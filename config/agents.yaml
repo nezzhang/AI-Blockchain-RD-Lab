@@ -1,0 +1,82 @@
+# Agent definitions and model routing (§8, §9, §31).
+# Model tiers implement cost control: cheap models for simple tasks,
+# stronger models for finalists. Simulation work stays in Python.
+
+defaults:
+  temperature: 0.7
+  max_retries: 3
+  request_timeout_seconds: 120
+
+# Model routing tiers (§31). Provider-specific model names are resolved
+# by the provider layer; the lab only asks for a tier.
+model_tiers:
+  cheap:
+    description: "Simple classification, normalization, deduplication"
+  medium:
+    description: "Idea generation, drafting, first-pass analysis"
+  strong:
+    description: "Research synthesis, mechanism analysis"
+  strongest:
+    description: "Finalist deep-dives only"
+
+agents:
+
+  discovery:
+    name: "Discovery Agent"
+    role: "Generate novel blockchain economic mechanisms across many source domains"
+    tier: medium
+    temperature: 0.9
+
+  economist:
+    name: "Economist Agent"
+    role: "Analyze monetary policy, incentives, liquidity, stability, reflexivity"
+    tier: strong
+    temperature: 0.4
+
+  game_theory:
+    name: "Game Theory Agent"
+    role: "Assume rational profit maximizers; find arbitrage, manipulation, death spirals"
+    tier: strong
+    temperature: 0.3
+
+  quant:
+    name: "Quant Agent"
+    role: "Convert ideas into mathematical models and simulations"
+    tier: strong
+    temperature: 0.2
+
+  blockchain:
+    name: "Blockchain Architect"
+    role: "Determine whether blockchain is required; design state, token, validator economics"
+    tier: strong
+    temperature: 0.3
+
+  oracle:
+    name: "Oracle Agent"
+    role: "Investigate data sources, accuracy, latency, revisions, manipulation"
+    tier: strong
+    temperature: 0.3
+
+  security:
+    name: "Security Agent"
+    role: "Investigate contract, economic, oracle, governance, validator attacks"
+    tier: strong
+    temperature: 0.3
+
+  regulatory:
+    name: "Regulatory Risk Agent"
+    role: "Identify regulatory risk areas requiring professional legal review (never legal advice)"
+    tier: strong
+    temperature: 0.2
+
+  market:
+    name: "Market Agent"
+    role: "Analyze customer, problem, alternatives, market size, adoption barriers"
+    tier: strong
+    temperature: 0.4
+
+  red_team:
+    name: "Red Team Agent"
+    role: "DESTROY THE IDEA — attempt to make every promising mechanism fail"
+    tier: strongest
+    temperature: 0.6

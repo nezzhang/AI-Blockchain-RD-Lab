@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.python-version
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+uv.lock
+
+# Lab artifacts (regenerated, never commit bulky research outputs)
+data/raw/*
+data/processed/*
+data/external/*
+database/*.db
+database/*.sqlite*
+*.duckdb
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+# Keep directory placeholders
+!**/.gitkeep

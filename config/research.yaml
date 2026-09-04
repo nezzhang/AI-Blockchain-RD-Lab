@@ -1,0 +1,60 @@
+# Research configuration (§12, §24, §29).
+
+novelty_classes:
+  A:
+    label: "clearly existing"
+    novelty_score: 2.0
+  B:
+    label: "very similar existing mechanism"
+    novelty_score: 4.0
+  C:
+    label: "adjacent mechanism"
+    novelty_score: 6.0
+  D:
+    label: "appears substantially novel"
+    novelty_score: 8.5
+  E:
+    label: "insufficient evidence"
+    novelty_score: 5.0
+
+novelty_language:
+  # §12: never claim "nobody has ever done this".
+  forbidden_claim: "Nobody has ever done this."
+  required_claim: >-
+    No substantially similar implementation was identified in the searched sources.
+
+source_preferences:
+  - academic papers
+  - official protocol documentation
+  - official repositories
+  - government datasets
+  - international organizations
+  - established research institutions
+
+evidence_levels:
+  - FACT        # directly verified from an authoritative source
+  - INFERENCE   # reasoned from facts
+  - HYPOTHESIS  # proposed, not yet tested
+
+# Source domains the Discovery Agent must span (§24).
+discovery_domains:
+  - monetary economics
+  - stablecoins
+  - payments
+  - demographics
+  - AI productivity
+  - energy
+  - climate
+  - commodities
+  - insurance
+  - prediction markets
+  - labor
+  - global trade
+  - internet
+  - biology
+  - ecology
+  - game theory
+  - information theory
+  - network economics
+  - financial markets
+  - distributed systems

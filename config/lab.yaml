@@ -1,0 +1,46 @@
+# Core laboratory configuration.
+# All paths are resolved relative to the repository root.
+
+lab:
+  name: "AI Blockchain R&D Lab"
+  version: "0.1.0"
+  # Deterministic foundation — LLM proposes, code tests, evidence decides.
+  principle: "LLM proposes. Code tests. Evidence decides."
+
+storage:
+  database: "database/lab.db"
+  reports_dir: "reports"
+  ideas_dir: "ideas"
+
+pipeline:
+  # Funnel targets from the master build prompt (§7).
+  discovery_count: 100
+  post_prior_art: 20
+  finalists: 5
+  recommended: 1
+
+  # Safety: the lab NEVER issues real tokens or deploys contracts (§28, §41).
+  require_human_approval_for:
+    - deploying_contracts
+    - launching_testnet
+    - issuing_real_tokens
+    - significant_api_spend
+    - connecting_wallets
+    - moving_funds
+    - publishing_novelty_claims
+    - legal_agreements
+
+runtime:
+  # Provider config comes from YAML + environment variables (§30).
+  # Never hard-code API keys.
+  llm_provider: "mock"            # mock | openai | anthropic | gemini | local
+  api_key_env: "LAB_LLM_API_KEY"  # read from environment only
+  max_concurrency: 4
+  request_timeout_seconds: 120
+  max_retries: 3
+  retry_backoff_seconds: 2.0
+  token_budget_per_run: 2_000_000
+
+logging:
+  level: "INFO"
+  rich_console: true

@@ -1,0 +1,45 @@
+# Deterministic scoring configuration (§19, §20).
+# The scoring engine is pure code — LLM opinions enter only as dimension
+# sub-scores, never as the final ranking.
+
+dimensions:
+  novelty:
+    weight: 0.10
+    description: "Genuinely new relative to searched prior art"
+  economic_coherence:
+    weight: 0.15
+    description: "Monetary model is internally consistent and stable"
+  game_theory:
+    weight: 0.10
+    description: "Incentive-compatible under rational profit maximizers"
+  technical_feasibility:
+    weight: 0.10
+    description: "Buildable with realistic engineering effort"
+  oracle_feasibility:
+    weight: 0.10
+    description: "Required external data is obtainable and trustworthy"
+  security:
+    weight: 0.10
+    description: "Resists economic, oracle, governance, and security attacks"
+  market_demand:
+    weight: 0.15
+    description: "Identifiable users with a real problem"
+  capital_efficiency:
+    weight: 0.05
+    description: "Achieves its goal with minimal locked capital"
+  network_effects:
+    weight: 0.05
+    description: "Value grows with adoption"
+  communication:
+    weight: 0.05
+    description: "Mechanism can be explained clearly"
+  viral_potential:
+    weight: 0.05
+    description: "Likely to spread organically"
+
+rules:
+  # Fatal flaws must never be averaged away (§20).
+  fatal_flaw_penalty: 0.35
+  fatal_flaw_cap: 5.0   # a confirmed fatal flaw caps the overall score
+  # Missing dimension scores are imputed at the neutral midpoint.
+  missing_score_default: 5.0
