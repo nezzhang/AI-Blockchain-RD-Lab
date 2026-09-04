@@ -58,3 +58,19 @@ discovery_domains:
   - network economics
   - financial markets
   - distributed systems
+
+# Discovery-generation settings (Phase 1).
+discovery:
+  ideas_per_batch: 5          # ideas requested per LLM call
+  max_description_chars: 2000
+  # §18: do not generate combinations randomly only — prompt for economic
+  # compatibility and semantic bridge reasoning.
+  require_combinatorics: true
+
+# De-duplication settings (Phase 1). Deterministic, pure-Python.
+dedup:
+  # Token-overlap similarity (Jaccard on normalized keyword tokens).
+  exact_threshold: 0.95       # at/above: duplicate
+  near_threshold: 0.60        # at/above: near-duplicate (flagged, human-reviewable)
+  # Shingled name similarity catches "Population Money" vs "Population Currency".
+  name_shingle_size: 2

@@ -1,0 +1,164 @@
+{
+  "summary": {
+    "generated": 16,
+    "normalized": 16,
+    "duplicates_removed": 1,
+    "stored": 15,
+    "failed_batches": 1,
+    "errors": [
+      "duplicate skipped: 'Demographic Reserve Rule' \u2248 'Demographic Reserve Rule' (exact name-key collision)",
+      "batch failed: [mock] Schema validation failed: 1 validation error for IdeaBatch\nideas\n  Field required [type=missing, input_value={'mock': True, 'digest': '529997'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing"
+    ],
+    "candidate_ids": [
+      "cand-67194a144f13",
+      "cand-003e179ea645",
+      "cand-0adc4c68dab6",
+      "cand-1a942337dba9",
+      "cand-ba66a9e529ff",
+      "cand-373cf68710eb",
+      "cand-f311cdd7b1e6",
+      "cand-41d6b050f0f9",
+      "cand-5980eb0d728d",
+      "cand-edeb313bb142",
+      "cand-781e98484dc7",
+      "cand-bd4946a39f52",
+      "cand-688e9d196eb5",
+      "cand-d5c82904afd6",
+      "cand-b07b1599889f"
+    ]
+  },
+  "stored_ideas": [
+    {
+      "name": "Population-Linked Supply",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Token supply expands and contracts with oracle-reported changes in verified global population. Each epoch, an oracle committee reports births, deaths, and net migration; the protocol mints or burns supply proportional to the reported delta. This is Experiment #001 (MASTER BUILD PROMPT \u00a725): the lab must attempt to prove or disprove it, NOT assume it is a good idea."
+    },
+    {
+      "name": "Population-Linked Supply",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Token supply expands and contracts with oracle-reported changes in verified global population. Each epoch, an oracle committee reports births, deaths, and net migration; the protocol mints or burns supply proportional to the reported delta. This is Experiment #001 (MASTER BUILD PROMPT \u00a725): the lab must attempt to prove or disprove it, NOT assume it is a good idea."
+    },
+    {
+      "name": "Population-Linked Supply",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Token supply expands and contracts with oracle-reported changes in verified global population. Each epoch, an oracle committee reports births, deaths, and net migration; the protocol mints or burns supply proportional to the reported delta. This is Experiment #001 (MASTER BUILD PROMPT \u00a725): the lab must attempt to prove or disprove it, NOT assume it is a good idea."
+    },
+    {
+      "name": "Population-Linked Supply",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Token supply expands and contracts with oracle-reported changes in verified global population. Each epoch, an oracle committee reports births, deaths, and net migration; the protocol mints or burns supply proportional to the reported delta. This is Experiment #001 (MASTER BUILD PROMPT \u00a725): the lab must attempt to prove or disprove it, NOT assume it is a good idea."
+    },
+    {
+      "name": "Population-Linked Supply",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Token supply expands and contracts with oracle-reported changes in verified global population. Each epoch, an oracle committee reports births, deaths, and net migration; the protocol mints or burns supply proportional to the reported delta. This is Experiment #001 (MASTER BUILD PROMPT \u00a725): the lab must attempt to prove or disprove it, NOT assume it is a good idea."
+    },
+    {
+      "name": "Population-Linked Supply",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Token supply expands and contracts with oracle-reported changes in verified global population. Each epoch, an oracle committee reports births, deaths, and net migration; the protocol mints or burns supply proportional to the reported delta. This is Experiment #001 (MASTER BUILD PROMPT \u00a725): the lab must attempt to prove or disprove it, NOT assume it is a good idea."
+    },
+    {
+      "name": "Population-Linked Supply",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Token supply expands and contracts with oracle-reported changes in verified global population. Each epoch, an oracle committee reports births, deaths, and net migration; the protocol mints or burns supply proportional to the reported delta. This is Experiment #001 (MASTER BUILD PROMPT \u00a725): the lab must attempt to prove or disprove it, NOT assume it is a good idea."
+    },
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "demographics",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Carbon-Weighted Gas Fees",
+      "category": "energy",
+      "domain": "climate",
+      "description": "Transaction gas is priced by the verified carbon intensity of the validator set's energy mix, so dirty periods become expensive and clean periods cheap."
+    },
+    {
+      "name": "Habitat Bond Curve",
+      "category": "ecology",
+      "domain": "ecology",
+      "description": "Conservation bonds whose redemption value grows with satellite-verified habitat area restored, paying out only on measured ecological outcomes."
+    },
+    {
+      "name": "Prediction-Coupled Insurance Float",
+      "category": "insurance",
+      "domain": "prediction markets",
+      "description": "An insurance mutual reprices coverage each epoch from live prediction-market odds on the insured event, aligning float returns with crowd-updated risk."
+    },
+    {
+      "name": "Labor-Backed Escrow",
+      "category": "labor",
+      "domain": "labor",
+      "description": "Freelance wages are escrowed in a pooled contract and released by verified work-completion attestations, letting earned-but-unpaid labor collateralize short-term credit."
+    },
+    {
+      "name": "Trade-Corridor Clearing Tokens",
+      "category": "payments",
+      "domain": "global trade",
+      "description": "Bilateral trade corridors mint corridor-specific clearing credits backed by verified export volumes, netting cross-border payments without global stablecoins."
+    },
+    {
+      "name": "Bandwidth Futures Market",
+      "category": "network economics",
+      "domain": "internet",
+      "description": "ISP peering agreements are replaced by an on-chain bandwidth futures market where routes are purchased ahead of congestion windows."
+    },
+    {
+      "name": "AI-Compute Denominated Debt",
+      "category": "financial markets",
+      "domain": "ai productivity",
+      "description": "Loans denominated in units of verified AI training compute, so repayment tracks the falling price of intelligence rather than fiat inflation."
+    },
+    {
+      "name": "Commodity-Volatility Stable Unit",
+      "category": "stablecoins",
+      "domain": "commodities",
+      "description": "A synthetic unit whose value targets a basket of commodity price volatilities, stabilized by volatility harvesting rather than collateral pegging."
+    },
+    {
+      "name": "Gene-Sequence Royalty Stream",
+      "category": "biology",
+      "domain": "biology",
+      "description": "Synthesized gene sequences carry embedded royalty streams paid per verified commercial use, sequenced through auditable licensing oracles."
+    },
+    {
+      "name": "Sybil-Resistant Airdrop Market",
+      "category": "game theory",
+      "domain": "game theory",
+      "description": "Airdrop allocations are determined by a secondary market in sealed reputation bids, making Sybil farming unprofitable by construction."
+    },
+    {
+      "name": "Entropy-Priced Storage",
+      "category": "distributed systems",
+      "domain": "information theory",
+      "description": "Decentralized storage rent is priced by the entropy of stored data chunks, rewarding deduplication at the protocol level."
+    },
+    {
+      "name": "Insurance-Backed Validator Slashing Pool",
+      "category": "security",
+      "domain": "distributed systems",
+      "description": "Validator slashings are covered by a mutual insurance pool priced by each validator's realized fault history, turning slashing risk into a tradable premium."
+    },
+    {
+      "name": "Demographic Dependency Reserve Rule",
+      "category": "monetary economics",
+      "domain": "demographics",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, using census oracles to verify age structure of participants."
+    },
+    {
+      "name": "Orthogonal idea: Toll-Lane Finality",
+      "category": "payments",
+      "domain": "distributed systems",
+      "description": "Finality speed becomes a purchasable lane: slow lanes are nearly free, fast lanes pay validators directly, separating consensus from fee markets."
+    }
+  ]
+}

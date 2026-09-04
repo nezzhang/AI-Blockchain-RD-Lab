@@ -100,25 +100,29 @@ class TestSearch:
 
 
 class TestPhaseStubs:
-    """Pipeline commands exist as stubs and fail fast with a phase pointer."""
-
-    @staticmethod
-    def _seed_db():
-        from blockchain_rd_lab.config import load_config
-        from blockchain_rd_lab.database import LabDatabase
-
-        cfg = load_config()
-        db = LabDatabase(REPO_ROOT / cfg.storage.database)
-        db.create_all()
-        return db
+    """Remaining pipeline commands exist as stubs and fail fast (§7)."""
 
     def test_stub_commands_exit_nonzero(self):
-        for cmd in (["discover"], ["research"], ["prior-art"], ["formalize"],
+        for cmd in (["research"], ["prior-art"], ["formalize"],
                     ["simulate"], ["redteam"], ["rank"], ["report"], ["pipeline"]):
             result = runner.invoke(app, cmd)
             assert result.exit_code == 2, cmd
             assert "PHASE" in result.output or "later phase" in result.output
 
     def test_stub_mentions_phase(self):
-        result = runner.invoke(app, ["discover"])
-        assert "PHASE 1" in result.output
+        result = runner.invoke(app, ["research"])
+        assert "PHASE 2" in result.output
+
+
+class TestSeedCommand:
+    def test_seed_population_money(self, tmp_path, monkeypatch):
+        monkeypatch.setattr("blockchain_rd_lab.config.CONFIG_DIR", tmp_path / "config")
+        result = runner.invoke(app, ["seed", "--experiment", "population-money"])
+        assert result.exit_code == 0, result.output
+        assert "seeded" in result.output
+
+    def test_seed_unknown_experiment(self, tmp_path, monkeypatch):
+        monkeypatch.setattr("blockchain_rd_lab.config.CONFIG_DIR", tmp_path / "config")
+        result = runner.invoke(app, ["seed", "--experiment", "nope"])
+        assert result.exit_code == 1
+        assert "Unknown experiment" in result.output

@@ -33,13 +33,31 @@ pipeline:
 runtime:
   # Provider config comes from YAML + environment variables (§30).
   # Never hard-code API keys.
-  llm_provider: "mock"            # mock | openai | anthropic | gemini | local
+  llm_provider: "mock"            # mock | openai | local
   api_key_env: "LAB_LLM_API_KEY"  # read from environment only
   max_concurrency: 4
   request_timeout_seconds: 120
   max_retries: 3
   retry_backoff_seconds: 2.0
   token_budget_per_run: 2_000_000
+
+# Per-provider settings (§30). API keys are ALWAYS read from the
+# environment variable named by the provider's api_key_env — never here.
+providers:
+  openai:
+    base_url: "https://api.openai.com/v1"
+    model: "gpt-4o-mini"
+    api_key_env: "OPENAI_API_KEY"
+    # §31 model routing: cheap model for simple tasks, stronger for finalists.
+    tier_models:
+      cheap: "gpt-4o-mini"
+      medium: "gpt-4o-mini"
+      strong: "gpt-4o"
+      strongest: "gpt-4o"
+  local:
+    base_url: "http://127.0.0.1:11434/v1"
+    model: "local-model"
+    api_key_env: "LOCAL_LLM_API_KEY"
 
 logging:
   level: "INFO"

@@ -37,8 +37,8 @@ The autonomous pipeline arrives in later phases (see
 | Phase | Scope | Status |
 |-------|-------|--------|
 | 0 | Foundation: schemas, DB, CLI, agents, mock LLM, scoring, tests | ✅ done |
-| 1 | Discovery: idea generation, normalization, dedup | ⬜ next |
-| 2 | Research: prior art, economist, market agents | ⬜ |
+| 1 | Discovery: idea generation, normalization, dedup | ✅ done |
+| 2 | Research: prior art, economist, market agents | ⬜ next |
 | 3 | Formalization: mathematical models | ⬜ |
 | 4 | Simulation: Monte Carlo, historical, sweeps | ⬜ |
 | 5 | Adversarial testing: game theory, security, red team | ⬜ |
@@ -63,15 +63,23 @@ pip install -e ".[analytics,dev]"
 
 ```bash
 lab init                 # initialize the SQLite database
+lab seed                 # seed Experiment #001 (Population Money) as an ordinary candidate
+lab discover --count 20  # generate ideas: LLM → normalize → dedup → store
+lab discover --count 20 --mock-fixtures   # offline demo with fixture batches
 lab status               # candidate counts by lifecycle state
 lab score <candidate_id> # deterministic scoring with fatal-flaw gate
 lab search <query>       # search stored candidates
 lab version              # lab version
 ```
 
-The full command surface (`lab discover`, `lab research`, `lab prior-art`,
-`lab formalize`, `lab simulate`, `lab redteam`, `lab rank`, `lab report`,
-`lab pipeline`) is declared as stubs that point to their future phase.
+Discovery runs against the configured provider (default: deterministic
+`mock`). To use a real provider, set `runtime.llm_provider` in
+`config/lab.yaml` (options: `openai`, `local`) and export the provider's API
+key — keys are read from environment variables only, never stored.
+
+The remaining command surface (`lab research`, `lab prior-art`, `lab
+formalize`, `lab simulate`, `lab redteam`, `lab rank`, `lab report`, `lab
+pipeline`) is declared as stubs that point to their future phase.
 
 ## Development
 
@@ -87,16 +95,16 @@ make typecheck  # mypy
 
 ```text
 config/        lab.yaml, agents.yaml, scoring.yaml, research.yaml
-src/           blockchain_rd_lab package (schemas, database, agents, scoring, CLI)
+src/           blockchain_rd_lab package (schemas, database, agents, discovery, scoring, CLI)
 agents/        agent prompt/spec definitions by role (populated in later phases)
-ideas/         active / promising / finalists / rejected candidates
+ideas/         active / promising / finalists / rejected candidates (+ discovery artifacts)
 research/      papers, protocols, prior art, competitors
 mechanisms/    formalized mechanism library
 simulations/   models, monte carlo, agent-based, historical
 redteam/       adversarial analyses by category
 data/          raw / processed / external datasets (never committed)
 database/      SQLite lab database (never committed)
-reports/       daily / weekly / finalists reports
+reports/       daily / weekly / finalists reports (+ phase reports)
 tests/         pytest suite
 scripts/       operational scripts
 ```

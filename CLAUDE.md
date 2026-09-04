@@ -10,12 +10,14 @@ replacement.
 
 - Prime directive: *LLM proposes. Code tests. Evidence decides.*
 - Build phase by phase (see [`MASTER BUILD PROMPT.md`](./MASTER%20BUILD%20PROMPT.md) §38).
-  Phase 0 = foundation only. Do not build the autonomous pipeline early.
+  Phase 0 = foundation. Phase 1 = discovery (done). No autonomous pipeline yet.
 - All agent output must pass Pydantic validation before storage.
 - Candidate status changes only via `Candidate.transition()` (state machine,
   `src/blockchain_rd_lab/schemas.py`).
 - Scoring is deterministic (`src/blockchain_rd_lab/scoring/`); confirmed fatal
   flaws cap scores and are never averaged away.
+- Discovery: `src/blockchain_rd_lab/discovery/` — agent (LLM) + normalizer and
+  deduplicator (pure code) + service; `lab discover --mock-fixtures` runs offline.
 - Never issue tokens, deploy contracts, move funds, or spend significant API
   budget without explicit human approval.
 
@@ -32,7 +34,9 @@ make test       # pytest
 
 - `src/blockchain_rd_lab/schemas.py` — candidate, status machine, scores, experiments
 - `src/blockchain_rd_lab/database/` — SQLAlchemy + SQLite repository
-- `src/blockchain_rd_lab/agents/` — agent + LLM provider abstractions, mock provider
+- `src/blockchain_rd_lab/agents/` — agent base + LLM providers (mock, OpenAI-compat, local)
+- `src/blockchain_rd_lab/discovery/` — Phase 1: agent, normalizer, deduplicator, service
 - `src/blockchain_rd_lab/scoring/` — deterministic scoring engine
 - `src/blockchain_rd_lab/cli.py` — Typer CLI (`lab`)
+- `src/blockchain_rd_lab/testing/` — offline discovery fixtures
 - `config/` — YAML configuration (lab, agents, scoring, research)

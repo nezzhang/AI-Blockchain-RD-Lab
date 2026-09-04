@@ -1,9 +1,9 @@
 """Lab CLI (§7).
 
-Phase 0 implements working `init`, `status`, `score`, and `search` commands.
-The pipeline commands (discover, research, prior-art, formalize, simulate,
-redteam, rank, report, pipeline) are declared as stubs so the command surface
-is stable from day one; they fail fast with "not implemented in Phase 0".
+Phase 1: working `init`, `status`, `score`, `search`, `discover`, `seed`.
+The remaining pipeline commands (research, prior-art, formalize, simulate,
+redteam, rank, report, pipeline) are stubs that fail fast with a pointer to
+their future phase.
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from rich.console import Console
 from rich.table import Table
 
 from blockchain_rd_lab import __version__
-from blockchain_rd_lab.config import REPO_ROOT, load_config
+from blockchain_rd_lab.config import REPO_ROOT, load_config, load_research
 from blockchain_rd_lab.database import LabDatabase
 from blockchain_rd_lab.schemas import CandidateStatus
 from blockchain_rd_lab.scoring import ScoringEngine, load_scoring_config
@@ -185,16 +185,106 @@ def search(
 
 
 # ---------------------------------------------------------------------------
-# Phase 1+ command stubs (§7) — declared now, implemented later
+# Phase 1: discovery (implemented)
 # ---------------------------------------------------------------------------
+
+
+def _provider_from_config():
+    """Resolve the configured LLM provider (mock by default)."""
+    from blockchain_rd_lab.agents import get_provider
+
+    cfg = load_config()
+    name = cfg.runtime.llm_provider
+    if name == "mock":
+        return get_provider("mock")
+    settings = cfg.providers.get(name)
+    kwargs = settings.model_dump() if settings else {}
+    return get_provider(name, **kwargs)
 
 
 @app.command("discover")
 def discover(
     count: Annotated[int, typer.Option("--count", "-n", min=1)] = 10,
+    no_avoid: Annotated[
+        bool, typer.Option("--no-avoid", help="Skip dedup against existing ideas")
+    ] = False,
+    mock_fixtures: Annotated[
+        bool,
+        typer.Option(
+            "--mock-fixtures",
+            help="Use offline fixture batches instead of the configured provider",
+        ),
+    ] = False,
 ) -> None:
-    """Generate novel mechanism candidates (Phase 1)."""
-    _not_implemented("discover", "PHASE 1 — DISCOVERY")
+    """Generate novel mechanism candidates: LLM → normalize → dedup → store."""
+    from blockchain_rd_lab.discovery.service import DiscoveryService
+
+    db = _db()
+    if mock_fixtures:
+        from blockchain_rd_lab.agents import MockLLMProvider
+        from blockchain_rd_lab.testing import fixture_responses
+
+        provider = MockLLMProvider()
+        for response in fixture_responses():
+            provider.queue_response(response)
+    else:
+        provider = _provider_from_config()
+    research = load_research()
+    service = DiscoveryService(
+        provider, db, research_config=research, ideas_dir=REPO_ROOT / "ideas" / "active"
+    )
+    summary = service.discover(count=count, avoid_existing=not no_avoid)
+
+    table = Table(title=f"Discovery — {summary.stored} new candidates")
+    for col in ("Metric", "Value"):
+        table.add_column(col, justify="right" if col == "Value" else "left")
+    table.add_row("generated", str(summary.generated))
+    table.add_row("normalized", str(summary.normalized))
+    table.add_row("duplicates removed", str(summary.duplicates_removed))
+    table.add_row("stored", str(summary.stored))
+    table.add_row("failed batches", str(summary.failed_batches))
+    console.print(table)
+
+    if summary.errors:
+        console.print("[dim]Notes:[/dim]")
+        for e in summary.errors[:10]:
+            console.print(f"  [dim]• {e}[/dim]")
+
+    for cid in summary.candidate_ids:
+        console.print(f"  [green]stored[/green] {cid}")
+
+
+@app.command("seed")
+def seed(
+    experiment: Annotated[str, typer.Option("--experiment", "-e")] = "population-money",
+) -> None:
+    """Seed a canonical experiment candidate (§25: Population Money = #001).
+
+    The seeded idea enters the funnel as an ORDINARY candidate — it must
+    compete fairly (§24: do not prematurely select the Population idea).
+    """
+    from blockchain_rd_lab.seeds import EXPERIMENT_SEEDS
+
+    if experiment not in EXPERIMENT_SEEDS:
+        known = ", ".join(sorted(EXPERIMENT_SEEDS))
+        console.print(f"[red]Unknown experiment {experiment!r}. Known: {known}[/red]")
+        raise typer.Exit(code=1)
+
+    db = _db()
+    created = []
+    for draft in EXPERIMENT_SEEDS[experiment]:
+        candidate = draft.to_candidate()
+        # Seed ideas are hypotheses, not confirmed mechanisms.
+        db.save_candidate(candidate)
+        created.append(candidate)
+
+    for c in created:
+        console.print(f"  [green]seeded[/green] {c.id} — {c.name}")
+
+
+# ---------------------------------------------------------------------------
+# Phase 2+ command stubs (§7) — declared now, implemented later
+# ---------------------------------------------------------------------------
 
 
 @app.command("research")
