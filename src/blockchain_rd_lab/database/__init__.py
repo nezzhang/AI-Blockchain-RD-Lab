@@ -190,6 +190,22 @@ class PriorArtORM(Base):
     )
 
 
+class MathModelORM(Base):
+    """Versioned formal models (Phase 3, §13). Never overwritten."""
+
+    __tablename__ = "math_models"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    candidate_id: Mapped[str] = mapped_column(ForeignKey("candidates.id"), index=True)
+    version: Mapped[int] = mapped_column(Integer, default=1)
+    model_json: Mapped[str] = mapped_column(Text)  # canonical MathModel dump
+    rationale: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(UTC),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Serialization helpers (Pydantic <-> ORM)
 # ---------------------------------------------------------------------------
@@ -522,6 +538,67 @@ class LabDatabase:
                     "finding": o.finding,
                     "similarity_class": o.similarity_class,
                     "source_id": o.source_id,
+                }
+                for o in session.scalars(stmt)
+            ]
+
+    # -- math models (Phase 3, §13) --------------------------------------------
+
+    def save_math_model(
+        self,
+        candidate_id: str,
+        model_json: str,
+        rationale: str,
+        version: int = 1,
+    ) -> int:
+        """Insert a new model version; returns the row id."""
+        with self._session() as session:
+            obj = MathModelORM(
+                candidate_id=candidate_id,
+                version=version,
+                model_json=model_json,
+                rationale=rationale,
+            )
+            session.add(obj)
+            session.commit()
+            session.refresh(obj)
+            return int(obj.id)
+
+    def latest_model_version(self, candidate_id: str) -> int:
+        """Highest stored model version for a candidate (0 if none)."""
+        with self._session() as session:
+            stmt = (
+                select(MathModelORM.version)
+                .where(MathModelORM.candidate_id == candidate_id)
+                .order_by(MathModelORM.version.desc())
+                .limit(1)
+            )
+            v = session.scalar(stmt)
+            return int(v) if v is not None else 0
+
+    def get_latest_math_model(self, candidate_id: str) -> str | None:
+        """Latest model JSON dump for a candidate (None if never formalized)."""
+        with self._session() as session:
+            stmt = (
+                select(MathModelORM.model_json)
+                .where(MathModelORM.candidate_id == candidate_id)
+                .order_by(MathModelORM.version.desc())
+                .limit(1)
+            )
+            dump = session.scalar(stmt)
+            return str(dump) if dump is not None else None
+
+    def list_math_models(self, candidate_id: str | None = None) -> list[dict[str, Any]]:
+        with self._session() as session:
+            stmt = select(MathModelORM).order_by(MathModelORM.candidate_id, MathModelORM.version)
+            if candidate_id is not None:
+                stmt = stmt.where(MathModelORM.candidate_id == candidate_id)
+            return [
+                {
+                    "candidate_id": o.candidate_id,
+                    "version": int(o.version),
+                    "rationale": o.rationale,
+                    "created_at": o.created_at.isoformat() if o.created_at else None,
                 }
                 for o in session.scalars(stmt)
             ]

@@ -1,0 +1,22 @@
+{
+  "attempted": 15,
+  "formalized": 15,
+  "failed": 0,
+  "model_versions": {
+    "cand-e33c18c7a75e": 1,
+    "cand-81eece8ab470": 1,
+    "cand-84b0ad6d012f": 1,
+    "cand-6aff3509aeaf": 1,
+    "cand-fb4bfe53914b": 1,
+    "cand-58d7091eb2a7": 1,
+    "cand-1acbaa9de0b0": 1,
+    "cand-045642b91848": 1,
+    "cand-d14a12373eb5": 1,
+    "cand-6e9dedb8b844": 1,
+    "cand-b8188890330a": 1,
+    "cand-986c8dd65b08": 1,
+    "cand-db0588dfed1a": 1,
+    "cand-108293ca9f4f": 1,
+    "cand-ebab7a8e41db": 1
+  }
+}

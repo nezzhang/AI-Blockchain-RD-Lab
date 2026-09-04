@@ -464,14 +464,122 @@ def filter_cmd(
 
 
 # ---------------------------------------------------------------------------
-# Phase 3+ command stubs (§7) — declared now, implemented later
+# Phase 3: formalization (implemented)
 # ---------------------------------------------------------------------------
 
 
+def _formalization_summary_table(
+    title: str,
+    attempted: int,
+    formalized: int,
+    failed: int,
+    versions: dict,
+) -> Table:
+    table = Table(title=title)
+    table.add_column("Metric")
+    table.add_column("Value", justify="right")
+    table.add_row("attempted", str(attempted))
+    table.add_row("formalized", str(formalized))
+    table.add_row("failed", str(failed))
+    table.add_row("model versions stored", str(len(versions)))
+    return table
+
+
 @app.command("formalize")
-def formalize(candidate_id: str | None = typer.Argument(default=None)) -> None:
-    """Build mathematical models for candidates (Phase 3)."""
-    _not_implemented("formalize", "PHASE 3 — FORMALIZATION")
+def formalize(
+    candidate_id: str | None = typer.Argument(default=None),
+    limit: Annotated[int, typer.Option("--limit", "-l", min=1)] = 50,
+    mock_fixtures: Annotated[
+        bool,
+        typer.Option(
+            "--mock-fixtures", help="Use offline fixture models (same validation/storage path)"
+        ),
+    ] = False,
+) -> None:
+    """Turn researched candidates into formal mathematical models (Phase 3, §13)."""
+    from blockchain_rd_lab.formalization import FormalizationSummary
+    from blockchain_rd_lab.formalization.service import FormalizationService
+
+    db = _db()
+    if mock_fixtures:
+        # Offline path: no LLM needed, but keep provider plumbing for the service.
+        from blockchain_rd_lab.agents import MockLLMProvider
+
+        service = FormalizationService(MockLLMProvider(), db)
+    else:
+        from blockchain_rd_lab.agents import MockLLMProvider
+
+        provider = _provider_from_config()
+        if isinstance(provider, MockLLMProvider):
+            console.print(
+                "[red]runtime.llm_provider is 'mock' with no queued responses.[/red]\n"
+                "Use --mock-fixtures for the offline demo, or configure a real\n"
+                "provider in config/lab.yaml (§30)."
+            )
+            raise typer.Exit(code=2)
+        service = FormalizationService(provider, db)
+
+    if candidate_id is not None:
+        cand = db.get_candidate(candidate_id)
+        if cand is None:
+            console.print(f"[red]Candidate {candidate_id!r} not found.[/red]")
+            raise typer.Exit(code=1)
+        if mock_fixtures:
+            summary = FormalizationSummary()
+            result = service._formalize_one_fixture(cand)
+            summary.attempted = 1
+            if result.formalized:
+                summary.formalized = 1
+                assert result.model is not None
+                summary.model_versions[cand.id] = result.model.version
+            else:
+                summary.failed = 1
+                summary.errors[cand.id] = result.error
+        else:
+            result = service.formalize_candidate(cand)
+            summary = FormalizationSummary(
+                attempted=1,
+                formalized=1 if result.formalized else 0,
+                failed=0 if result.formalized else 1,
+                model_versions={cand.id: result.model.version} if result.model else {},
+                errors={} if result.formalized else {cand.id: result.error},
+            )
+        console.print(
+            _formalization_summary_table(
+                f"Formalization — {summary.formalized} of {summary.attempted}",
+                summary.attempted,
+                summary.formalized,
+                summary.failed,
+                summary.model_versions,
+            )
+        )
+        return
+
+    if mock_fixtures:
+        summary = service.formalize_all_fixtures(
+            limit=limit, artifacts_dir=REPO_ROOT / "formalization" / "models"
+        )
+    else:
+        summary = service.formalize_all(limit=limit)
+
+    console.print(
+        _formalization_summary_table(
+            f"Formalization — {summary.formalized} of {summary.attempted}",
+            summary.attempted,
+            summary.formalized,
+            summary.failed,
+            summary.model_versions,
+        )
+    )
+    if summary.errors:
+        console.print("[dim]Failures (candidates left in place for retry):[/dim]")
+        for cid, err in list(summary.errors.items())[:10]:
+            console.print(f"  [dim]• {cid}: {err}[/dim]")
+
+
+# ---------------------------------------------------------------------------
+# Phase 4+ command stubs (§7) — declared now, implemented later
+# ---------------------------------------------------------------------------
 
 
 @app.command()

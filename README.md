@@ -39,8 +39,8 @@ The autonomous pipeline arrives in later phases (see
 | 0 | Foundation: schemas, DB, CLI, agents, mock LLM, scoring, tests | ✅ done |
 | 1 | Discovery: idea generation, normalization, dedup | ✅ done |
 | 2 | Research: prior art, economist, market agents, 100→20 filter | ✅ done |
-| 3 | Formalization: mathematical models | ⬜ next |
-| 4 | Simulation: Monte Carlo, historical, sweeps | ⬜ |
+| 3 | Formalization: mathematical models | ✅ done |
+| 4 | Simulation: Monte Carlo, historical, sweeps | ⬜ next |
 | 5 | Adversarial testing: game theory, security, red team | ⬜ |
 | 6 | Ranking: deterministic scoring, fatal-flaw gate, finalists | ⬜ |
 | 7 | Reporting: automated research reports | ⬜ |
@@ -68,6 +68,7 @@ lab discover --count 20  # generate ideas: LLM → normalize → dedup → store
 lab discover --count 20 --mock-fixtures   # offline demo with fixture batches
 lab research --mock-fixtures              # Phase 2: prior-art + economist + market per candidate
 lab filter --target 20    # deterministic funnel cut after prior-art research (§7)
+lab formalize --mock-fixtures              # Phase 3: math models with variables/equations/assumptions (§13)
 lab status               # candidate counts by lifecycle state
 lab score <candidate_id> # deterministic scoring with fatal-flaw gate
 lab search <query>       # search stored candidates
@@ -80,9 +81,9 @@ deterministic `mock`). To use a real provider, set `runtime.llm_provider` in
 key — keys are read from environment variables only, never stored. A dry
 mock queue (no `--mock-fixtures`) fails closed instead of emitting junk.
 
-The remaining command surface (`lab formalize`, `lab simulate`, `lab
-redteam`, `lab rank`, `lab report`, `lab pipeline`) is declared as stubs
-that point to their future phase.
+The remaining command surface (`lab simulate`, `lab redteam`, `lab rank`,
+`lab report`, `lab pipeline`) is declared as stubs that point to their
+future phase.
 
 ## Development
 
