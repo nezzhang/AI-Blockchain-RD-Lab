@@ -460,3 +460,68 @@ class LabDatabase:
                     error=obj.error,
                     output=json.loads(obj.output_json or "{}"),
                 )
+
+    # -- sources & prior art (§22, Phase 2) ------------------------------------
+
+    def save_source(self, title: str, url: str, source_type: str = "web") -> int:
+        """Insert or reuse a source; returns the source id."""
+        with self._session() as session:
+            existing = session.scalar(select(SourceORM).where(SourceORM.url == url))
+            if existing is not None:
+                return int(existing.id)
+            obj = SourceORM(url=url, title=title, source_type=source_type)
+            session.add(obj)
+            session.commit()
+            session.refresh(obj)
+            return int(obj.id)
+
+    def list_sources(self, limit: int | None = None) -> list[dict[str, Any]]:
+        with self._session() as session:
+            stmt = select(SourceORM).order_by(SourceORM.id)
+            if limit is not None:
+                stmt = stmt.limit(limit)
+            return [
+                {
+                    "id": int(o.id),
+                    "url": o.url,
+                    "title": o.title,
+                    "source_type": o.source_type,
+                }
+                for o in session.scalars(stmt)
+            ]
+
+    def save_prior_art(
+        self,
+        candidate_id: str,
+        query: str,
+        finding: str,
+        similarity_class: str,
+        source_id: int | None = None,
+    ) -> None:
+        with self._session() as session:
+            session.add(
+                PriorArtORM(
+                    candidate_id=candidate_id,
+                    query=query,
+                    finding=finding,
+                    similarity_class=similarity_class,
+                    source_id=source_id,
+                )
+            )
+            session.commit()
+
+    def list_prior_art(self, candidate_id: str | None = None) -> list[dict[str, Any]]:
+        with self._session() as session:
+            stmt = select(PriorArtORM)
+            if candidate_id is not None:
+                stmt = stmt.where(PriorArtORM.candidate_id == candidate_id)
+            return [
+                {
+                    "candidate_id": o.candidate_id,
+                    "query": o.query,
+                    "finding": o.finding,
+                    "similarity_class": o.similarity_class,
+                    "source_id": o.source_id,
+                }
+                for o in session.scalars(stmt)
+            ]

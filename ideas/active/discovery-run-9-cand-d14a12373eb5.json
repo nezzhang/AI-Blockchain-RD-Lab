@@ -1,0 +1,79 @@
+{
+  "summary": {
+    "generated": 10,
+    "normalized": 10,
+    "duplicates_removed": 1,
+    "stored": 9,
+    "failed_batches": 0,
+    "errors": [
+      "duplicate skipped: 'Demographic Reserve Rule' \u2248 'Demographic Reserve Rule' (exact name-key collision)"
+    ],
+    "candidate_ids": [
+      "cand-d14a12373eb5",
+      "cand-6e9dedb8b844",
+      "cand-b8188890330a",
+      "cand-bec3b6e85a91",
+      "cand-986c8dd65b08",
+      "cand-f9d0e9af020b",
+      "cand-db0588dfed1a",
+      "cand-108293ca9f4f",
+      "cand-ebab7a8e41db"
+    ]
+  },
+  "stored_ideas": [
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "demographics",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Carbon-Weighted Gas Fees",
+      "category": "energy",
+      "domain": "climate",
+      "description": "Transaction gas is priced by the verified carbon intensity of the validator set's energy mix, so dirty periods become expensive and clean periods cheap."
+    },
+    {
+      "name": "Habitat Bond Curve",
+      "category": "ecology",
+      "domain": "ecology",
+      "description": "Conservation bonds whose redemption value grows with satellite-verified habitat area restored, paying out only on measured ecological outcomes."
+    },
+    {
+      "name": "Prediction-Coupled Insurance Float",
+      "category": "insurance",
+      "domain": "prediction markets",
+      "description": "An insurance mutual reprices coverage each epoch from live prediction-market odds on the insured event, aligning float returns with crowd-updated risk."
+    },
+    {
+      "name": "Labor-Backed Escrow",
+      "category": "labor",
+      "domain": "labor",
+      "description": "Freelance wages are escrowed in a pooled contract and released by verified work-completion attestations, letting earned-but-unpaid labor collateralize short-term credit."
+    },
+    {
+      "name": "Trade-Corridor Clearing Tokens",
+      "category": "payments",
+      "domain": "global trade",
+      "description": "Bilateral trade corridors mint corridor-specific clearing credits backed by verified export volumes, netting cross-border payments without global stablecoins."
+    },
+    {
+      "name": "Bandwidth Futures Market",
+      "category": "network economics",
+      "domain": "internet",
+      "description": "ISP peering agreements are replaced by an on-chain bandwidth futures market where routes are purchased ahead of congestion windows."
+    },
+    {
+      "name": "AI-Compute Denominated Debt",
+      "category": "financial markets",
+      "domain": "ai productivity",
+      "description": "Loans denominated in units of verified AI training compute, so repayment tracks the falling price of intelligence rather than fiat inflation."
+    },
+    {
+      "name": "Commodity-Volatility Stable Unit",
+      "category": "stablecoins",
+      "domain": "commodities",
+      "description": "A synthetic unit whose value targets a basket of commodity price volatilities, stabilized by volatility harvesting rather than collateral pegging."
+    }
+  ]
+}

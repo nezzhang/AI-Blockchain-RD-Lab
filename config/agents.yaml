@@ -27,6 +27,12 @@ agents:
     tier: medium
     temperature: 0.9
 
+  prior_art:
+    name: "Prior-Art Agent"
+    role: "Determine whether a candidate mechanism already exists in prior art (§12)"
+    tier: strong
+    temperature: 0.3
+
   economist:
     name: "Economist Agent"
     role: "Analyze monetary policy, incentives, liquidity, stability, reflexivity"

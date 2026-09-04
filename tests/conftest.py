@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -15,6 +16,29 @@ def memory_db() -> LabDatabase:
     db = LabDatabase(":memory:")
     db.create_all()
     return db
+
+
+@pytest.fixture()
+def tmp_lab_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Isolated CLI test environment: config dir + private database.
+
+    Monkeypatching CONFIG_DIR alone is NOT enough — an empty config dir
+    makes load_config() fall back to the default `database/lab.db`, which
+    silently reads and writes the real lab database. This fixture writes a
+    lab.yaml pointing storage at a private tmp database so CLI tests can
+    never pollute (or depend on) the real lab state.
+    """
+    import yaml
+
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    db_rel = tmp_path / "lab.db"
+    (config_dir / "lab.yaml").write_text(
+        yaml.safe_dump({"storage": {"database": str(db_rel)}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("blockchain_rd_lab.config.CONFIG_DIR", config_dir)
+    return tmp_path
 
 
 @pytest.fixture()

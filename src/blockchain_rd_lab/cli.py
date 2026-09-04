@@ -283,22 +283,189 @@ def seed(
 
 
 # ---------------------------------------------------------------------------
-# Phase 2+ command stubs (§7) — declared now, implemented later
+# Phase 2: research (implemented)
 # ---------------------------------------------------------------------------
+
+
+def _research_service(mock_fixtures: bool):
+    from blockchain_rd_lab.agents import MockLLMProvider
+    from blockchain_rd_lab.research.service import ResearchService
+
+    db = _db()
+    if mock_fixtures:
+        provider = MockLLMProvider()
+        from blockchain_rd_lab.research.agents import fixture_research_responses
+        from blockchain_rd_lab.schemas import CandidateStatus
+
+        briefs = [
+            _brief_of(c)
+            for c in db.list_candidates(status=CandidateStatus.GENERATED)
+        ]
+        if not briefs:
+            console.print("[yellow]No GENERATED candidates to research.[/yellow]")
+            raise typer.Exit(code=0)
+        for response in fixture_research_responses(briefs):
+            provider.queue_response(response)
+    else:
+        provider = _provider_from_config()
+        if isinstance(provider, MockLLMProvider):
+            console.print(
+                "[red]runtime.llm_provider is 'mock' with no queued responses.[/red]\n"
+                "Use --mock-fixtures for the offline demo, or configure a real\n"
+                "provider in config/lab.yaml (§30)."
+            )
+            raise typer.Exit(code=2)
+    return ResearchService(provider, db, artifacts_dir=REPO_ROOT / "research" / "prior_art")
+
+
+def _brief_of(cand):
+    from blockchain_rd_lab.research import CandidateBrief
+
+    return CandidateBrief.from_candidate(cand)
+
+
+def _run_research(
+    service,
+    candidate_id: str | None,
+    limit: int | None,
+) -> None:
+    if candidate_id is not None:
+        cand = service.database.get_candidate(candidate_id)
+        if cand is None:
+            console.print(f"[red]Candidate {candidate_id!r} not found.[/red]")
+            raise typer.Exit(code=1)
+        results = [service.research_candidate(cand)]
+    else:
+        results = service.research_all(limit=limit)
+
+    table = Table(title=f"Research — {len(results)} candidate(s)")
+    table.add_column("Candidate", style="cyan")
+    table.add_column("Novelty")
+    table.add_column("Coherence", justify="right")
+    table.add_column("Demand", justify="right")
+    table.add_column("Status")
+    for r in results:
+        cand = service.database.get_candidate(r.candidate_id)
+        table.add_row(
+            r.candidate_id,
+            r.prior_art.novelty_class.value if r.prior_art else "—",
+            f"{r.economist.economic_coherence_score:.1f}" if r.economist else "—",
+            f"{r.market.market_demand_score:.1f}" if r.market else "—",
+            cand.status.value if cand else "?",
+        )
+    console.print(table)
+
+    rejected = [r for r in results if r.rejected]
+    if rejected:
+        console.print(f"[red]{len(rejected)} rejected (fatal economic concern):[/red]")
+        for r in rejected:
+            console.print(f"  [red]• {r.candidate_id}: {r.rejection_reason}[/red]")
+    errs = [(r.candidate_id, e) for r in results for e in r.errors]
+    if errs:
+        console.print("[dim]Agent errors (candidates left in place for retry):[/dim]")
+        for cid, e in errs[:10]:
+            console.print(f"  [dim]• {cid}: {e}[/dim]")
 
 
 @app.command("research")
 def research(
     candidate_id: str | None = typer.Argument(default=None),
+    limit: Annotated[int, typer.Option("--limit", "-l", min=1)] = 50,
+    mock_fixtures: Annotated[
+        bool,
+        typer.Option("--mock-fixtures", help="Use offline fixture reports"),
+    ] = False,
 ) -> None:
-    """Run research agents on candidates (Phase 2)."""
-    _not_implemented("research", "PHASE 2 — RESEARCH")
+    """Run Prior-Art, Economist, and Market agents on candidates (Phase 2)."""
+    service = _research_service(mock_fixtures)
+    _run_research(service, candidate_id, limit)
 
 
 @app.command("prior-art")
-def prior_art(candidate_id: str | None = typer.Argument(default=None)) -> None:
-    """Check prior art for candidates (Phase 2)."""
-    _not_implemented("prior-art", "PHASE 2 — RESEARCH")
+def prior_art(
+    candidate_id: str | None = typer.Argument(default=None),
+    limit: Annotated[int, typer.Option("--limit", "-l", min=1)] = 50,
+    mock_fixtures: Annotated[
+        bool,
+        typer.Option("--mock-fixtures", help="Use offline fixture reports"),
+    ] = False,
+) -> None:
+    """Run only the Prior-Art agent on candidates (Phase 2, §12)."""
+    from blockchain_rd_lab.research.service import ResearchService
+
+    db = _db()
+    provider = _provider_from_config()
+    service = ResearchService(provider, db, artifacts_dir=None)
+    if candidate_id is not None:
+        cand = db.get_candidate(candidate_id)
+        if cand is None:
+            console.print(f"[red]Candidate {candidate_id!r} not found.[/red]")
+            raise typer.Exit(code=1)
+        cands = [cand]
+    else:
+        from blockchain_rd_lab.schemas import CandidateStatus
+
+        cands = db.list_candidates(status=CandidateStatus.GENERATED, limit=limit)
+
+    for cand in cands:
+        brief = _brief_of(cand)
+        try:
+            result, _ = service.prior_art_agent.execute(brief)
+            from blockchain_rd_lab.research import PriorArtReport
+
+            if not isinstance(result, PriorArtReport):
+                raise TypeError("PriorArtAgent returned unexpected output type")
+            report = result
+            cand.novelty_class = report.novelty_class
+            cand.novelty_score = report.novelty_score
+            if cand.status.value == "generated":
+                cand.transition(CandidateStatus.RESEARCHING)
+                cand.transition(CandidateStatus.PRIOR_ART_CHECKED)
+            db.save_candidate(cand)
+            service._persist_prior_art(cand.id, report)
+            console.print(
+                f"  {cand.id} — {cand.name}: "
+                f"[cyan]{report.novelty_class.value}[/cyan] "
+                f"(confidence {report.confidence:.2f})"
+            )
+        except Exception as exc:
+            console.print(f"  [red]{cand.id} failed:[/red] {exc}")
+
+
+@app.command("filter")
+def filter_cmd(
+    target: Annotated[int, typer.Option("--target", "-t", min=1)] = 20,
+) -> None:
+    """Deterministic funnel cut: keep top candidates after prior-art (§7)."""
+    from blockchain_rd_lab.research.service import ResearchFilter
+
+    db = _db()
+    outcome = ResearchFilter(target=target).apply(db)
+
+    table = Table(title=f"Filter — {outcome.kept} kept of {outcome.considered}")
+    table.add_column("Metric")
+    table.add_column("Value", justify="right")
+    table.add_row("considered", str(outcome.considered))
+    table.add_row("kept", str(outcome.kept))
+    table.add_row("rejected (class A)", str(outcome.rejected_class_a))
+    table.add_row("rejected (class B)", str(outcome.rejected_class_b))
+    overflow = outcome.rejected - outcome.rejected_class_a - outcome.rejected_class_b
+    table.add_row("rejected (overflow)", str(overflow))
+    console.print(table)
+
+    if outcome.rejected_details:
+        console.print("[dim]Rejections:[/dim]")
+        for d in outcome.rejected_details[:15]:
+            console.print(f"  [dim]• {d}[/dim]")
+    if outcome.kept_ids:
+        console.print("[green]Kept for Phase 3 (formalization):[/green]")
+        for cid in outcome.kept_ids:
+            console.print(f"  [green]•[/green] {cid}")
+
+
+# ---------------------------------------------------------------------------
+# Phase 3+ command stubs (§7) — declared now, implemented later
+# ---------------------------------------------------------------------------
 
 
 @app.command("formalize")

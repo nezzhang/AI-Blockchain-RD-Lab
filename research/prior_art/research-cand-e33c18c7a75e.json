@@ -1,0 +1,157 @@
+{
+  "researched": 19,
+  "candidates": [
+    {
+      "candidate_id": "cand-e33c18c7a75e",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-81eece8ab470",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-84b0ad6d012f",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-6aff3509aeaf",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-a218268ad562",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-fb4bfe53914b",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-06418647c270",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-58d7091eb2a7",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-1acbaa9de0b0",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-045642b91848",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-d14a12373eb5",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-6e9dedb8b844",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-b8188890330a",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-bec3b6e85a91",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-986c8dd65b08",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-f9d0e9af020b",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-db0588dfed1a",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-108293ca9f4f",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-ebab7a8e41db",
+      "novelty_class": "insufficient_evidence",
+      "coherence": 5.0,
+      "demand": 5.0,
+      "rejected": false,
+      "errors": []
+    }
+  ]
+}

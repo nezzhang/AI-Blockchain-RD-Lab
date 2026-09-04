@@ -268,8 +268,8 @@ class Candidate(BaseModel):
         return target
 
 
-def _novelty_score_for(cls_: NoveltyClass) -> float:
-    # Mirrors config/research.yaml novelty_classes; code is authoritative.
+def novelty_score_for(cls_: NoveltyClass) -> float:
+    """Deterministic novelty sub-score per §12 class (code is authoritative)."""
     return {
         NoveltyClass.A: 2.0,
         NoveltyClass.B: 4.0,
@@ -277,6 +277,10 @@ def _novelty_score_for(cls_: NoveltyClass) -> float:
         NoveltyClass.D: 8.5,
         NoveltyClass.E: 5.0,
     }[cls_]
+
+
+# Backwards-compatible private alias.
+_novelty_score_for = novelty_score_for
 
 
 # ---------------------------------------------------------------------------
