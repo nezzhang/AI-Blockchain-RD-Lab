@@ -11,8 +11,8 @@ replacement.
 - Prime directive: *LLM proposes. Code tests. Evidence decides.*
 - Build phase by phase (see [`MASTER BUILD PROMPT.md`](./MASTER%20BUILD%20PROMPT.md) §38).
   Phase 0 = foundation. Phase 1 = discovery. Phase 2 = research. Phase 3 =
-  formalization. Phase 4 = simulation. Phase 5 = adversarial testing (done).
-  No autonomous pipeline yet.
+  formalization. Phase 4 = simulation. Phase 5 = adversarial testing.
+  Phase 6 = ranking (done). No autonomous pipeline yet.
 - All agent output must pass Pydantic validation before storage.
 - Candidate status changes only via `Candidate.transition()` (state machine,
   `src/blockchain_rd_lab/schemas.py`).
@@ -36,6 +36,10 @@ replacement.
   Red-Team agents ("DESTROY THE IDEA", §9); the §20 fatal-flaw gate is
   deterministic code — a fatal verdict only rejects when the strongest
   attack is also profitable; `lab redteam --mock-fixtures` runs offline.
+- Ranking: `src/blockchain_rd_lab/ranking/` — deterministic §19 scoring
+  (11 weighted dimensions, missing dims imputed at 5.0), §20 gate
+  exclusion, stable ranking (score desc, name asc), §7 finalist cut;
+  `lab rank` and `lab score` advance RED_TEAM -> SCORED -> FINALIST.
 - Never issue tokens, deploy contracts, move funds, or spend significant API
   budget without explicit human approval.
 
@@ -58,6 +62,7 @@ make test       # pytest
 - `src/blockchain_rd_lab/formalization/` — Phase 3: Mechanism Designer, MathModel schema + integrity checks, service
 - `src/blockchain_rd_lab/simulation/` — Phase 4: equation interpreter, scenario battery, Monte Carlo, sweeps, Optuna
 - `src/blockchain_rd_lab/redteam/` — Phase 5: adversarial agents, §20 fatal-flaw gate, redteam_results persistence
+- `src/blockchain_rd_lab/ranking/` — Phase 6: deterministic scoring service, ranking, finalist selection
 - `src/blockchain_rd_lab/scoring/` — deterministic scoring engine
 - `src/blockchain_rd_lab/cli.py` — Typer CLI (`lab`)
 - `src/blockchain_rd_lab/testing/` — offline discovery fixtures

@@ -1,0 +1,91 @@
+{
+  "finalists": [
+    {
+      "rank": 1,
+      "candidate_id": "cand-da7a5f5103e3",
+      "name": "Beta Rule",
+      "overall_score": 5.3,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "capital_efficiency",
+        "communication",
+        "economic_coherence",
+        "game_theory",
+        "market_demand",
+        "network_effects",
+        "oracle_feasibility",
+        "security",
+        "technical_feasibility",
+        "viral_potential"
+      ],
+      "status": "scored"
+    },
+    {
+      "rank": 2,
+      "candidate_id": "cand-b5567188d436",
+      "name": "Alpha Rule",
+      "overall_score": 5.1,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "capital_efficiency",
+        "communication",
+        "economic_coherence",
+        "game_theory",
+        "market_demand",
+        "network_effects",
+        "oracle_feasibility",
+        "security",
+        "technical_feasibility",
+        "viral_potential"
+      ],
+      "status": "scored"
+    }
+  ],
+  "ranking": [
+    {
+      "rank": 1,
+      "candidate_id": "cand-da7a5f5103e3",
+      "name": "Beta Rule",
+      "overall_score": 5.3,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "capital_efficiency",
+        "communication",
+        "economic_coherence",
+        "game_theory",
+        "market_demand",
+        "network_effects",
+        "oracle_feasibility",
+        "security",
+        "technical_feasibility",
+        "viral_potential"
+      ],
+      "status": "scored"
+    },
+    {
+      "rank": 2,
+      "candidate_id": "cand-b5567188d436",
+      "name": "Alpha Rule",
+      "overall_score": 5.1,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "capital_efficiency",
+        "communication",
+        "economic_coherence",
+        "game_theory",
+        "market_demand",
+        "network_effects",
+        "oracle_feasibility",
+        "security",
+        "technical_feasibility",
+        "viral_potential"
+      ],
+      "status": "scored"
+    }
+  ],
+  "rejected_by_gate": 0
+}

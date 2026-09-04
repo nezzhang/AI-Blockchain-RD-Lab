@@ -96,14 +96,14 @@ class TestPhaseStubs:
     """Remaining pipeline commands exist as stubs and fail fast (§7)."""
 
     def test_stub_commands_exit_nonzero(self):
-        for cmd in (["rank"], ["report"], ["pipeline"]):
+        for cmd in (["report"], ["pipeline"]):
             result = runner.invoke(app, cmd)
             assert result.exit_code == 2, cmd
             assert "PHASE" in result.output or "later phase" in result.output
 
     def test_stub_mentions_phase(self):
-        result = runner.invoke(app, ["rank"])
-        assert "PHASE 6" in result.output
+        result = runner.invoke(app, ["report"])
+        assert "PHASE 7" in result.output
 
 
 class TestSeedCommand:

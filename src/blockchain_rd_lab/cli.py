@@ -112,10 +112,11 @@ def score(
         raise typer.Exit(code=1)
 
     engine = ScoringEngine(load_scoring_config())
-    result = engine.score(candidate)
+    # Phase 6: scoring advances the state machine (RED_TEAM -> SCORED) and
+    # applies the §20 gate consistently with the ranking service.
+    from blockchain_rd_lab.ranking.service import RankingService
 
-    candidate.overall_score = result.overall_score
-    db.save_candidate(candidate)
+    result = RankingService(db, engine).score_candidate(candidate)
 
     table = Table(title=f"Score — {candidate.name}")
     table.add_column("Dimension")
@@ -737,14 +738,100 @@ def redteam(
 
 
 # ---------------------------------------------------------------------------
-# Phase 6+ command stubs (§7) — declared now, implemented later
+# Phase 6: ranking (implemented)
 # ---------------------------------------------------------------------------
 
 
 @app.command()
-def rank() -> None:
-    """Rank scored candidates (Phase 6)."""
-    _not_implemented("rank", "PHASE 6 — RANKING")
+def rank(
+    finalists: Annotated[
+        int, typer.Option("--finalists", "-f", min=1, help="Top N to select (§7)")
+    ] = 5,
+    limit: Annotated[int, typer.Option("--limit", "-l", min=1)] = 50,
+    no_promote: Annotated[
+        bool,
+        typer.Option(
+            "--no-promote", help="Rank only; do not transition SCORED -> FINALIST"
+        ),
+    ] = False,
+) -> None:
+    """Score red-teamed candidates, rank deterministically, select finalists."""
+    from blockchain_rd_lab.ranking.service import RankingService
+    from blockchain_rd_lab.schemas import CandidateStatus
+
+    db = _db()
+    service = RankingService(db)
+
+    redteam = db.list_candidates(status=CandidateStatus.RED_TEAM, limit=limit)
+    if not redteam and not db.list_candidates(status=CandidateStatus.SCORED, limit=1):
+        console.print(
+            "[yellow]No RED_TEAM or SCORED candidates to rank.[/yellow]\n"
+            "Run `lab redteam` first (Phase 5)."
+        )
+        raise typer.Exit(code=0)
+
+    # Score any RED_TEAM candidates first (deterministic engine, §19).
+    for cand in redteam:
+        service.score_candidate(cand)
+
+    selection = service.select_finalists(
+        count=finalists, promote=not no_promote
+    )
+    ranking = service.rank(limit=limit)
+
+    # Persist the ranking artifact (§21-style run record).
+    import json as _json
+
+    out_dir = REPO_ROOT / "ranking"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "ranking-latest.json").write_text(
+        _json.dumps(
+            {
+                "finalists": [f.model_dump(mode="json") for f in selection.finalists],
+                "ranking": [
+                    r.model_dump(mode="json") for r in ranking.rows
+                ],
+                "rejected_by_gate": ranking.rejected_by_gate,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    table = Table(title=f"Ranking — {len(ranking.rows)} candidate(s)")
+    table.add_column("#", justify="right")
+    table.add_column("Candidate", style="cyan")
+    table.add_column("Name")
+    table.add_column("Score", justify="right")
+    table.add_column("Imputed dims", justify="right")
+    table.add_column("Status")
+    for r in ranking.rows:
+        is_finalist = any(f.candidate_id == r.candidate_id for f in selection.finalists)
+        table.add_row(
+            str(r.rank),
+            r.candidate_id,
+            r.name[:44],
+            f"{r.overall_score:.4f}",
+            str(len(r.imputed_dimensions)) if r.imputed_dimensions else "—",
+            ("[bold]FINALIST[/bold]" if is_finalist else r.status),
+        )
+    console.print(table)
+
+    console.print(
+        f"Finalists (top {len(selection.finalists)} of "
+        f"{selection.available} scored, §7): "
+        + ", ".join(f.candidate_id for f in selection.finalists)
+    )
+    if ranking.rejected_by_gate:
+        console.print(
+            f"[red]{ranking.rejected_by_gate} candidate(s) excluded by the "
+            "fatal-flaw gate (§20).[/red]"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Phase 7+ command stubs (§7) — declared now, implemented later
+# ---------------------------------------------------------------------------
 
 
 @app.command()
