@@ -41,8 +41,8 @@ The autonomous pipeline arrives in later phases (see
 | 2 | Research: prior art, economist, market agents, 100→20 filter | ✅ done |
 | 3 | Formalization: mathematical models | ✅ done |
 | 4 | Simulation: scenario battery, Monte Carlo, sweeps, Optuna | ✅ done |
-| 5 | Adversarial testing: game theory, security, red team | ⬜ next |
-| 6 | Ranking: deterministic scoring, fatal-flaw gate, finalists | ⬜ |
+| 5 | Adversarial testing: Game Theory, Security, Oracle, Red Team agents, §20 fatal-flaw gate | ✅ done |
+| 6 | Ranking: deterministic scoring, fatal-flaw gate, finalists | ⬜ next |
 | 7 | Reporting: automated research reports | ⬜ |
 | 8 | Public research release | ⬜ |
 
@@ -70,6 +70,7 @@ lab research --mock-fixtures              # Phase 2: prior-art + economist + mar
 lab filter --target 20    # deterministic funnel cut after prior-art research (§7)
 lab formalize --mock-fixtures              # Phase 3: math models with variables/equations/assumptions (§13)
 lab simulate [--trials 20] [--steps 60]   # Phase 4: §15 scenario battery + Monte Carlo + sweep (§21 records)
+lab redteam --mock-fixtures              # Phase 5: adversarial agents + §20 fatal-flaw gate (verdict: survives/vulnerable/fatal)
 lab status               # candidate counts by lifecycle state
 lab score <candidate_id> # deterministic scoring with fatal-flaw gate
 lab search <query>       # search stored candidates

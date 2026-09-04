@@ -206,6 +206,22 @@ class MathModelORM(Base):
     )
 
 
+class RedTeamORM(Base):
+    """Adversarial testing results (Phase 5, §9/§17). Append-only."""
+
+    __tablename__ = "redteam_results"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    candidate_id: Mapped[str] = mapped_column(ForeignKey("candidates.id"), index=True)
+    agent_name: Mapped[str] = mapped_column(String(48))  # game_theory/security/oracle/red_team
+    report_json: Mapped[str] = mapped_column(Text)  # validated agent report dump
+    verdict: Mapped[str] = mapped_column(String(24), default="")  # red_team verdict if applicable
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(UTC),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Serialization helpers (Pydantic <-> ORM)
 # ---------------------------------------------------------------------------
@@ -598,6 +614,47 @@ class LabDatabase:
                     "candidate_id": o.candidate_id,
                     "version": int(o.version),
                     "rationale": o.rationale,
+                    "created_at": o.created_at.isoformat() if o.created_at else None,
+                }
+                for o in session.scalars(stmt)
+            ]
+
+    # -- red-team results (Phase 5) ------------------------------------------
+
+    def save_redteam_result(
+        self,
+        candidate_id: str,
+        agent_name: str,
+        report_json: str,
+        verdict: str = "",
+    ) -> int:
+        """Append one validated agent report (§22 redteam_results)."""
+        with self._session() as session:
+            orm = RedTeamORM(
+                candidate_id=candidate_id,
+                agent_name=agent_name,
+                report_json=report_json,
+                verdict=verdict,
+            )
+            session.add(orm)
+            session.commit()
+            return int(orm.id)
+
+    def list_redteam_results(
+        self, candidate_id: str | None = None
+    ) -> list[dict[str, Any]]:
+        """All adversarial reports, newest first."""
+        with self._session() as session:
+            stmt = select(RedTeamORM).order_by(RedTeamORM.id.desc())
+            if candidate_id is not None:
+                stmt = stmt.where(RedTeamORM.candidate_id == candidate_id)
+            return [
+                {
+                    "id": int(o.id),
+                    "candidate_id": o.candidate_id,
+                    "agent_name": o.agent_name,
+                    "report_json": o.report_json,
+                    "verdict": o.verdict,
                     "created_at": o.created_at.isoformat() if o.created_at else None,
                 }
                 for o in session.scalars(stmt)

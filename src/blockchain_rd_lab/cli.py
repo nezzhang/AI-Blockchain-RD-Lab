@@ -652,14 +652,93 @@ def simulate(
 
 
 # ---------------------------------------------------------------------------
-# Phase 5+ command stubs (§7) — declared now, implemented later
+# Phase 5: adversarial testing (implemented)
 # ---------------------------------------------------------------------------
 
 
+def _redteam_provider(mock_fixtures: bool, briefs):
+    """Build the LLM provider; fixture mode queues one report set per brief."""
+    from blockchain_rd_lab.agents import MockLLMProvider
+
+    if mock_fixtures:
+        provider = MockLLMProvider()
+        from blockchain_rd_lab.redteam.agents import fixture_redteam_responses
+
+        if not briefs:
+            console.print("[yellow]No SIMULATING candidates to red-team.[/yellow]")
+            raise typer.Exit(code=0)
+        for response in fixture_redteam_responses(briefs):
+            provider.queue_response(response)
+        return provider
+    provider = _provider_from_config()
+    if isinstance(provider, MockLLMProvider):
+        console.print(
+            "[red]runtime.llm_provider is 'mock' with no queued responses.[/red]\n"
+            "Use --mock-fixtures for the offline demo, or configure a real\n"
+            "provider in config/lab.yaml (§30)."
+        )
+        raise typer.Exit(code=2)
+    return provider
+
+
 @app.command()
-def redteam(candidate_id: str | None = typer.Argument(default=None)) -> None:
-    """Adversarial testing on candidates (Phase 5)."""
-    _not_implemented("redteam", "PHASE 5 — ADVERSARIAL TESTING")
+def redteam(
+    candidate_id: str | None = typer.Argument(default=None),
+    limit: Annotated[int, typer.Option("--limit", "-l", min=1)] = 50,
+    mock_fixtures: Annotated[
+        bool,
+        typer.Option("--mock-fixtures", help="Use offline fixture reports"),
+    ] = False,
+) -> None:
+    """Run Game-Theory/Security/Oracle/Red-Team agents on simulated candidates."""
+    from blockchain_rd_lab.redteam.service import RedTeamService
+    from blockchain_rd_lab.schemas import CandidateStatus
+
+    db = _db()
+    if candidate_id is not None:
+        cand = db.get_candidate(candidate_id)
+        if cand is None:
+            console.print(f"[red]Candidate {candidate_id!r} not found.[/red]")
+            raise typer.Exit(code=1)
+        if cand.status is not CandidateStatus.SIMULATING:
+            console.print(
+                f"[red]Candidate is {cand.status.value!r}; red team requires "
+                "simulating.[/red]"
+            )
+            raise typer.Exit(code=1)
+        briefs = [_brief_of(cand)]
+    else:
+        cands = db.list_candidates(status=CandidateStatus.SIMULATING, limit=limit)
+        briefs = [_brief_of(c) for c in cands]
+
+    provider = _redteam_provider(mock_fixtures, briefs)
+    service = RedTeamService(provider, db, artifacts_dir=REPO_ROOT / "redteam" / "runs")
+
+    if candidate_id is not None and cand is not None:
+        result = service.redteam_candidate(cand)
+        summary_rows = [service._summary_row(cand, result)]
+    else:
+        summary = service.redteam_all(limit=limit)
+        summary_rows = summary.per_candidate
+
+    table = Table(title=f"Red Team — {len(summary_rows)} candidate(s)")
+    table.add_column("Candidate", style="cyan")
+    table.add_column("Verdict")
+    table.add_column("Rejected", justify="right")
+    table.add_column("Errors", justify="right")
+    for row in summary_rows:
+        table.add_row(
+            str(row.get("candidate_id")),
+            str(row.get("verdict") or "—"),
+            "yes" if row.get("rejected") else "no",
+            str(len(row.get("errors", []))),
+        )
+    console.print(table)
+
+
+# ---------------------------------------------------------------------------
+# Phase 6+ command stubs (§7) — declared now, implemented later
+# ---------------------------------------------------------------------------
 
 
 @app.command()

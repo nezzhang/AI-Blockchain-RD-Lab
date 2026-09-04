@@ -1,0 +1,18 @@
+{
+  "attempted": 1,
+  "completed": 1,
+  "rejected": 0,
+  "vulnerable": 1,
+  "survives": 0,
+  "errors": 0,
+  "per_candidate": [
+    {
+      "candidate_id": "cand-136c656d53de",
+      "name": "Batch Candidate",
+      "verdict": "vulnerable",
+      "rejected": false,
+      "errors": [],
+      "confirmed_flaws": []
+    }
+  ]
+}
