@@ -11,7 +11,7 @@ replacement.
 - Prime directive: *LLM proposes. Code tests. Evidence decides.*
 - Build phase by phase (see [`MASTER BUILD PROMPT.md`](./MASTER%20BUILD%20PROMPT.md) §38).
   Phase 0 = foundation. Phase 1 = discovery. Phase 2 = research. Phase 3 =
-  formalization (done). No autonomous pipeline yet.
+  formalization. Phase 4 = simulation (done). No autonomous pipeline yet.
 - All agent output must pass Pydantic validation before storage.
 - Candidate status changes only via `Candidate.transition()` (state machine,
   `src/blockchain_rd_lab/schemas.py`).
@@ -26,6 +26,11 @@ replacement.
   agent + `MathModel` schema (variables/parameters/equations/assumptions,
   §13) + deterministic integrity checks; `lab formalize --mock-fixtures`
   runs offline.
+- Simulation: `src/blockchain_rd_lab/simulation/` — safe equation
+  interpreter + §15 scenario battery (13 scenarios incl. bank run, oracle
+  failure, black swan) + Monte Carlo + parameter sweeps + Optuna (optional);
+  `lab simulate` runs offline; every run persists §21 experiment records
+  (seed, git commit, parameters, results).
 - Never issue tokens, deploy contracts, move funds, or spend significant API
   budget without explicit human approval.
 
@@ -46,6 +51,7 @@ make test       # pytest
 - `src/blockchain_rd_lab/discovery/` — Phase 1: agent, normalizer, deduplicator, service
 - `src/blockchain_rd_lab/research/` — Phase 2: prior-art/economist/market agents, service, deterministic filter
 - `src/blockchain_rd_lab/formalization/` — Phase 3: Mechanism Designer, MathModel schema + integrity checks, service
+- `src/blockchain_rd_lab/simulation/` — Phase 4: equation interpreter, scenario battery, Monte Carlo, sweeps, Optuna
 - `src/blockchain_rd_lab/scoring/` — deterministic scoring engine
 - `src/blockchain_rd_lab/cli.py` — Typer CLI (`lab`)
 - `src/blockchain_rd_lab/testing/` — offline discovery fixtures

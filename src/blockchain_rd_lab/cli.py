@@ -578,14 +578,82 @@ def formalize(
 
 
 # ---------------------------------------------------------------------------
-# Phase 4+ command stubs (§7) — declared now, implemented later
+# Phase 4: simulation (implemented)
 # ---------------------------------------------------------------------------
 
 
 @app.command()
-def simulate(candidate_id: str | None = typer.Argument(default=None)) -> None:
-    """Run simulations on candidates (Phase 4)."""
-    _not_implemented("simulate", "PHASE 4 — SIMULATION")
+def simulate(
+    candidate_id: str | None = typer.Argument(default=None),
+    limit: Annotated[int, typer.Option("--limit", "-l", min=1)] = 50,
+    trials: Annotated[int, typer.Option("--trials", "-t", min=1)] = 30,
+    sweep_points: Annotated[int, typer.Option("--sweep-points", min=2)] = 5,
+    seed: Annotated[int, typer.Option("--seed", min=0)] = 7,
+    steps: Annotated[int, typer.Option("--steps", min=10)] = 120,
+) -> None:
+    """Run §15 scenario battery + Monte Carlo + sweep on formalized candidates."""
+    from blockchain_rd_lab.schemas import CandidateStatus
+    from blockchain_rd_lab.simulation.service import SimulationService
+
+    db = _db()
+    service = SimulationService(db, seed=seed, steps=steps)
+
+    if candidate_id is not None:
+        cand = db.get_candidate(candidate_id)
+        if cand is None:
+            console.print(f"[red]Candidate {candidate_id!r} not found.[/red]")
+            raise typer.Exit(code=1)
+        ok = (CandidateStatus.FORMALIZED, CandidateStatus.SIMULATING)
+        if cand.status not in ok:
+            console.print(
+                f"[red]Candidate is {cand.status.value!r}; simulation requires "
+                "formalized.[/red]"
+            )
+            raise typer.Exit(code=1)
+        outcomes = {
+            cand.id: service.simulate_candidate(
+                cand, mc_trials=trials, sweep_points=sweep_points
+            )
+        }
+    else:
+        outcomes = service.simulate_all(
+            limit=limit,
+            mc_trials=trials,
+            sweep_points=sweep_points,
+            artifacts_dir=REPO_ROOT / "simulation" / "runs",
+        )
+
+    table = Table(title=f"Simulation — {len(outcomes)} candidate(s)")
+    table.add_column("Candidate", style="cyan")
+    table.add_column("MC mean final", justify="right")
+    table.add_column("MC p95", justify="right")
+    table.add_column("Failed scenarios", justify="right")
+    table.add_column("Status", justify="left")
+    for cid, outcome in outcomes.items():
+        cand = db.get_candidate(cid)
+        mc = outcome.get("monte_carlo", {})
+        n_failed = len(outcome.get("hard_failures", [])) or (
+            1 if outcome.get("error") else 0
+        )
+        table.add_row(
+            cid,
+            f"{mc.get('mean_final', float('nan')):.2f}" if mc else "—",
+            f"{mc.get('p95_final', float('nan')):.2f}" if mc else "—",
+            str(n_failed),
+            cand.status.value if cand else "?",
+        )
+    console.print(table)
+
+    for cid, outcome in outcomes.items():
+        if outcome.get("error"):
+            console.print(f"  [red]{cid} failed:[/red] {outcome['error']}")
+        for k, fails in outcome.get("hard_failures", [])[:5]:
+            console.print(f"  [red]{cid} scenario {k}:[/red] {fails[0]}")
+
+
+# ---------------------------------------------------------------------------
+# Phase 5+ command stubs (§7) — declared now, implemented later
+# ---------------------------------------------------------------------------
 
 
 @app.command()
