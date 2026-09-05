@@ -1160,6 +1160,14 @@ def pipeline(
             help="Interrupt after a stage (resume with a later run, §35)",
         ),
     ] = None,
+    budget: Annotated[
+        int,
+        typer.Option(
+            "--budget",
+            min=0,
+            help="Token budget for this run (§31); default from config",
+        ),
+    ] = 2_000_000,
     mock_fixtures: Annotated[
         bool,
         typer.Option("--mock-fixtures", help="Offline demo: fixture LLM responses"),
@@ -1197,10 +1205,22 @@ def pipeline(
         db,
         repo_root=REPO_ROOT,
         research_config=load_research(),
+        token_budget=budget,
     )
     summary = service.run(
         count=count, target=target, finalists=finalists, stop_after=stop_after
     )
+
+    # §31: report the run's token spend + cache savings.
+    state = service.budget.state
+    usage = Table(title="Token usage (§31)")
+    usage.add_column("Metric", style="cyan")
+    usage.add_column("Value", justify="right")
+    usage.add_row("budget", str(state.budget))
+    usage.add_row("spent", str(state.spent))
+    usage.add_row("calls", str(state.calls))
+    usage.add_row("cache hits (free)", str(state.cache_hits))
+    console.print(usage)
 
     table = Table(title="Pipeline run (§34)")
     table.add_column("Stage", style="cyan")

@@ -20,6 +20,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 
 from blockchain_rd_lab.agents.base import LLMProvider
+from blockchain_rd_lab.cost import BudgetExceededError
 from blockchain_rd_lab.database import LabDatabase
 from blockchain_rd_lab.schemas import CandidateStatus
 
@@ -45,6 +46,7 @@ class PipelineSummary(BaseModel):
     finalists: list[str] = Field(default_factory=list)
     recommended_id: str | None = None
     completed: bool = False
+    budget_exhausted: bool = False
 
     @property
     def total_errors(self) -> int:
@@ -74,8 +76,22 @@ class PipelineService:
         database: LabDatabase,
         repo_root: Path,
         research_config: Any = None,
+        token_budget: int | None = None,
+        cache_dir: Path | None = None,
     ) -> None:
-        self.provider = provider
+        """§31 cost control: the provider is wrapped in a BudgetGuard so
+        one run cannot overspend; identical agent calls hit the response
+        cache instead of re-paying. Budget exhausted → fail closed.
+        """
+        from blockchain_rd_lab.cost import BudgetGuard, ResponseCache, TokenBudget
+
+        self.raw_provider = provider
+        budget = TokenBudget(
+            token_budget if token_budget is not None else 2_000_000
+        )
+        cache = ResponseCache(cache_dir or (repo_root / ".cache" / "llm"))
+        self.provider: LLMProvider = BudgetGuard(provider, budget, cache)
+        self.budget = budget
         self.database = database
         self.repo_root = repo_root
         self.research_config = research_config
@@ -288,10 +304,29 @@ class PipelineService:
             ("report", lambda: self._stage_report()),
         ]
         for name, run_stage in stages:
-            stage_result = run_stage()
+            try:
+                stage_result = run_stage()
+            except BudgetExceededError as exc:
+                # §31: the run's token ceiling is crossed. Stop cleanly —
+                # the database state remains resumable with a fresh budget
+                # (§35). Record and stop; do not run further stages.
+                summary.stages.append(
+                    StageResult(
+                        stage=name,
+                        errors=[f"budget exhausted: {exc}"],
+                    )
+                )
+                summary.budget_exhausted = True
+                break
             summary.stages.append(stage_result)
             if stop_after == name:
                 break
+
+        # §31: persist the usage ledger for this run (auditable cost).
+        from blockchain_rd_lab.cost import UsageLedger
+
+        ledger = UsageLedger.from_budget(f"pipeline-{self._run_stamp()}", self.budget)
+        ledger.to_artifact(self.repo_root / "reports" / "usage-latest.json")
 
         from blockchain_rd_lab.reporting.service import ReportBuilder
 
@@ -300,3 +335,9 @@ class PipelineService:
         summary.recommended_id = lab.recommended_id
         summary.completed = stop_after is None
         return summary
+
+    def _run_stamp(self) -> str:
+        """Deterministic-enough run id (time-based, not evidence)."""
+        from datetime import UTC, datetime
+
+        return datetime.now(UTC).strftime("%Y%m%d-%H%M%S")

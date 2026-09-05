@@ -58,6 +58,11 @@ AI agents here.** This file is a convenience summary, not a replacement.
   semantic bridge (shared keywords) + economic compatibility (curated
   control-flow map), emits hints that steer `lab discover --combine`;
   `lab combine` inspects families/pairs. Never random mashups.
+- Cost control: `src/blockchain_rd_lab/cost/` — §31 enforcement: TokenBudget
+  (hard fail-closed ceiling), BudgetGuard provider wrapper (cache + budget
+  on every call), ResponseCache (disk-backed, TTL), UsageLedger
+  (reports/usage-latest.json). Pipeline halts cleanly on exhaustion and
+  resumes with a fresh budget; cache hits are free.
 - Archive: `src/blockchain_rd_lab/archive/` — §26 rejected-mechanisms
   index (ideas/rejected/index.{md,json}) with rejection reasons and §20
   flaw records; failed experiments are a research asset.
@@ -91,6 +96,7 @@ make test       # pytest
 - `src/blockchain_rd_lab/archive/` — Phase 8: §26 rejected-mechanisms index
 - `src/blockchain_rd_lab/improvement/` — §34 improve/retest loop (patched model versions)
 - `src/blockchain_rd_lab/combinator/` — §18 mechanism combination engine (families, pair scoring, hints)
+- `src/blockchain_rd_lab/cost/` — §31 budgets, response cache, usage ledger
 - `src/blockchain_rd_lab/scoring/` — deterministic scoring engine
 - `src/blockchain_rd_lab/cli.py` — Typer CLI (`lab`)
 - `src/blockchain_rd_lab/testing/` — offline discovery fixtures

@@ -13,6 +13,8 @@ venv/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+# LLM response cache (§31) — local machine state, not research evidence
+.cache/
 .coverage
 htmlcov/
 uv.lock

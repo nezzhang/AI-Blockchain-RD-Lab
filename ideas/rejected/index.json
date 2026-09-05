@@ -1,5 +1,14 @@
 [
   {
+    "candidate_id": "cand-9fba1d8cbe98",
+    "name": "Habitat Bond Curve",
+    "category": "ecology",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
     "candidate_id": "cand-a218268ad562",
     "name": "Prediction-Coupled Insurance Float",
     "category": "insurance",
@@ -10,6 +19,15 @@
   },
   {
     "candidate_id": "cand-bec3b6e85a91",
+    "name": "Prediction-Coupled Insurance Float",
+    "category": "insurance",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-94920de262c7",
     "name": "Prediction-Coupled Insurance Float",
     "category": "insurance",
     "status": "rejected",

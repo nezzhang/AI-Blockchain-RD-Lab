@@ -78,6 +78,7 @@ lab discover --combine                   # discovery steered by §18 combination
 lab improve [candidate_id]                # §34: patch red-teamed models (LLM proposes; §13 integrity gates)
 lab retest [candidate_id]                # §34: re-simulate + re-attack patched models (§20 gate re-evaluates)
 lab pipeline --count 10 --mock-fixtures # Phase 8: full §34 loop incl. improve/retest (resumable via --stop-after, §35)
+                                          #   --budget N caps token spend (§31: fail-closed; resumable with a fresh budget)
 lab status               # candidate counts by lifecycle state
 lab score <candidate_id> # deterministic scoring with fatal-flaw gate
 lab search <query>       # search stored candidates
@@ -163,6 +164,26 @@ Evidence decides.**
 
 Every experiment stores seed, parameters, git commit, and results (§21);
 reproducing a run is a lookup, not a guess.
+
+## Cost Control (§31)
+
+The founder has limited capital, so spending is enforced by code, not
+good intentions:
+
+- Every pipeline run wraps its provider in a **BudgetGuard**: a hard token
+  ceiling (`--budget`, default from `config/lab.yaml`) that fails closed —
+  once crossed, the run halts cleanly and the database remains resumable
+  with a fresh budget (§35). No silent overspend.
+- A **disk-backed response cache** memoizes identical agent calls across
+  runs (§31 caching; §32: agents must not repeatedly re-pay for the same
+  research). Cache hits cost zero tokens.
+- A **usage ledger** (`reports/usage-latest.json`) records spend, calls,
+  and cache savings per run — cost evidence is auditable like everything
+  else (§21 spirit).
+
+- Model routing follows §31's tiers (cheap for classification, medium for
+  idea generation, strong for research synthesis, strongest for finalists)
+  via `tier_models` in `config/lab.yaml`.
 
 ## Reproducibility
 

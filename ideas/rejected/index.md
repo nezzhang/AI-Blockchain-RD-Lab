@@ -4,8 +4,10 @@ Failed experiments are a research asset (§26): they record what was considered 
 
 | Candidate | Name | Category | Rejected because |
 |-----------|------|----------|------------------|
+| cand-9fba1d8cbe98 | Habitat Bond Curve | ecology | research-funnel cut (class A/B or §7 overflow); see filter records |
 | cand-a218268ad562 | Prediction-Coupled Insurance Float | insurance | research-funnel cut (class A/B or §7 overflow); see filter records |
 | cand-bec3b6e85a91 | Prediction-Coupled Insurance Float | insurance | research-funnel cut (class A/B or §7 overflow); see filter records |
+| cand-94920de262c7 | Prediction-Coupled Insurance Float | insurance | research-funnel cut (class A/B or §7 overflow); see filter records |
 | cand-7f2f07fd4e9a | Population-Linked Supply | monetary economics | confirmed fatal flaw(s) (game_theory); §20 gate |
 | cand-06418647c270 | Trade-Corridor Clearing Tokens | payments | research-funnel cut (class A/B or §7 overflow); see filter records |
 | cand-f9d0e9af020b | Trade-Corridor Clearing Tokens | payments | research-funnel cut (class A/B or §7 overflow); see filter records |
