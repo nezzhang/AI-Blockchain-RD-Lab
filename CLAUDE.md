@@ -12,7 +12,7 @@ replacement.
 - Build phase by phase (see [`MASTER BUILD PROMPT.md`](./MASTER%20BUILD%20PROMPT.md) §38).
   Phase 0 = foundation. Phase 1 = discovery. Phase 2 = research. Phase 3 =
   formalization. Phase 4 = simulation. Phase 5 = adversarial testing.
-  Phase 6 = ranking (done). No autonomous pipeline yet.
+  Phase 6 = ranking. Phase 7 = reporting (done). No autonomous pipeline yet.
 - All agent output must pass Pydantic validation before storage.
 - Candidate status changes only via `Candidate.transition()` (state machine,
   `src/blockchain_rd_lab/schemas.py`).
@@ -40,6 +40,10 @@ replacement.
   (11 weighted dimensions, missing dims imputed at 5.0), §20 gate
   exclusion, stable ranking (score desc, name asc), §7 finalist cut;
   `lab rank` and `lab score` advance RED_TEAM -> SCORED -> FINALIST.
+- Reporting: `src/blockchain_rd_lab/reporting/` — §23 dossiers (19 fixed
+  sections) + lab funnel report, ASSEMBLED BY CODE from stored evidence
+  (no report-writer LLM; §2); rank-1 finalist is the §7 recommended
+  candidate; `lab report [id]` writes reports/finalists/ + lab-latest.md.
 - Never issue tokens, deploy contracts, move funds, or spend significant API
   budget without explicit human approval.
 
@@ -63,6 +67,7 @@ make test       # pytest
 - `src/blockchain_rd_lab/simulation/` — Phase 4: equation interpreter, scenario battery, Monte Carlo, sweeps, Optuna
 - `src/blockchain_rd_lab/redteam/` — Phase 5: adversarial agents, §20 fatal-flaw gate, redteam_results persistence
 - `src/blockchain_rd_lab/ranking/` — Phase 6: deterministic scoring service, ranking, finalist selection
+- `src/blockchain_rd_lab/reporting/` — Phase 7: dossier + lab report builders, §7 recommendation
 - `src/blockchain_rd_lab/scoring/` — deterministic scoring engine
 - `src/blockchain_rd_lab/cli.py` — Typer CLI (`lab`)
 - `src/blockchain_rd_lab/testing/` — offline discovery fixtures

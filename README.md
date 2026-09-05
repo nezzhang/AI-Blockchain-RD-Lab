@@ -43,8 +43,8 @@ The autonomous pipeline arrives in later phases (see
 | 4 | Simulation: scenario battery, Monte Carlo, sweeps, Optuna | ✅ done |
 | 5 | Adversarial testing: Game Theory, Security, Oracle, Red Team agents, §20 fatal-flaw gate | ✅ done |
 | 6 | Ranking: deterministic scoring, §20 fatal-flaw gate, top-5 finalists | ✅ done |
-| 7 | Reporting: automated research reports | ⬜ next |
-| 8 | Public research release | ⬜ |
+| 7 | Reporting: §23 dossiers (19 sections), lab report, §7 recommendation | ✅ done |
+| 8 | Public research release | ⬜ next |
 
 ## Install
 
@@ -72,6 +72,7 @@ lab formalize --mock-fixtures              # Phase 3: math models with variables
 lab simulate [--trials 20] [--steps 60]   # Phase 4: §15 scenario battery + Monte Carlo + sweep (§21 records)
 lab redteam --mock-fixtures              # Phase 5: adversarial agents + §20 fatal-flaw gate (verdict: survives/vulnerable/fatal)
 lab rank [--finalists 5]                # Phase 6: deterministic scoring + ranking + §7 finalist cut
+lab report [candidate_id]               # Phase 7: §23 finalist dossiers + lab report (reports/finalists/, reports/lab-latest.md)
 lab status               # candidate counts by lifecycle state
 lab score <candidate_id> # deterministic scoring with fatal-flaw gate
 lab search <query>       # search stored candidates

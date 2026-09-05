@@ -830,14 +830,74 @@ def rank(
 
 
 # ---------------------------------------------------------------------------
-# Phase 7+ command stubs (§7) — declared now, implemented later
+# Phase 7: reporting (implemented)
 # ---------------------------------------------------------------------------
 
 
 @app.command()
-def report() -> None:
-    """Generate research reports (Phase 7)."""
-    _not_implemented("report", "PHASE 7 — REPORTING")
+def report(
+    candidate_id: str | None = typer.Argument(default=None),
+    no_dossiers: Annotated[
+        bool,
+        typer.Option("--no-dossiers", help="Skip per-finalist dossiers"),
+    ] = False,
+) -> None:
+    """Assemble research reports from stored evidence (Phase 7, §23)."""
+    from pathlib import Path as _Path
+
+    from blockchain_rd_lab.reporting.service import ReportBuilder
+
+    db = _db()
+    builder = ReportBuilder(db)
+
+    if candidate_id is not None:
+        cand = db.get_candidate(candidate_id)
+        if cand is None:
+            console.print(f"[red]Candidate {candidate_id!r} not found.[/red]")
+            raise typer.Exit(code=1)
+        from blockchain_rd_lab.ranking.service import RankingService
+        from blockchain_rd_lab.schemas import CandidateStatus
+
+        rank = None
+        if cand.status in (CandidateStatus.SCORED, CandidateStatus.FINALIST):
+            ranking = RankingService(db).rank()
+            row = next((r for r in ranking.rows if r.candidate_id == cand.id), None)
+            rank = row.rank if row else None
+        dossier = builder.build_dossier(cand, rank=rank)
+        console.print(dossier.to_markdown())
+        return
+
+    reports_dir = REPO_ROOT / "reports"
+    outcome = builder.write_reports(
+        reports_dir, include_dossiers=not no_dossiers
+    )
+
+    table = Table(title="Reports written")
+    table.add_column("Artifact", style="cyan")
+    table.add_column("Path")
+    for path in outcome.dossiers_written:
+        table.add_row("Finalist dossier", _Path(path).name)
+    if outcome.lab_report_path:
+        table.add_row("Lab report", _Path(outcome.lab_report_path).name)
+    console.print(table)
+
+    from blockchain_rd_lab.schemas import CandidateStatus
+
+    finalists = db.list_candidates(status=CandidateStatus.FINALIST)
+    if not finalists:
+        console.print(
+            "[yellow]No finalists yet; dossiers were skipped. Run `lab rank` "
+            "first (Phase 6).[/yellow]"
+        )
+    if outcome.recommended_id:
+        console.print(
+            f"[bold]Recommended candidate (§7):[/bold] {outcome.recommended_id}"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Phase 8+ command stubs (§7) — declared now, implemented later
+# ---------------------------------------------------------------------------
 
 
 @app.command()
