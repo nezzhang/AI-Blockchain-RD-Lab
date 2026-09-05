@@ -76,15 +76,19 @@ class SimulationService:
         parameters: dict[str, Any],
         results: dict[str, Any],
         dataset: str,
+        model_version: int = 1,
     ) -> ExperimentRecord:
+        # §21 append-only discipline: a re-simulated model version gets a
+        # distinct experiment id so the v1 evidence is never clobbered.
+        suffix = "" if model_version <= 1 else f"-v{model_version}"
         return ExperimentRecord(
-            experiment_id=experiment_id,
+            experiment_id=f"{experiment_id}{suffix}",
             candidate_id=candidate_id,
             timestamp=utcnow(),
             git_commit=_git_commit(),
             parameters=parameters,
             dataset=dataset,
-            model="mathmodel-latest",
+            model=f"mathmodel-v{model_version}",
             seed=self.seed,
             simulation_version=SIMULATION_VERSION,
             results=results,
@@ -103,6 +107,7 @@ class SimulationService:
         Returns {"scenarios": {...}, "monte_carlo": {...}, "sweep": [...]}.
         """
         model = self.load_model(candidate)
+        model_version = int(getattr(model, "version", 1))
 
         # Enter SIMULATING once (idempotent for re-runs).
         if candidate.status is CandidateStatus.FORMALIZED:
@@ -127,6 +132,7 @@ class SimulationService:
             self._record(
                 candidate_id=candidate.id,
                 experiment_id=f"{candidate.id}-scenarios",
+                model_version=model_version,
                 parameters={"steps": self.steps, "scenarios": [k.value for k in battery.scenarios]},
                 results=scenario_results,
                 dataset=f"synthetic-anchor-v1/seed-{self.seed}",
@@ -154,6 +160,7 @@ class SimulationService:
             self._record(
                 candidate_id=candidate.id,
                 experiment_id=f"{candidate.id}-montecarlo",
+                model_version=model_version,
                 parameters={"trials": mc_trials, "steps": self.steps},
                 results=mc_results,
                 dataset=f"synthetic-anchor-v1/seed-{self.seed}-mc{mc_trials}",
@@ -183,6 +190,7 @@ class SimulationService:
             self._record(
                 candidate_id=candidate.id,
                 experiment_id=f"{candidate.id}-sweep",
+                model_version=model_version,
                 parameters={"sweep_points": sweep_points, "steps": self.steps},
                 results={"points": sweep_results},
                 dataset=f"synthetic-anchor-v1/seed-{self.seed}",

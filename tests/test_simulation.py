@@ -310,6 +310,8 @@ class TestSimulationService:
             assert e.git_commit  # recorded (unknown only outside a repo)
             assert e.simulation_version
             assert e.timestamp is not None
+            # v1 records carry the un-suffixed id and the version tag
+            assert e.model == "mathmodel-v1"
 
         # §11: FORMALIZED → SIMULATING
         stored = memory_db.get_candidate(cand.id)
@@ -319,6 +321,46 @@ class TestSimulationService:
         assert len(outcome["scenarios"]) == 13
         assert outcome["monte_carlo"]["trials"] == 5
         assert len(outcome["sweep"]) == 3
+
+    def test_resimulation_of_new_version_is_append_only(self, memory_db):
+        """§21: re-simulating a patched model v2 must not clobber v1 runs."""
+        cand = self._prepared(memory_db)
+        service = SimulationService(memory_db, seed=7, steps=30)
+
+        # First run on v1.
+        service.simulate_candidate(cand, mc_trials=3, sweep_points=2)
+        first = {e.experiment_id for e in memory_db.iter_experiments(cand.id)}
+        assert first == {
+            f"{cand.id}-scenarios",
+            f"{cand.id}-montecarlo",
+            f"{cand.id}-sweep",
+        }
+
+        # Store a v2 model (§34 improve) and re-simulate.
+        brief = CandidateBrief.from_candidate(cand)
+        v2 = model_from_dict(build_math_model_fixture(brief))
+        v2_dump = v2.model_dump(mode="json")
+        v2_dump["version"] = 2
+        memory_db.save_math_model(
+            cand.id,
+            json.dumps(v2_dump),
+            "patched model v2 (test)",
+            version=2,
+        )
+        service.simulate_candidate(cand, mc_trials=3, sweep_points=2)
+
+        all_ids = {e.experiment_id for e in memory_db.iter_experiments(cand.id)}
+        # Both versions' records persist (append-only §21).
+        assert all_ids == {
+            f"{cand.id}-scenarios",
+            f"{cand.id}-montecarlo",
+            f"{cand.id}-sweep",
+            f"{cand.id}-scenarios-v2",
+            f"{cand.id}-montecarlo-v2",
+            f"{cand.id}-sweep-v2",
+        }
+        v2_records = [e for e in memory_db.iter_experiments(cand.id) if e.model == "mathmodel-v2"]
+        assert len(v2_records) == 3
 
     def test_hard_failure_marks_failed(self, memory_db):
         from blockchain_rd_lab.formalization import ModelEquation

@@ -738,6 +738,160 @@ def redteam(
 
 
 # ---------------------------------------------------------------------------
+# §34 loop: improve + retest (implemented)
+# ---------------------------------------------------------------------------
+
+
+@app.command()
+def improve(
+    candidate_id: str | None = typer.Argument(default=None),
+    limit: Annotated[int, typer.Option("--limit", "-l", min=1)] = 50,
+    mock_fixtures: Annotated[
+        bool,
+        typer.Option("--mock-fixtures", help="Use the offline fixture patch"),
+    ] = False,
+) -> None:
+    """Propose patched models for red-teamed candidates (§34 improve).
+
+    RED_TEAM -> IMPROVEMENT -> RETEST. The patched model must pass the
+    same §13 integrity checks as any formalization (§2: the LLM never
+    bypasses validation).
+    """
+    from blockchain_rd_lab.improvement.service import ImprovementService
+    from blockchain_rd_lab.schemas import CandidateStatus
+
+    db = _db()
+    if candidate_id is not None:
+        cand = db.get_candidate(candidate_id)
+        if cand is None:
+            console.print(f"[red]Candidate {candidate_id!r} not found.[/red]")
+            raise typer.Exit(code=1)
+        if cand.status is not CandidateStatus.RED_TEAM:
+            console.print(
+                f"[red]Candidate is {cand.status.value!r}; improve requires "
+                "red_team.[/red]"
+            )
+            raise typer.Exit(code=1)
+
+    provider = _improve_provider(mock_fixtures)
+    service = ImprovementService(provider, db)
+
+    if candidate_id is not None and cand is not None:
+        outcomes = [service.improve_candidate(cand, offline=mock_fixtures)]
+        attempted = 1
+    else:
+        summary = service.improve_all(limit=limit, offline=mock_fixtures)
+        outcomes = summary.per_candidate
+        attempted = summary.attempted
+
+    table = Table(title=f"Improve — {attempted} candidate(s)")
+    table.add_column("Candidate", style="cyan")
+    table.add_column("Improved")
+    table.add_column("New version", justify="right")
+    table.add_column("Attacks fixed", justify="right")
+    table.add_column("Reason / errors")
+    for o in outcomes:
+        reason = o.rejected_reason or "; ".join(o.errors) or "—"
+        table.add_row(
+            o.candidate_id,
+            "yes" if o.improved else "no",
+            str(o.new_version or "—"),
+            str(o.attacks_addressed or "—"),
+            reason[:80],
+        )
+    console.print(table)
+
+
+@app.command()
+def retest(
+    candidate_id: str | None = typer.Argument(default=None),
+    limit: Annotated[int, typer.Option("--limit", "-l", min=1)] = 50,
+    mock_fixtures: Annotated[
+        bool,
+        typer.Option("--mock-fixtures", help="Use offline fixture reviews"),
+    ] = False,
+) -> None:
+    """Re-simulate and re-attack improved candidates (§34 re-simulate).
+
+    RETEST -> SIMULATING -> RED_TEAM (or REJECTED by the §20 gate). The
+    patched model re-runs the same §15 battery and faces fresh adversarial
+    review — evidence decides (§2).
+    """
+    from blockchain_rd_lab.improvement.retest import RetestService
+    from blockchain_rd_lab.schemas import CandidateStatus
+
+    db = _db()
+    if candidate_id is not None:
+        cand = db.get_candidate(candidate_id)
+        if cand is None:
+            console.print(f"[red]Candidate {candidate_id!r} not found.[/red]")
+            raise typer.Exit(code=1)
+        if cand.status is not CandidateStatus.RETEST:
+            console.print(
+                f"[red]Candidate is {cand.status.value!r}; retest requires "
+                "retest (run `lab improve` first).[/red]"
+            )
+            raise typer.Exit(code=1)
+
+    if mock_fixtures:
+        from blockchain_rd_lab.testing.pipeline_fixtures import (
+            build_pipeline_provider,
+        )
+
+        provider = build_pipeline_provider()
+    else:
+        provider = _provider_from_config()
+    service = RetestService(
+        provider, db, redteam_artifacts_dir=REPO_ROOT / "redteam" / "runs"
+    )
+
+    if candidate_id is not None and cand is not None:
+        outcomes = [service.retest_candidate(cand)]
+        attempted = 1
+    else:
+        summary = service.retest_all(limit=limit)
+        outcomes = summary.per_candidate
+        attempted = summary.attempted
+
+    table = Table(title=f"Retest — {attempted} candidate(s)")
+    table.add_column("Candidate", style="cyan")
+    table.add_column("Re-simulated")
+    table.add_column("Re-attacked")
+    table.add_column("Final status")
+    table.add_column("Errors")
+    for o in outcomes:
+        table.add_row(
+            o.candidate_id,
+            "yes" if o.resimulated else "no",
+            "yes" if o.re_attacked else "no",
+            o.final_status or "—",
+            "; ".join(e[:60] for e in o.errors) or "—",
+        )
+    console.print(table)
+
+
+def _improve_provider(mock_fixtures: bool):
+    """Offline improvement uses the schema-aware fixture provider."""
+    if mock_fixtures:
+        from blockchain_rd_lab.testing.pipeline_fixtures import (
+            build_pipeline_provider,
+        )
+
+        return build_pipeline_provider()
+    from blockchain_rd_lab.agents import MockLLMProvider
+
+    provider = _provider_from_config()
+    if isinstance(provider, MockLLMProvider):
+        console.print(
+            "[red]runtime.llm_provider is 'mock' with no queued responses.[/red]\n"
+            "Use --mock-fixtures for the offline demo, or configure a real\n"
+            "provider in config/lab.yaml (§30)."
+        )
+        raise typer.Exit(code=2)
+    return provider
+
+
+# ---------------------------------------------------------------------------
 # Phase 6: ranking (implemented)
 # ---------------------------------------------------------------------------
 

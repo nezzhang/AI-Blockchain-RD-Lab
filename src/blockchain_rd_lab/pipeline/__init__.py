@@ -62,6 +62,8 @@ class PipelineService:
         "formalize",
         "simulate",
         "redteam",
+        "improve",
+        "retest",
         "score",
         "report",
     )
@@ -186,6 +188,44 @@ class PipelineService:
                 result.errors.append(f"{row['candidate_id']}: {row['errors'][0]}")
         return result
 
+    def _stage_improve(self) -> StageResult:
+        from blockchain_rd_lab.improvement.service import ImprovementService
+
+        result = StageResult(stage="improve")
+        redteam = self.database.list_candidates(status=CandidateStatus.RED_TEAM)
+        if not redteam:
+            result.skipped = True
+            return result
+        service = ImprovementService(self.provider, self.database)
+        summary = service.improve_all(limit=None)
+        result.processed = summary.attempted
+        result.advanced = summary.improved
+        for row in summary.per_candidate:
+            if row.errors:
+                result.errors.append(f"{row.candidate_id}: {row.errors[0]}")
+        return result
+
+    def _stage_retest(self) -> StageResult:
+        from blockchain_rd_lab.improvement.retest import RetestService
+
+        result = StageResult(stage="retest")
+        pending = self.database.list_candidates(status=CandidateStatus.RETEST)
+        if not pending:
+            result.skipped = True
+            return result
+        service = RetestService(
+            self.provider,
+            self.database,
+            redteam_artifacts_dir=self.repo_root / "redteam" / "runs",
+        )
+        summary = service.retest_all(limit=None)
+        result.processed = summary.attempted
+        result.advanced = summary.completed
+        for row in summary.per_candidate:
+            if row.errors:
+                result.errors.append(f"{row.candidate_id}: {row.errors[0]}")
+        return result
+
     def _stage_score(self, finalists: int) -> StageResult:
         from blockchain_rd_lab.ranking.service import RankingService
 
@@ -242,6 +282,8 @@ class PipelineService:
             ("formalize", lambda: self._stage_formalize()),
             ("simulate", lambda: self._stage_simulate()),
             ("redteam", lambda: self._stage_redteam()),
+            ("improve", lambda: self._stage_improve()),
+            ("retest", lambda: self._stage_retest()),
             ("score", lambda: self._stage_score(finalists)),
             ("report", lambda: self._stage_report()),
         ]

@@ -85,8 +85,8 @@
   publication → community criticism → prototype → testnet → only then
   consider token).
 - No charts in reports (deterministic Markdown tables carry the data).
-- IMPROVEMENT/RETEST loop stages (§11/§34) not automated — the pipeline
-  stops at report, which matches §38's phase scope.
+- (None — the IMPROVEMENT/RETEST loop stages were automated in the
+  follow-up commit; see below.)
 
 ## Known Limitations
 
@@ -96,8 +96,8 @@
 - Resume relies on status granularity: a candidate mid-stage (e.g. one
   of three research agents done) restarts its whole stage on resume —
   acceptable per §35 (no progress *lost*, possibly re-worked).
-- The §34 "Improve / Re-test" stages of the master plan are future work;
-  the state machine already has IMPROVEMENT/RETEST statuses reserved.
+- Resumability is status-granular: a candidate mid-stage restarts that
+  whole stage on resume — no progress lost, possibly re-worked (§35).
 - Archive reasons for unresearched (class-E) rejections are coarse — the
   filter-stage details live in run records, not persisted per candidate.
 
@@ -108,3 +108,36 @@ surface is complete with no stubs. The lab runs its full deterministic
 research loop offline, every phase honors the prime directive (§2), and
 the repository carries its research record — including failures — as
 the public artifact (§26).
+
+
+## Follow-up: the §34 Improve → Re-simulate loop (closing the full cycle)
+
+The initial Phase 8 pipeline stopped at redteam → score. The master
+loop (§3/§34) requires IMPROVE → RE-SIMULATE between them, and §11
+reserved the statuses. Implemented as a follow-up commit:
+
+| Component | File(s) | Notes |
+|-----------|---------|-------|
+| Improvement Agent + proposal schema | `improvement/agents.py`, `improvement/__init__.py` | LLM proposes a patched MathModel v(n+1) + an explicit account of which attacks it fixes; proposals that fix nothing are invalid (§29 honesty) |
+| ImprovementService | `improvement/service.py` | Deterministic gate: patched model must pass the SAME §13 integrity checks (undeclared symbols → reject, candidate stays RED_TEAM); findings extracted from stored adversarial reports (profitable attacks only); RED_TEAM → IMPROVEMENT → RETEST (§11); §35 isolation |
+| RetestService | `improvement/retest.py` | RETEST → SIMULATING: re-runs the §15 battery + MC + sweep over v(n+1) with fresh §21 records, then a FRESH adversarial review; the §20 gate re-evaluates (fatal+profitable → REJECTED) |
+| §21 append-only fix | `simulation/service.py` | Found & fixed a data-loss bug: re-simulations OVERWROTE v1 experiment records (`save_experiment` merges by experiment_id). Records now carry the model version (`{id}-scenarios-v{n}`, `model=mathmodel-v{n}`) so every version's evidence persists |
+| CLI | `cli.py` | `lab improve [id]` / `lab retest [id]` (+ batches, `--mock-fixtures`); retest uses the schema-aware fixture provider for offline runs |
+| Pipeline | `pipeline/__init__.py` | STAGES now: discover → research → filter → formalize → simulate → redteam → **improve** → **retest** → score → report; interruption/resume covers the loop (stop-after-improve leaves RETEST candidates; next run resumes) |
+
+Offline fixture: `build_improvement_fixture` patches the supply rule with
+a hard single-step cap `c_max` + EMA anchor smoothing — a *replacement*
+of the S_t1 rule (not a duplicate), §13 open questions preserved + one
+new honest question recorded. The patched model executes cleanly across
+all 13 §15 scenarios.
+
+E2E (`database/lab.db`): full pipeline with improve/retest — 3 improved
+(v2 stored), 3 retested (re-simulated + re-attacked, all survived to
+RED_TEAM → scored); single-candidate `lab improve`/`lab retest` round
+trips to v3 with both versions' experiment records persisted.
+
+Tests: 257 passing (+16 improvement tests: proposal schema honesty,
+fixture integrity (replaces rule, no undeclared symbols, §13 question),
+service transitions/status-gates/§13-fail-closed/batch isolation,
+retest full loop + status gate, pipeline stage order + loop resume,
+prompt carries model + findings; +1 §21 append-only regression test).

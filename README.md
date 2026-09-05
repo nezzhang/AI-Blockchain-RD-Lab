@@ -73,7 +73,9 @@ lab simulate [--trials 20] [--steps 60]   # Phase 4: §15 scenario battery + Mon
 lab redteam --mock-fixtures              # Phase 5: adversarial agents + §20 fatal-flaw gate (verdict: survives/vulnerable/fatal)
 lab rank [--finalists 5]                # Phase 6: deterministic scoring + ranking + §7 finalist cut
 lab report [candidate_id]               # Phase 7: §23 finalist dossiers + lab report (reports/finalists/, reports/lab-latest.md)
-lab pipeline --count 10 --mock-fixtures # Phase 8: full §34 loop (resumable via --stop-after, §35)
+lab improve [candidate_id]                # §34: patch red-teamed models (LLM proposes; §13 integrity gates)
+lab retest [candidate_id]                # §34: re-simulate + re-attack patched models (§20 gate re-evaluates)
+lab pipeline --count 10 --mock-fixtures # Phase 8: full §34 loop incl. improve/retest (resumable via --stop-after, §35)
 lab status               # candidate counts by lifecycle state
 lab score <candidate_id> # deterministic scoring with fatal-flaw gate
 lab search <query>       # search stored candidates
@@ -146,7 +148,11 @@ Evidence decides.**
 5. **Adversarial review** (LLM) attacks the mechanism; the §20 fatal-flaw
    gate is deterministic code — a fatal verdict rejects only when the
    strongest attack is also profitable.
-6. **Scoring, ranking, and reports** are entirely deterministic — the
+6. **Improvement loop** (LLM proposes, code gates): vulnerable mechanisms
+   get a patched model v(n+1) that must pass the same §13 integrity checks,
+   then re-run the §15 battery and a fresh adversarial review — the full
+   §34 RED_TEAM → IMPROVEMENT → RETEST → SIMULATING → RED_TEAM loop.
+7. **Scoring, ranking, and reports** are entirely deterministic — the
    §23 dossiers are assembled by code from stored evidence, with no
    report-writer LLM anywhere.
 

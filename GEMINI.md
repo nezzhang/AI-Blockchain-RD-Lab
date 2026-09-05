@@ -43,9 +43,15 @@ AI agents here.** This file is a convenience summary, not a replacement.
   (no report-writer LLM; §2); rank-1 finalist is the §7 recommended
   candidate; `lab report [id]` writes reports/finalists/ + lab-latest.md.
 - Pipeline: `src/blockchain_rd_lab/pipeline/` — §34 full loop (discover →
-  research → filter → formalize → simulate → redteam → score → report);
-  resumable by status (§35: the database is the checkpoint);
-  `lab pipeline --count N --mock-fixtures [--stop-after stage]`.
+  research → filter → formalize → simulate → redteam → improve → retest →
+  score → report); resumable by status (§35: the database is the
+  checkpoint); `lab pipeline --count N --mock-fixtures [--stop-after stage]`.
+- Improvement loop: `src/blockchain_rd_lab/improvement/` — §34 improve +
+  retest stages: the Improvement Agent (LLM) proposes a patched MathModel
+  v(n+1) addressing profitable attacks; deterministic §13 integrity checks
+  gate it; RETEST re-simulates (§15 battery) and re-attacks (fresh red
+  team, §20 gate re-evaluates). RED_TEAM → IMPROVEMENT → RETEST →
+  SIMULATING → RED_TEAM; `lab improve`/`lab retest` (offline fixtures).
 - Archive: `src/blockchain_rd_lab/archive/` — §26 rejected-mechanisms
   index (ideas/rejected/index.{md,json}) with rejection reasons and §20
   flaw records; failed experiments are a research asset.
@@ -77,6 +83,7 @@ make test       # pytest
 - `src/blockchain_rd_lab/reporting/` — Phase 7: dossier + lab report builders, §7 recommendation
 - `src/blockchain_rd_lab/pipeline/` — Phase 8: §34 resumable pipeline orchestration
 - `src/blockchain_rd_lab/archive/` — Phase 8: §26 rejected-mechanisms index
+- `src/blockchain_rd_lab/improvement/` — §34 improve/retest loop (patched model versions)
 - `src/blockchain_rd_lab/scoring/` — deterministic scoring engine
 - `src/blockchain_rd_lab/cli.py` — Typer CLI (`lab`)
 - `src/blockchain_rd_lab/testing/` — offline discovery fixtures

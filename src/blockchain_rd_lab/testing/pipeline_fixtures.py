@@ -111,6 +111,27 @@ class PipelineFixtureProvider(MockLLMProvider):
             }[schema_name]
             return build_redteam_fixture(brief)[key]
 
+        if schema_name == "ImprovementProposal":
+            from blockchain_rd_lab.improvement.agents import build_improvement_fixture
+            from blockchain_rd_lab.research import CandidateBrief
+
+            user_text = next(m.content for m in messages if m.role == "user")
+            # The current model is embedded as pretty JSON — recover it
+            # deterministically for the fixture patcher.
+            import re as _re
+
+            m = _re.search(
+                r"CURRENT MODEL \(version \d+\):\n(\{.*\})\n\nADVERSARIAL",
+                user_text,
+                flags=_re.DOTALL,
+            )
+            if not m:
+                raise ValueError("improvement fixture could not locate current model")
+            current = json.loads(m.group(1))
+            brief = CandidateBrief.model_validate(_brief_dict(messages))
+            findings = [{"agent": "red_team", "vector": "anchor spike manipulation"}]
+            return dict(build_improvement_fixture(brief, current, findings))
+
         # Unknown schema: no fixture available — fail closed (§30) rather
         # than emit digest garbage that would masquerade as evidence.
         raise ValueError(
