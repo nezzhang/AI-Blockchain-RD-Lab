@@ -232,6 +232,48 @@ class PipelineService:
                 result.errors.append(f"{row.candidate_id}: {row.errors[0]}")
         return result
 
+    def _improvement_blocked(self) -> set[str]:
+        """§35 honesty gate: candidates whose improvement errored.
+
+        A RED_TEAM candidate whose improve attempt ENDED IN ERROR (pending
+        bridge answer, LLMError, validation failure) must NOT be scored
+        — scoring it would finalize an unimproved model while an authored
+        fix sits orphaned (the round-1/round-2 bridge race). Held
+        candidates stay RED_TEAM and resolve on the next resumed run.
+        """
+        import json as _json
+
+        from blockchain_rd_lab.improvement.service import (
+            ImprovementService,
+            _fixable_findings,
+            _matches_any,
+        )
+
+        redteam = self.database.list_candidates(status=CandidateStatus.RED_TEAM)
+        if not redteam:
+            return set()
+        service = ImprovementService(self.provider, self.database)
+        blocked: set[str] = set()
+        for cand in redteam:
+            findings = _fixable_findings(
+                self.database.list_redteam_results(candidate_id=cand.id)
+            )
+            if not findings:
+                continue
+            current = self.database.get_latest_math_model(cand.id)
+            if current is None:
+                continue
+            addressed = service._addressed_attacks(
+                cand.id, int(_json.loads(current).get("version", 1))
+            )
+            fresh = [f for f in findings if not _matches_any(f, addressed)]
+            if fresh:
+                # Fresh findings exist but the candidate is still RED_TEAM:
+                # its improve attempt did not complete (pending/failed) on
+                # the latest run — hold it.
+                blocked.add(cand.id)
+        return blocked
+
     def _stage_retest(self) -> StageResult:
         from blockchain_rd_lab.improvement.retest import RetestService
 
@@ -268,10 +310,19 @@ class PipelineService:
             # allow resume when candidates are already SCORED/FINALIST
             result.skipped = True
             return result
-        for cand in redteam:
+        blocked = self._improvement_blocked()
+        scoreable = [c for c in redteam if c.id not in blocked]
+        held = [c for c in redteam if c.id in blocked]
+        if held:
+            result.errors.append(
+                f"{len(held)} RED_TEAM candidate(s) held from scoring — "
+                "improvement not yet resolved (pending/failed); they remain "
+                "RED_TEAM for the next run (§35)"
+            )
+        for cand in scoreable:
             service.score_candidate(cand)
         selection = service.select_finalists(count=finalists)
-        result.processed = len(redteam)
+        result.processed = len(scoreable)
         result.advanced = len(selection.finalists)
         return result
 

@@ -38,6 +38,11 @@ The improvement loop now consults the knowledge graph:
 - **Prior fixes as context** — the improver's prompt carries how
   similar attacks were fixed on OTHER candidates (§32: reuse what
   worked instead of re-deriving defenses), capped at 5 records.
+- **Score-stage honesty gate (§35)** — a RED_TEAM candidate whose
+  improvement is unresolved (fresh profitable findings remain) is
+  HELD at RED_TEAM and never scored: the score stage can no longer
+  finalize an unfixed model while an authored fix sits pending
+  (the round-1/round-2 bridge race, now impossible).
 - **Deterministic convergence** — a finding whose attack the CURRENT
   model version already ADDRESSES (per §33 ADDRESSES edges, token-
   matched at Jaccard ≥ 0.5) is filtered BEFORE the improver runs;
