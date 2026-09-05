@@ -193,6 +193,26 @@ good intentions:
 - The research loop never averages away fatal flaws (§20) and never hides
   failed experiments (§26, §29).
 
+## Research Knowledge Graph (§33)
+
+Every piece of stored evidence — candidates, prior-art sources, math
+model versions, §21 experiment records, adversarial attack vectors,
+and §34 improvement rationales — is linked into one reusable graph:
+
+```
+Idea ↔ Source ↔ Mechanism ↔ Simulation ↔ Attack ↔ Improvement
+```
+
+- `lab graph` — node/edge inventory + artifact export
+  (`reports/graph-latest.json`)
+- `lab graph <idea_id>` — the full §33 chain for one idea
+- `lab graph --similar-attack "..."` — §32 reuse: has a similar
+  attack been recorded before, and how was it fixed?
+
+The graph is DERIVED and deterministic (§2): rebuild over the same
+database yields the identical graph. It is how future agents consult
+previous discoveries instead of re-deriving them.
+
 ## Research Archive
 
 - `reports/finalists/` — §23 dossiers per finalist

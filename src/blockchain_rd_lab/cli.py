@@ -343,6 +343,105 @@ def combine(
         )
 
 
+@app.command("graph")
+def graph(
+    candidate_id: Annotated[
+        str | None,
+        typer.Argument(help="Show only this idea's §33 subgraph"),
+    ] = None,
+    similar_attack: Annotated[
+        str | None,
+        typer.Option(
+            "--similar-attack", help="Find historically similar attacks (§32 reuse)"
+        ),
+    ] = None,
+    no_artifact: Annotated[
+        bool, typer.Option("--no-artifact", help="Skip writing graph-latest.json")
+    ] = False,
+) -> None:
+    """Inspect the §33 research knowledge graph (derived, deterministic)."""
+    import json as _json
+
+    from blockchain_rd_lab.graph.builder import GraphBuilder
+
+    db = _db()
+    builder = GraphBuilder(db)
+    g = builder.build()
+
+    if candidate_id is not None:
+        node = g.node_by_id(candidate_id)
+        if node is None:
+            console.print(f"[red]Idea {candidate_id!r} not in the graph.[/red]")
+            raise typer.Exit(code=1)
+        sub = g.subgraph_for_idea(candidate_id)
+        summary = builder.summary(sub)
+        console.print(
+            f"[bold]§33 subgraph for {candidate_id}[/bold] "
+            f"({summary.nodes} nodes, {summary.edges} edges)"
+        )
+        for e in sub.edges:
+            src = sub.node_by_id(e.source)
+            tgt = sub.node_by_id(e.target)
+            src_kind = src.kind.value if src else "?"
+            tgt_kind = tgt.kind.value if tgt else "?"
+            console.print(
+                f"  • {e.source} -[{e.kind.value}]-> {e.target}"
+                f"  [dim]{src_kind}→{tgt_kind}[/dim]"
+            )
+        return
+
+    if similar_attack is not None:
+        hits = builder.similar_attacks(g, similar_attack, limit=5)
+        if not hits:
+            console.print("[dim]No similar attacks on record.[/dim]")
+            return
+        table = Table(title=f"Similar attacks (§32 reuse) — {len(hits)}")
+        table.add_column("Attack", style="cyan")
+        table.add_column("Idea")
+        table.add_column("Fixed")
+        table.add_column("Fix summary")
+        for h in hits:
+            table.add_row(
+                h.attack_label[:60],
+                h.attacked_idea,
+                "yes" if h.fixed_by else "no",
+                (h.fix_summary or "—")[:60],
+            )
+        console.print(table)
+        return
+
+    summary = builder.summary(g)
+    table = Table(
+        title=f"Knowledge graph (§33) — {summary.nodes} nodes, {summary.edges} edges"
+    )
+    table.add_column("Node kind", style="cyan")
+    table.add_column("Count", justify="right")
+    for kind, count in sorted(summary.by_kind.items()):
+        table.add_row(kind, str(count))
+    table.add_row("[bold]attacks with fixes[/bold]", f"[bold]{summary.attacks_with_fixes}[/bold]")
+    console.print(table)
+
+    edge_kinds: dict[str, int] = {}
+    for e in g.edges:
+        edge_kinds[e.kind.value] = edge_kinds.get(e.kind.value, 0) + 1
+    edges_table = Table(title="Relationships")
+    edges_table.add_column("Edge kind", style="cyan")
+    edges_table.add_column("Count", justify="right")
+    for kind, count in sorted(edge_kinds.items()):
+        edges_table.add_row(kind, str(count))
+    console.print(edges_table)
+
+    if not no_artifact:
+        artifact = REPO_ROOT / "reports" / "graph-latest.json"
+        payload = {
+            "nodes": [n.model_dump(mode="json") for n in g.nodes],
+            "edges": [e.model_dump(mode="json") for e in g.edges],
+        }
+        artifact.parent.mkdir(parents=True, exist_ok=True)
+        artifact.write_text(_json.dumps(payload, indent=2), encoding="utf-8")
+        console.print(f"[green]Graph artifact:[/green] {artifact.name}")
+
+
 @app.command("seed")
 def seed(
     experiment: Annotated[str, typer.Option("--experiment", "-e")] = "population-money",

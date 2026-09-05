@@ -66,6 +66,11 @@ replacement.
   on every call), ResponseCache (disk-backed, TTL), UsageLedger
   (reports/usage-latest.json). Pipeline halts cleanly on exhaustion and
   resumes with a fresh budget; cache hits are free.
+- Knowledge graph: `src/blockchain_rd_lab/graph/` — §33: deterministic
+  derived graph over all stored evidence (idea ↔ source ↔ mechanism ↔
+  simulation ↔ attack ↔ improvement, typed edges); `lab graph [id]`
+  (+ --similar-attack for §32 reuse: how was a similar attack fixed?);
+  artifact reports/graph-latest.json.
 - Archive: `src/blockchain_rd_lab/archive/` — §26 rejected-mechanisms
   index (ideas/rejected/index.{md,json}) with rejection reasons and §20
   flaw records; failed experiments are a research asset.
@@ -98,6 +103,7 @@ make test       # pytest
 - `src/blockchain_rd_lab/improvement/` — §34 improve/retest loop (patched model versions)
 - `src/blockchain_rd_lab/combinator/` — §18 mechanism combination engine (families, pair scoring, hints)
 - `src/blockchain_rd_lab/cost/` — §31 budgets, response cache, usage ledger
+- `src/blockchain_rd_lab/graph/` — §33 research knowledge graph (derived, deterministic)
 - `src/blockchain_rd_lab/scoring/` — deterministic scoring engine
 - `src/blockchain_rd_lab/cli.py` — Typer CLI (`lab`)
 - `src/blockchain_rd_lab/testing/` — offline discovery fixtures
