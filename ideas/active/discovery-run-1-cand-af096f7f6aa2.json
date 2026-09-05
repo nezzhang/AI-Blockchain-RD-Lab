@@ -1,14 +1,14 @@
 {
   "summary": {
-    "generated": 0,
-    "normalized": 0,
+    "generated": 1,
+    "normalized": 1,
     "duplicates_removed": 0,
-    "stored": 0,
-    "failed_batches": 1,
-    "errors": [
-      "batch failed: bridge request 27e6edeb0da116df is PENDING: answer it with `lab bridge answer 27e6edeb0da116df` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
-    ],
-    "candidate_ids": []
+    "stored": 1,
+    "failed_batches": 0,
+    "errors": [],
+    "candidate_ids": [
+      "cand-af096f7f6aa2"
+    ]
   },
   "stored_ideas": [
     {
@@ -200,7 +200,7 @@
     {
       "name": "Countercyclical Corridor Insurance Float",
       "category": "stablecoin routing",
-      "domain": "",
+      "domain": "payment channels",
       "description": "A corridor-level insurance float that supplies liquidity exactly when batch FX corridors thin out. Step by step: (1) LPs stake into a corridor float pool and receive float tokens; premium income accrues continuously from corridors that borrow float liquidity. (2) Each corridor's rebate pool (from the \u00a716 batch matcher's surplus recycling) pays a premium stream proportional to how far its rolling volume falls below its merge floor \u2014 thin, stressed corridors pay more, exactly like insurance. (3) When a corridor's volume drops below its floor, the float automatically lends inventory into that corridor's next batches (as additional clearing inventory), dampening the price-band pressure the thin corridor would otherwise exert. (4) As corridor volume recovers past the floor, borrowed inventory returns to the float plus the accrued premium. (5) Float LPs earn premium + a share of corridor surplus in calm periods; the insurance pays out in stressed ones. The control-surface feed: the insurance family's premium schedule is driven BY the market family's own volume-floor state, and the float's inventory injection acts ON the market family's clearing-price band."
     }
   ]
