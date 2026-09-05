@@ -51,6 +51,12 @@ class PipelineFixtureProvider(MockLLMProvider):
 
     name = "mock-pipeline"
 
+    def __init__(self) -> None:
+        super().__init__()
+        # §42 corpus serving: hand-written batches first, then the
+        # deterministic generator takes over so --count 100 works offline.
+        self._batch_index = 0
+
     def complete_structured(self, messages, *, schema: type, **kwargs):
         payload = self._fixture_for(schema, messages)
         # Route through the same validation path as every other response.
@@ -60,15 +66,27 @@ class PipelineFixtureProvider(MockLLMProvider):
 
     # -- fixture synthesis -----------------------------------------------------
 
+    def _idea_batch(self) -> dict[str, Any]:
+        """Hand-written batches first, then the §24 corpus generator."""
+        from blockchain_rd_lab.testing.corpus import generate_corpus
+        from blockchain_rd_lab.testing.fixtures_ideas import FIXTURE_BATCHES
+
+        index = self._batch_index
+        self._batch_index += 1
+        if index < len(FIXTURE_BATCHES):
+            batch = FIXTURE_BATCHES[index]
+        else:
+            # Deterministic generated corpus, offset past the fixtures.
+            gen = list(generate_corpus(count=200, seed=24 + index))
+            batch = gen[(index - len(FIXTURE_BATCHES)) % len(gen)]
+        dump = batch.model_dump(mode="json")
+        return {str(k): v for k, v in dump.items()}
+
     def _fixture_for(self, schema, messages: list[LLMMessage]) -> dict[str, Any]:
         schema_name = getattr(schema, "__name__", str(schema))
 
         if schema_name == "IdeaBatch":
-            from blockchain_rd_lab.testing.fixtures_ideas import FIXTURE_BATCHES
-
-            batch = FIXTURE_BATCHES[0]
-            dump = batch.model_dump(mode="json")
-            return {str(k): v for k, v in dump.items()}
+            return self._idea_batch()
 
         if schema_name == "PriorArtReport":
             from blockchain_rd_lab.research import CandidateBrief

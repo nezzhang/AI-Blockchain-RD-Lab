@@ -55,6 +55,9 @@ packages = ["src/blockchain_rd_lab"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+markers = [
+    "slow: full-funnel integration tests (the §42 success run, ~10s)",
+]
 
 [tool.ruff]
 line-length = 100

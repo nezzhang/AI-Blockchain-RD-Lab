@@ -9,6 +9,28 @@ simulating, attacking, and ranking **novel blockchain economic mechanisms**.
 > and to eliminate bad ideas through research, mathematical modeling,
 > simulation, and adversarial testing.
 
+## Definition of Success (§42) — verified
+
+```bash
+lab pipeline --count 100 --mock-fixtures
+```
+
+Runs the spec's entire success funnel offline and deterministically:
+
+```
+100 mechanisms (§24: all 20 source domains)
+  → prior-art analysis → 20 serious candidates
+  → mathematical models → simulations → adversarial attacks
+  → improvements → retests → 5 finalists → 1 recommended
+  → reproducible reports + usage ledger + rejected archive
+```
+
+Locked in as `tests/test_success_criteria.py::TestDefinitionOfSuccess`
+(~6s, part of the standard suite). The offline corpus generator
+supplies 100+ distinct mechanisms across §24's domains; the same
+normalization, dedup, §13 integrity, §15 battery, §20 gate, and §19
+scoring code paths gate everything exactly as with a live provider.
+
 ## Core Principle
 
 ```text

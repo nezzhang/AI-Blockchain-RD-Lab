@@ -74,6 +74,11 @@ replacement.
 - Archive: `src/blockchain_rd_lab/archive/` — §26 rejected-mechanisms
   index (ideas/rejected/index.{md,json}) with rejection reasons and §20
   flaw records; failed experiments are a research asset.
+- Success criteria: §42 is TEST-ENFORCED — `tests/test_success_criteria.py`
+  runs `pipeline --count 100` offline (corpus generator spans §24's 20
+  domains; `src/blockchain_rd_lab/testing/corpus.py`) and asserts the
+  whole funnel: 100 generated → 20 after the filter → 20 modeled/simmed/
+  attacked/improved/retested → 5 finalists → 1 recommended + reports.
 - Never issue tokens, deploy contracts, move funds, or spend significant API
   budget without explicit human approval.
 
@@ -106,5 +111,5 @@ make test       # pytest
 - `src/blockchain_rd_lab/graph/` — §33 research knowledge graph (derived, deterministic)
 - `src/blockchain_rd_lab/scoring/` — deterministic scoring engine
 - `src/blockchain_rd_lab/cli.py` — Typer CLI (`lab`)
-- `src/blockchain_rd_lab/testing/` — offline discovery fixtures
+- `src/blockchain_rd_lab/testing/` — offline fixtures + §24 corpus generator (deterministic, 20 domains)
 - `config/` — YAML configuration (lab, agents, scoring, research)
