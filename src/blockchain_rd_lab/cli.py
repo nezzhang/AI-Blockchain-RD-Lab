@@ -209,6 +209,13 @@ def discover(
     no_avoid: Annotated[
         bool, typer.Option("--no-avoid", help="Skip dedup against existing ideas")
     ] = False,
+    combine: Annotated[
+        bool,
+        typer.Option(
+            "--combine",
+            help="Steer discovery with §18 mechanism-combination hints",
+        ),
+    ] = False,
     mock_fixtures: Annotated[
         bool,
         typer.Option(
@@ -231,10 +238,26 @@ def discover(
     else:
         provider = _provider_from_config()
     research = load_research()
+
+    hints: list[str] | None = None
+    if combine:
+        from blockchain_rd_lab.combinator.engine import MechanismCombinator
+
+        cands = db.list_candidates(limit=None)
+        comb = MechanismCombinator()
+        proposed = comb.propose(cands, max_hints=max(count, 1))
+        hints = [h.hint_text() for h in proposed]
+        if hints:
+            console.print("[cyan]§18 combination hints:[/cyan]")
+            for h in hints[:5]:
+                console.print(f"  • {h}")
+
     service = DiscoveryService(
         provider, db, research_config=research, ideas_dir=REPO_ROOT / "ideas" / "active"
     )
-    summary = service.discover(count=count, avoid_existing=not no_avoid)
+    summary = service.discover(
+        count=count, avoid_existing=not no_avoid, combination_hints=hints
+    )
 
     table = Table(title=f"Discovery — {summary.stored} new candidates")
     for col in ("Metric", "Value"):
@@ -253,6 +276,71 @@ def discover(
 
     for cid in summary.candidate_ids:
         console.print(f"  [green]stored[/green] {cid}")
+
+
+@app.command("combine")
+def combine(
+    max_hints: Annotated[
+        int, typer.Option("--max", "-m", min=1, help="Maximum pairs to show")
+    ] = 10,
+    all_pairs: Annotated[
+        bool,
+        typer.Option("--all", help="Show scored pairs below the emit threshold too"),
+    ] = False,
+) -> None:
+    """Inspect §18 mechanism combinations (families mined from the corpus)."""
+    from blockchain_rd_lab.combinator.engine import MechanismCombinator
+
+    db = _db()
+    cands = db.list_candidates(limit=None)
+    comb = MechanismCombinator()
+
+    families = comb.mine_families(cands)
+    fam_table = Table(title=f"Mechanism families — {len(families)} found (§17)")
+    fam_table.add_column("Family", style="cyan")
+    fam_table.add_column("Members", justify="right")
+    fam_table.add_column("Vocabulary hits")
+    for f in families:
+        fam_table.add_row(f.family, str(len(f.member_ids)), str(len(f.keywords)))
+    console.print(fam_table)
+
+    from itertools import combinations
+
+    pairs = sorted(families, key=lambda f: f.family)
+    rows = []
+    for a, b in combinations(pairs, 2):
+        bridge = comb.bridge_strength(a, b)
+        compat = comb.compatibility(a, b)
+        score = 0.5 * bridge + 0.5 * compat
+        rows.append((a, b, bridge, compat, score))
+    rows.sort(key=lambda r: -r[4])
+    emitted = [r for r in rows if r[4] >= comb.min_score]
+    shown = rows if all_pairs else emitted
+    pair_table = Table(
+        title=f"Combination pairs — {len(shown)} shown "
+        f"({len(emitted)} above the emit threshold)"
+    )
+    pair_table.add_column("Family A", style="cyan")
+    pair_table.add_column("Family B", style="cyan")
+    pair_table.add_column("Bridge", justify="right")
+    pair_table.add_column("Compat", justify="right")
+    pair_table.add_column("Score", justify="right")
+    pair_table.add_column("Emits")
+    for a, b, bridge, compat, score in shown[:max_hints]:
+        pair_table.add_row(
+            a.family,
+            b.family,
+            f"{bridge:.3f}",
+            f"{compat:.3f}",
+            f"{score:.3f}",
+            "yes" if score >= comb.min_score else "no",
+        )
+    console.print(pair_table)
+    if not shown:
+        console.print(
+            "[dim]No pairs above the §18 gates. Add candidates across more "
+            "mechanism families (see `lab seed`, `lab discover`).[/dim]"
+        )
 
 
 @app.command("seed")

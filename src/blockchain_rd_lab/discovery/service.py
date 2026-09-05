@@ -55,18 +55,32 @@ class DiscoveryService:
         self,
         count: int = 20,
         avoid_existing: bool = True,
+        combination_hints: list[str] | None = None,
     ) -> DiscoveryRunSummary:
-        """Generate `count` ideas in batches; normalize, dedup, store."""
+        """Generate `count` ideas in batches; normalize, dedup, store.
+
+        `combination_hints` (§18): free-text mechanism-combination briefs;
+        each batch request carries the next hint, steering the agent
+        toward economically compatible combinations instead of random
+        mashups. Deterministic code (the combinator) proposes; the agent
+        still generates; the normalizer/dedup still gate (§2).
+        """
         research = self.research_config
         per_batch = research.discovery.ideas_per_batch if research else 5
         stored = self._stored_ideas() if avoid_existing else []
+        hints = list(combination_hints or [])
+        hint_index = 0
 
         summary = DiscoveryRunSummary()
         remaining = count
         while remaining > 0:
             batch_size = min(per_batch, remaining)
+            hint = ""
+            if hints:
+                hint = hints[hint_index % len(hints)]
+                hint_index += 1
             try:
-                payload = DiscoveryPayload(count=batch_size)
+                payload = DiscoveryPayload(count=batch_size, combination_hint=hint)
                 result, _record = self.agent.execute(payload)
                 if not isinstance(result, IdeaBatch):
                     raise LLMError("DiscoveryAgent returned unexpected output type")

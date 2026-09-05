@@ -1,0 +1,44 @@
+{
+  "summary": {
+    "generated": 5,
+    "normalized": 5,
+    "duplicates_removed": 1,
+    "stored": 4,
+    "failed_batches": 0,
+    "errors": [
+      "duplicate skipped: 'Demographic Reserve Rule' \u2248 'Demographic Reserve Rule' (exact name-key collision)"
+    ],
+    "candidate_ids": [
+      "cand-9f7f38fbc39b",
+      "cand-f84653a7fb9c",
+      "cand-9fba1d8cbe98",
+      "cand-94920de262c7"
+    ]
+  },
+  "stored_ideas": [
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "demographics",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Carbon-Weighted Gas Fees",
+      "category": "energy",
+      "domain": "climate",
+      "description": "Transaction gas is priced by the verified carbon intensity of the validator set's energy mix, so dirty periods become expensive and clean periods cheap."
+    },
+    {
+      "name": "Habitat Bond Curve",
+      "category": "ecology",
+      "domain": "ecology",
+      "description": "Conservation bonds whose redemption value grows with satellite-verified habitat area restored, paying out only on measured ecological outcomes."
+    },
+    {
+      "name": "Prediction-Coupled Insurance Float",
+      "category": "insurance",
+      "domain": "prediction markets",
+      "description": "An insurance mutual reprices coverage each epoch from live prediction-market odds on the insured event, aligning float returns with crowd-updated risk."
+    }
+  ]
+}

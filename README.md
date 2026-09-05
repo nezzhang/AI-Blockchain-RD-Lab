@@ -73,6 +73,8 @@ lab simulate [--trials 20] [--steps 60]   # Phase 4: §15 scenario battery + Mon
 lab redteam --mock-fixtures              # Phase 5: adversarial agents + §20 fatal-flaw gate (verdict: survives/vulnerable/fatal)
 lab rank [--finalists 5]                # Phase 6: deterministic scoring + ranking + §7 finalist cut
 lab report [candidate_id]               # Phase 7: §23 finalist dossiers + lab report (reports/finalists/, reports/lab-latest.md)
+lab combine                               # §18: inspect mechanism families + combination pairs (pure code)
+lab discover --combine                   # discovery steered by §18 combination hints
 lab improve [candidate_id]                # §34: patch red-teamed models (LLM proposes; §13 integrity gates)
 lab retest [candidate_id]                # §34: re-simulate + re-attack patched models (§20 gate re-evaluates)
 lab pipeline --count 10 --mock-fixtures # Phase 8: full §34 loop incl. improve/retest (resumable via --stop-after, §35)
@@ -136,7 +138,10 @@ The lab enforces one discipline end to end: **LLM proposes. Code tests.
 Evidence decides.**
 
 1. **Discovery** (LLM) proposes ideas; deterministic code normalizes and
-   deduplicates them.
+   deduplicates them. The §18 Mechanism Combinator (pure code) mines
+   mechanism families from the corpus and proposes economically
+   compatible combination pairs — semantic bridges, never random
+   mashups — as steering hints for discovery.
 2. **Research** agents (prior art, economist, market) return structured,
    Pydantic-validated reports; a deterministic §7 filter cuts the funnel.
 3. **Formalization** (LLM) proposes a mathematical model; deterministic

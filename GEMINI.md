@@ -52,6 +52,12 @@ AI agents here.** This file is a convenience summary, not a replacement.
   gate it; RETEST re-simulates (§15 battery) and re-attacks (fresh red
   team, §20 gate re-evaluates). RED_TEAM → IMPROVEMENT → RETEST →
   SIMULATING → RED_TEAM; `lab improve`/`lab retest` (offline fixtures).
+- Combinator: `src/blockchain_rd_lab/combinator/` — §18 mechanism
+  combination engine, pure deterministic code: mines §17 mechanism
+  families from the stored corpus by vocabulary, scores pairs by
+  semantic bridge (shared keywords) + economic compatibility (curated
+  control-flow map), emits hints that steer `lab discover --combine`;
+  `lab combine` inspects families/pairs. Never random mashups.
 - Archive: `src/blockchain_rd_lab/archive/` — §26 rejected-mechanisms
   index (ideas/rejected/index.{md,json}) with rejection reasons and §20
   flaw records; failed experiments are a research asset.
@@ -84,6 +90,7 @@ make test       # pytest
 - `src/blockchain_rd_lab/pipeline/` — Phase 8: §34 resumable pipeline orchestration
 - `src/blockchain_rd_lab/archive/` — Phase 8: §26 rejected-mechanisms index
 - `src/blockchain_rd_lab/improvement/` — §34 improve/retest loop (patched model versions)
+- `src/blockchain_rd_lab/combinator/` — §18 mechanism combination engine (families, pair scoring, hints)
 - `src/blockchain_rd_lab/scoring/` — deterministic scoring engine
 - `src/blockchain_rd_lab/cli.py` — Typer CLI (`lab`)
 - `src/blockchain_rd_lab/testing/` — offline discovery fixtures
