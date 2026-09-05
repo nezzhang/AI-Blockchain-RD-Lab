@@ -30,6 +30,10 @@ class DiscoveryPayload(BaseModel):
     domains: list[str] = Field(default_factory=list)
     avoid_topics: list[str] = Field(default_factory=list)
     combination_hint: str = ""
+    # Deterministic seed for the domain draw (reproducibility + §30 bridge
+    # replay): the service passes the batch index so the same call sequence
+    # yields the same prompts, while successive batches still span domains.
+    seed: int = 0
 
 
 DISCOVERY_SYSTEM_PROMPT = f"""You are the Discovery Agent of an independent blockchain
@@ -84,10 +88,11 @@ class DiscoveryAgent(BaseAgent):
         if not isinstance(payload, DiscoveryPayload):
             got = type(payload).__name__
             raise TypeError(f"DiscoveryAgent expects DiscoveryPayload, got {got}")
+        rng = random.Random(payload.seed)
         domains = (
             payload.domains
             if payload.domains
-            else random.sample(
+            else rng.sample(
                 self.research.discovery_domains,
                 k=min(3, len(self.research.discovery_domains)),
             )

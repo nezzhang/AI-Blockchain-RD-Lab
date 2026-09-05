@@ -52,7 +52,17 @@ lab pipeline --count 3    # resumes; answered requests replay for free
   the database.
 - The bridge provider is structured-only — free-text completion is
   refused by design.
-- Enable with `runtime.llm_provider: bridge` in config/lab.yaml.
+- Enabled by default (`runtime.llm_provider: bridge` in config/lab.yaml);
+  flip to `mock` for pure fixtures or `openai`/`local` for live providers.
+
+**First real run (this repo's history):** a full §34 loop executed through
+the bridge — 2 mechanisms proposed (Congestion-Reflexive Bandwidth Unit,
+Homeostatic Reserve Stablecoin), honest research trimmed the funnel to 1,
+the survivor was formalized (15-var MathModel), simulated through the §15
+battery, red-teamed (4 agents, verdict: vulnerable — 4 profitable attack
+vectors), improved (v2: burn-rate taper, oscillation gate, TWAP layer 3,
+rho_cap), re-tested, and scored as the §7 recommended candidate with a
+full dossier — all offline, no API key, no spend.
 
 ## Core Principle
 

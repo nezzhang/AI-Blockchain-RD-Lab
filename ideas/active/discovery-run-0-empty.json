@@ -1,18 +1,23 @@
 {
   "summary": {
-    "generated": 3,
-    "normalized": 3,
-    "duplicates_removed": 3,
+    "generated": 2,
+    "normalized": 2,
+    "duplicates_removed": 2,
     "stored": 0,
     "failed_batches": 0,
     "errors": [
-      "duplicate skipped: 'Demographic Reserve Rule' \u2248 'Demographic Reserve Rule' (exact name-key collision)",
-      "duplicate skipped: 'Demographic Reserve Rule' \u2248 'Demographic Reserve Rule' (exact name-key collision)",
-      "duplicate skipped: 'Carbon-Weighted Gas Fees' \u2248 'Carbon-Weighted Gas Fees' (exact name-key collision)"
+      "duplicate skipped: 'Congestion-Reflexive Bandwidth Unit' \u2248 'Congestion-Reflexive Bandwidth Unit' (exact name-key collision)",
+      "duplicate skipped: 'Homeostatic Reserve Stablecoin' \u2248 'Homeostatic Reserve Stablecoin' (exact name-key collision)"
     ],
     "candidate_ids": []
   },
   "stored_ideas": [
+    {
+      "name": "Population-Linked Supply",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Token supply expands and contracts with oracle-reported changes in verified global population. Each epoch, an oracle committee reports births, deaths, and net migration; the protocol mints or burns supply proportional to the reported delta. This is Experiment #001 (MASTER BUILD PROMPT \u00a725): the lab must attempt to prove or disprove it, NOT assume it is a good idea."
+    },
     {
       "name": "Demographic Reserve Rule",
       "category": "monetary economics",
@@ -32,10 +37,172 @@
       "description": "Conservation bonds whose redemption value grows with satellite-verified habitat area restored, paying out only on measured ecological outcomes."
     },
     {
-      "name": "Prediction-Coupled Insurance Float",
-      "category": "insurance",
+      "name": "Labor-Backed Escrow",
+      "category": "labor",
       "domain": "",
-      "description": "An insurance mutual reprices coverage each epoch from live prediction-market odds on the insured event, aligning float returns with crowd-updated risk."
+      "description": "Freelance wages are escrowed in a pooled contract and released by verified work-completion attestations, letting earned-but-unpaid labor collateralize short-term credit."
+    },
+    {
+      "name": "Bandwidth Futures Market",
+      "category": "network economics",
+      "domain": "",
+      "description": "ISP peering agreements are replaced by an on-chain bandwidth futures market where routes are purchased ahead of congestion windows."
+    },
+    {
+      "name": "AI-Compute Denominated Debt",
+      "category": "financial markets",
+      "domain": "",
+      "description": "Loans denominated in units of verified AI training compute, so repayment tracks the falling price of intelligence rather than fiat inflation."
+    },
+    {
+      "name": "Commodity-Volatility Stable Unit",
+      "category": "stablecoins",
+      "domain": "",
+      "description": "A synthetic unit whose value targets a basket of commodity price volatilities, stabilized by volatility harvesting rather than collateral pegging."
+    },
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Carbon-Weighted Gas Fees",
+      "category": "energy",
+      "domain": "",
+      "description": "Transaction gas is priced by the verified carbon intensity of the validator set's energy mix, so dirty periods become expensive and clean periods cheap."
+    },
+    {
+      "name": "Habitat Bond Curve",
+      "category": "ecology",
+      "domain": "",
+      "description": "Conservation bonds whose redemption value grows with satellite-verified habitat area restored, paying out only on measured ecological outcomes."
+    },
+    {
+      "name": "Labor-Backed Escrow",
+      "category": "labor",
+      "domain": "",
+      "description": "Freelance wages are escrowed in a pooled contract and released by verified work-completion attestations, letting earned-but-unpaid labor collateralize short-term credit."
+    },
+    {
+      "name": "Bandwidth Futures Market",
+      "category": "network economics",
+      "domain": "",
+      "description": "ISP peering agreements are replaced by an on-chain bandwidth futures market where routes are purchased ahead of congestion windows."
+    },
+    {
+      "name": "AI-Compute Denominated Debt",
+      "category": "financial markets",
+      "domain": "",
+      "description": "Loans denominated in units of verified AI training compute, so repayment tracks the falling price of intelligence rather than fiat inflation."
+    },
+    {
+      "name": "Commodity-Volatility Stable Unit",
+      "category": "stablecoins",
+      "domain": "",
+      "description": "A synthetic unit whose value targets a basket of commodity price volatilities, stabilized by volatility harvesting rather than collateral pegging."
+    },
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Carbon-Weighted Gas Fees",
+      "category": "energy",
+      "domain": "",
+      "description": "Transaction gas is priced by the verified carbon intensity of the validator set's energy mix, so dirty periods become expensive and clean periods cheap."
+    },
+    {
+      "name": "Habitat Bond Curve",
+      "category": "ecology",
+      "domain": "",
+      "description": "Conservation bonds whose redemption value grows with satellite-verified habitat area restored, paying out only on measured ecological outcomes."
+    },
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Carbon-Weighted Gas Fees",
+      "category": "energy",
+      "domain": "",
+      "description": "Transaction gas is priced by the verified carbon intensity of the validator set's energy mix, so dirty periods become expensive and clean periods cheap."
+    },
+    {
+      "name": "Habitat Bond Curve",
+      "category": "ecology",
+      "domain": "",
+      "description": "Conservation bonds whose redemption value grows with satellite-verified habitat area restored, paying out only on measured ecological outcomes."
+    },
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Carbon-Weighted Gas Fees",
+      "category": "energy",
+      "domain": "",
+      "description": "Transaction gas is priced by the verified carbon intensity of the validator set's energy mix, so dirty periods become expensive and clean periods cheap."
+    },
+    {
+      "name": "Habitat Bond Curve",
+      "category": "ecology",
+      "domain": "",
+      "description": "Conservation bonds whose redemption value grows with satellite-verified habitat area restored, paying out only on measured ecological outcomes."
+    },
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Carbon-Weighted Gas Fees",
+      "category": "energy",
+      "domain": "",
+      "description": "Transaction gas is priced by the verified carbon intensity of the validator set's energy mix, so dirty periods become expensive and clean periods cheap."
+    },
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Congestion-Reflexive Bandwidth Unit",
+      "category": "internet",
+      "domain": "",
+      "description": "A unit of account for bandwidth settlement between autonomous networks where the unit's minting rate is governed by the network's OWN congestion signal, not by a committee. Step by step: (1) participating networks (ASNs) meter inter-domain traffic at their peering points and publish signed flow records; (2) a congestion index C_t is computed deterministically as the ratio of 95th-percentile queue depth to link capacity, smoothed across peering points; (3) settlement units are minted to networks that carry transit ABOVE their peering balance during congested intervals (when C_t exceeds its historical median) and burned from networks that draw transit above balance during congested intervals; (4) the mint/burn rate is proportional to both the size of the imbalance and the height of C_t above median, so congestion-time generosity is rewarded more than off-peak generosity \u2014 the exact periods when capacity is scarce are the periods the incentive points at; (5) during sub-median congestion (off-peak), settlement runs at a flat minimal rate in the opposite direction to prevent hoarding of peering credits; (6) all computations (queue percentiles, medians, mint/burn rates) are deterministic over signed metering records, so no oracle and no committee adjust the rule."
+    },
+    {
+      "name": "Homeostatic Reserve Stablecoin",
+      "category": "stablecoins",
+      "domain": "",
+      "description": "A stable-value unit whose reserve policy is modeled on biological homeostasis: like an organism's negative-feedback loops (blood glucose, body temperature), the mechanism holds value near its target not through one peg-breaking act, but through layered counteracting responses of graded strength. Step by step: (1) the unit targets a 1.00 reference value against its reference basket; (2) the FIRST-LAYER response is a transfer-fee rebate/penalty: when the market price deviates within \u00b10.5%, redemption fees rise and minting fees fall (or vice versa), nudging arbitrageurs to push value back \u2014 cheap, fast, weak; (3) the SECOND-LAYER response activates beyond \u00b10.5%: the reserve pool's yield distribution tilts \u2014 the excess return from over-collateralized reserves flows to whichever side of the market needs shrinking (buyers when below peg to reward contractionary pressure, redeemers when above peg), a stronger, slower correction funded by real reserve yield; (4) the THIRD-LAYER response activates beyond \u00b12%: issuance is throttled by a mint-holiday that deterministically scales new supply creation down as |deviation| grows, and a portion of the protocol's own insurance tranche is used for direct open-market rebalancing; (5) crucially, each layer DEACTIVATES as deviation shrinks, and the layers' thresholds are fixed by rule, not discretion; (6) the reserve ratio itself floats within a [1.05, 1.30] band, and when the ratio hits the band's floor, the second layer's yield redirection automatically pauses \u2014 the biological insight that an exhausted organ must rest rather than respond \u2014 preventing a death spiral where yield payments drain the last collateral."
+    },
+    {
+      "name": "Homeostatic Reserve Stablecoin",
+      "category": "stablecoins",
+      "domain": "",
+      "description": "A stable-value unit whose reserve policy is modeled on biological homeostasis: like an organism's negative-feedback loops (blood glucose, body temperature), the mechanism holds value near its target not through one peg-breaking act, but through layered counteracting responses of graded strength. Step by step: (1) the unit targets a 1.00 reference value against its reference basket; (2) the FIRST-LAYER response is a transfer-fee rebate/penalty: when the market price deviates within \u00b10.5%, redemption fees rise and minting fees fall (or vice versa), nudging arbitrageurs to push value back \u2014 cheap, fast, weak; (3) the SECOND-LAYER response activates beyond \u00b10.5%: the reserve pool's yield distribution tilts \u2014 the excess return from over-collateralized reserves flows to whichever side of the market needs shrinking (buyers when below peg to reward contractionary pressure, redeemers when above peg), a stronger, slower correction funded by real reserve yield; (4) the THIRD-LAYER response activates beyond \u00b12%: issuance is throttled by a mint-holiday that deterministically scales new supply creation down as |deviation| grows, and a portion of the protocol's own insurance tranche is used for direct open-market rebalancing; (5) crucially, each layer DEACTIVATES as deviation shrinks, and the layers' thresholds are fixed by rule, not discretion; (6) the reserve ratio itself floats within a [1.05, 1.30] band, and when the ratio hits the band's floor, the second layer's yield redirection automatically pauses \u2014 the biological insight that an exhausted organ must rest rather than respond \u2014 preventing a death spiral where yield payments drain the last collateral."
     }
   ]
 }

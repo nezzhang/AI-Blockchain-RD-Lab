@@ -33,7 +33,7 @@ pipeline:
 runtime:
   # Provider config comes from YAML + environment variables (§30).
   # Never hard-code API keys.
-  llm_provider: "mock"            # mock | openai | local
+  llm_provider: "bridge"          # mock | openai | local | bridge (agent-as-LLM)
   api_key_env: "LAB_LLM_API_KEY"  # read from environment only
   max_concurrency: 4
   request_timeout_seconds: 120

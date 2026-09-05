@@ -10,7 +10,7 @@ class TestConfig:
         cfg = load_config()
         assert isinstance(cfg, LabConfig)
         assert cfg.lab.name == "AI Blockchain R&D Lab"
-        assert cfg.runtime.llm_provider == "mock"
+        assert cfg.runtime.llm_provider == "bridge"
         assert cfg.pipeline.discovery_count == 100
         assert cfg.pipeline.post_prior_art == 20
         assert cfg.pipeline.finalists == 5
@@ -29,4 +29,4 @@ class TestConfig:
     def test_reads_current_config_dir(self):
         # CONFIG_DIR is read at call time so tests/other tools can repoint it.
         cfg = load_config(CONFIG_DIR)
-        assert cfg.runtime.llm_provider == "mock"
+        assert cfg.runtime.llm_provider == "bridge"

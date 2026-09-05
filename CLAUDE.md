@@ -72,6 +72,7 @@ replacement.
   (+ --similar-attack for §32 reuse: how was a similar attack fixed?);
   artifact reports/graph-latest.json.
 - Bridge: `src/blockchain_rd_lab/agents/bridge.py` — §30 agent-as-LLM
+  (DEFAULT provider; config tests pin 'bridge')
   provider: file-protocol (requests/answers under .bridge/),
   fail-closed pending halt, deterministic request ids, free replay
   of answered requests; `lab bridge list|show|answer|purge`;

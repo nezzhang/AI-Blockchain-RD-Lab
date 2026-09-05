@@ -73,6 +73,7 @@ class DiscoveryService:
 
         summary = DiscoveryRunSummary()
         remaining = count
+        batch_index = 0
         while remaining > 0:
             batch_size = min(per_batch, remaining)
             hint = ""
@@ -80,7 +81,11 @@ class DiscoveryService:
                 hint = hints[hint_index % len(hints)]
                 hint_index += 1
             try:
-                payload = DiscoveryPayload(count=batch_size, combination_hint=hint)
+                payload = DiscoveryPayload(
+                    count=batch_size,
+                    combination_hint=hint,
+                    seed=batch_index,  # reproducible domain draw (§21/§30)
+                )
                 result, _record = self.agent.execute(payload)
                 if not isinstance(result, IdeaBatch):
                     raise LLMError("DiscoveryAgent returned unexpected output type")
@@ -110,6 +115,7 @@ class DiscoveryService:
                 summary.stored += 1
                 summary.candidate_ids.append(candidate.id)
             remaining -= len(drafts)
+            batch_index += 1
 
         self._write_artifacts(summary, stored)
         return summary
@@ -117,9 +123,19 @@ class DiscoveryService:
     # -- internals --------------------------------------------------------------
 
     def _stored_ideas(self) -> list[NormalizedIdea]:
-        """Rebuild NormalizedIdea views from stored candidates for dedup."""
+        """Rebuild NormalizedIdea views from stored candidates for dedup.
+
+        §35 fix: dedup against ALL non-terminal candidates, not just
+        GENERATED — once a candidate advances (research/formalized/...),
+        it must stay visible to dedup, or a resumed run re-stores the
+        same mechanism as a "new" candidate.
+        """
         out: list[NormalizedIdea] = []
-        for cand in self.database.list_candidates(status=CandidateStatus.GENERATED):
+        for cand in self.database.list_candidates(limit=None):
+            if cand.status in (CandidateStatus.REJECTED, CandidateStatus.FAILED):
+                # Rejected/failed ideas MAY be re-proposed in improved form;
+                # the archive index still records the rejection (§26).
+                continue
             out.append(self.normalizer.normalize(self._candidate_to_draft(cand)))
         return out
 

@@ -1,0 +1,28 @@
+{
+  "summary": {
+    "generated": 2,
+    "normalized": 2,
+    "duplicates_removed": 0,
+    "stored": 2,
+    "failed_batches": 0,
+    "errors": [],
+    "candidate_ids": [
+      "cand-abb98e812f6b",
+      "cand-16d505be99f6"
+    ]
+  },
+  "stored_ideas": [
+    {
+      "name": "Congestion-Reflexive Bandwidth Unit",
+      "category": "internet",
+      "domain": "internet",
+      "description": "A unit of account for bandwidth settlement between autonomous networks where the unit's minting rate is governed by the network's OWN congestion signal, not by a committee. Step by step: (1) participating networks (ASNs) meter inter-domain traffic at their peering points and publish signed flow records; (2) a congestion index C_t is computed deterministically as the ratio of 95th-percentile queue depth to link capacity, smoothed across peering points; (3) settlement units are minted to networks that carry transit ABOVE their peering balance during congested intervals (when C_t exceeds its historical median) and burned from networks that draw transit above balance during congested intervals; (4) the mint/burn rate is proportional to both the size of the imbalance and the height of C_t above median, so congestion-time generosity is rewarded more than off-peak generosity \u2014 the exact periods when capacity is scarce are the periods the incentive points at; (5) during sub-median congestion (off-peak), settlement runs at a flat minimal rate in the opposite direction to prevent hoarding of peering credits; (6) all computations (queue percentiles, medians, mint/burn rates) are deterministic over signed metering records, so no oracle and no committee adjust the rule."
+    },
+    {
+      "name": "Homeostatic Reserve Stablecoin",
+      "category": "stablecoins",
+      "domain": "stablecoins",
+      "description": "A stable-value unit whose reserve policy is modeled on biological homeostasis: like an organism's negative-feedback loops (blood glucose, body temperature), the mechanism holds value near its target not through one peg-breaking act, but through layered counteracting responses of graded strength. Step by step: (1) the unit targets a 1.00 reference value against its reference basket; (2) the FIRST-LAYER response is a transfer-fee rebate/penalty: when the market price deviates within \u00b10.5%, redemption fees rise and minting fees fall (or vice versa), nudging arbitrageurs to push value back \u2014 cheap, fast, weak; (3) the SECOND-LAYER response activates beyond \u00b10.5%: the reserve pool's yield distribution tilts \u2014 the excess return from over-collateralized reserves flows to whichever side of the market needs shrinking (buyers when below peg to reward contractionary pressure, redeemers when above peg), a stronger, slower correction funded by real reserve yield; (4) the THIRD-LAYER response activates beyond \u00b12%: issuance is throttled by a mint-holiday that deterministically scales new supply creation down as |deviation| grows, and a portion of the protocol's own insurance tranche is used for direct open-market rebalancing; (5) crucially, each layer DEACTIVATES as deviation shrinks, and the layers' thresholds are fixed by rule, not discretion; (6) the reserve ratio itself floats within a [1.05, 1.30] band, and when the ratio hits the band's floor, the second layer's yield redirection automatically pauses \u2014 the biological insight that an exhausted organ must rest rather than respond \u2014 preventing a death spiral where yield payments drain the last collateral."
+    }
+  ]
+}
