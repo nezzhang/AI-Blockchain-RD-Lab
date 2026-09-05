@@ -7,7 +7,7 @@
   "errors": 0,
   "per_candidate": [
     {
-      "candidate_id": "cand-34d84250c2cd",
+      "candidate_id": "cand-4c55f8cc2e3b",
       "name": "Batch Candidate",
       "verdict": "vulnerable",
       "rejected": false,

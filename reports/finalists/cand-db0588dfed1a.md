@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-db0588dfed1a
 - **Category:** network economics
 - **Overall score:** 5.0500
-- **Rank:** 6
+- **Rank:** 7
 - **Status:** finalist
 
 ## Executive Summary
