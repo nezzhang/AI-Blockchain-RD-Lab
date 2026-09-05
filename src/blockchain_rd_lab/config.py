@@ -62,6 +62,8 @@ class ProviderSettings(BaseModel):
     timeout_seconds: float = 120.0
     max_retries: int = 3
     retry_backoff_seconds: float = 2.0
+    # bridge provider (agent-as-LLM): where requests/answers live
+    bridge_dir: str = ".bridge"
 
 
 class LabConfig(BaseModel):

@@ -34,3 +34,6 @@ database/*.sqlite*
 
 # Keep directory placeholders
 !**/.gitkeep
+
+# Agent-as-LLM bridge protocol (§30) — operator session state, not evidence
+.bridge/

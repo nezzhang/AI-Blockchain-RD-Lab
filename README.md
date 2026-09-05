@@ -31,6 +31,29 @@ supplies 100+ distinct mechanisms across §24's domains; the same
 normalization, dedup, §13 integrity, §15 battery, §20 gate, and §19
 scoring code paths gate everything exactly as with a live provider.
 
+## Agent-as-LLM Bridge (§30)
+
+The lab can run with **no API key and zero spend** by making the
+operator (a reasoning agent or a careful human) the LLM through a
+file protocol:
+
+```bash
+lab pipeline --count 3      # writes pending requests, halts (fail-closed)
+lab bridge list           # see what the lab is asking
+lab bridge show <id>      # read the prompt + schema + answer template
+lab bridge answer <id> --file answer.json   # validated before install
+lab pipeline --count 3    # resumes; answered requests replay for free
+```
+
+- Requests are deterministic-hashed from prompt+schema: re-runs
+  don't duplicate work, and installed answers replay at zero cost.
+- Every answer passes the SAME Pydantic validation as any provider
+  (§2): `install_answer` refuses invalid JSON before it can enter
+  the database.
+- The bridge provider is structured-only — free-text completion is
+  refused by design.
+- Enable with `runtime.llm_provider: bridge` in config/lab.yaml.
+
 ## Core Principle
 
 ```text

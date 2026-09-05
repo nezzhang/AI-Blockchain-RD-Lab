@@ -19,6 +19,7 @@ from blockchain_rd_lab.agents.base import (
     json_safe,
     parse_json_as,
 )
+from blockchain_rd_lab.agents.bridge import AgentBridgeProvider
 from blockchain_rd_lab.agents.providers import (
     PROVIDER_REGISTRY,
     LocalLLMProvider,
@@ -29,6 +30,7 @@ from blockchain_rd_lab.agents.providers import (
 
 __all__ = [
     "PROVIDER_REGISTRY",
+    "AgentBridgeProvider",
     "AgentTool",
     "BaseAgent",
     "LLMConnectionError",

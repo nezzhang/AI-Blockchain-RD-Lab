@@ -58,6 +58,10 @@ providers:
     base_url: "http://127.0.0.1:11434/v1"
     model: "local-model"
     api_key_env: "LOCAL_LLM_API_KEY"
+  # Agent-as-LLM bridge (§30): the operator (me) answers pending requests
+  # via files; no network, no key, no spend. See `lab bridge`.
+  bridge:
+    bridge_dir: ".bridge"
 
 logging:
   level: "INFO"

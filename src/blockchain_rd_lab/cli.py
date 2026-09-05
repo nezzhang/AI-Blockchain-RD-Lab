@@ -8,6 +8,7 @@ their future phase.
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Annotated
 
 import typer
@@ -341,6 +342,102 @@ def combine(
             "[dim]No pairs above the §18 gates. Add candidates across more "
             "mechanism families (see `lab seed`, `lab discover`).[/dim]"
         )
+
+
+_bridge_cmd = typer.Typer(help="Agent-as-LLM bridge (§30): answer pending requests")
+app.add_typer(_bridge_cmd, name="bridge")
+
+
+def _bridge_provider():
+    from blockchain_rd_lab.agents.bridge import AgentBridgeProvider
+
+    cfg = load_config()
+    return AgentBridgeProvider(bridge_dir=cfg.providers["bridge"].bridge_dir)
+
+
+@_bridge_cmd.command("list")
+def bridge_list(
+    all_requests: Annotated[
+        bool, typer.Option("--all", help="Include answered requests")
+    ] = False,
+) -> None:
+    """List pending (or all) bridge requests waiting for an answer."""
+    provider = _bridge_provider()
+    requests = provider.list_requests(status=None if all_requests else "pending")
+    if not requests:
+        console.print("[green]No pending bridge requests.[/green]")
+        return
+    table = Table(title=f"Bridge requests — {len(requests)} pending")
+    table.add_column("ID", style="cyan")
+    table.add_column("Schema")
+    table.add_column("Created")
+    table.add_column("Preview", overflow="fold")
+    for r in requests:
+        last = r["messages"][-1]["content"] if r.get("messages") else ""
+        preview = last.replace("\n", " ")[:80]
+        table.add_row(r["id"], r.get("schema", ""), r.get("created_at", ""), preview)
+    console.print(table)
+
+
+@_bridge_cmd.command("show")
+def bridge_show(request_id: str) -> None:
+    """Print a full bridge request (prompt + schema + template)."""
+    provider = _bridge_provider()
+
+    req_path = provider.requests_dir / f"{request_id}.json"
+    if not req_path.exists():
+        console.print(f"[red]No request {request_id}.[/red]")
+        raise typer.Exit(code=1)
+    console.print(req_path.read_text(encoding="utf-8"))
+    tpl_path = provider.requests_dir / f"{request_id}.template.json"
+    if tpl_path.exists():
+        console.print("\n[bold]--- answer template ---[/bold]")
+        console.print(tpl_path.read_text(encoding="utf-8"))
+
+
+@_bridge_cmd.command("answer")
+def bridge_answer(
+    request_id: str,
+    answer: Annotated[
+        str | None,
+        typer.Argument(help="Inline JSON answer (or use --file)"),
+    ] = None,
+    answer_file: Annotated[
+        Path | None,
+        typer.Option("--file", help="Path to a JSON file with the answer"),
+    ] = None,
+) -> None:
+    """Install an answer for a pending request (validated, then replayable)."""
+    import json as _json
+
+    if (answer is None) == (answer_file is None):
+        console.print("[red]Give exactly one of: inline JSON or --file PATH.[/red]")
+        raise typer.Exit(code=1)
+    if answer_file is not None:
+        payload = _json.loads(answer_file.read_text(encoding="utf-8"))
+    elif answer is not None:
+        payload = _json.loads(answer)
+    else:  # pragma: no cover - guarded above
+        raise typer.Exit(code=1)
+    provider = _bridge_provider()
+    try:
+        path = provider.install_answer(request_id, payload)
+    except Exception as exc:
+        console.print(f"[red]Answer rejected:[/red] {exc}")
+        raise typer.Exit(code=1) from exc
+    console.print(f"[green]Answer installed and validated:[/green] {path.name}")
+    console.print(
+        "Re-run the pipeline command to resume (§35: the database is the "
+        "checkpoint; answered requests replay for free)."
+    )
+
+
+@_bridge_cmd.command("purge")
+def bridge_purge() -> None:
+    """Drop PENDING requests (answered answers are kept: replay is free)."""
+    provider = _bridge_provider()
+    n = provider.purge_pending()
+    console.print(f"Purged {n} pending request(s). Answered answers kept.")
 
 
 @app.command("graph")

@@ -243,6 +243,19 @@ PROVIDER_REGISTRY: dict[str, type[LLMProvider]] = {
 }
 
 
+def _register_bridges() -> None:
+    """Register optional file-protocol providers (agent-as-LLM, §30)."""
+    try:
+        from blockchain_rd_lab.agents.bridge import AgentBridgeProvider
+
+        PROVIDER_REGISTRY["bridge"] = AgentBridgeProvider
+    except Exception:  # pragma: no cover - defensive
+        pass
+
+
+_register_bridges()
+
+
 def get_provider(name: str, **kwargs: Any) -> LLMProvider:
     """Resolve a provider by name; unknown providers raise LLMError."""
     from blockchain_rd_lab.agents.base import LLMError
