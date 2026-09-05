@@ -36,6 +36,15 @@
     "novelty_class": "insufficient_evidence"
   },
   {
+    "candidate_id": "cand-a7f8794b596a",
+    "name": "Congestion-Reflexive Bandwidth Unit",
+    "category": "internet",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
     "candidate_id": "cand-023e4ade3011",
     "name": "Congestion-Reflexive Bandwidth Unit",
     "category": "internet",
@@ -52,6 +61,15 @@
     "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
     "fatal_flaws": [],
     "novelty_class": "adjacent_mechanism"
+  },
+  {
+    "candidate_id": "cand-9f7f38fbc39b",
+    "name": "Demographic Reserve Rule",
+    "category": "monetary economics",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
   },
   {
     "candidate_id": "cand-7f2f07fd4e9a",
@@ -81,6 +99,15 @@
     "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
     "fatal_flaws": [],
     "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-c70d44d533eb",
+    "name": "Homeostatic Reserve Stablecoin",
+    "category": "stablecoins",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
   },
   {
     "candidate_id": "cand-16d505be99f6",

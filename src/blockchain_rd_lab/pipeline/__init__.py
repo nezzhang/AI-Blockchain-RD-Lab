@@ -118,14 +118,25 @@ class PipelineService:
         from blockchain_rd_lab.research.service import ResearchService
 
         result = StageResult(stage="research")
+        # §35 resume: research interrupted mid-run leaves candidates at
+        # RESEARCHING (the transition fires before the agent calls); a
+        # fresh run must pick up BOTH fresh GENERATED candidates and
+        # stranded RESEARCHING ones — the database is the checkpoint.
+        stranded = self.database.list_candidates(status=CandidateStatus.RESEARCHING)
         generated = self.database.list_candidates(status=CandidateStatus.GENERATED)
-        if not generated:
+        if not generated and not stranded:
             result.skipped = True
             return result
         service = ResearchService(
             self.provider, self.database, artifacts_dir=None
         )
-        results = service.research_all(limit=None)
+        results = service.research_all(
+            limit=None, only_status=CandidateStatus.GENERATED
+        )
+        # Stranded RESEARCHING candidates re-run their (replayed or fresh)
+        # agent calls; _apply_findings completes the transition.
+        for cand in stranded:
+            results.append(service.research_candidate(cand))
         result.processed = len(results)
         for r in results:
             if r.errors:

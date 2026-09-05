@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-c17ab7a0f74e
 - **Category:** stablecoins
 - **Overall score:** 5.2500
-- **Rank:** 1 (recommended)
+- **Rank:** 2
 - **Status:** finalist
 
 ## Executive Summary
@@ -143,4 +143,4 @@ See the Mathematical Model section's §13 open questions; unresolved items remai
 
 ## Recommendation
 
-**Recommended candidate (§7).** Rank 1 among finalists; selected deterministically from the ranking.
+Not the recommended candidate this cycle. See the lab report for the current recommendation.

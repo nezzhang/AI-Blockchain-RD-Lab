@@ -58,6 +58,17 @@ discovery_domains:
   - network economics
   - financial markets
   - distributed systems
+  # §16 Stablecoin Infrastructure Research Track: what infrastructure
+  # could make stablecoins substantially cheaper, faster, safer, easier?
+  - stablecoin settlement
+  - cross-border payments
+  - merchant payments
+  - stablecoin routing
+  - decentralized FX
+  - payment channels
+  - institutional settlement
+  - transaction fee markets
+  - compliance infrastructure
 
 # Discovery-generation settings (Phase 1).
 discovery:
