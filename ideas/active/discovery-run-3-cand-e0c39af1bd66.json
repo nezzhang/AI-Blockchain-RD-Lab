@@ -1,0 +1,43 @@
+{
+  "summary": {
+    "generated": 10,
+    "normalized": 10,
+    "duplicates_removed": 7,
+    "stored": 3,
+    "failed_batches": 0,
+    "errors": [
+      "duplicate skipped: 'Demographic Reserve Rule' \u2248 'Demographic Reserve Rule' (exact name-key collision)",
+      "duplicate skipped: 'Demographic Reserve Rule' \u2248 'Demographic Reserve Rule' (exact name-key collision)",
+      "duplicate skipped: 'Demographic Reserve Rule' \u2248 'Demographic Reserve Rule' (exact name-key collision)",
+      "duplicate skipped: 'Carbon-Weighted Gas Fees' \u2248 'Carbon-Weighted Gas Fees' (exact name-key collision)",
+      "duplicate skipped: 'Habitat Bond Curve' \u2248 'Habitat Bond Curve' (exact name-key collision)",
+      "duplicate skipped: 'Demographic Reserve Rule' \u2248 'Demographic Reserve Rule' (exact name-key collision)",
+      "duplicate skipped: 'Demographic Reserve Rule' \u2248 'Demographic Reserve Rule' (exact name-key collision)"
+    ],
+    "candidate_ids": [
+      "cand-e0c39af1bd66",
+      "cand-c7118453cf48",
+      "cand-274537b6fc9c"
+    ]
+  },
+  "stored_ideas": [
+    {
+      "name": "Demographic Reserve Rule",
+      "category": "monetary economics",
+      "domain": "demographics",
+      "description": "Monetary base expands only when the dependency ratio crosses set bands, coupling money creation to the age structure of participants verified by census oracles."
+    },
+    {
+      "name": "Carbon-Weighted Gas Fees",
+      "category": "energy",
+      "domain": "climate",
+      "description": "Transaction gas is priced by the verified carbon intensity of the validator set's energy mix, so dirty periods become expensive and clean periods cheap."
+    },
+    {
+      "name": "Habitat Bond Curve",
+      "category": "ecology",
+      "domain": "ecology",
+      "description": "Conservation bonds whose redemption value grows with satellite-verified habitat area restored, paying out only on measured ecological outcomes."
+    }
+  ]
+}

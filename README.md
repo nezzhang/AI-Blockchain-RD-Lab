@@ -44,7 +44,7 @@ The autonomous pipeline arrives in later phases (see
 | 5 | Adversarial testing: Game Theory, Security, Oracle, Red Team agents, §20 fatal-flaw gate | ✅ done |
 | 6 | Ranking: deterministic scoring, §20 fatal-flaw gate, top-5 finalists | ✅ done |
 | 7 | Reporting: §23 dossiers (19 sections), lab report, §7 recommendation | ✅ done |
-| 8 | Public research release | ⬜ next |
+| 8 | Public research: §34 pipeline (resumable), §26 rejected archive, release docs | ✅ done |
 
 ## Install
 
@@ -73,6 +73,7 @@ lab simulate [--trials 20] [--steps 60]   # Phase 4: §15 scenario battery + Mon
 lab redteam --mock-fixtures              # Phase 5: adversarial agents + §20 fatal-flaw gate (verdict: survives/vulnerable/fatal)
 lab rank [--finalists 5]                # Phase 6: deterministic scoring + ranking + §7 finalist cut
 lab report [candidate_id]               # Phase 7: §23 finalist dossiers + lab report (reports/finalists/, reports/lab-latest.md)
+lab pipeline --count 10 --mock-fixtures # Phase 8: full §34 loop (resumable via --stop-after, §35)
 lab status               # candidate counts by lifecycle state
 lab score <candidate_id> # deterministic scoring with fatal-flaw gate
 lab search <query>       # search stored candidates
@@ -85,9 +86,11 @@ deterministic `mock`). To use a real provider, set `runtime.llm_provider` in
 key — keys are read from environment variables only, never stored. A dry
 mock queue (no `--mock-fixtures`) fails closed instead of emitting junk.
 
-The remaining command surface (`lab simulate`, `lab redteam`, `lab rank`,
-`lab report`, `lab pipeline`) is declared as stubs that point to their
-future phase.
+The full §34 pipeline runs offline end to end:
+`lab pipeline --count 10 --mock-fixtures` — discover → research → filter →
+formalize → simulate → red-team → score/rank → report, with `--stop-after
+<stage>` for interruption and resumable re-runs (§35: the database is the
+checkpoint; no progress is lost when an agent fails).
 
 ## Development
 
@@ -124,6 +127,49 @@ contracts, or moves funds. The following require explicit human approval
 (MASTER BUILD PROMPT §28, §41): deploying contracts, launching testnets,
 issuing tokens, significant API spend, wallet connections, fund movement,
 publishing official novelty claims, and legal agreements.
+
+## Methodology
+
+The lab enforces one discipline end to end: **LLM proposes. Code tests.
+Evidence decides.**
+
+1. **Discovery** (LLM) proposes ideas; deterministic code normalizes and
+   deduplicates them.
+2. **Research** agents (prior art, economist, market) return structured,
+   Pydantic-validated reports; a deterministic §7 filter cuts the funnel.
+3. **Formalization** (LLM) proposes a mathematical model; deterministic
+   integrity checks enforce declared symbols, ASCII equations, and §13
+   open questions before anything is stored.
+4. **Simulation** is pure code: a safe AST interpreter executes the
+   stored equations across the §15 scenario battery (bank run, oracle
+   failure, black swan, ...), Monte Carlo, and parameter sweeps.
+5. **Adversarial review** (LLM) attacks the mechanism; the §20 fatal-flaw
+   gate is deterministic code — a fatal verdict rejects only when the
+   strongest attack is also profitable.
+6. **Scoring, ranking, and reports** are entirely deterministic — the
+   §23 dossiers are assembled by code from stored evidence, with no
+   report-writer LLM anywhere.
+
+Every experiment stores seed, parameters, git commit, and results (§21);
+reproducing a run is a lookup, not a guess.
+
+## Reproducibility
+
+- All offline commands (`--mock-fixtures`) are fully deterministic: same
+  inputs → identical database states, scores, and report bytes.
+- Simulations record seed + git commit + parameters per run (§21).
+- The research loop never averages away fatal flaws (§20) and never hides
+  failed experiments (§26, §29).
+
+## Research Archive
+
+- `reports/finalists/` — §23 dossiers per finalist
+- `reports/lab-latest.md` — funnel status, ranking, §7 recommendation
+- `reports/PHASE_*_REPORT.md` — phase engineering reports
+- `ideas/rejected/index.md` — the rejected-mechanisms index (§26: failed
+  experiments are a research asset, with rejection reasons and §20 flaw
+  records)
+- `ideas/active/` — stored idea batches from discovery runs
 
 ## Public Research Philosophy
 

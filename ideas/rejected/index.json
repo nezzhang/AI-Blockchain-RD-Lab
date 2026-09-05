@@ -1,0 +1,49 @@
+[
+  {
+    "candidate_id": "cand-a218268ad562",
+    "name": "Prediction-Coupled Insurance Float",
+    "category": "insurance",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-bec3b6e85a91",
+    "name": "Prediction-Coupled Insurance Float",
+    "category": "insurance",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-7f2f07fd4e9a",
+    "name": "Population-Linked Supply",
+    "category": "monetary economics",
+    "status": "rejected",
+    "rejected_because": "confirmed fatal flaw(s) (game_theory); \u00a720 gate",
+    "fatal_flaws": [
+      "Red team confirmed a profitable structural attack: Coordinate an anchor spike during a low-liquidity window so the mechanism over-expands exactly when exit is cheapest."
+    ],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-06418647c270",
+    "name": "Trade-Corridor Clearing Tokens",
+    "category": "payments",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-f9d0e9af020b",
+    "name": "Trade-Corridor Clearing Tokens",
+    "category": "payments",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  }
+]

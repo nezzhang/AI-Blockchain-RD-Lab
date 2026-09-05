@@ -896,16 +896,101 @@ def report(
 
 
 # ---------------------------------------------------------------------------
-# Phase 8+ command stubs (§7) — declared now, implemented later
+# Phase 8: pipeline (implemented, §34) + public research structure
 # ---------------------------------------------------------------------------
 
 
 @app.command()
 def pipeline(
-    count: Annotated[int, typer.Option("--count", "-n", min=1)] = 10,
+    count: Annotated[
+        int, typer.Option("--count", "-n", min=1, help="Ideas to discover (§34)")
+    ] = 10,
+    target: Annotated[
+        int, typer.Option("--target", "-t", min=1, help="Funnel cut after research (§7)")
+    ] = 20,
+    finalists: Annotated[
+        int, typer.Option("--finalists", "-f", min=1, help="Finalist cut (§7)")
+    ] = 5,
+    stop_after: Annotated[
+        str | None,
+        typer.Option(
+            "--stop-after",
+            help="Interrupt after a stage (resume with a later run, §35)",
+        ),
+    ] = None,
+    mock_fixtures: Annotated[
+        bool,
+        typer.Option("--mock-fixtures", help="Offline demo: fixture LLM responses"),
+    ] = False,
 ) -> None:
-    """Run the full research pipeline end-to-end (Phase 8+)."""
-    _not_implemented("pipeline", "a later phase once agents are implemented")
+    """Run the full research pipeline (§34): discover -> ... -> report."""
+    from blockchain_rd_lab.pipeline import PipelineService
+
+    db = _db()
+    if mock_fixtures:
+        from blockchain_rd_lab.testing.pipeline_fixtures import build_pipeline_provider
+
+        provider = build_pipeline_provider()
+    else:
+        from blockchain_rd_lab.agents import MockLLMProvider as _MockProvider
+
+        provider = _provider_from_config()
+        if isinstance(provider, _MockProvider):
+            console.print(
+                "[red]runtime.llm_provider is 'mock' with no queued responses.[/red]\n"
+                "Use --mock-fixtures for the offline demo, or configure a real\n"
+                "provider in config/lab.yaml (§30)."
+            )
+            raise typer.Exit(code=2)
+
+    valid_stages = PipelineService.STAGES
+    if stop_after is not None and stop_after not in valid_stages:
+        console.print(
+            f"[red]Unknown stage {stop_after!r}. Valid: {', '.join(valid_stages)}[/red]"
+        )
+        raise typer.Exit(code=1)
+
+    service = PipelineService(
+        provider,
+        db,
+        repo_root=REPO_ROOT,
+        research_config=load_research(),
+    )
+    summary = service.run(
+        count=count, target=target, finalists=finalists, stop_after=stop_after
+    )
+
+    table = Table(title="Pipeline run (§34)")
+    table.add_column("Stage", style="cyan")
+    table.add_column("Processed", justify="right")
+    table.add_column("Advanced", justify="right")
+    table.add_column("Skipped", justify="right")
+    table.add_column("Errors", justify="right")
+    for stage in summary.stages:
+        table.add_row(
+            stage.stage,
+            str(stage.processed),
+            str(stage.advanced),
+            "yes" if stage.skipped else "",
+            str(len(stage.errors)),
+        )
+    console.print(table)
+
+    for stage in summary.stages:
+        for err in stage.errors[:5]:
+            console.print(f"  [red]{stage.stage}:[/red] {err}")
+
+    if summary.recommended_id:
+        console.print(
+            f"[bold]Recommended candidate (§7):[/bold] {summary.recommended_id}"
+        )
+    if summary.completed:
+        console.print("[green]Pipeline complete.[/green]")
+    else:
+        console.print(
+            "[yellow]Pipeline interrupted by --stop-after; re-run `lab "
+            "pipeline` to resume from the database state (§35).[/yellow]"
+        )
 
 
 if __name__ == "__main__":

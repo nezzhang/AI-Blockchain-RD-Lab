@@ -93,17 +93,33 @@ class TestSearch:
 
 
 class TestPhaseStubs:
-    """Remaining pipeline commands exist as stubs and fail fast (§7)."""
+    """The §7 command set is fully implemented (no stubs remain)."""
 
-    def test_stub_commands_exit_nonzero(self):
-        for cmd in (["pipeline"],):
-            result = runner.invoke(app, cmd)
-            assert result.exit_code == 2, cmd
-            assert "PHASE" in result.output or "later phase" in result.output
+    def test_all_cli_commands_implemented(self):
+        # §7 lists the complete command set; every one exists as a real
+        # command now (Phase 8 closed the last stub).
+        commands = registered_commands()
+        required = {
+            "discover", "research", "prior-art", "filter", "formalize",
+            "simulate", "redteam", "score", "rank", "report", "pipeline",
+            "status", "search",
+        }
+        assert required <= commands, f"missing: {required - commands}"
 
-    def test_stub_mentions_phase(self):
-        result = runner.invoke(app, ["pipeline"])
-        assert "later phase" in result.output
+
+def registered_commands():
+    from blockchain_rd_lab.cli import app
+
+    names = set()
+    for cmd in app.registered_commands:
+        # Explicit @app.command("x") sets .name; default registration
+        # leaves it None and the callback __name__ holds the id.
+        callback = getattr(cmd, "callback", None)
+        fn_name = getattr(callback, "__name__", None) if callback else None
+        names.add(cmd.name or fn_name)
+    for group in app.registered_groups:
+        names.add(group.name)
+    return {n.replace("_", "-") for n in names if n}
 
 
 class TestSeedCommand:
