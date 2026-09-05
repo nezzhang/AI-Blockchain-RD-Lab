@@ -39,6 +39,37 @@ from blockchain_rd_lab.schemas import Candidate, CandidateStatus
 # Agents whose findings the improver must address first.
 _PRIORITY = ("red_team", "game_theory", "security", "oracle")
 
+# §33 already-addressed matching: token overlap between a finding's text
+# and a graph attack label/detail above this Jaccard threshold counts as
+# "the same attack" (deterministic, §2).
+_ADDRESSED_THRESHOLD = 0.5
+
+
+def _tokens(text: str) -> set[str]:
+    """Normalized keyword tokens (reuses the discovery normalizer rules)."""
+    from blockchain_rd_lab.discovery.normalize import _STOPWORDS, _TOKEN_RE
+
+    return {
+        t
+        for t in _TOKEN_RE.findall(text.lower())
+        if t not in _STOPWORDS and len(t) >= 4
+    }
+
+
+def _matches_any(finding: dict[str, str], attacks: list[dict[str, str]]) -> bool:
+    """True when the finding is token-similar to an already-addressed attack."""
+    tokens = _tokens(finding.get("vector", ""))
+    if not tokens:
+        return False
+    for attack in attacks:
+        other = _tokens(attack.get("text", ""))
+        if not other:
+            continue
+        overlap = len(tokens & other) / len(tokens | other)
+        if overlap >= _ADDRESSED_THRESHOLD:
+            return True
+    return False
+
 
 def _fixable_findings(reports: list[dict[str, Any]]) -> list[dict[str, str]]:
     """Profitable attacks worth fixing, strongest agent first.
@@ -82,6 +113,72 @@ class ImprovementService:
 
     # -- one candidate -----------------------------------------------------------
 
+    def _graph(self):
+        """Build the §33 knowledge graph over the current lab database."""
+        from blockchain_rd_lab.graph.builder import GraphBuilder
+
+        return GraphBuilder(self.database).build()
+
+    def _addressed_attacks(
+        self, candidate_id: str, version: int
+    ) -> list[dict[str, str]]:
+        """Attacks the CURRENT model version already ADDRESSES (§33 edges).
+
+        The graph records improvement→attack ADDRESSES edges from §34 fix
+        claims; a finding that matches an attack addressed at (or below)
+        the current version is converged — the improver must not
+        re-patch it (the v3 honesty rule, now deterministic).
+        """
+        from blockchain_rd_lab.graph import EdgeKind, NodeKind
+
+        graph = self._graph()
+        out: list[dict[str, str]] = []
+        for e in graph.edges:
+            if e.kind is not EdgeKind.ADDRESSES:
+                continue
+            src = graph.node_by_id(e.source)
+            tgt = graph.node_by_id(e.target)
+            if src is None or tgt is None or src.kind is not NodeKind.IMPROVEMENT:
+                continue
+            # Only this candidate's fixes, at or below the current version.
+            if not src.id.startswith(candidate_id):
+                continue
+            try:
+                fix_version = int(src.id.rsplit("v", 1)[-1])
+            except ValueError:
+                continue
+            if fix_version > version:
+                continue
+            detail = str(tgt.meta.get("detail", ""))
+            out.append({"text": tgt.label + " " + detail})
+        return out
+
+    def _prior_fixes(self, candidate_id: str) -> list:
+        """Graph-derived how-similar-attacks-were-fixed records (§32 reuse)."""
+        from blockchain_rd_lab.graph.builder import GraphBuilder
+        from blockchain_rd_lab.improvement.agents import PriorFix
+
+        builder = GraphBuilder(self.database)
+        graph = builder.build()
+        out: list[PriorFix] = []
+        for fix in builder.attack_fixes(graph):
+            if fix.fixed_by is None:
+                continue
+            if fix.attacked_idea == candidate_id:
+                continue  # own history is handled by the addressed filter
+            version = 1
+            if fix.fixed_by.rsplit("v", 1)[-1].isdigit():
+                version = int(fix.fixed_by.rsplit("v", 1)[-1])
+            out.append(
+                PriorFix(
+                    candidate_id=fix.attacked_idea,
+                    attack=fix.attack_label,
+                    fix_summary=fix.fix_summary or "",
+                    model_version=version,
+                )
+            )
+        return out[:5]  # bounded context
+
     def improve_candidate(
         self, candidate: Candidate, *, offline: bool = False
     ) -> ImprovementOutcome:
@@ -104,15 +201,37 @@ class ImprovementService:
                 outcome.rejected_reason = "no profitable attacks to fix"
                 return outcome
 
+            # §33→§34: graph-derived prior fixes for similar attacks (§32
+            # reuse: consult how a similar attack was answered before) +
+            # deterministic already-addressed filtering (a finding whose
+            # attack the CURRENT model version already ADDRESSES is not
+            # re-patched — the convergence rule, enforced by code not LLM
+            # judgment, §2).
+            prior_fixes = self._prior_fixes(candidate.id)
+            current_version = int(json.loads(model_dump).get("version", 1))
+            addressed = self._addressed_attacks(candidate.id, current_version)
+            fresh = [
+                f for f in findings if not _matches_any(f, addressed)
+            ]
+            if not fresh:
+                outcome.rejected_reason = (
+                    f"all profitable findings already addressed by model "
+                    f"v{current_version} (§33 convergence rule)"
+                )
+                return outcome
+
             brief = CandidateBrief.from_candidate(candidate)
             current = json.loads(model_dump)
 
             if offline:
-                payload = build_improvement_fixture(brief, current, findings)
+                payload = build_improvement_fixture(brief, current, fresh)
                 proposal = ImprovementProposal.model_validate(payload)
             else:
                 agent_input = ImprovementInput(
-                    brief=brief, current_model=current, attack_findings=findings
+                    brief=brief,
+                    current_model=current,
+                    attack_findings=fresh,
+                    prior_fixes=prior_fixes,
                 )
                 output = self.agent.execute(agent_input)[0]
                 if not isinstance(output, ImprovementProposal):

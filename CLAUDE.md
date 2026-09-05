@@ -77,6 +77,12 @@ replacement.
   fail-closed pending halt, deterministic request ids, free replay
   of answered requests; `lab bridge list|show|answer|purge`;
   structured-only (no free-text completion, §2).
+- Improvement×Graph: the improve stage consults the §33 graph —
+  prior fixes (other candidates' resolved attacks + fix
+  rationales) render in the improver prompt (§32 reuse), and
+  findings already ADDRESSES-ed by the current model version are
+  deterministically filtered (Jaccard ≥ 0.5 token match): full
+  convergence = honest stop, no re-patching.
 - Archive: `src/blockchain_rd_lab/archive/` — §26 rejected-mechanisms
   index (ideas/rejected/index.{md,json}) with rejection reasons and §20
   flaw records; failed experiments are a research asset.

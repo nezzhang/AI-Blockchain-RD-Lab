@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from blockchain_rd_lab.agents.base import (
     BaseAgent,
@@ -76,6 +76,19 @@ class ImprovementAgent(BaseAgent):
         )
         for finding in payload.attack_findings:
             user += f"- [{finding['agent']}] {finding['vector']}\n"
+        if payload.prior_fixes:
+            # §32/§33 reuse: how similar attacks were answered before.
+            user += (
+                "\nPRIOR FIXES ON SIMILAR MECHANISMS (§33 knowledge graph — "
+                "REUSE what worked before rather than re-deriving defenses; "
+                "do not re-patch an attack that a listed fix already "
+                "addresses for this model version):\n"
+            )
+            for pf in payload.prior_fixes:
+                user += (
+                    f"- [{pf.candidate_id} v{pf.model_version}] attack: "
+                    f"{pf.attack[:200]}\n  fix: {pf.fix_summary[:300]}\n"
+                )
         user += (
             "\nProduce the improvement proposal as the JSON object described "
             "in the system message."
@@ -86,14 +99,31 @@ class ImprovementAgent(BaseAgent):
         ]
 
 
+class PriorFix(BaseModel):
+    """§32/§33 reuse: how a similar attack was fixed on a previous model."""
+
+    model_config = {"frozen": True}
+
+    candidate_id: str
+    attack: str
+    fix_summary: str
+    model_version: int
+
+
 class ImprovementInput(BaseModel):
-    """Everything the improvement agent needs: brief + model + findings."""
+    """Everything the improvement agent needs: brief + model + findings.
+
+    prior_fixes (§33→§34): graph-derived records of how similar attacks
+    were answered before, so the improver REUSES previous discoveries
+    instead of re-deriving defenses from scratch (§32).
+    """
 
     model_config = {"frozen": True}
 
     brief: CandidateBrief
     current_model: dict[str, Any]
     attack_findings: list[dict[str, str]]
+    prior_fixes: list[PriorFix] = Field(default_factory=list)
 
 
 def build_improvement_fixture(

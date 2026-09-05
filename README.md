@@ -31,6 +31,20 @@ supplies 100+ distinct mechanisms across §24's domains; the same
 normalization, dedup, §13 integrity, §15 battery, §20 gate, and §19
 scoring code paths gate everything exactly as with a live provider.
 
+## §33→§34: Graph-Backed Improvement (convergence)
+
+The improvement loop now consults the knowledge graph:
+
+- **Prior fixes as context** — the improver's prompt carries how
+  similar attacks were fixed on OTHER candidates (§32: reuse what
+  worked instead of re-deriving defenses), capped at 5 records.
+- **Deterministic convergence** — a finding whose attack the CURRENT
+  model version already ADDRESSES (per §33 ADDRESSES edges, token-
+  matched at Jaccard ≥ 0.5) is filtered BEFORE the improver runs;
+  when every finding is already addressed, the stage stops with an
+  honest "all profitable findings already addressed" outcome. The
+  loop terminates on evidence, not judgment (§2).
+
 ## Agent-as-LLM Bridge (§30)
 
 The lab can run with **no API key and zero spend** by making the
