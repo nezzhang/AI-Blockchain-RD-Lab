@@ -1,5 +1,23 @@
 [
   {
+    "candidate_id": "cand-642ea9f42170",
+    "name": "Corridor-Native FX Batch Matching",
+    "category": "decentralized fx",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r7 evidence-quality correction): uninterpretable evidence \u2014 stored v1 model has a dependency cycle (impact_check/rebate_pool) today's interpreter rejects; its \u00a715 runs predate the toposort gate. Successor candidate with a contract-compliant model follows.",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
+    "candidate_id": "cand-ef024f8bb596",
+    "name": "Escrowed Batch-Clearing Insurance Pool",
+    "category": "decentralized fx",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r7 evidence-quality correction): uninterpretable evidence \u2014 stored v2 model has a dependency cycle (partition_income/shared_spend/solvency_tie) today's interpreter rejects; its \u00a715 runs predate the toposort gate. Successor candidate with a contract-compliant model follows.",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
     "candidate_id": "cand-3acbd67d51cb",
     "name": "Escrowed Batch-Clearing Insurance Pool",
     "category": "decentralized fx",
@@ -16,6 +34,24 @@
     "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
     "fatal_flaws": [],
     "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-108293ca9f4f",
+    "name": "AI-Compute Denominated Debt",
+    "category": "financial markets",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r7 evidence-quality correction): replay-duplicate of cand-1acbaa9de0b0 (AI-Compute Denominated Debt) \u2014 same description, replayed evidence; a restorage workaround, not independent ranking evidence. Successor candidate with a contract-compliant model follows.",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-cb4d584867ed",
+    "name": "Tranche-Segmented Settlement Guarantee Stack",
+    "category": "institutional settlement",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r7 evidence-quality correction): vacuous evidence \u2014 \u00a715 battery 13/13 degenerate under today's gates (states pinned at clip bounds); v2 'clean' verdicts describe identical saturated trajectories, not stress survival. Successor candidate with a contract-compliant model follows.",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
   },
   {
     "candidate_id": "cand-a218268ad562",
@@ -92,6 +128,15 @@
     "novelty_class": "insufficient_evidence"
   },
   {
+    "candidate_id": "cand-db0588dfed1a",
+    "name": "Bandwidth Futures Market",
+    "category": "network economics",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r7 evidence-quality correction): replay-duplicate of cand-58d7091eb2a7 (Bandwidth Futures Market) \u2014 same description, replayed evidence; a restorage workaround, not independent ranking evidence. Successor candidate with a contract-compliant model follows.",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
     "candidate_id": "cand-06418647c270",
     "name": "Trade-Corridor Clearing Tokens",
     "category": "payments",
@@ -108,6 +153,15 @@
     "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
     "fatal_flaws": [],
     "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-636a97854ac8",
+    "name": "Dual-Sided Bond Auction Rebalancer",
+    "category": "stablecoin routing",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r7 evidence-quality correction): uninterpretable evidence \u2014 stored v2 model has a dependency cycle (capacity/rebalance/seasoning_depth) today's interpreter rejects; its \u00a715 runs predate the toposort gate and read stale values. Successor candidate with a contract-compliant model follows.",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
   },
   {
     "candidate_id": "cand-4952b2a96bab",
@@ -128,11 +182,29 @@
     "novelty_class": "adjacent_mechanism"
   },
   {
+    "candidate_id": "cand-c17ab7a0f74e",
+    "name": "Homeostatic Reserve Stablecoin",
+    "category": "stablecoins",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r7 evidence-quality correction): vacuous evidence \u2014 \u00a715 battery 13/13 degenerate under today's gates (states pinned at clip bounds); v2 'clean' verdicts describe identical saturated trajectories, not stress survival. Successor candidate with a contract-compliant model follows.",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
     "candidate_id": "cand-16d505be99f6",
     "name": "Homeostatic Reserve Stablecoin",
     "category": "stablecoins",
     "status": "rejected",
     "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
+    "candidate_id": "cand-7f4c2dee85e7",
+    "name": "Vol-Weighted Fee Smoothing Escrow",
+    "category": "transaction fee markets",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r7 evidence-quality correction): vacuous evidence \u2014 \u00a715 battery 13/13 degenerate under today's gates (states pinned at clip bounds); v2 'clean' verdicts describe identical saturated trajectories, not stress survival. Successor candidate with a contract-compliant model follows.",
     "fatal_flaws": [],
     "novelty_class": "adjacent_mechanism"
   }

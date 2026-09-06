@@ -302,13 +302,22 @@ class MechanismSimulation:
     def _is_degenerate(self, run: SimulationRun) -> bool:
         """§15 evidence quality: a run whose states never exercise dynamics.
 
-        A trajectory is DEGENERATE when every base state variable (the
-        S_t forms, not stepped S_t1 copies) spends ≥95% of its steps
-        pinned exactly at a clip bound (min or max) that appears in the
-        model's equations, or never moves off its initial value at all.
-        Saturated models make every scenario look identical — the
-        battery's job is to differentiate stress regimes, so such runs
-        carry no discriminating evidence (§2/§29).
+        A trajectory is DEGENERATE when NO base state variable (the S_t
+        forms, not stepped S_t1 copies) carries dynamics: each is either
+        pinned at a clip bound from the moment it first reaches it, or
+        frozen at one value the whole run. Saturated models make every
+        scenario look identical — the battery's job is to differentiate
+        stress regimes, so such runs carry no discriminating evidence
+        (§2/§29).
+
+        A state pinned at an INTENDED ceiling while OTHER states keep
+        moving is NOT degeneracy — that is the mechanism responding
+        (e.g. maximum retention under hyperinflation with the escrow
+        level still evolving). Degeneracy requires the whole state
+        vector to be evidence-free; one alive state keeps the run
+        informative, so the verdict is ALL-states-degenerate (matching
+        the §15 service rule: a FAILED verdict needs every scenario
+        vacuous).
         """
         if run.steps < 3 or not run.history:
             return False
@@ -333,6 +342,7 @@ class MechanismSimulation:
             base_set.append(s)
         if not base_set:
             return False
+        any_alive = False
         for sym in base_set:
             path = [
                 float(row[sym]) for row in run.history if sym in row and row[sym] is not None
@@ -340,12 +350,11 @@ class MechanismSimulation:
             if len(path) < 3:
                 continue
             if len(set(path)) == 1:
-                # frozen at one value all run — no dynamics exercised
-                return True
+                # frozen at one value all run — no dynamics from this state
+                continue
             # Pinned-at-bound: once the trajectory first reaches a clip
-            # bound, it never leaves it for the rest of the run. The
-            # initial transient (however long) does not restore evidence:
-            # a saturated steady state exercises no dynamics.
+            # bound, it never leaves it for the rest of the run. A state
+            # that pins is not alive, whatever the transient before it.
             first_bound = next(
                 (
                     i
@@ -359,8 +368,11 @@ class MechanismSimulation:
                 if all(
                     any(abs(x - b) <= 1e-9 for b in bounds) for x in tail
                 ):
-                    return True
-        return False
+                    continue
+            any_alive = True
+        # Degenerate = NO state carries dynamics (the vacuous case). One
+        # alive state keeps the run informative (§2: evidence decides).
+        return not any_alive
 
     def _roll_state_forward(
         self,

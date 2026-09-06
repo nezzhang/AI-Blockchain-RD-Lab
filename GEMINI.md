@@ -105,6 +105,17 @@ AI agents here.** This file is a convenience summary, not a replacement.
   reports healthy | vacuous | uninterpretable (legacy cycles) —
   the census that exposes ranking evidence authored under older
   gates; §11 corrections remain the operator's decision.
+- Round 7 correction (evidence honesty): the 6 vacuous/cycle
+  finalists + 2 replay-duplicates were SUPERSEDED with reasons
+  recorded (innovation_claim lineage) and §26-archived; the 2
+  cycle-evidence SCORED models likewise. Six successors were minted
+  with lineage, formalized to battery-contract-compliant v1 models
+  (13/13 distinct non-degenerate scenario trajectories), red-teamed,
+  improved to v2 (claim-based addressed_attacks, verbatim attack
+  names), re-tested (5/6 survives), and scored — the ranking's top 5
+  is now ALL successors on real evidence. Improve-stage claim hygiene:
+  addressed_attacks must name the stored attack vectors verbatim or
+  the §33/§27 matching (name-slug/Jaccard) cannot bind the claim.
 - Red teams attack the FORMALIZED model: CandidateBrief.formal_model
   carries the latest MathModel JSON into every adversarial prompt
   ('attack THIS design') — retest's re-attack targets the patched

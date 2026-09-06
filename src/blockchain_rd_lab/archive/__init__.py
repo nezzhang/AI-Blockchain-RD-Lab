@@ -54,6 +54,22 @@ def _rejection_reason(cand: Candidate) -> str:
     return "research-funnel cut (class A/B or §7 overflow); see filter records"
 
 
+def _supersede_reason(cand: Candidate) -> str:
+    """Honest reason a SUPERSEDED candidate left the ranked corpus."""
+    reasons: list[str] = []
+    for flaw in cand.fatal_flaws:
+        if flaw.confirmed and "evidence" in flaw.description.lower():
+            reasons.append(flaw.description)
+    if cand.innovation_claim and "successor" in cand.innovation_claim.lower():
+        reasons.append(cand.innovation_claim)
+    if reasons:
+        return "; ".join(reasons[:2])
+    return (
+        "superseded by successor with corrected evidence "
+        "(see innovation_claim lineage); §11"
+    )
+
+
 class ArchiveBuilder:
     """Builds the §26 public research archive from lab state."""
 
@@ -63,19 +79,38 @@ class ArchiveBuilder:
     def rejected_entries(self) -> list[RejectedEntry]:
         out: list[RejectedEntry] = []
         for cand in self.database.list_candidates(limit=None):
-            if cand.status is not CandidateStatus.REJECTED:
-                continue
-            out.append(
-                RejectedEntry(
-                    candidate_id=cand.id,
-                    name=cand.name,
-                    category=cand.category,
-                    status=cand.status.value,
-                    rejected_because=_rejection_reason(cand),
-                    fatal_flaws=[f.description for f in cand.fatal_flaws if f.confirmed],
-                    novelty_class=cand.novelty_class.value,
+            if cand.status is CandidateStatus.REJECTED:
+                out.append(
+                    RejectedEntry(
+                        candidate_id=cand.id,
+                        name=cand.name,
+                        category=cand.category,
+                        status=cand.status.value,
+                        rejected_because=_rejection_reason(cand),
+                        fatal_flaws=[
+                            f.description
+                            for f in cand.fatal_flaws
+                            if f.confirmed
+                        ],
+                        novelty_class=cand.novelty_class.value,
+                    )
                 )
-            )
+            elif cand.status is CandidateStatus.SUPERSEDED:
+                out.append(
+                    RejectedEntry(
+                        candidate_id=cand.id,
+                        name=cand.name,
+                        category=cand.category,
+                        status=cand.status.value,
+                        rejected_because=_supersede_reason(cand),
+                        fatal_flaws=[
+                            f.description
+                            for f in cand.fatal_flaws
+                            if f.confirmed
+                        ],
+                        novelty_class=cand.novelty_class.value,
+                    )
+                )
         out.sort(key=lambda e: (e.category, e.name))
         return out
 
