@@ -42,9 +42,13 @@ replacement.
   exclusion, stable ranking (score desc, name asc), §7 finalist cut;
   `lab rank` and `lab score` advance RED_TEAM -> SCORED -> FINALIST.
 - Reporting: `src/blockchain_rd_lab/reporting/` — §23 dossiers (19 fixed
-  sections) + lab funnel report, ASSEMBLED BY CODE from stored evidence
-  (no report-writer LLM; §2); rank-1 finalist is the §7 recommended
-  candidate; `lab report [id]` writes reports/finalists/ + lab-latest.md.
+  sections) + lab funnel report + §27 release package, ASSEMBLED BY CODE
+  from stored evidence (no report-writer LLM; §2); rank-1 finalist is the
+  §7 recommended candidate; `lab report [id]` writes reports/finalists/ +
+  lab-latest.md + reports/release/release-package-latest.md (build-in-public
+  staging: publication is the HUMAN decision, §27/§28; its §4 residual
+  disclosure lists every still-profitable/open attack surface the final
+  model version carries, strongest-honest-status per surface).
 - Pipeline: `src/blockchain_rd_lab/pipeline/` — §34 full loop (discover →
   research → filter → formalize → simulate → redteam → improve → retest →
   score → report); resumable by status (§35: the database is the
@@ -95,7 +99,11 @@ replacement.
   rationales) render in the improver prompt (§32 reuse), and
   findings already ADDRESSES-ed by the current model version are
   deterministically filtered (Jaccard ≥ 0.5 token match): full
-  convergence = honest stop, no re-patching.
+  convergence = honest stop, no re-patching. ADDRESSES edges are
+  CLAIM-BASED: they derive from the improver's own addressed_attacks
+  list (persisted agent-run output, name-slug or Jaccard ≥ 0.5 match),
+  never a blanket claim over every profitable attack — a fix that
+  never targeted an attack cannot close it.
 - Archive: `src/blockchain_rd_lab/archive/` — §26 rejected-mechanisms
   index (ideas/rejected/index.{md,json}) with rejection reasons and §20
   flaw records; failed experiments are a research asset.

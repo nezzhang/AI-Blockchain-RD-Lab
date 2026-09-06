@@ -43,12 +43,44 @@ The improvement loop now consults the knowledge graph:
   HELD at RED_TEAM and never scored: the score stage can no longer
   finalize an unfixed model while an authored fix sits pending
   (the round-1/round-2 bridge race, now impossible).
+- **Claim-based ADDRESSES edges** — the §33 graph derives
+  improvement→attack ADDRESSES edges from the improver's OWN
+  `addressed_attacks` claims (persisted agent-run output, matched by
+  name-slug or Jaccard ≥ 0.5 tokens), never a blanket claim over every
+  profitable attack on the idea. A fix that never targeted an attack
+  cannot "close" it; a re-found residual stays open even when claimed.
 - **Deterministic convergence** — a finding whose attack the CURRENT
   model version already ADDRESSES (per §33 ADDRESSES edges, token-
   matched at Jaccard ≥ 0.5) is filtered BEFORE the improver runs;
   when every finding is already addressed, the stage stops with an
   honest "all profitable findings already addressed" outcome. The
-  loop terminates on evidence, not judgment (§2).
+  loop terminates on evidence, not judgment (§2). Convergence may
+  legitimately take two pipeline runs: run 1 patches what it was
+  shown; retest's fresh re-attack may surface new residuals → held;
+  run 2 claims those → scored. Honest beats fast.
+
+## §27 Release Package (build-in-public staging)
+
+`lab report` also stages `reports/release/release-package-latest.md`
+for the §7 recommended candidate — assembled by code from STORED
+EVIDENCE ONLY (§2, no report-writer LLM):
+
+- **Publication readiness** — deterministic score, model versions,
+  §15 battery verdict, Monte Carlo outcome.
+- **Evidence trail** — prior-art searches, adversarial reports,
+  improvement cycle provenance (all traceable to DB records).
+- **Residual attacks disclosure (the honesty core)** — every
+  profitable attack surface the FINAL model version still carries,
+  two-layer honest: `still-profitable` (claimed by the fix AND
+  re-found by the model-wired re-attack), `open` (never claimed),
+  deduplicated per surface at the strongest honest status. The §12
+  qualifier is explicit: this is the searched attack space, not an
+  absolute security claim.
+- **Build-in-public progression (§27)** — Idea→Research→Simulation
+  marked done; "Open-source publication" marked as the HUMAN
+  DECISION this package stages; community criticism of the named
+  residuals is the designed next filter. §28 boundary restated in
+  the document: the lab recommends, never publishes.
 
 ## Agent-as-LLM Bridge (§30)
 

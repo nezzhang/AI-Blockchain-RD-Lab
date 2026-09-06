@@ -1317,6 +1317,14 @@ def report(
         table.add_row("Finalist dossier", _Path(path).name)
     if outcome.lab_report_path:
         table.add_row("Lab report", _Path(outcome.lab_report_path).name)
+
+    # §27 release package: staged from stored evidence, for the human
+    # publication decision. Written when a finalist exists.
+    from blockchain_rd_lab.reporting.release import ReleasePackageBuilder
+
+    release_path = ReleasePackageBuilder(db).write(REPO_ROOT / "reports")
+    if release_path:
+        table.add_row("§27 release package", _Path(release_path).name)
     console.print(table)
 
     from blockchain_rd_lab.schemas import CandidateStatus

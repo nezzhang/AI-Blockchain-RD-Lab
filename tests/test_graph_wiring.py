@@ -109,6 +109,31 @@ def _store_fixed_history(db, cid: str, attack_text: str, fix_text: str) -> None:
         report_json=json.dumps(_mk_attack_report(attack_text)),
         verdict="vulnerable",
     )
+    # The improver's run record (as the real improve stage persists): §33
+    # ADDRESSES edges derive from the proposal's OWN addressed_attacks
+    # claims — the graph never blanket-claims unlisted attacks.
+    from blockchain_rd_lab.schemas import AgentRunRecord, utcnow
+
+    db.save_agent_run(
+        AgentRunRecord(
+            agent_name="improver",
+            candidate_id=cid,
+            status="success",
+            finished_at=utcnow(),
+            output={
+                "summary": fix_text,
+                "addressed_attacks": [
+                    {
+                        "agent_name": "red_team",
+                        "vector_description": attack_text,
+                        "fix_strategy": fix_text,
+                        "fixes_attack": True,
+                    }
+                ],
+                "model": m2.model_dump(),
+            },
+        )
+    )
 
 
 # ---------------------------------------------------------------------------

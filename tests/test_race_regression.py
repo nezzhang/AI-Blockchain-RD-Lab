@@ -137,12 +137,28 @@ class TestPendingImprovementHoldsScoring:
         assert not summary.completed or score.errors  # run may finish; hold recorded
 
     def test_resolved_improvement_scores_normally(self, race_db, tmp_path):
-        """No pending findings → score proceeds as before (no regression)."""
+        """No pending findings → score proceeds as before (no regression).
+
+        Under claim-based §33 ADDRESSES edges the convergence is honest
+        and takes TWO pipeline runs: run 1 improves (v2 claims the
+        findings it was shown) but retest's fresh re-attack finds more
+        fixture vectors → the §35 gate correctly HOLDS the candidate;
+        run 2 improves again (v3 claims the retest findings) and the
+        static fixture re-attack finds nothing new → score proceeds.
+        (The old blanket-edge semantics "resolved" in one run by
+        retroactively claiming attacks the fix never targeted.)
+        """
         pipe = PipelineService(
             build_pipeline_provider(), race_db, repo_root=tmp_path, research_config=None
         )
-        # Offline fixtures resolve the improvement; the mock provider
-        # answers everything. The candidate should reach SCORED/FINALIST.
+        # Run 1: improvement + retest; re-attack finds fresh vectors → held.
+        pipe.run(count=1, target=1, finalists=1)
+        cand = race_db.get_candidate("cand-race1")
+        assert cand is not None
+        assert cand.status is CandidateStatus.RED_TEAM, (
+            "run 1 must hold: retest found fresh unclaimed findings (§35)"
+        )
+        # Run 2: the improver claims the retest findings → converged → scored.
         pipe.run(count=1, target=1, finalists=1)
         cand = race_db.get_candidate("cand-race1")
         assert cand is not None
@@ -199,6 +215,21 @@ class TestPendingImprovementHoldsScoring:
             json.dumps(proposal.model),
             proposal.summary,
             version=2,
+        )
+        # Persist the improver's run record (as the real improve stage
+        # does): the §33 ADDRESSES edges are derived from the proposal's
+        # OWN addressed_attacks claims — the graph never blanket-claims
+        # attacks a fix did not target.
+        from blockchain_rd_lab.schemas import AgentRunRecord, utcnow
+
+        memory_db.save_agent_run(
+            AgentRunRecord(
+                agent_name="improver",
+                candidate_id=cid,
+                status="success",
+                finished_at=utcnow(),
+                output=proposal.model_dump(),
+            )
         )
         pipe = PipelineService(
             build_pipeline_provider(), memory_db, repo_root=tmp_path, research_config=None

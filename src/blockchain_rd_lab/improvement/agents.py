@@ -217,14 +217,30 @@ def build_improvement_fixture(
     )
     patched["open_questions"] = oq
 
+    # Claim EVERY finding the improver was shown: the hard cap + EMA
+    # smoothing patch is the deterministic fix for the anchor-manipulation
+    # family, and the §33/§35 gates read these claims as the fix contract.
+    # A fixture claiming only one finding would leave the rest "fresh" and
+    # hold the candidate forever (the race-regression suite pins this).
+    strategies = list(FIX_STRATEGIES) + [FIX_STRATEGIES[0]] * len(findings)
     addressed = [
         {
-            "agent_name": findings[0]["agent"] if findings else "red_team",
-            "vector_description": findings[0]["vector"] if findings else "unspecified",
-            "fix_strategy": FIX_STRATEGIES[0],
+            "agent_name": f["agent"] if f.get("agent") else "red_team",
+            "vector_description": f["vector"] if f.get("vector") else "unspecified",
+            "fix_strategy": strategies[i % len(strategies)],
             "fixes_attack": True,
         }
+        for i, f in enumerate(findings)
     ]
+    if not addressed:
+        addressed = [
+            {
+                "agent_name": "red_team",
+                "vector_description": "unspecified",
+                "fix_strategy": FIX_STRATEGIES[0],
+                "fixes_attack": True,
+            }
+        ]
     return {
         "summary": "Harden the supply rule with a hard single-step cap c_max "
         "and EMA anchor smoothing so transient anchor manipulation cannot "

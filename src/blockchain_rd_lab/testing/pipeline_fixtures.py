@@ -40,9 +40,8 @@ def _brief_dict(messages: list[LLMMessage]) -> dict[str, Any]:
         "description": _field_from_message(messages, "description") or "fixture",
         "core_mechanism": _field_from_message(messages, "core mechanism") or "fixture",
         "problem": "",
-        "oracle_required": "oracle): yes" in " ".join(
-            m.content for m in messages if m.role == "user"
-        ),
+        "oracle_required": "oracle): yes"
+        in " ".join(m.content for m in messages if m.role == "user"),
     }
 
 
@@ -147,14 +146,23 @@ class PipelineFixtureProvider(MockLLMProvider):
                 raise ValueError("improvement fixture could not locate current model")
             current = json.loads(m.group(1))
             brief = CandidateBrief.model_validate(_brief_dict(messages))
-            findings = [{"agent": "red_team", "vector": "anchor spike manipulation"}]
-            return dict(build_improvement_fixture(brief, current, findings))
+            # Parse the ACTUAL adversarial findings from the prompt (the
+            # improver's claims must match the attacks it was shown — a
+            # blanket claim would let §33/§35 honesty gates see fixes that
+            # were never claimed).
+            findings: list[dict[str, str]] = _re.findall(
+                r"^- \[([a-z_]+)\] (.+)$",
+                user_text,
+                flags=_re.MULTILINE,
+            )
+            parsed = [{"agent": agent, "vector": vector} for agent, vector in findings]
+            if not parsed:
+                parsed = [{"agent": "red_team", "vector": "anchor spike manipulation"}]
+            return dict(build_improvement_fixture(brief, current, parsed))
 
         # Unknown schema: no fixture available — fail closed (§30) rather
         # than emit digest garbage that would masquerade as evidence.
-        raise ValueError(
-            f"no pipeline fixture for schema {schema_name!r}"
-        )
+        raise ValueError(f"no pipeline fixture for schema {schema_name!r}")
 
 
 def build_pipeline_provider() -> PipelineFixtureProvider:

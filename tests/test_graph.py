@@ -69,6 +69,40 @@ def store_chain(db, cid: str = "cand-graph") -> str:
     v2["version"] = 2
     db.save_math_model(cid, json.dumps(v2), "hard cap + smoothing fix", version=2)
 
+    # The improver's run record (as the real improve stage persists): §33
+    # ADDRESSES edges derive from the proposal's OWN claims — never a
+    # blanket claim over every profitable attack on the idea.
+    from blockchain_rd_lab.redteam.agents import build_redteam_fixture
+
+    _reports = build_redteam_fixture(brief, verdict="vulnerable")
+    _claimed = [
+        {
+            "agent_name": agent,
+            "vector_description": str(
+                (_reports[agent].get("attack_vectors") or [{}])[0].get("vector", "")
+            ),
+            "fix_strategy": "hard single-step cap c_max + EMA anchor smoothing",
+            "fixes_attack": True,
+        }
+        for agent in ("game_theory", "security", "oracle", "red_team")
+        if _reports[agent].get("attack_vectors")
+    ]
+    from blockchain_rd_lab.schemas import AgentRunRecord, utcnow
+
+    db.save_agent_run(
+        AgentRunRecord(
+            agent_name="improver",
+            candidate_id=cid,
+            status="success",
+            finished_at=utcnow(),
+            output={
+                "summary": "Harden with hard cap + EMA smoothing.",
+                "addressed_attacks": _claimed,
+                "model": {"candidate_id": cid, "version": 2},
+            },
+        )
+    )
+
     # experiment records (v1 + v2 style ids)
     for suffix, model in (("", "mathmodel-latest"), ("-v2", "mathmodel-v2")):
         db.save_experiment(

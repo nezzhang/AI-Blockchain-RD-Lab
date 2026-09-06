@@ -1,0 +1,310 @@
+"""§27 release-package assembly: code-built, evidence-only, honest.
+
+Builds the public-release staging document for the §7 recommended
+candidate from STORED EVIDENCE ONLY (§2: no report-writer LLM — every
+claim in the package traces to a database record). The package exists
+to support the §27 human decision: publication is a human call, and
+this document hands the human the complete evidence trail — including
+the residual attacks the red team found and could NOT fully close.
+
+Structure (deterministic, same DB state → byte-identical output):
+  1. Publication readiness: score, versions, simulation battery verdict
+  2. The mechanism: description + core causal chain (from the record)
+  3. Evidence trail: research/simulation/red-team/improvement lineage
+  4. RESIDUAL ATTACKS DISCLOSURE: every profitable attack the final
+     model version still carries — the §12 honesty core. A mechanism
+     ships WITH its residuals named, never without.
+  5. Build-in-public progression: the §27 ladder with the lab's honest
+     position marked (research complete; publication is the next
+     HUMAN decision; no token, no deployment — §28).
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import UTC, datetime
+from pathlib import Path
+
+from blockchain_rd_lab.database import LabDatabase
+from blockchain_rd_lab.schemas import CandidateStatus
+
+# §27 progression, verbatim in spirit from the master prompt.
+_PROGRESSION = (
+    "Idea",
+    "Research",
+    "Simulation",
+    "Open-source publication",
+    "Community criticism",
+    "Prototype",
+    "Testnet",
+    "Developer adoption",
+    "Token/mainnet consideration",
+)
+
+
+class ReleasePackageBuilder:
+    """Assembles the §27 release package for the recommended candidate."""
+
+    def __init__(self, database: LabDatabase) -> None:
+        self.database = database
+
+    # -- helpers -------------------------------------------------------------
+
+    def _recommended(self) -> tuple[str, str] | None:
+        candidates = self.database.list_candidates(limit=None)
+        finalists = [c for c in candidates if c.status is CandidateStatus.FINALIST]
+        if not finalists:
+            return None
+        ranked = sorted(finalists, key=lambda c: (-(c.overall_score or 0.0), c.name))
+        top = ranked[0]
+        return top.id, top.name
+
+    def _residual_attacks(self, candidate_id: str) -> list[dict[str, object]]:
+        """Profitable attacks against the LATEST model version, honestly.
+
+        Two-layer honesty (§12, §33):
+        - An attack vector from ANY red-team report marked profitable is a
+          candidate residual.
+        - The §33 graph's ADDRESSES edges record what each fix CLAIMS to
+          address — a claim, not a proof. So each candidate residual is
+          matched against the FINAL version's claims:
+          * no claim covers it → OPEN residual (never addressed);
+          * a claim covers it AND the finding came from a re-attack of the
+            final version (the model-wired retest) → STILL-PROFITABLE
+            residual: the fix claims it; the red team re-found it anyway;
+          * a claim covers it from an OLDER attack only → claimed-closed.
+        The package discloses OPEN and STILL-PROFITABLE residuals; only
+        claimed-closed ones are left out (they live in the dossier).
+        """
+        from blockchain_rd_lab.improvement.service import ImprovementService, _matches_any
+        from blockchain_rd_lab.redteam import AttackVector
+
+        model_json = self.database.get_latest_math_model(candidate_id)
+        if model_json is None:
+            return []
+        version = int(json.loads(model_json).get("version", 1))
+        svc = ImprovementService.__new__(ImprovementService)
+        svc.database = self.database
+        addressed = svc._addressed_attacks(candidate_id, version)
+        # When the final model version was stored (deterministic re-attack
+        # boundary: red-team reports created AFTER this saw the final
+        # version's parameters in their prompts — §34 model-wired retest).
+        versions_meta = {
+            m["version"]: m["created_at"] for m in self.database.list_math_models(candidate_id)
+        }
+        final_stored_at = versions_meta.get(version)
+
+        # Collect every profitable-vector occurrence first, then dedup by
+        # surface taking the STRONGEST honest status (a surface claimed by
+        # v2 AND re-found by the final-version re-attack is still-profitable
+        # even if an older report shows the same surface as fixed-claimed).
+        order = {"still-profitable": 2, "open": 1, "claimed-closed": 0}
+        occurrences: dict[str, dict[str, object]] = {}
+        for rec in self.database.list_redteam_results(candidate_id=candidate_id):
+            payload = json.loads(rec["report_json"])
+            vectors = payload.get("attack_vectors", [])
+            for v in vectors:
+                try:
+                    av = AttackVector.model_validate(v)
+                except Exception:
+                    continue
+                if not av.profitable_for_attacker:
+                    continue
+                key = av.vector.strip().lower()
+                claimed = _matches_any(
+                    {"vector": f"{av.vector}: {av.description}"}, addressed
+                )
+                # Did this vector come from a red team that saw the final
+                # version (§34 retest re-attack, model-wired prompt)?
+                report_time = rec["created_at"] or ""
+                saw_final = final_stored_at is not None and report_time > final_stored_at
+                status = (
+                    "still-profitable"
+                    if (claimed and saw_final)
+                    else ("claimed-closed" if claimed else "open")
+                )
+                prev = occurrences.get(key)
+                if prev is None or order[status] > order[str(prev["status"])]:
+                    occurrences[key] = {
+                        "vector": av.vector,
+                        "description": av.description,
+                        "attacker": av.attacker,
+                        "requires_collusion": av.requires_collusion,
+                        "evidence_level": str(av.evidence_level.value)
+                        if hasattr(av.evidence_level, "value")
+                        else str(av.evidence_level),
+                        "found_in_report": rec["agent_name"],
+                        "status": status,
+                    }
+        residuals = [
+            o
+            for o in occurrences.values()
+            if o["status"] != "claimed-closed"
+        ]
+        return residuals
+
+    def _simulation_verdict(self, candidate_id: str) -> dict[str, dict[str, object]]:
+        """Latest battery + Monte Carlo outcomes for the evidence trail."""
+        scenarios: dict[str, object] = {}
+        monte_carlo: dict[str, object] = {}
+        for exp in self.database.iter_experiments(candidate_id):
+            res = exp.results or {}
+            if "scenarios" in exp.experiment_id:
+                ok = sum(1 for r in res.values() if not r.get("failures"))
+                total = len(res)
+                scenarios = {
+                    "scenarios_total": total,
+                    "scenarios_clean": ok,
+                    "all_clean": ok == total and total > 0,
+                }
+            elif "montecarlo" in exp.experiment_id:
+                monte_carlo = {
+                    "trials": res.get("trials", 0),
+                    "failures": res.get("failures", 0),
+                }
+        return {"battery": scenarios, "monte_carlo": monte_carlo}
+
+    # -- main ----------------------------------------------------------------
+
+    def build(self) -> str | None:
+        """Render the §27 release package as markdown; None if no finalist."""
+        top = self._recommended()
+        if top is None:
+            return None
+        cid, name = top
+        cand = self.database.get_candidate(cid)
+        assert cand is not None
+
+        lines: list[str] = []
+        lines.append(f"# Release Package: {name}")
+        lines.append("")
+        lines.append(
+            "§27 build-in-public staging document — assembled by code from "
+            "stored evidence only (§2). Publication is a HUMAN decision "
+            "(§27); this package stages the evidence, it does not publish."
+        )
+        lines.append("")
+        lines.append(f"Generated: {datetime.now(UTC).isoformat(timespec='seconds')}")
+        lines.append(f"Candidate: `{cid}` (§7 recommended, rank 1)")
+        lines.append("")
+
+        # 1. readiness
+        lines.append("## 1. Publication Readiness")
+        lines.append("")
+        score = cand.overall_score
+        versions = [m.get("version") for m in self.database.list_math_models(cid)]
+        sim = self._simulation_verdict(cid)
+        lines.append(f"- Deterministic overall score: **{score}** (§19, 11 dimensions)")
+        lines.append(f"- Model versions stored: {versions} (append-only, §21)")
+        battery = sim.get("battery", {})
+        if battery:
+            mark = "✅" if battery.get("all_clean") else "❌"
+            lines.append(
+                f"- §15 battery: {mark} {battery.get('scenarios_clean')}/"
+                f"{battery.get('scenarios_total')} scenarios clean"
+            )
+        mc = sim.get("monte_carlo", {})
+        if mc:
+            lines.append(
+                f"- Monte Carlo: {mc.get('failures')} failures / {mc.get('trials')} trials"
+            )
+        lines.append("")
+
+        # 2. the mechanism
+        lines.append("## 2. The Mechanism (as recorded)")
+        lines.append("")
+        lines.append(f"**Problem.** {cand.problem}")
+        lines.append("")
+        lines.append(f"**Core causal chain.** {cand.core_mechanism}")
+        lines.append("")
+
+        # 3. evidence trail
+        lines.append("## 3. Evidence Trail")
+        lines.append("")
+        pa = self.database.list_prior_art(cid)
+        lines.append(f"- Prior-art searches recorded: {len(pa)} (queries + sources stored, §12)")
+        redteam = self.database.list_redteam_results(candidate_id=cid)
+        agents = sorted({r["agent_name"] for r in redteam})
+        lines.append(f"- Adversarial reports: {len(redteam)} across {agents}")
+        lines.append(
+            "- Improvement cycle: "
+            + (
+                f"{len(versions) - 1} patched version(s) stored; the final "
+                f"version v{max(v for v in versions if v)} was re-attacked "
+                "with the patched model in the adversarial prompt (§34 retest)"
+                if len(versions) > 1
+                else "none (single version)"
+            )
+        )
+        lines.append("")
+
+        # 4. residual attacks — the honesty core
+        residuals = self._residual_attacks(cid)
+        lines.append("## 4. Residual Attacks Disclosure (§12 honesty)")
+        lines.append("")
+        if residuals:
+            lines.append(
+                "This list is the searched attack space, not an absolute "
+                "claim about all attacks (§12)."
+            )
+            lines.append("")
+            lines.append(
+                f"The red team found **{len(residuals)} profitable attack "
+                "surface(s)** the final model version does not fully close "
+                "(independent agents often converge on the same surface "
+                "with different phrasings — convergence is itself evidence "
+                "the surface is real). Publication means shipping the "
+                "mechanism WITH these named residuals — every one is "
+                "recorded here and in the dossier:"
+            )
+            lines.append("")
+            for r in residuals:
+                collusion = " (requires collusion)" if r["requires_collusion"] else ""
+                lines.append(
+                    f"- **{r['vector']}** [{r['status']}; {r['attacker']}"
+                    f"{collusion}, {r['evidence_level']}] — {r['description']}"
+                )
+        else:
+            lines.append(
+                "No profitable attack remains unaddressed by the final "
+                "model version. This is a statement about the searched "
+                "attack space, not an absolute claim of security (§12: no "
+                "absolute claims)."
+            )
+        lines.append("")
+
+        # 5. progression
+        lines.append("## 5. Build-in-Public Progression (§27)")
+        lines.append("")
+        lines.append("```text")
+        for step in _PROGRESSION:
+            if step in ("Idea", "Research", "Simulation"):
+                marker = "[x]"
+            elif step == "Open-source publication":
+                marker = "[← HUMAN DECISION — this package]"
+            else:
+                marker = "[ ]"
+            lines.append(f"{marker} {step}")
+        lines.append("```")
+        lines.append("")
+        lines.append(
+            "The lab is a research system (§28): no token, no contract "
+            "deployment, no funds. The next step — open-source publication "
+            "of this evidence package — is explicitly a human decision. "
+            "Community criticism of the residual attacks above is the "
+            "progression's designed next filter: publication invites the "
+            "attackers to prove the residual surfaces real or bounded."
+        )
+        lines.append("")
+        return "\n".join(lines)
+
+    def write(self, reports_dir: Path) -> Path | None:
+        """Write the package to reports/release/; returns the path."""
+        content = self.build()
+        if content is None:
+            return None
+        out = reports_dir / "release"
+        out.mkdir(parents=True, exist_ok=True)
+        path = out / "release-package-latest.md"
+        path.write_text(content, encoding="utf-8")
+        return path
