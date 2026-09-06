@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-c17ab7a0f74e
 - **Category:** stablecoins
 - **Overall score:** 5.2500
-- **Rank:** 4
+- **Rank:** 6
 - **Status:** finalist
 
 ## Executive Summary

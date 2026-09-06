@@ -1,14 +1,17 @@
 {
   "summary": {
-    "generated": 0,
-    "normalized": 0,
-    "duplicates_removed": 0,
-    "stored": 0,
-    "failed_batches": 1,
+    "generated": 3,
+    "normalized": 3,
+    "duplicates_removed": 1,
+    "stored": 2,
+    "failed_batches": 0,
     "errors": [
-      "batch failed: bridge request ca2cad10be5038a9 is PENDING: answer it with `lab bridge answer ca2cad10be5038a9` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      "duplicate skipped: 'Dual-Sided Bond Auction Rebalancer' \u2248 'Dual-Sided Bond Auction Rebalancer' (exact name-key collision)"
     ],
-    "candidate_ids": []
+    "candidate_ids": [
+      "cand-cb4d584867ed",
+      "cand-7f4c2dee85e7"
+    ]
   },
   "stored_ideas": [
     {
@@ -224,13 +227,13 @@
     {
       "name": "Tranche-Segmented Settlement Guarantee Stack",
       "category": "institutional settlement",
-      "domain": "",
+      "domain": "payment channels",
       "description": "A two-layer capital structure for settlement guarantees where risk is tranched instead of pooled flat: (1) settlement participants buy guarantee coverage in SENIOR tranches \u2014 first-loss capital from the float's calm-period surplus, priced cheap, covering routine solver hiccups (latency straddles, marginal degradations \u2014 the frequent small failures). (2) LPs seeking yield underwrite JUNIOR tranches \u2014 the fallback-solver inventory and its bonds \u2014 earning concentration-priced premiums from the batch-clearing pool, covering the rare big failures (solver strikes, correlated exits). (3) The tranche boundary is itself dynamic: it is set by the prediction market's implied stress odds \u2014 when implied stress rises, the senior/junior split point moves so MORE capital is pre-committed to the junior (event) layer before the event arrives, converting the market's early warning into a capital reallocation the pool could never do by committee. (4) Premiums flow tranchewise: senior coverage pays a steady fee into the float's surplus; junior underwriting earns the state-dependent fragility premium; both are priced off the SAME implied-odds surface so there is one coherent risk price across the stack. (5) On failure events: senior absorbs first (routine), junior activates the fallback solver (severe); on calm, premiums recapitalize senior first (rebuilding the cheap layer)."
     },
     {
       "name": "Vol-Weighted Fee Smoothing Escrow",
       "category": "transaction fee markets",
-      "domain": "",
+      "domain": "transaction fee markets",
       "description": "An escrow that converts realized fee volatility into smoothing inventory for the fee-relay voucher market: (1) payers buying fee vouchers pay a small vol-weight (a premium proportional to the CURRENT measured fee volatility, not a fixed spread). (2) The vol-weights accumulate into a smoothing inventory that the escrow deploys when realized fees exceed voucher faces: instead of rationing (the round-2 finding \u2014 acceptance collapses during spikes), the smoothing inventory tops up relayer margins exactly when G_t rises, making acceptance INCREASING in congestion (the v2 congestion-indexed premium, now capitalized by the market's own vol payments rather than a parameter). (3) When volatility subsides, the smoothing inventory decays back into rebates for loyal voucher holders \u2014 the calm-period surplus share. (4) The measured volatility input is a long EMA of realized inclusion fees (native on-chain data), so the weight is manipulation-resistant by the same window lineage the lab has reused three times. (5) The design closes the loop the round-2 model left open: the acceptance equation's k_premium term is no longer a hopeful parameter but a capitalized budget."
     }
   ]

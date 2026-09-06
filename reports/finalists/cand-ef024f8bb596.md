@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-ef024f8bb596
 - **Category:** decentralized fx
 - **Overall score:** 5.7000
-- **Rank:** 2
+- **Rank:** 4
 - **Status:** finalist
 
 ## Executive Summary
