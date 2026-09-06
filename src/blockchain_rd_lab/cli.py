@@ -941,6 +941,62 @@ def simulate(
 # ---------------------------------------------------------------------------
 
 
+@app.command()
+def audit(
+    steps: Annotated[int, typer.Option("--steps", min=10)] = 120,
+    seed: Annotated[int, typer.Option("--seed", min=0)] = 7,
+) -> None:
+    """§15/§21 evidence-quality census: re-run every stored model today.
+
+    Reports each FINALIST/SCORED candidate's model under the CURRENT
+    interpreter + battery: healthy | vacuous (degenerate trajectories —
+    stored 'clean' verdicts carry no evidence) | uninterpretable
+    (dependency cycles / errors today's code rejects). Measures only;
+    §11 corrections are the operator's decision (§2).
+    """
+    from blockchain_rd_lab.simulation.audit import AuditService
+
+    db = _db()
+    report = AuditService(db, steps=steps, seed=seed).audit_all()
+
+    table = Table(title="Evidence-Quality Audit — stored models under today's code")
+    table.add_column("Candidate", style="cyan")
+    table.add_column("Status")
+    table.add_column("Model", justify="right")
+    table.add_column("Interpret")
+    table.add_column("Battery", justify="right")
+    table.add_column("Verdict")
+    style_by_verdict = {
+        "healthy": "green",
+        "vacuous": "yellow",
+        "uninterpretable": "red",
+        "no_model": "dim",
+    }
+    for row in sorted(report.rows, key=lambda r: (r["verdict"], str(r["name"]))):
+        battery = (
+            f"{row['clean']}/{row['scenarios']}"
+            if row["scenarios"]
+            else "—"
+        )
+        if row["degenerate"]:
+            battery += f" ({row['degenerate']} degenerate)"
+        table.add_row(
+            str(row["name"])[:44],
+            str(row["status"]),
+            f"v{row['model_version']}",
+            str(row["interpret"]),
+            battery,
+            f"[{style_by_verdict.get(str(row['verdict']), 'white')}]{row['verdict']}[/]",
+        )
+    console.print(table)
+    console.print(
+        f"Counts: {report.counts} — vacuous/uninterpretable models' stored "
+        "verdicts carry no evidence under today's gates; §11 corrections "
+        "(SUPERSEDED + successor on a corrected model) are the operator's "
+        "decision."
+    )
+
+
 def _redteam_provider(mock_fixtures: bool, briefs):
     """Build the LLM provider; fixture mode queues one report set per brief."""
     from blockchain_rd_lab.agents import MockLLMProvider

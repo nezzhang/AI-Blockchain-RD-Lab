@@ -86,6 +86,28 @@ replacement.
   battery inputs + initial state) BEFORE storing — unfed inputs
   and dependency cycles are caught at RED_TEAM (resubmittable),
   never at RETEST's terminal step 0.
+- Degenerate-run gate (§15 evidence quality): runs whose states pin
+  at clip bounds / freeze (every scenario indistinguishable) are
+  flagged `degenerate` — vacuous evidence, NOT clean. The §15
+  verdict FAILS such models (SIMULATING → FAILED, resubmittable);
+  the formalize prompt now states the battery input contract
+  (X_t anchor level ~1000, dX_t delta, states seed at 1000, clip
+  bounds must bracket those scales).
+- §14 state feedback: models declaring both S_t and S_t1 as states
+  (the §13 bridge convention) roll computed S_t1 back into S_t —
+  the feedback loop closes (previously such models ran flat at
+  their initial state and still "passed" the battery).
+- Adversarial pattern battery (§20 residual bounding):
+  `simulation/adversarial.py` executes the named attack
+  choreographies (vol oscillation, wash flow, pump-unwind, shock
+  timing) against the final model and reports the attacker's edge
+  vs a matched base run; saturated models report headline=None
+  (VACUOUS), never 0.0 — a false "bounded by zero" claim.
+- Evidence-quality audit: `lab audit` re-runs every stored
+  FINALIST/SCORED model under TODAY'S interpreter + battery and
+  reports healthy | vacuous | uninterpretable (legacy cycles) —
+  the census that exposes ranking evidence authored under older
+  gates; §11 corrections remain the operator's decision.
 - Red teams attack the FORMALIZED model: CandidateBrief.formal_model
   carries the latest MathModel JSON into every adversarial prompt
   ('attack THIS design') — retest's re-attack targets the patched

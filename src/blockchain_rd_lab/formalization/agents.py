@@ -83,6 +83,17 @@ class MechanismDesignerAgent(BaseAgent):
                 "variables, their reporting frequency, and revision policy.\n"
             )
         user += (
+            "\nBATTERY INPUT CONTRACT (the §15 simulation feeds your model):\n"
+            "- Inputs each step are exactly: X_t = anchor LEVEL (~1000, "
+            "drifts per scenario) and dX_t = anchor DELTA that step.\n"
+            "- State variables seed at 1000.0; equations must tolerate "
+            "that scale.\n"
+            "- Any other input symbol you declare gets NO battery feed — "
+            "it must derive itself from X_t/dX_t or be a parameter/state.\n"
+            "- clip() bounds must bracket the values your equations "
+            "actually produce at these scales, or the run saturates "
+            "(pinned states = degenerate = vacuous §15 evidence; the "
+            "battery flags and rejects such models).\n"
             "\nProduce the formal mathematical model as the JSON object described "
             "in the system message. Every symbol used in equations must be declared."
         )

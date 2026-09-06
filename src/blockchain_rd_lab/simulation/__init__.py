@@ -13,6 +13,7 @@ whale attack, market crash, black swan.
 
 from __future__ import annotations
 
+import contextlib
 import enum
 import math
 import statistics
@@ -295,7 +296,71 @@ class MechanismSimulation:
             parameters=dict(self.parameters),
         )
         run.metrics = self.metrics(run)
+        run.degenerate = self._is_degenerate(run)
         return run
+
+    def _is_degenerate(self, run: SimulationRun) -> bool:
+        """§15 evidence quality: a run whose states never exercise dynamics.
+
+        A trajectory is DEGENERATE when every base state variable (the
+        S_t forms, not stepped S_t1 copies) spends ≥95% of its steps
+        pinned exactly at a clip bound (min or max) that appears in the
+        model's equations, or never moves off its initial value at all.
+        Saturated models make every scenario look identical — the
+        battery's job is to differentiate stress regimes, so such runs
+        carry no discriminating evidence (§2/§29).
+        """
+        if run.steps < 3 or not run.history:
+            return False
+        # collect clip bounds from equation expressions
+        bounds: set[float] = {0.0, 1.0, 3.0}  # common clip bounds
+        for eq in self.model.equations:
+            expr = eq.expression
+            import re as _re
+
+            for m in _re.finditer(r"clip\([^,]+,[^,]+,\s*([-\d.eE+]+)\s*\)", expr):
+                with contextlib.suppress(ValueError):
+                    bounds.add(float(m.group(1)))
+            for m in _re.finditer(r"clip\([^,]+,\s*([-\d.eE+]+)\s*,", expr):
+                with contextlib.suppress(ValueError):
+                    bounds.add(float(m.group(1)))
+        # base symbols: the ones WITHOUT a trailing step digit (S_t not S_t1)
+        base_set = []
+        for v in self._state_vars:
+            s = v.symbol
+            if s.endswith("1") or s.endswith("_next"):
+                continue
+            base_set.append(s)
+        if not base_set:
+            return False
+        for sym in base_set:
+            path = [
+                float(row[sym]) for row in run.history if sym in row and row[sym] is not None
+            ]
+            if len(path) < 3:
+                continue
+            if len(set(path)) == 1:
+                # frozen at one value all run — no dynamics exercised
+                return True
+            # Pinned-at-bound: once the trajectory first reaches a clip
+            # bound, it never leaves it for the rest of the run. The
+            # initial transient (however long) does not restore evidence:
+            # a saturated steady state exercises no dynamics.
+            first_bound = next(
+                (
+                    i
+                    for i, x in enumerate(path)
+                    if any(abs(x - b) <= 1e-9 for b in bounds)
+                ),
+                None,
+            )
+            if first_bound is not None and first_bound < len(path) - 1:
+                tail = path[first_bound:]
+                if all(
+                    any(abs(x - b) <= 1e-9 for b in bounds) for x in tail
+                ):
+                    return True
+        return False
 
     def _roll_state_forward(
         self,
@@ -306,11 +371,23 @@ class MechanismSimulation:
 
         An LHS exactly matching a state symbol updates it directly; an LHS
         matching a state symbol plus a time-step suffix (S_t1 for S_t,
-        S_next for S) steps the state forward.
+        S_next for S) steps the state forward. When BOTH the base (S_t)
+        and its stepped form (S_t1) are declared states — the §13
+        convention bridge-authored models use — the stepped form is the
+        mechanism's own next-step declaration: its computed value rolls
+        INTO the base state, or the feedback loop never closes and every
+        model runs flat at its initial state (§14 defect caught by the
+        adversarial pattern battery).
         """
         state_names = {v.symbol for v in self._state_vars}
         for lhs, value in computed.items():
             if lhs in state_names:
+                # Stepped form of a state (S_t1) also being a state: roll
+                # it into the base. Take the LAST such write (declaration
+                # order, consistent with multi-writer resolution).
+                base = self._stepped_base(lhs, state_names)
+                if base is not None and base != lhs:
+                    state_symbols[base] = value
                 state_symbols[lhs] = value
                 continue
             for name in state_names:
@@ -319,6 +396,21 @@ class MechanismSimulation:
                     if suffix and all(ch.isdigit() or ch in "_next" for ch in suffix):
                         state_symbols[name] = value
                         break
+
+    @staticmethod
+    def _stepped_base(
+        lhs: str, state_names: set[str]
+    ) -> str | None:
+        """If `lhs` is itself a state and also a stepped form of another
+        declared state (S_t1 given S_t), return the base symbol."""
+        for name in state_names:
+            if lhs == name:
+                continue
+            if lhs.startswith(name):
+                suffix = lhs[len(name):]
+                if suffix and all(ch.isdigit() or ch in "_next" for ch in suffix):
+                    return name
+        return None
 
     def metrics(self, run: SimulationRun) -> dict[str, float]:
         """Deterministic summary metrics over the run history."""
@@ -358,7 +450,16 @@ def _max_drawdown_pct(path: list[float]) -> float:
 
 
 class SimulationRun(BaseModel):
-    """One executed simulation (§14 run() output)."""
+    """One executed simulation (§14 run() output).
+
+    `degenerate` — §15 evidence-quality flag: True when every state
+    variable is pinned to a clip boundary for (nearly) the whole run.
+    Such a trajectory exercises no dynamics: the scenario battery
+    cannot distinguish BASE from BLACK_SWAN through a saturated model,
+    so a "clean" verdict over degenerate runs is vacuous evidence
+    (§2/§29). The flag does not fail the run by itself — callers (the
+    §15 service verdict) decide what a degenerate run proves.
+    """
 
     model_config = ConfigDict(validate_assignment=True)
 
@@ -368,6 +469,7 @@ class SimulationRun(BaseModel):
     failures: list[str] = Field(default_factory=list)
     parameters: dict[str, float] = Field(default_factory=dict)
     metrics: dict[str, float] = Field(default_factory=dict)
+    degenerate: bool = False
 
 
 # ---------------------------------------------------------------------------

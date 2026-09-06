@@ -125,6 +125,7 @@ class SimulationService:
             kind: {
                 "final": r.metrics,
                 "failures": r.failures,
+                "degenerate": r.degenerate,
             }
             for kind, r in runs.items()
         }
@@ -203,8 +204,25 @@ class SimulationService:
             for k, r in scenario_results.items()
             if r["failures"]
         ]
+        # §15 evidence quality: degenerate runs (states pinned at clip
+        # bounds / frozen — every scenario indistinguishable) are NOT
+        # clean evidence. The candidate stays simulating-resubmittable:
+        # the model must be re-authored to the battery's input contract
+        # (X_t anchor level ~1000, dX_t delta, states seed at 1000) —
+        # the formalize prompt now states it. Reported, never hidden (§29).
+        degenerate_scenarios = [
+            k for k, r in scenario_results.items() if r.get("degenerate")
+        ]
         if hard_failures:
             if candidate.status is CandidateStatus.SIMULATING:
+                candidate.transition(CandidateStatus.FAILED)
+                self.database.save_candidate(candidate)
+        elif degenerate_scenarios:
+            if candidate.status is CandidateStatus.SIMULATING:
+                # §11: SIMULATING → FAILED is the honest transition for a
+                # model that cannot exercise dynamics under the battery's
+                # inputs — resubmit a corrected model (same idea, fresh
+                # version) rather than advance on vacuous evidence.
                 candidate.transition(CandidateStatus.FAILED)
                 self.database.save_candidate(candidate)
         else:
@@ -215,6 +233,7 @@ class SimulationService:
             "monte_carlo": mc_results,
             "sweep": sweep_results,
             "hard_failures": hard_failures,
+            "degenerate_scenarios": degenerate_scenarios,
         }
 
     def simulate_all(

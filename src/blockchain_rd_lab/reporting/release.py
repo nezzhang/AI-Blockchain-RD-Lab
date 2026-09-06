@@ -144,18 +144,27 @@ class ReleasePackageBuilder:
         return residuals
 
     def _simulation_verdict(self, candidate_id: str) -> dict[str, dict[str, object]]:
-        """Latest battery + Monte Carlo outcomes for the evidence trail."""
+        """Latest battery + Monte Carlo outcomes for the evidence trail.
+
+        §15 evidence quality: runs flagged degenerate (states pinned at
+        clip bounds — every scenario indistinguishable) count as NEITHER
+        clean nor failed: they are vacuous. A battery whose scenarios are
+        vacuous cannot support publication, whatever its failure count.
+        """
         scenarios: dict[str, object] = {}
         monte_carlo: dict[str, object] = {}
         for exp in self.database.iter_experiments(candidate_id):
             res = exp.results or {}
             if "scenarios" in exp.experiment_id:
                 ok = sum(1 for r in res.values() if not r.get("failures"))
+                degenerate = sum(1 for r in res.values() if r.get("degenerate"))
                 total = len(res)
                 scenarios = {
                     "scenarios_total": total,
                     "scenarios_clean": ok,
+                    "scenarios_degenerate": degenerate,
                     "all_clean": ok == total and total > 0,
+                    "vacuous": degenerate == total and total > 0,
                 }
             elif "montecarlo" in exp.experiment_id:
                 monte_carlo = {
@@ -198,11 +207,27 @@ class ReleasePackageBuilder:
         lines.append(f"- Model versions stored: {versions} (append-only, §21)")
         battery = sim.get("battery", {})
         if battery:
-            mark = "✅" if battery.get("all_clean") else "❌"
-            lines.append(
-                f"- §15 battery: {mark} {battery.get('scenarios_clean')}/"
-                f"{battery.get('scenarios_total')} scenarios clean"
-            )
+            if battery.get("vacuous"):
+                lines.append(
+                    f"- §15 battery: ⚠️ VACUOUS — {battery.get('scenarios_total')} "
+                    "scenarios ran but every trajectory is degenerate "
+                    "(states pinned at clip bounds; no dynamics exercised). "
+                    "The battery cannot distinguish stress regimes through "
+                    "this model; its 'clean' verdicts carry no evidence "
+                    "(§2/§29). Re-formalize to the battery input contract."
+                )
+            else:
+                mark = "✅" if battery.get("all_clean") else "❌"
+                deg = battery.get("scenarios_degenerate", 0)
+                deg_note = (
+                    f" ({deg} degenerate — pinned states, no evidence)"
+                    if deg
+                    else ""
+                )
+                lines.append(
+                    f"- §15 battery: {mark} {battery.get('scenarios_clean')}/"
+                    f"{battery.get('scenarios_total')} scenarios clean{deg_note}"
+                )
         mc = sim.get("monte_carlo", {})
         if mc:
             lines.append(
