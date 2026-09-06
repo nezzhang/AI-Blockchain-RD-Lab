@@ -79,8 +79,18 @@ class RedTeamService:
     # -- public API -----------------------------------------------------------
 
     def redteam_candidate(self, candidate: Candidate) -> RedTeamResult:
-        """Run all four adversarial agents on one candidate; persist findings."""
+        """Run all four adversarial agents on one candidate; persist findings.
+
+        §34/§9: when a formalized MathModel exists, agents attack THE MODEL
+        (the latest stored version, including improvement patches) — the
+        brief carries it so the adversarial prompt reflects the design as
+        formalized, not just as described. Red-team after improve sees the
+        patched parameters and must find attacks against THEM.
+        """
         brief = CandidateBrief.from_candidate(candidate)
+        model_json = self.database.get_latest_math_model(candidate.id)
+        if model_json:
+            brief = brief.model_copy(update={"formal_model": model_json})
         result = RedTeamResult(candidate_id=candidate.id)
 
         try:

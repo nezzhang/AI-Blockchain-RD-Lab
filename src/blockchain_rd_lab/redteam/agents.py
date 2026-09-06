@@ -41,6 +41,10 @@ def _brief_user_message(brief: CandidateBrief, model_dump: str = "", extra: str 
         parts.append("requires external data (oracle): yes")
     if model_dump:
         parts.append(f"formalized model:\n{model_dump}")
+    if brief.formal_model:
+        # §34 retest: the red team attacks the FORMALIZED design (the
+        # latest patched MathModel), not just the prose description.
+        parts.append(f"formalized model (attack THIS design):\n{brief.formal_model}")
     if extra:
         parts.append(extra)
     return "\n".join(parts)

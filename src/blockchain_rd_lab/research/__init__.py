@@ -156,6 +156,11 @@ class CandidateBrief(BaseModel):
     core_mechanism: str
     problem: str = ""
     oracle_required: bool = False
+    #: §34/§9: when set, adversarial agents attack the FORMALIZED model
+    #: (the latest MathModel JSON), not just the description — retest's
+    #: fresh red team genuinely re-attacks the patched design, and the
+    #: changed prompt content mints a fresh bridge request id.
+    formal_model: str = ""
 
     @classmethod
     def from_candidate(cls, cand) -> CandidateBrief:

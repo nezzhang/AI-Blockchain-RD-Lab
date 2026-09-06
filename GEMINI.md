@@ -74,6 +74,11 @@ AI agents here.** This file is a convenience summary, not a replacement.
   fail-closed pending halt, deterministic request ids, free replay
   of answered requests; `lab bridge list|show|answer|purge`;
   structured-only (no free-text completion, §2).
+- Red teams attack the FORMALIZED model: CandidateBrief.formal_model
+  carries the latest MathModel JSON into every adversarial prompt
+  ('attack THIS design') — retest's re-attack targets the patched
+  parameters, and changed model versions mint fresh bridge requests
+  (no stale replays of pre-patch attacks).
 - Score-stage honesty gate: RED_TEAM candidates with unresolved
   improvements (fresh profitable findings remain) are HELD, never
   scored on unfixed models; they resolve on the next run (§35).
