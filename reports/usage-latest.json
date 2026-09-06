@@ -1,8 +1,8 @@
 {
-  "run_id": "pipeline-20260905-162101",
+  "run_id": "pipeline-20260906-074914",
   "budget": 2000000,
-  "spent": 14806,
-  "calls": 2,
-  "cache_hits": 9,
+  "spent": 9450,
+  "calls": 3,
+  "cache_hits": 0,
   "by_agent": {}
 }

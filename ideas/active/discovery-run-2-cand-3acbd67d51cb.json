@@ -1,0 +1,28 @@
+{
+  "summary": {
+    "generated": 2,
+    "normalized": 2,
+    "duplicates_removed": 0,
+    "stored": 2,
+    "failed_batches": 0,
+    "errors": [],
+    "candidate_ids": [
+      "cand-3acbd67d51cb",
+      "cand-4952b2a96bab"
+    ]
+  },
+  "stored_ideas": [
+    {
+      "name": "Escrowed Batch-Clearing Insurance Pool",
+      "category": "decentralized fx",
+      "domain": "institutional settlement",
+      "description": "An insurance pool that guarantees batch-auction clearing when solvers fail or withhold: (1) settlement participants escrow a small premium fraction alongside each order into a corridor-level insurance pool. (2) A solver that wins a batch posts a performance bond; if its batch settles late, partially, or optimality-fraudulently, the pool instantly steps in as a fallback solver of last resort using its escrowed inventory. (3) The insurance premium each participant pays is state-dependent: it RISES with the corridor's recent solver-concentration (fewer active solvers = more fragile batches = pricier insurance), so the insurance price itself is a real-time fragility sensor the corridor can act on. (4) Pool LPs earn premiums plus surplus-share in normal operation; the pool only draws down on solver failure events. (5) When solver concentration returns to healthy levels (measured as a long EMA of distinct bonded solvers), premiums fall back \u2014 countercyclical pricing in BOTH directions."
+    },
+    {
+      "name": "Prediction-Weighted Corridor Risk Pricing",
+      "category": "stablecoin routing",
+      "domain": "compliance infrastructure",
+      "description": "Corridor risk is priced by a prediction market instead of a committee: (1) a continuous prediction market trades binary 'corridor-stress' contracts \u2014 will corridor X thin below its floor within N batches? (2) The corridor's insurance premium (paid by corridor operators to a float) is set BY the market odds: premium = base + k * market-implied stress probability, updated each batch. (3) The market's traders \u2014 anyone with information about payment-flow patterns, seasonal corridors, or counterparty risk \u2014 are paid to be right early: their odds move premiums before the stress arrives, giving corridors lead time to top up inventory or pre-arrange routing. (4) When stress events resolve, the market settles against the corridor's own on-chain volume state (no oracle: settlement reads the floor state directly). (5) The float that receives premiums is capitalized by LPs; the prediction market is the pricing surface, the float is the balance sheet."
+    }
+  ]
+}

@@ -121,6 +121,58 @@ class EquationInterpreter:
             self._compiled[eq.name] = tree
             self.lhs_symbols[eq.name] = lhs
 
+        # §14: evaluate in DEPENDENCY order, not declaration order —
+        # LLM-authored models may declare equations in any order; the
+        # interpreter resolves the dependency graph deterministically
+        # (stable: declaration order preserved among independents) and
+        # rejects cycles at compile time, not step 0.
+        self._order: list[str] = self._topological_order()
+
+    def _equation_dependencies(self, eq_name: str) -> set[str]:
+        """Symbols an equation's RHS reads that other equations compute."""
+        computed = set(self.lhs_symbols.values())
+        deps: set[str] = set()
+        for node in ast.walk(self._compiled[eq_name]):
+            if isinstance(node, ast.Name) and node.id in computed:
+                deps.add(node.id)
+        return deps
+
+    def _topological_order(self) -> list[str]:
+        """Stable topological sort of equations by data dependency.
+
+        Raises SimulationError on a dependency cycle (deterministic
+        compile-time failure, clearer than a step-0 runtime miss).
+        """
+        names = [eq.name for eq in self.model.equations]
+        deps = {n: self._equation_dependencies(n) for n in names}
+        # Map LHS -> equation name (multiple writers to one LHS keep
+        # declaration order among themselves; the LAST writer wins in
+        # evaluate, matching prior declared-order semantics).
+        writer: dict[str, list[str]] = {}
+        for n in names:
+            writer.setdefault(self.lhs_symbols[n], []).append(n)
+        emitted: list[str] = []
+        done: set[str] = set()
+        pending = list(names)
+        while pending:
+            progressed = False
+            for n in list(pending):
+                if all(
+                    d not in writer or all(w in done for w in writer[d])
+                    for d in deps[n]
+                ):
+                    emitted.append(n)
+                    done.add(n)
+                    pending.remove(n)
+                    progressed = True
+            if not progressed:
+                stuck = ", ".join(sorted(pending))
+                raise SimulationError(
+                    f"dependency cycle among equations: {stuck} — equations "
+                    "cannot reference each other's outputs circularly"
+                )
+        return emitted
+
     def _check_tree(self, tree: ast.AST) -> None:
         """Whitelist AST nodes and operators; reject everything else."""
         allowed = (
@@ -164,13 +216,18 @@ class EquationInterpreter:
                 )
 
     def evaluate(self, symbols: dict[str, float | list[float]]) -> dict[str, float]:
-        """Evaluate all equations in declared order; returns computed values."""
+        """Evaluate equations in dependency order; returns computed values.
+
+        Same LHS-multiple-writer semantics as before (later equations in
+        the ORIGINAL declaration order overwrite earlier ones), so
+        correctly-ordered models behave byte-identically.
+        """
         env: dict[str, float | list[float]] = dict(symbols)
         results: dict[str, float] = {}
-        for eq in self.model.equations:
-            tree = self._compiled[eq.name]
+        for name in self._order:
+            tree = self._compiled[name]
             value = self._eval_node(tree.body, env)
-            lhs = self.lhs_symbols[eq.name]
+            lhs = self.lhs_symbols[name]
             env[lhs] = value
             results[lhs] = value
         return results
