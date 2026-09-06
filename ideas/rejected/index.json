@@ -1,5 +1,14 @@
 [
   {
+    "candidate_id": "cand-3acbd67d51cb",
+    "name": "Escrowed Batch-Clearing Insurance Pool",
+    "category": "decentralized fx",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
     "candidate_id": "cand-9fba1d8cbe98",
     "name": "Habitat Bond Curve",
     "category": "ecology",
@@ -95,6 +104,15 @@
     "candidate_id": "cand-f9d0e9af020b",
     "name": "Trade-Corridor Clearing Tokens",
     "category": "payments",
+    "status": "rejected",
+    "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-4952b2a96bab",
+    "name": "Prediction-Weighted Corridor Risk Pricing",
+    "category": "stablecoin routing",
     "status": "rejected",
     "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
     "fatal_flaws": [],

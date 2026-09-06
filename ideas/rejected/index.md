@@ -4,6 +4,7 @@ Failed experiments are a research asset (§26): they record what was considered 
 
 | Candidate | Name | Category | Rejected because |
 |-----------|------|----------|------------------|
+| cand-3acbd67d51cb | Escrowed Batch-Clearing Insurance Pool | decentralized fx | research-funnel cut (class A/B or §7 overflow); see filter records |
 | cand-9fba1d8cbe98 | Habitat Bond Curve | ecology | research-funnel cut (class A/B or §7 overflow); see filter records |
 | cand-a218268ad562 | Prediction-Coupled Insurance Float | insurance | research-funnel cut (class A/B or §7 overflow); see filter records |
 | cand-bec3b6e85a91 | Prediction-Coupled Insurance Float | insurance | research-funnel cut (class A/B or §7 overflow); see filter records |
@@ -15,6 +16,7 @@ Failed experiments are a research asset (§26): they record what was considered 
 | cand-7f2f07fd4e9a | Population-Linked Supply | monetary economics | confirmed fatal flaw(s) (game_theory); §20 gate |
 | cand-06418647c270 | Trade-Corridor Clearing Tokens | payments | research-funnel cut (class A/B or §7 overflow); see filter records |
 | cand-f9d0e9af020b | Trade-Corridor Clearing Tokens | payments | research-funnel cut (class A/B or §7 overflow); see filter records |
+| cand-4952b2a96bab | Prediction-Weighted Corridor Risk Pricing | stablecoin routing | research-funnel cut (class A/B or §7 overflow); see filter records |
 | cand-c70d44d533eb | Homeostatic Reserve Stablecoin | stablecoins | research-funnel cut (class A/B or §7 overflow); see filter records |
 | cand-16d505be99f6 | Homeostatic Reserve Stablecoin | stablecoins | research-funnel cut (class A/B or §7 overflow); see filter records |
 
