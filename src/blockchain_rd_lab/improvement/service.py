@@ -153,6 +153,35 @@ class ImprovementService:
             out.append({"text": tgt.label + " " + detail})
         return out
 
+    def _smoke_test(self, model: MathModel) -> str | None:
+        """One deterministic base-scenario step; None if simulatable.
+
+        §14/§2: the §13 structural gate alone cannot see runtime
+        unsimulatability — declared-but-unfed inputs, dependency cycles,
+        missing initial values all pass §13 and then kill RETEST at step 0
+        (terminal FAILED). This gate keeps failures at IMPROVE where the
+        improver can resubmit.
+        """
+        try:
+            from blockchain_rd_lab.simulation import MechanismSimulation
+
+            sim = MechanismSimulation(model)
+            state = sim.initial_state()
+            # The battery's base row is exactly {"X_t": x, "dX_t": dx} with
+            # model parameters injected alongside; any other declared input
+            # must derive itself or the model fails here, deterministically,
+            # with the missing symbol named.
+            row: dict[str, float | list[float]] = {
+                "X_t": 1000.0,
+                "dX_t": 1.0,
+                **{p.symbol: p.default for p in model.parameters},
+                **state,
+            }
+            sim.transition(row)
+            return None
+        except Exception as exc:
+            return f"{type(exc).__name__}: {exc}"
+
     def _prior_fixes(self, candidate_id: str) -> list:
         """Graph-derived how-similar-attacks-were-fixed records (§32 reuse)."""
         from blockchain_rd_lab.graph.builder import GraphBuilder
@@ -244,6 +273,22 @@ class ImprovementService:
                 raise LLMError("patched model does not reference this candidate")
             if patched.version <= int(current.get("version", 1)):
                 raise LLMError("patched model must be a new version")
+
+            # §14 simulatability smoke test (deterministic, §2): one step of
+            # the battery's base scenario at parameter defaults. A model can
+            # pass §13 structure and still be unsimulatable (declared inputs
+            # the series never feeds, dependency cycles, missing initial
+            # values) — catching it HERE keeps the candidate RED_TEAM with
+            # the improver able to resubmit, instead of RETEST → FAILED
+            # (terminal) on a structurally valid but unrunnable patch.
+            smoke = self._smoke_test(patched)
+            if smoke is not None:
+                raise LLMError(
+                    f"patched model is not simulatable: {smoke} — fix the "
+                    f"model (every declared input needs a value in the "
+                    f"battery series or a derivation equation; equations "
+                    f"must not cycle)"
+                )
 
             # Store append-only + transition §11.
             self.database.save_math_model(

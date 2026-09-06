@@ -74,6 +74,11 @@ AI agents here.** This file is a convenience summary, not a replacement.
   fail-closed pending halt, deterministic request ids, free replay
   of answered requests; `lab bridge list|show|answer|purge`;
   structured-only (no free-text completion, §2).
+- Improve-stage simulatability gate: every patched model must
+  survive one deterministic base-scenario step (parameters +
+  battery inputs + initial state) BEFORE storing — unfed inputs
+  and dependency cycles are caught at RED_TEAM (resubmittable),
+  never at RETEST's terminal step 0.
 - Red teams attack the FORMALIZED model: CandidateBrief.formal_model
   carries the latest MathModel JSON into every adversarial prompt
   ('attack THIS design') — retest's re-attack targets the patched
