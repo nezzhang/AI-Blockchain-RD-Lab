@@ -181,13 +181,16 @@ class AttackPatternBattery:
         if premium_keys:
             key = premium_keys[0]
             out["premium_paid"] = sum(float(r.get(key, 0.0)) for r in hist)
-        # generic drainage: any state whose symbol starts with B or R
+        # generic drainage: EVERY declared state is a potential stock the
+        # attacker drains (bonds, reserves, escrows, pools — the symbol
+        # letter is a naming convention, not a semantic guarantee; §13
+        # only guarantees the ROLE). The r10 fix: the old B_/R_ prefix
+        # pattern left S_/J_/G_/W_-named stocks unmeasured, and their
+        # models reported false "bounded by zero" headlines.
         stock_symbols = [
             v.symbol
             for v in self.model.variables
-            if v.role == "state"
-            and (v.symbol.startswith("B") or v.symbol.startswith("R"))
-            and "1" not in v.symbol
+            if v.role == "state" and "1" not in v.symbol
         ]
         for sym in stock_symbols:
             vals = [float(r.get(sym, 0.0)) for r in hist if sym in r]
@@ -233,6 +236,14 @@ class AttackPatternBattery:
         # design bounds the attack, but because nothing responds. That
         # is a VACUOUS bound, not a zero bound (§2/§29).
         vacuous = bool(pat.degenerate or base.degenerate)
+
+        # §20 honesty: a model whose declared symbols match NO metric
+        # pattern (no premium π_*, no stock B_*/R_*, no measured vol v_t)
+        # is UNMEASURABLE by this battery — reporting headline=0.0 would
+        # be a false "bounded by zero" claim. That is the same vacuity
+        # class as saturation: no evidence, never zero (§2/§29).
+        if not edge and not vacuous:
+            vacuous = True
 
         return AttackBound(
             kind=spec.kind,

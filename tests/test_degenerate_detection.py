@@ -200,3 +200,55 @@ class TestAdversarialPatternBattery:
         b1 = AttackPatternBattery(m).run_all(steps=30)
         b2 = AttackPatternBattery(m).run_all(steps=30)
         assert [x.model_dump() for x in b1] == [x.model_dump() for x in b2]
+
+    def test_unmeasurable_model_is_vacuous_not_zero(self):
+        """A model with NO drainable states (auxiliary-output only) is
+        UNMEASURABLE by the battery — the r10 gap: such models reported
+        headline=0.0 ('bounded by zero'), a false security claim. They
+        must report headline=None/vacuous, the same no-evidence class
+        as saturation (§20/§2)."""
+        m = MathModel(
+            candidate_id="cand-simtest",
+            variables=[
+                {"name": "anchor", "symbol": "X_t", "role": "input", "units": "i",
+                 "description": "anchor level"},
+                {"name": "anchor_delta", "symbol": "dX_t", "role": "input", "units": "i",
+                 "description": "anchor change"},
+                {"name": "tax", "symbol": "tax_t", "role": "auxiliary", "units": "u",
+                 "description": "instantaneous tax (no stock to drain)"},
+            ],
+            parameters=_params(),
+            equations=[
+                {"name": "tax", "expression": "tax_t = alpha * abs(dX_t)/X_t",
+                 "description": "flow-only output"},
+            ],
+            assumptions=[{"statement": "observable anchor", "critical": False}],
+            constraints=[],
+            open_questions=["is alpha right?"],
+            rationale="test model",
+            version=1,
+        )
+        bound = AttackPatternBattery(m).run_pattern(
+            PatternSpec(kind=AttackPattern.VOL_OSCILLATION, steps=40)
+        )
+        assert bound.edge == {}, "sanity: no metrics were extractable"
+        assert bound.vacuous, "unmeasurable must flag vacuous"
+        assert bound.headline is None, "never report 'bounded by zero'"
+
+    def test_every_declared_state_is_drainable(self):
+        """The r10 extractor fix: state drainage must cover EVERY state
+        role symbol (S_/J_/G_/W_...), not just B_*/R_* prefixes — a
+        J-named escrow drains exactly like a B-named bond (§13 roles,
+        not naming conventions, carry the semantics)."""
+        m = _model([
+            {"name": "rule",
+             "expression": "S_t1 = clip(S_t - alpha * abs(dX_t)/X_t * 200.0, 400.0, 2000.0)",
+             "description": "supply drains under crafted vol"},
+        ], version=1)
+        bound = AttackPatternBattery(m).run_pattern(
+            PatternSpec(kind=AttackPattern.VOL_OSCILLATION, steps=40)
+        )
+        assert "S_t_drawn" in bound.edge, (
+            "S_t is a declared state; its drain must be measurable"
+        )
+        assert not bound.vacuous

@@ -59,6 +59,57 @@ class ReleasePackageBuilder:
         top = ranked[0]
         return top.id, top.name
 
+    def _adversarial_bounds(self, candidate_id: str) -> str | None:
+        """The latest §20 pattern-battery record for this candidate.
+
+        Renders the MEASURED attacker edges under the four named
+        choreographies, with §20 honesty: vacuous (no measurable edge)
+        is reported as no-evidence, never as 'bounded by zero'; a
+        measured all-nonpositive edge is a genuine measured bound.
+        Returns None when no adversarial-patterns record is stored.
+        """
+        latest = None
+        for rec in self.database.iter_experiments(candidate_id=candidate_id):
+            results = rec.results
+            if isinstance(results, dict) and "bounds" in results:
+                latest = results
+        if latest is None:
+            return None
+        out: list[str] = []
+        vacuous_n = int(latest.get("vacuous_count", 0))
+        for b in latest.get("bounds", []):
+            kind = str(b.get("kind", "?"))
+            vacuous = bool(b.get("vacuous"))
+            headline = b.get("headline")
+            if vacuous or headline is None:
+                out.append(
+                    f"- **{kind}**: no measurable edge (§20 vacuous — the "
+                    "battery measured nothing; this is NOT a zero bound)"
+                )
+            elif float(headline) == 0.0:
+                out.append(
+                    f"- **{kind}**: measured, no positive attacker edge "
+                    "(the state(s) drained no further under attack than "
+                    "base)"
+                )
+            else:
+                metric = b.get("headline_metric", "?")
+                out.append(
+                    f"- **{kind}**: attacker edge **{float(headline):+.4f}** "
+                    f"on `{metric}` vs a matched base run"
+                )
+        if not out:
+            return None
+        header = "Deterministic bounds from the §20 attack-pattern battery "
+        header += "(60-step window, matched base runs)."
+        if vacuous_n:
+            header += (
+                f" {vacuous_n} of {len(latest.get('bounds', []))} patterns "
+                "yielded no measurable edge — those are evidence gaps, not "
+                "zero bounds (§20)."
+            )
+        return header + "\n" + "\n".join(out)
+
     def _residual_attacks(self, candidate_id: str) -> list[dict[str, object]]:
         """Profitable attacks against the LATEST model version, honestly.
 
@@ -297,6 +348,18 @@ class ReleasePackageBuilder:
                 "absolute claims)."
             )
         lines.append("")
+
+        # 4b. quantitative residual bounds (§20 pattern battery) — the
+        # measured attacker edge against the FINAL model, from the latest
+        # §21 adversarial-patterns experiment record. Claims above are
+        # what the fixes ADDRESS; these numbers are what the battery
+        # MEASURED under the four named choreographies.
+        bounds_block = self._adversarial_bounds(cid)
+        if bounds_block is not None:
+            lines.append("### 4b. Measured Attack-Pattern Bounds (§20)")
+            lines.append("")
+            lines.append(bounds_block)
+            lines.append("")
 
         # 5. progression
         lines.append("## 5. Build-in-Public Progression (§27)")

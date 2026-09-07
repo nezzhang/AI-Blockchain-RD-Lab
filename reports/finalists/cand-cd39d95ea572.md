@@ -70,6 +70,7 @@ No external data dependency declared. See Security and adversarial sections for 
 - **cand-cd39d95ea572-scenarios-v2** (seed 7, sim-0.1.0): results recorded
 - **cand-cd39d95ea572-montecarlo-v2** (seed 7, sim-0.1.0): mean_final=8441.659600878862, p5_final=8436.421690331563, p95_final=8444.991148396039, failures=0
 - **cand-cd39d95ea572-sweep-v2** (seed 7, sim-0.1.0): results recorded
+- **exp-5b5d741a0452** (seed None, sim-0.1.0): results recorded
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 

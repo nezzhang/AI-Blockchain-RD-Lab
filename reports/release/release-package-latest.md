@@ -2,7 +2,7 @@
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-07T07:08:59+00:00
+Generated: 2026-09-07T08:47:10+00:00
 Candidate: `cand-cab81fc40bbf` (§7 recommended, rank 1)
 
 ## 1. Publication Readiness
@@ -27,6 +27,14 @@ Candidate: `cand-cab81fc40bbf` (§7 recommended, rank 1)
 ## 4. Residual Attacks Disclosure (§12 honesty)
 
 No profitable attack remains unaddressed by the final model version. This is a statement about the searched attack space, not an absolute claim of security (§12: no absolute claims).
+
+### 4b. Measured Attack-Pattern Bounds (§20)
+
+Deterministic bounds from the §20 attack-pattern battery (60-step window, matched base runs).
+- **vol_oscillation**: attacker edge **+6.3239** on `F_l_drawn` vs a matched base run
+- **wash_flow**: attacker edge **+6.9039** on `F_l_drawn` vs a matched base run
+- **pump_unwind**: attacker edge **+14.7520** on `F_l_drawn` vs a matched base run
+- **shock_timing**: attacker edge **+1.9367** on `O_p_drawn` vs a matched base run
 
 ## 5. Build-in-Public Progression (§27)
 

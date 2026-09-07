@@ -116,6 +116,24 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 10 adversarial-residual bounding: the §20 AttackPatternBattery
+  (vol_oscillation, wash_flow, pump_unwind, shock_timing) now runs
+  against every finalist's FINAL model version and persists as §21
+  experiment records (dataset='adversarial_patterns',
+  scripts/r10_adversarial_residuals.py); the §27 release package's §4
+  disclosure gained section 4b — MEASURED attacker edges vs matched
+  base runs, code-assembled from the latest record (§2). Two §20
+  honesty fixes pinned by tests: (1) the metric extractor only measured
+  B_*/R_* stocks — S_/J_/G_/W_-named states were UNMEASURED and their
+  models reported false "bounded by zero" headlines (now EVERY declared
+  state is drainable; `test_every_declared_state_is_drainable`);
+  (2) models with no measurable metrics at all now flag vacuous
+  (headline=None), never headline=0.0
+  (`test_unmeasurable_model_is_vacuous_not_zero`). Findings on the
+  current finalists: rank-1 Prediction-Fee Fallback Oracle carries
+  measured attacker edges +1.94..+14.75 (F_l fallback pool drain,
+  O_p open-interest pool) under the four choreographies — disclosed
+  in 4b; Joule escrow +288..+352 J_t drain under vol/pump patterns.
 - Round 9 corpus-widening round: 10 bridge-authored ideas targeting
   the families ABSENT from the ranked corpus (governance,
   economic-driven, energy-driven, oracle-design) driven through the

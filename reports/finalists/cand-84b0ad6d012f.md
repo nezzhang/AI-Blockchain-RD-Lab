@@ -69,6 +69,7 @@ This mechanism requires external data (oracle). See Security and adversarial sec
 - **cand-84b0ad6d012f-scenarios** (seed 7, sim-0.1.0): results recorded
 - **cand-84b0ad6d012f-montecarlo** (seed 7, sim-0.1.0): mean_final=1240.6944547857192, p5_final=1220.2580406408717, p95_final=1257.8568144250726, failures=0
 - **cand-84b0ad6d012f-sweep** (seed 7, sim-0.1.0): results recorded
+- **exp-96187aed0ce3** (seed None, sim-0.1.0): results recorded
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 
