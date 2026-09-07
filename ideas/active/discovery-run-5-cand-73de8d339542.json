@@ -1,14 +1,20 @@
 {
   "summary": {
-    "generated": 0,
-    "normalized": 0,
+    "generated": 5,
+    "normalized": 5,
     "duplicates_removed": 0,
-    "stored": 0,
+    "stored": 5,
     "failed_batches": 1,
     "errors": [
-      "batch failed: bridge request a5366185d58ae97d is PENDING: answer it with `lab bridge answer a5366185d58ae97d` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      "batch failed: bridge request e72ce6a00864ca1c is PENDING: answer it with `lab bridge answer e72ce6a00864ca1c` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
     ],
-    "candidate_ids": []
+    "candidate_ids": [
+      "cand-73de8d339542",
+      "cand-e74d830a9479",
+      "cand-b713e862acdc",
+      "cand-e0c80c26b7f3",
+      "cand-e626f13713b0"
+    ]
   },
   "stored_ideas": [
     {
@@ -352,6 +358,36 @@
       "category": "two-sided market",
       "domain": "",
       "description": "Step 1: an FX corridor pool pairs ordinary liquidity with opt-in underwriter liquidity. Step 2: ordinary LPs earn the spread; underwriters earn the spread plus an insurance premium quoted from realized corridor drawdown statistics. Step 3: if corridor depth depletes past a drawdown band, underwriter liquidity converts to trading liquidity at a pre-agreed conversion price, absorbing the tail. Step 4: as realized drawdowns deepen, the premium ticks up at a published schedule. Step 5: when the corridor refills, underwriters are made whole first from spread revenue."
+    },
+    {
+      "name": "Treasury-Backed Fee Parameter Governance",
+      "category": "governance",
+      "domain": "transaction fee markets",
+      "description": "Step 1: the venue's fee parameters (base fee, escalation rate, discount tiers) live in a parameter registry. Step 2: any participant may propose a parameter change by bonding a treasury stake. Step 3: the proposal enters a voting window where voting weight is the proposer's own historical fee contribution, not token holdings. Step 4: if the change executes and realized fee revenue over the following epoch falls below the pre-change baseline, the bond is slashed to the treasury. Step 5: if revenue rises, the proposer earns a fraction of the improvement. Parameter control is thus pay-for-performance governance."
+    },
+    {
+      "name": "Demand-Index Escalation Ladder for FX Batches",
+      "category": "monetary economics",
+      "domain": "decentralized fx",
+      "description": "Step 1: cross-border FX batches settle through a corridor whose escalation premium is keyed to a published demand index: the rolling ratio of queued batch volume to settled capacity. Step 2: when the index is low, the escalation premium decays toward a floor, making off-peak settlement nearly free. Step 3: when the index rises, the premium escalates by a schedule of progressively wider rungs. Step 4: escalation revenue does not accrue to the venue; it accrues to a counter-cyclical reserve that refunds congested-epoch settlers. Step 5: the index itself is computed from on-chain queue depth (no external oracle)."
+    },
+    {
+      "name": "Bandwidth Bond Market for Relay Peers",
+      "category": "network economics",
+      "domain": "internet",
+      "description": "Step 1: relay peers commit bandwidth capacity to a mesh and bond against it. Step 2: committed capacity earns a leasing fee from the protocol's bandwidth escrow, priced by an internal auction. Step 3: live probes measure delivered throughput; shortfall below the bonded level triggers a proportional bond forfait funding the next auction round. Step 4: consumers of relay bandwidth (any L2 posting blobs through the mesh) buy capacity from the escrow. Step 5: the mesh's aggregate energy budget (compute for relaying) is metered and priced into the same auction, so capacity commitments carry their true operational cost."
+    },
+    {
+      "name": "Quote-Deviation Slashed FX Reference Feed",
+      "category": "oracle design",
+      "domain": "decentralized fx",
+      "description": "Step 1: an FX reference rate for cross-border settlement is composed from reporter quotes, each backed by a bond. Step 2: the published rate is the median of bonded quotes. Step 3: after each settlement window, the rate is compared against the volume-weighted realized execution prices in the same corridor. Step 4: reporters whose quotes deviated beyond tolerance from realized prices lose bond proportionally to their deviation; the slashed value funds reporter diversity grants. Step 5: reporters whose quotes tracked realized prices earn settlement fees. The reference is thus anchored to its own corridor's ground truth."
+    },
+    {
+      "name": "Cyclic Demand Reserve for Fee Recycles",
+      "category": "monetary economics",
+      "domain": "transaction fee markets",
+      "description": "Step 1: burned or recycled transaction fees accumulate in a protocol reserve. Step 2: the reserve releases rebates to active builders/relayers on a cyclic schedule keyed to a demand index (rolling fee volume relative to its moving average). Step 3: when demand is below average, the cycle releases more (counter-cyclical support for infrastructure sustainability). Step 4: when demand is above average, the cycle releases less and the reserve accumulates. Step 5: release weights are bounded per epoch so the reserve can never drain below a floor, and the demand index is computed from on-chain fee data only."
     }
   ]
 }

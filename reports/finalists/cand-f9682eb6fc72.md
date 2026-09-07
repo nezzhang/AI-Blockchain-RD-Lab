@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-f9682eb6fc72
 - **Category:** derivatives
 - **Overall score:** 6.3500
-- **Rank:** 4
+- **Rank:** 7
 - **Status:** finalist
 
 ## Executive Summary

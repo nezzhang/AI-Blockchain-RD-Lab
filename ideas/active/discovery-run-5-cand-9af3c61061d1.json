@@ -1,14 +1,24 @@
 {
   "summary": {
-    "generated": 0,
-    "normalized": 0,
-    "duplicates_removed": 0,
-    "stored": 0,
-    "failed_batches": 1,
+    "generated": 10,
+    "normalized": 10,
+    "duplicates_removed": 5,
+    "stored": 5,
+    "failed_batches": 0,
     "errors": [
-      "batch failed: bridge request a5366185d58ae97d is PENDING: answer it with `lab bridge answer a5366185d58ae97d` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      "duplicate skipped: 'Treasury-Backed Fee Parameter Governance' \u2248 'Treasury-Backed Fee Parameter Governance' (exact name-key collision)",
+      "duplicate skipped: 'Demand-Index Escalation Ladder for FX Batches' \u2248 'Demand-Index Escalation Ladder for FX Batches' (exact name-key collision)",
+      "duplicate skipped: 'Bandwidth Bond Market for Relay Peers' \u2248 'Bandwidth Bond Market for Relay Peers' (exact name-key collision)",
+      "duplicate skipped: 'Quote-Deviation Slashed FX Reference Feed' \u2248 'Quote-Deviation Slashed FX Reference Feed' (exact name-key collision)",
+      "duplicate skipped: 'Cyclic Demand Reserve for Fee Recycles' \u2248 'Cyclic Demand Reserve for Fee Recycles' (exact name-key collision)"
     ],
-    "candidate_ids": []
+    "candidate_ids": [
+      "cand-9af3c61061d1",
+      "cand-e98e5859f3f5",
+      "cand-d5bf8d515927",
+      "cand-771f66f9de0a",
+      "cand-27e6a6ae5492"
+    ]
   },
   "stored_ideas": [
     {
@@ -352,6 +362,66 @@
       "category": "two-sided market",
       "domain": "",
       "description": "Step 1: an FX corridor pool pairs ordinary liquidity with opt-in underwriter liquidity. Step 2: ordinary LPs earn the spread; underwriters earn the spread plus an insurance premium quoted from realized corridor drawdown statistics. Step 3: if corridor depth depletes past a drawdown band, underwriter liquidity converts to trading liquidity at a pre-agreed conversion price, absorbing the tail. Step 4: as realized drawdowns deepen, the premium ticks up at a published schedule. Step 5: when the corridor refills, underwriters are made whole first from spread revenue."
+    },
+    {
+      "name": "Treasury-Backed Fee Parameter Governance",
+      "category": "governance",
+      "domain": "",
+      "description": "Step 1: the venue's fee parameters (base fee, escalation rate, discount tiers) live in a parameter registry. Step 2: any participant may propose a parameter change by bonding a treasury stake. Step 3: the proposal enters a voting window where voting weight is the proposer's own historical fee contribution, not token holdings. Step 4: if the change executes and realized fee revenue over the following epoch falls below the pre-change baseline, the bond is slashed to the treasury. Step 5: if revenue rises, the proposer earns a fraction of the improvement. Parameter control is thus pay-for-performance governance."
+    },
+    {
+      "name": "Demand-Index Escalation Ladder for FX Batches",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Step 1: cross-border FX batches settle through a corridor whose escalation premium is keyed to a published demand index: the rolling ratio of queued batch volume to settled capacity. Step 2: when the index is low, the escalation premium decays toward a floor, making off-peak settlement nearly free. Step 3: when the index rises, the premium escalates by a schedule of progressively wider rungs. Step 4: escalation revenue does not accrue to the venue; it accrues to a counter-cyclical reserve that refunds congested-epoch settlers. Step 5: the index itself is computed from on-chain queue depth (no external oracle)."
+    },
+    {
+      "name": "Bandwidth Bond Market for Relay Peers",
+      "category": "network economics",
+      "domain": "",
+      "description": "Step 1: relay peers commit bandwidth capacity to a mesh and bond against it. Step 2: committed capacity earns a leasing fee from the protocol's bandwidth escrow, priced by an internal auction. Step 3: live probes measure delivered throughput; shortfall below the bonded level triggers a proportional bond forfait funding the next auction round. Step 4: consumers of relay bandwidth (any L2 posting blobs through the mesh) buy capacity from the escrow. Step 5: the mesh's aggregate energy budget (compute for relaying) is metered and priced into the same auction, so capacity commitments carry their true operational cost."
+    },
+    {
+      "name": "Quote-Deviation Slashed FX Reference Feed",
+      "category": "oracle design",
+      "domain": "",
+      "description": "Step 1: an FX reference rate for cross-border settlement is composed from reporter quotes, each backed by a bond. Step 2: the published rate is the median of bonded quotes. Step 3: after each settlement window, the rate is compared against the volume-weighted realized execution prices in the same corridor. Step 4: reporters whose quotes deviated beyond tolerance from realized prices lose bond proportionally to their deviation; the slashed value funds reporter diversity grants. Step 5: reporters whose quotes tracked realized prices earn settlement fees. The reference is thus anchored to its own corridor's ground truth."
+    },
+    {
+      "name": "Cyclic Demand Reserve for Fee Recycles",
+      "category": "monetary economics",
+      "domain": "",
+      "description": "Step 1: burned or recycled transaction fees accumulate in a protocol reserve. Step 2: the reserve releases rebates to active builders/relayers on a cyclic schedule keyed to a demand index (rolling fee volume relative to its moving average). Step 3: when demand is below average, the cycle releases more (counter-cyclical support for infrastructure sustainability). Step 4: when demand is above average, the cycle releases less and the reserve accumulates. Step 5: release weights are bounded per epoch so the reserve can never drain below a floor, and the demand index is computed from on-chain fee data only."
+    },
+    {
+      "name": "Productivity-Index Scaled Compute Clearing",
+      "category": "monetary economics",
+      "domain": "ai productivity",
+      "description": "Step 1: AI compute batches clear through a market whose clearing fee scales with a productivity index: realized training/inference throughput per energy unit, measured over the mesh's own completed batches. Step 2: when the index rises (more output per joule), the clearing fee share allocated to compute providers falls, passing efficiency gains to users. Step 3: when the index falls, provider share rises, sustaining capacity through efficiency troughs. Step 4: the index is a moving median of completed-batch statistics, published on-chain from execution proofs. Step 5: fee splits rebalance each epoch with bounded step size."
+    },
+    {
+      "name": "Joule-Bonded Inference Escrow",
+      "category": "energy economics",
+      "domain": "ai productivity",
+      "description": "Step 1: inference requests post escrow denominated in expected joules (energy budget), converted to fees at a published energy price index. Step 2: providers commit capacity with bonds proportional to their advertised joule capacity. Step 3: delivery proofs attest actual joules consumed; the escrow releases fees against attested consumption. Step 4: over-attestation beyond measurement tolerance slashes bonds. Step 5: the energy price index is derived from the mesh's own median realized cost per joule, so pricing floats with the true operating cost of inference."
+    },
+    {
+      "name": "Output-Indexed Compute Swap Board",
+      "category": "financial markets",
+      "domain": "financial markets",
+      "description": "Step 1: a board lists compute-output swaps: fixed fee now against delivered model-output benchmarks later. Step 2: buyers (compute users) pay a fixed premium to lock future capacity at a benchmarked output level. Step 3: sellers (providers) post margin against the benchmark delivery. Step 4: at expiry, benchmark verification (public evaluation scores on agreed tasks) settles the swap: delivered outputs above the benchmark settle in the seller's favor, below in the buyer's. Step 5: the margin engine marks positions to the rolling benchmark distribution, not to a spot price."
+    },
+    {
+      "name": "Fee-Tier Voted Model Registry",
+      "category": "governance",
+      "domain": "transaction fee markets",
+      "description": "Step 1: an inference registry lists model endpoints with a fee tier per model (the tier determines the registry fee share that flows to upkeep vs the provider). Step 2: users accumulate fee-paid weight in the registry by paying inference fees. Step 3: tier changes (which models get preferential fee treatment) are voted by fee-paid weight, executed on a delay, and bonded by the proposer. Step 4: if a tier change is followed by a measurable drop in total inference volume, the proposer's bond funds a fee rebate to affected users. Step 5: registry weight decays over epochs so governance tracks current usage, not historical stock."
+    },
+    {
+      "name": "Vol-Adaptive Market Making Rebate Curve for Compute Futures",
+      "category": "market microstructure",
+      "domain": "financial markets",
+      "description": "Step 1: a compute-futures venue pays maker rebates on a curve keyed to realized output-index volatility (the swap-board benchmark distribution's rolling variance). Step 2: when benchmark volatility is high, the rebate curve pays more for resting depth near the benchmark's rolling mean. Step 3: when volatility is low, the curve pays less everywhere, and rebates concentrate on far-touch depth that tightens extremes. Step 4: rebates fund from taker fees whose schedule widens with the same volatility index. Step 5: the curve's parameters are bounded and published, and every parameter change requires a performance bond."
     }
   ]
 }

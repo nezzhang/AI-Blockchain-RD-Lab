@@ -119,6 +119,27 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 9 corpus-widening round: 10 bridge-authored ideas targeting
+  the families ABSENT from the ranked corpus (governance,
+  economic-driven, energy-driven, oracle-design) driven through the
+  full §34 loop — all 10 modeled (battery-contract MathModels, 13/13
+  distinct non-degenerate), all 10 red-teamed VULNERABLE with named
+  profitable vectors, all 10 patched to v2 (multi-epoch baselines,
+  escalation-proportional refund caps, probe corroboration, flow-gated
+  slashing, delivery-keyed releases, provider weight floors,
+  corroboration gaps, benchmark gap penalties, net-of-self-dealing
+  weight, realized-stabilization vesting), all 10 SURVIVE v2 re-attack;
+  3 new finalists (Joule-Bonded Inference Escrow 6.60 at #2, Bandwidth
+  Bond Market 6.525 at #3, Demand-Index Escalation Ladder 6.40 at #5).
+  Curriculum: ok — 12 families (was 11), all 57 ranked healthy,
+  dominant market-driven 21%. Classification honesty: cross-family
+  candidates classify by max token hits, so energy/oracle/economic
+  PATTERNS landed in market/stablecoin/productivity families — the
+  mechanism patterns are in the corpus even where the label straddles.
+  Ops lesson pinned: bridge improvement proposals MUST carry the real
+  candidate_id (improve rejects `unknown`); `--store` after formalize
+  double-saves (auto-version bump, duplicate content) — scripts now
+  skip existing v1 rows.
 - Round 8 combination round (§18 × §34): the two unexercised §18
   pairs — market×prediction and oracle×prediction — each produced 5
   bridge-authored ideas driven through the full pipeline (15

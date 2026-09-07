@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-84b0ad6d012f
 - **Category:** energy
 - **Overall score:** 5.0500
-- **Rank:** 14
+- **Rank:** 17
 - **Status:** finalist
 
 ## Executive Summary

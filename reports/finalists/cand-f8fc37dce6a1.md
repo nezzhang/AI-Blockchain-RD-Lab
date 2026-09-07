@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-f8fc37dce6a1
 - **Category:** two-sided market
 - **Overall score:** 6.4000
-- **Rank:** 3
+- **Rank:** 6
 - **Status:** finalist
 
 ## Executive Summary

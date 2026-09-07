@@ -640,6 +640,78 @@
       }
     },
     {
+      "id": "cand-27e6a6ae5492-attack-game_theory-curve-front-running",
+      "kind": "attack",
+      "label": "curve front-running",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Makers compute the soon-to-publish volatility index from public quotes and pre-position depth where the curve will pay most, extracting rebates for anticipated (not delivered) stabilization."
+      }
+    },
+    {
+      "id": "cand-27e6a6ae5492-attack-game_theory-delivered-stabilization-farming",
+      "kind": "attack",
+      "label": "delivered-stabilization farming",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Makers must now deliver actual stabilization to vest rebates; the edge becomes compensation for real service."
+      }
+    },
+    {
+      "id": "cand-27e6a6ae5492-attack-oracle-index-manipulation-for-rebate-capture",
+      "kind": "attack",
+      "label": "index manipulation for rebate capture",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Quote patterns inflate measured volatility, steering the rebate curve."
+      }
+    },
+    {
+      "id": "cand-27e6a6ae5492-attack-oracle-quote-pattern-vol-inflation",
+      "kind": "attack",
+      "label": "quote-pattern vol inflation",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Inflating vol without delivering stabilization mints no rebate \u2014 the gap penalty neutralizes it."
+      }
+    },
+    {
+      "id": "cand-27e6a6ae5492-attack-red_team-curve-front-running",
+      "kind": "attack",
+      "label": "curve front-running",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Makers pre-position where the volatility-indexed curve will pay, harvesting rebates for stabilization already priced."
+      }
+    },
+    {
+      "id": "cand-27e6a6ae5492-attack-red_team-delivered-stabilization-farming",
+      "kind": "attack",
+      "label": "delivered-stabilization farming",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Vesting on realized stabilization converts the edge into compensation."
+      }
+    },
+    {
+      "id": "cand-27e6a6ae5492-attack-security-index-manipulation-for-rebate-capture",
+      "kind": "attack",
+      "label": "index manipulation for rebate capture",
+      "meta": {
+        "agent": "security",
+        "detail": "A cohort trades to inflate measured benchmark volatility, moving the curve to rebate-rich territory while their own depth collects."
+      }
+    },
+    {
+      "id": "cand-27e6a6ae5492-attack-security-vol-index-inflation-residual",
+      "kind": "attack",
+      "label": "vol-index inflation (residual)",
+      "meta": {
+        "agent": "security",
+        "detail": "Collusive quote patterns can still inflate measured vol, but inflated vol with unchanged delivered stabilization yields no incremental rebate under the gap penalty."
+      }
+    },
+    {
       "id": "cand-3132499bb565-attack-game_theory-baseline-capacity-farming",
       "kind": "attack",
       "label": "baseline capacity farming",
@@ -1837,6 +1909,150 @@
       }
     },
     {
+      "id": "cand-73de8d339542-attack-game_theory-baseline-timing-adverse-selection",
+      "kind": "attack",
+      "label": "baseline-timing adverse selection",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Proposer observes a depressed revenue epoch, proposes any change, and reversion-to-mean delivers improvement the proposer did not cause; bond pays out on luck."
+      }
+    },
+    {
+      "id": "cand-73de8d339542-attack-game_theory-sustained-regression-mispricing",
+      "kind": "attack",
+      "label": "sustained-regression mispricing",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A proposer could still win on a genuinely long depression-recovery cycle, but only by identifying sustained regime turns \u2014 that is parameter skill, not timing luck."
+      }
+    },
+    {
+      "id": "cand-73de8d339542-attack-oracle-attribution-gaming",
+      "kind": "attack",
+      "label": "attribution gaming",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Attributing revenue causally to a parameter change vs the counterfactual baseline is an econometrics problem done on-chain; unresolvable without a model."
+      }
+    },
+    {
+      "id": "cand-73de8d339542-attack-oracle-baseline-construction-ambiguity",
+      "kind": "attack",
+      "label": "baseline construction ambiguity",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Counterfactual baseline construction is still a modeling choice \u2014 recorded as residual, not an exploitable vector."
+      }
+    },
+    {
+      "id": "cand-73de8d339542-attack-red_team-baseline-timing-adverse-selection",
+      "kind": "attack",
+      "label": "baseline-timing adverse selection",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Proposer times changes to depressed revenue epochs; reversion-to-mean guarantees improvement the proposer did not cause."
+      }
+    },
+    {
+      "id": "cand-73de8d339542-attack-red_team-sustained-regression-mispricing",
+      "kind": "attack",
+      "label": "sustained-regression mispricing",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Paying proposers for real regime turns is compensation, not exploitation."
+      }
+    },
+    {
+      "id": "cand-73de8d339542-attack-security-multi-epoch-wash-inflation",
+      "kind": "attack",
+      "label": "multi-epoch wash inflation",
+      "meta": {
+        "agent": "security",
+        "detail": "Wash volume must persist across the full baseline window to move the comparison \u2014 cost scales linearly with window length and now exceeds payout."
+      }
+    },
+    {
+      "id": "cand-73de8d339542-attack-security-wash-settlement-revenue-inflation",
+      "kind": "attack",
+      "label": "wash-settlement revenue inflation",
+      "meta": {
+        "agent": "security",
+        "detail": "Attacker proposing a change washes transactions to inflate the post-change revenue epoch, guaranteeing the bond pays out."
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-attack-game_theory-external-front-volume-washing",
+      "kind": "attack",
+      "label": "external-front volume washing",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "An attacker could pay REAL external users to route volume \u2014 but that is genuine usage and the capture cost now equals real market-building cost."
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-attack-game_theory-sustained-volume-tier-capture",
+      "kind": "attack",
+      "label": "sustained-volume tier capture",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A wealthy actor simply pays the fees \u2014 buying sustained inference volume to hold registry weight and set tiers favoring its own models; the bond rebates on regressions may be cheaper than the prize."
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-attack-oracle-attribution-evasion",
+      "kind": "attack",
+      "label": "attribution evasion",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Attribution evasion is bounded by the drift discount's structure; evasion cost scales with volume."
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-attack-oracle-self-dealing-volume",
+      "kind": "attack",
+      "label": "self-dealing volume",
+      "meta": {
+        "agent": "oracle",
+        "detail": "First-party endpoint volume mints weight without serving external demand."
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-attack-red_team-external-front-volume-washing",
+      "kind": "attack",
+      "label": "external-front volume washing",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Paying for genuine external usage is usage, not capture."
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-attack-red_team-self-dealing-volume",
+      "kind": "attack",
+      "label": "self-dealing volume",
+      "meta": {
+        "agent": "red_team",
+        "detail": "First-party routed volume mints governance weight without external demand."
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-attack-security-self-dealing-volume",
+      "kind": "attack",
+      "label": "self-dealing volume",
+      "meta": {
+        "agent": "security",
+        "detail": "Attacker routes its own inference through its own endpoints at scale, paying fees to itself to mint weight."
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-attack-security-sybil-endpoint-splitting",
+      "kind": "attack",
+      "label": "sybil endpoint splitting",
+      "meta": {
+        "agent": "security",
+        "detail": "Splitting endpoints to dilute ownership attribution is detectable via routing-pattern clustering \u2014 implementation layer."
+      }
+    },
+    {
       "id": "cand-7f2f07fd4e9a-attack-game_theory-exit-timing-around-anchor-revisions",
       "kind": "attack",
       "label": "exit timing around anchor revisions",
@@ -2458,6 +2674,78 @@
       }
     },
     {
+      "id": "cand-9af3c61061d1-attack-game_theory-floor-boundary-erosion",
+      "kind": "attack",
+      "label": "floor-boundary erosion",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A dominant cartel could still shift the blend slightly above the floor, but the extractable fee-split delta is bounded and small relative to the cost of sustained inefficiency."
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1-attack-game_theory-index-suppression-via-slow-batches",
+      "kind": "attack",
+      "label": "index suppression via slow batches",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Provider submits deliberately inefficient batches at scale to depress the mesh productivity index, raising the provider fee share for all its batches."
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1-attack-oracle-efficiency-term-suppression",
+      "kind": "attack",
+      "label": "efficiency-term suppression",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Suppression below the floor is impossible by construction; above-floor movement is bounded."
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1-attack-oracle-proof-metadata-gaming",
+      "kind": "attack",
+      "label": "proof metadata gaming",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Throughput attestation includes task-difficulty metadata; overstating difficulty inflates measured productivity."
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1-attack-red_team-floor-boundary-erosion",
+      "kind": "attack",
+      "label": "floor-boundary erosion",
+      "meta": {
+        "agent": "red_team",
+        "detail": "The floor bounds suppression's economic reach."
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1-attack-red_team-index-suppression-via-slow-batches",
+      "kind": "attack",
+      "label": "index suppression via slow batches",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Provider cartel depresses the mesh index with inefficient batches, shifting the fee split in its favor."
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1-attack-security-metadata-gaming-residual",
+      "kind": "attack",
+      "label": "metadata gaming (residual)",
+      "meta": {
+        "agent": "security",
+        "detail": "Difficulty normalization in attestation is implementation-layer; the model's floor bounds the economic impact."
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1-attack-security-sample-selection-bias",
+      "kind": "attack",
+      "label": "sample selection bias",
+      "meta": {
+        "agent": "security",
+        "detail": "If index statistics accept provider-chosen batch samples, cherry-picking skews the index systematically."
+      }
+    },
+    {
       "id": "cand-a4e0cf125cdf-attack-game_theory-exit-timing-around-anchor-revisions",
       "kind": "attack",
       "label": "exit timing around anchor revisions",
@@ -3013,6 +3301,78 @@
       "meta": {
         "agent": "security",
         "detail": "Fixture attack for Carbon-Weighted Gas Fees: oracle_provider acts when the mechanism is most dependent on cooperation."
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-attack-game_theory-degraded-peer-shielding",
+      "kind": "attack",
+      "label": "degraded-peer shielding",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A cartel can still shield individual peers from probes, but the aggregate capacity-vs-delivered gap now triggers forfaits on the whole bonded cluster."
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-attack-game_theory-probe-route-selection",
+      "kind": "attack",
+      "label": "probe-route selection",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A relay cluster arranges that probes sample healthy peers while its degraded peers serve real traffic, collecting lease fees without delivering."
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-attack-oracle-corroboration-drift-residual",
+      "kind": "attack",
+      "label": "corroboration drift (residual)",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Top-of-band attestation drags the energy index but the gap term now self-corrects; residual drift is bounded by the index EMA."
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-attack-oracle-joule-over-attestation",
+      "kind": "attack",
+      "label": "joule over-attestation",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Relays overstate consumed energy to raise escrow releases; tolerance bands bound single-report overstatement but systematic bias accumulates."
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-attack-red_team-degraded-peer-shielding",
+      "kind": "attack",
+      "label": "degraded-peer shielding",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Aggregate corroboration gap forfaits the cluster's bonded capacity."
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-attack-red_team-probe-route-selection",
+      "kind": "attack",
+      "label": "probe-route selection",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Cartel routes probes through healthy peers while degraded peers collect lease fees undetected."
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-attack-security-probe-commons-underfunding",
+      "kind": "attack",
+      "label": "probe commons underfunding",
+      "meta": {
+        "agent": "security",
+        "detail": "Probe budget starvation is a governance concern outside the mechanism's loop; forfait-funded probes are the implementation answer."
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-attack-security-probe-underfunding",
+      "kind": "attack",
+      "label": "probe underfunding",
+      "meta": {
+        "agent": "security",
+        "detail": "Starving the probe budget degrades verification coverage; forfaits stop firing and under-delivery becomes free."
       }
     },
     {
@@ -3934,6 +4294,78 @@
       }
     },
     {
+      "id": "cand-d5bf8d515927-attack-game_theory-benchmark-overfitting",
+      "kind": "attack",
+      "label": "benchmark overfitting",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Sellers tune models to the agreed task set rather than delivering general quality; swaps settle in their favor while real output quality stagnates."
+      }
+    },
+    {
+      "id": "cand-d5bf8d515927-attack-game_theory-gap-optimized-tuning",
+      "kind": "attack",
+      "label": "gap-optimized tuning",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Sellers could tune to move both benchmark AND delivered proxy together \u2014 but the delivered proxy moving with real settlement flow is exactly the honest outcome the board prices."
+      }
+    },
+    {
+      "id": "cand-d5bf8d515927-attack-oracle-delivered-proxy-gaming",
+      "kind": "attack",
+      "label": "delivered-proxy gaming",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Moving the delivered proxy without real quality requires settling real swaps \u2014 which is the service the board exists to price."
+      }
+    },
+    {
+      "id": "cand-d5bf8d515927-attack-oracle-harness-capture",
+      "kind": "attack",
+      "label": "harness capture",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Bribing or compromising the evaluation harness moves settlements across all open swaps."
+      }
+    },
+    {
+      "id": "cand-d5bf8d515927-attack-red_team-benchmark-overfitting",
+      "kind": "attack",
+      "label": "benchmark overfitting",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Static agreed tasks let sellers optimize for the benchmark rather than delivered quality."
+      }
+    },
+    {
+      "id": "cand-d5bf8d515927-attack-red_team-gap-optimized-tuning",
+      "kind": "attack",
+      "label": "gap-optimized tuning",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Settling benchmark AND delivered together is honest behavior."
+      }
+    },
+    {
+      "id": "cand-d5bf8d515927-attack-security-harness-capture-residual",
+      "kind": "attack",
+      "label": "harness capture (residual)",
+      "meta": {
+        "agent": "security",
+        "detail": "Evaluation-harness compromise remains the implementation-layer risk; multi-harness medians are the field answer."
+      }
+    },
+    {
+      "id": "cand-d5bf8d515927-attack-security-score-verification-capture",
+      "kind": "attack",
+      "label": "score verification capture",
+      "meta": {
+        "agent": "security",
+        "detail": "The verification oracle (public evaluation harness) is a single point of capture; a captured harness settles all swaps dishonestly."
+      }
+    },
+    {
       "id": "cand-db0588dfed1a-attack-game_theory-exit-timing-around-anchor-revisions",
       "kind": "attack",
       "label": "exit timing around anchor revisions",
@@ -4123,6 +4555,78 @@
       }
     },
     {
+      "id": "cand-e0c80c26b7f3-attack-game_theory-thick-window-anchor-pressure",
+      "kind": "attack",
+      "label": "thick-window anchor pressure",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Moving realized prices in high-flow windows costs real execution losses that exceed any bond extraction \u2014 the gate restored the intended equilibrium."
+      }
+    },
+    {
+      "id": "cand-e0c80c26b7f3-attack-game_theory-thin-window-anchor-capture",
+      "kind": "attack",
+      "label": "thin-window anchor capture",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "In low-flow windows, a wealthy attacker moves realized execution prices cheaply, forcing honest reporters into deviation slashes; bond pool drains to diversity grants while the attacker's own quotes prevail."
+      }
+    },
+    {
+      "id": "cand-e0c80c26b7f3-attack-oracle-gate-threshold-probing",
+      "kind": "attack",
+      "label": "gate-threshold probing",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Attackers may hunt windows just above the gate threshold; extraction there is bounded by the real flow requirement."
+      }
+    },
+    {
+      "id": "cand-e0c80c26b7f3-attack-oracle-thin-window-anchor-capture",
+      "kind": "attack",
+      "label": "thin-window anchor capture",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Cheap realized-price movement in thin windows turns the slash condition against honest reporters."
+      }
+    },
+    {
+      "id": "cand-e0c80c26b7f3-attack-red_team-thick-window-anchor-pressure",
+      "kind": "attack",
+      "label": "thick-window anchor pressure",
+      "meta": {
+        "agent": "red_team",
+        "detail": "High-flow windows make anchor movement self-defeating."
+      }
+    },
+    {
+      "id": "cand-e0c80c26b7f3-attack-red_team-thin-window-anchor-capture",
+      "kind": "attack",
+      "label": "thin-window anchor capture",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Whale moves thin-window realized prices to force deviation slashes on honest reporters and capture the reference."
+      }
+    },
+    {
+      "id": "cand-e0c80c26b7f3-attack-security-reporter-exodus-cascade",
+      "kind": "attack",
+      "label": "reporter-exodus cascade",
+      "meta": {
+        "agent": "security",
+        "detail": "Repeated thin-window slashes push reporters out; fewer reporters widens medians, increasing 'deviation' slashes \u2014 a self-accelerating drain."
+      }
+    },
+    {
+      "id": "cand-e0c80c26b7f3-attack-security-reporter-exodus-residual",
+      "kind": "attack",
+      "label": "reporter-exodus (residual)",
+      "meta": {
+        "agent": "security",
+        "detail": "The cascade risk is structurally mooted since honest reporters are no longer slashable in thin windows."
+      }
+    },
+    {
       "id": "cand-e33c18c7a75e-attack-game_theory-exit-timing-around-anchor-revisions",
       "kind": "attack",
       "label": "exit timing around anchor revisions",
@@ -4249,6 +4753,150 @@
       }
     },
     {
+      "id": "cand-e626f13713b0-attack-game_theory-minimal-delivery-farming",
+      "kind": "attack",
+      "label": "minimal-delivery farming",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Builders must now actually deliver scaled throughput to collect rebates; minimal deliveries collect minimal rebates by construction."
+      }
+    },
+    {
+      "id": "cand-e626f13713b0-attack-game_theory-trough-eligibility-farming",
+      "kind": "attack",
+      "label": "trough eligibility farming",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Builders maintain minimal activity proofs during demand troughs, collecting counter-cyclical rebates far exceeding the value of infrastructure actually sustained."
+      }
+    },
+    {
+      "id": "cand-e626f13713b0-attack-oracle-delivery-attestation-quality",
+      "kind": "attack",
+      "label": "delivery attestation quality",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Delivery proofs inherit verified-compute infrastructure quality \u2014 outside the model's boundary."
+      }
+    },
+    {
+      "id": "cand-e626f13713b0-attack-oracle-ma-window-gaming",
+      "kind": "attack",
+      "label": "MA window gaming",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Timing volume bursts to reset the moving average high makes subsequent normal volume read as trough, triggering rebates."
+      }
+    },
+    {
+      "id": "cand-e626f13713b0-attack-red_team-minimal-delivery-farming",
+      "kind": "attack",
+      "label": "minimal-delivery farming",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Delivery-proportional releases convert ghost farming into paid work."
+      }
+    },
+    {
+      "id": "cand-e626f13713b0-attack-red_team-trough-eligibility-farming",
+      "kind": "attack",
+      "label": "trough eligibility farming",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Builders hold minimal activity proofs through troughs to collect rebates exceeding sustained value."
+      }
+    },
+    {
+      "id": "cand-e626f13713b0-attack-security-index-depression",
+      "kind": "attack",
+      "label": "index depression",
+      "meta": {
+        "agent": "security",
+        "detail": "Cohort suppresses fee volume (or withholds settlement) to deepen the perceived trough, harvesting rebates on artificially low demand."
+      }
+    },
+    {
+      "id": "cand-e626f13713b0-attack-security-ma-window-gaming-residual",
+      "kind": "attack",
+      "label": "MA-window gaming (residual)",
+      "meta": {
+        "agent": "security",
+        "detail": "Timing bursts to reset the average remains possible but with delivery-scaled releases the payoff is proportional to actual work done."
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-attack-game_theory-capped-cycle-grinding",
+      "kind": "attack",
+      "label": "capped-cycle grinding",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A stuffed cycle still nets negative for the stuffer (own escalation exceeds capped refund share); grinding across epochs compounds the loss, not profit."
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-attack-game_theory-queue-stuffing-refund-farming",
+      "kind": "attack",
+      "label": "queue-stuffing refund farming",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Cohort stuffs the queue above escalation rungs, triggering refund distribution to all congested settlers including the cohort; net positive when cohort share of refunds exceeds escalation paid."
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-attack-oracle-queue-depth-stuffing",
+      "kind": "attack",
+      "label": "queue depth stuffing",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Queue depth is directly manipulable by submitting batches; the index measures pressure, not intent, so stuffing and congestion are indistinguishable to the rule."
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-attack-oracle-queue-depth-stuffing-residual",
+      "kind": "attack",
+      "label": "queue depth stuffing (residual)",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Stuffing still moves the index but refunds are now self-funded by the stuffer's escalations."
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-attack-red_team-capped-cycle-grinding",
+      "kind": "attack",
+      "label": "capped-cycle grinding",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Escalation-proportional capped refunds make stuffing a pure deadweight loss."
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-attack-red_team-queue-stuffing-refund-farming",
+      "kind": "attack",
+      "label": "queue-stuffing refund farming",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Cohort stuffs the queue to rung-triggering depth and shares refunds paid to all congested-epoch settlers."
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-attack-security-refund-cap-exhaustion",
+      "kind": "attack",
+      "label": "refund-cap exhaustion",
+      "meta": {
+        "agent": "security",
+        "detail": "Repeated coordinated stuffing across epochs grinds the reserve toward its floor, degrading counter-cyclical function even if each cycle's profit is capped."
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-attack-security-reserve-floor-pressure",
+      "kind": "attack",
+      "label": "reserve-floor pressure",
+      "meta": {
+        "agent": "security",
+        "detail": "Repeated cycles push the reserve toward its floor but cannot breach it; counter-cyclical function degrades gracefully, not catastrophically."
+      }
+    },
+    {
       "id": "cand-e8e15b483070-attack-game_theory-float-floor-rationing-race",
       "kind": "attack",
       "label": "float floor rationing race",
@@ -4345,6 +4993,78 @@
       "meta": {
         "agent": "security",
         "detail": "Coordinate premium payers to withhold during stress, accelerating the float's approach to the floor and forcing deferrals that damage honest claimants' liquidity."
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-attack-game_theory-bounded-band-skimming",
+      "kind": "attack",
+      "label": "bounded-band skimming",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Single-request skimming below tolerance is bounded and self-correcting via the index EMA; the aggregate drift term slashes above it."
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-attack-game_theory-tolerance-band-over-attestation",
+      "kind": "attack",
+      "label": "tolerance-band over-attestation",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Providers systematically attest at the top of the measurement tolerance band, collecting escrow releases for joules never consumed; per-request overstatement is legal, aggregate drift is theft."
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-attack-oracle-index-drift-via-collusive-attestation",
+      "kind": "attack",
+      "label": "index drift via collusive attestation",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Majority-collusive attestation can still move the index, but the gap term punishes the drift \u2014 the manipulation self-reports."
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-attack-oracle-tolerance-band-over-attestation",
+      "kind": "attack",
+      "label": "tolerance-band over-attestation",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Top-of-band attestation aggregates into index drift favoring providers."
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-attack-red_team-bounded-band-skimming",
+      "kind": "attack",
+      "label": "bounded-band skimming",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Corroboration gap closes the skim window."
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-attack-red_team-tolerance-band-over-attestation",
+      "kind": "attack",
+      "label": "tolerance-band over-attestation",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Systematic top-of-band joule attestation aggregates into paid escrow releases for energy never consumed."
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-attack-security-energy-index-drift",
+      "kind": "attack",
+      "label": "energy index drift",
+      "meta": {
+        "agent": "security",
+        "detail": "Collusive over-attestation slowly raises the mesh energy index, taxing honest providers and users alike while skim accrues."
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-attack-security-racking-level-meter-spoofing",
+      "kind": "attack",
+      "label": "racking-level meter spoofing",
+      "meta": {
+        "agent": "security",
+        "detail": "Physical meter spoofing is outside the cryptographic boundary \u2014 corroboration sampling raises the cost but cannot eliminate it."
       }
     },
     {
@@ -5036,6 +5756,16 @@
       }
     },
     {
+      "id": "cand-27e6a6ae5492",
+      "kind": "idea",
+      "label": "Vol-Adaptive Market Making Rebate Curve for Compute Futures",
+      "meta": {
+        "category": "market microstructure",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
       "id": "cand-3132499bb565",
       "kind": "idea",
       "label": "Dual-Sided Bond Auction Rebalancer",
@@ -5196,6 +5926,26 @@
       }
     },
     {
+      "id": "cand-73de8d339542",
+      "kind": "idea",
+      "label": "Treasury-Backed Fee Parameter Governance",
+      "meta": {
+        "category": "governance",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a",
+      "kind": "idea",
+      "label": "Fee-Tier Voted Model Registry",
+      "meta": {
+        "category": "governance",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
       "id": "cand-7f2f07fd4e9a",
       "kind": "idea",
       "label": "Population-Linked Supply",
@@ -5273,6 +6023,16 @@
         "category": "labor",
         "status": "scored",
         "novelty_class": "insufficient_evidence"
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1",
+      "kind": "idea",
+      "label": "Productivity-Index Scaled Compute Clearing",
+      "meta": {
+        "category": "monetary economics",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
       }
     },
     {
@@ -5416,6 +6176,16 @@
       }
     },
     {
+      "id": "cand-b713e862acdc",
+      "kind": "idea",
+      "label": "Bandwidth Bond Market for Relay Peers",
+      "meta": {
+        "category": "network economics",
+        "status": "finalist",
+        "novelty_class": "appears_substantially_novel"
+      }
+    },
+    {
       "id": "cand-b8188890330a",
       "kind": "idea",
       "label": "Habitat Bond Curve",
@@ -5536,6 +6306,16 @@
       }
     },
     {
+      "id": "cand-d5bf8d515927",
+      "kind": "idea",
+      "label": "Output-Indexed Compute Swap Board",
+      "meta": {
+        "category": "financial markets",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
       "id": "cand-db0588dfed1a",
       "kind": "idea",
       "label": "Bandwidth Futures Market",
@@ -5566,6 +6346,16 @@
       }
     },
     {
+      "id": "cand-e0c80c26b7f3",
+      "kind": "idea",
+      "label": "Quote-Deviation Slashed FX Reference Feed",
+      "meta": {
+        "category": "oracle design",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
       "id": "cand-e33c18c7a75e",
       "kind": "idea",
       "label": "Population-Linked Supply",
@@ -5586,6 +6376,26 @@
       }
     },
     {
+      "id": "cand-e626f13713b0",
+      "kind": "idea",
+      "label": "Cyclic Demand Reserve for Fee Recycles",
+      "meta": {
+        "category": "monetary economics",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
+      "id": "cand-e74d830a9479",
+      "kind": "idea",
+      "label": "Demand-Index Escalation Ladder for FX Batches",
+      "meta": {
+        "category": "monetary economics",
+        "status": "finalist",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
       "id": "cand-e8e15b483070",
       "kind": "idea",
       "label": "Escrowed Batch-Clearing Insurance Pool",
@@ -5593,6 +6403,16 @@
         "category": "insurance",
         "status": "finalist",
         "novelty_class": "insufficient_evidence"
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5",
+      "kind": "idea",
+      "label": "Joule-Bonded Inference Escrow",
+      "meta": {
+        "category": "energy economics",
+        "status": "finalist",
+        "novelty_class": "appears_substantially_novel"
       }
     },
     {
@@ -5700,6 +6520,14 @@
       }
     },
     {
+      "id": "cand-27e6a6ae5492-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-27e6a6ae5492 improvement v2",
+      "meta": {
+        "rationale": "Realized-stabilization vesting closes curve front-running."
+      }
+    },
+    {
       "id": "cand-3132499bb565-improvement-v2",
       "kind": "improvement",
       "label": "cand-3132499bb565 improvement v2",
@@ -5756,6 +6584,22 @@
       }
     },
     {
+      "id": "cand-73de8d339542-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-73de8d339542 improvement v2",
+      "meta": {
+        "rationale": "Multi-epoch baselines and window-averaged slashes close the baseline-timing attack."
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-771f66f9de0a improvement v2",
+      "meta": {
+        "rationale": "Net-of-self-dealing weight closes self-dealing volume capture."
+      }
+    },
+    {
       "id": "cand-7f4c2dee85e7-improvement-v2",
       "kind": "improvement",
       "label": "cand-7f4c2dee85e7 improvement v2",
@@ -5777,6 +6621,14 @@
       "label": "cand-8359598274f7 improvement v2",
       "meta": {
         "rationale": "v2 patch for Fee-Spike Mutual for Rollup Batches: targeted fixes against the red-team vectors (rationing / dynamic barriers / verified-exposure compensation / directional accuracy / probe corroboration per candidate). Model smoke-tested 13/13 distinct."
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-9af3c61061d1 improvement v2",
+      "meta": {
+        "rationale": "Per-provider weight floors close cartel index suppression."
       }
     },
     {
@@ -5825,6 +6677,14 @@
       "label": "cand-afe909352ab4 improvement v2",
       "meta": {
         "rationale": "Harden the supply rule with a hard single-step cap c_max and EMA anchor smoothing so transient anchor manipulation cannot over-expand supply within the attack window."
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-b713e862acdc improvement v2",
+      "meta": {
+        "rationale": "Randomized probe corroboration closes probe-route selection."
       }
     },
     {
@@ -5884,6 +6744,14 @@
       }
     },
     {
+      "id": "cand-d5bf8d515927-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-d5bf8d515927 improvement v2",
+      "meta": {
+        "rationale": "Gap-penalized settlement closes benchmark overfitting."
+      }
+    },
+    {
       "id": "cand-dc109b36cd60-improvement-v2",
       "kind": "improvement",
       "label": "cand-dc109b36cd60 improvement v2",
@@ -5908,6 +6776,14 @@
       }
     },
     {
+      "id": "cand-e0c80c26b7f3-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-e0c80c26b7f3 improvement v2",
+      "meta": {
+        "rationale": "Flow-gated slashing closes thin-window anchor capture."
+      }
+    },
+    {
       "id": "cand-e37c1f655db5-improvement-v2",
       "kind": "improvement",
       "label": "cand-e37c1f655db5 improvement v2",
@@ -5916,11 +6792,35 @@
       }
     },
     {
+      "id": "cand-e626f13713b0-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-e626f13713b0 improvement v2",
+      "meta": {
+        "rationale": "Delivered-throughput-keyed releases close trough eligibility farming."
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-e74d830a9479 improvement v2",
+      "meta": {
+        "rationale": "Escalation-proportional capped refunds close queue-stuffing refund farming."
+      }
+    },
+    {
       "id": "cand-e8e15b483070-improvement-v2",
       "kind": "improvement",
       "label": "cand-e8e15b483070 improvement v2",
       "meta": {
         "rationale": "Underwriting cap ties the payable bill to premium history; pro-rata deferral (deployment constraint) removes first-come capture."
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-e98e5859f3f5 improvement v2",
+      "meta": {
+        "rationale": "Corroboration-sampled gaps close tolerance-band over-attestation."
       }
     },
     {
@@ -6057,6 +6957,22 @@
       "label": "cand-274537b6fc9c model v1",
       "meta": {
         "version": 1
+      }
+    },
+    {
+      "id": "cand-27e6a6ae5492-model-v1",
+      "kind": "mechanism",
+      "label": "cand-27e6a6ae5492 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-27e6a6ae5492-model-v2",
+      "kind": "mechanism",
+      "label": "cand-27e6a6ae5492 model v2",
+      "meta": {
+        "version": 2
       }
     },
     {
@@ -6228,6 +7144,38 @@
       }
     },
     {
+      "id": "cand-73de8d339542-model-v1",
+      "kind": "mechanism",
+      "label": "cand-73de8d339542 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-73de8d339542-model-v2",
+      "kind": "mechanism",
+      "label": "cand-73de8d339542 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-model-v1",
+      "kind": "mechanism",
+      "label": "cand-771f66f9de0a model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-771f66f9de0a-model-v2",
+      "kind": "mechanism",
+      "label": "cand-771f66f9de0a model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
       "id": "cand-7f4c2dee85e7-model-v1",
       "kind": "mechanism",
       "label": "cand-7f4c2dee85e7 model v1",
@@ -6297,6 +7245,22 @@
       "label": "cand-986c8dd65b08 model v1",
       "meta": {
         "version": 1
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1-model-v1",
+      "kind": "mechanism",
+      "label": "cand-9af3c61061d1 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-9af3c61061d1-model-v2",
+      "kind": "mechanism",
+      "label": "cand-9af3c61061d1 model v2",
+      "meta": {
+        "version": 2
       }
     },
     {
@@ -6415,6 +7379,22 @@
       "id": "cand-afe909352ab4-model-v2",
       "kind": "mechanism",
       "label": "cand-afe909352ab4 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-model-v1",
+      "kind": "mechanism",
+      "label": "cand-b713e862acdc model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-b713e862acdc-model-v2",
+      "kind": "mechanism",
+      "label": "cand-b713e862acdc model v2",
       "meta": {
         "version": 2
       }
@@ -6556,6 +7536,22 @@
       }
     },
     {
+      "id": "cand-d5bf8d515927-model-v1",
+      "kind": "mechanism",
+      "label": "cand-d5bf8d515927 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-d5bf8d515927-model-v2",
+      "kind": "mechanism",
+      "label": "cand-d5bf8d515927 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
       "id": "cand-db0588dfed1a-model-v1",
       "kind": "mechanism",
       "label": "cand-db0588dfed1a model v1",
@@ -6604,6 +7600,22 @@
       }
     },
     {
+      "id": "cand-e0c80c26b7f3-model-v1",
+      "kind": "mechanism",
+      "label": "cand-e0c80c26b7f3 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-e0c80c26b7f3-model-v2",
+      "kind": "mechanism",
+      "label": "cand-e0c80c26b7f3 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
       "id": "cand-e33c18c7a75e-model-v1",
       "kind": "mechanism",
       "label": "cand-e33c18c7a75e model v1",
@@ -6628,6 +7640,38 @@
       }
     },
     {
+      "id": "cand-e626f13713b0-model-v1",
+      "kind": "mechanism",
+      "label": "cand-e626f13713b0 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-e626f13713b0-model-v2",
+      "kind": "mechanism",
+      "label": "cand-e626f13713b0 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-model-v1",
+      "kind": "mechanism",
+      "label": "cand-e74d830a9479 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-e74d830a9479-model-v2",
+      "kind": "mechanism",
+      "label": "cand-e74d830a9479 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
       "id": "cand-e8e15b483070-model-v1",
       "kind": "mechanism",
       "label": "cand-e8e15b483070 model v1",
@@ -6639,6 +7683,22 @@
       "id": "cand-e8e15b483070-model-v2",
       "kind": "mechanism",
       "label": "cand-e8e15b483070 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-model-v1",
+      "kind": "mechanism",
+      "label": "cand-e98e5859f3f5 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-e98e5859f3f5-model-v2",
+      "kind": "mechanism",
+      "label": "cand-e98e5859f3f5 model v2",
       "meta": {
         "version": 2
       }
@@ -7131,6 +8191,39 @@
       "meta": {
         "seed": 7,
         "model": "mathmodel-latest",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-27e6a6ae5492-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-27e6a6ae5492-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-27e6a6ae5492-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-27e6a6ae5492-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-27e6a6ae5492-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-27e6a6ae5492-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
         "dataset": "synthetic-anchor-v1/seed-7",
         "simulation_version": "sim-0.1.0"
       }
@@ -7796,6 +8889,72 @@
       }
     },
     {
+      "id": "sim-cand-73de8d339542-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-73de8d339542-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-73de8d339542-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-73de8d339542-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-73de8d339542-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-73de8d339542-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-771f66f9de0a-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-771f66f9de0a-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-771f66f9de0a-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-771f66f9de0a-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-771f66f9de0a-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-771f66f9de0a-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-cand-7f4c2dee85e7-montecarlo",
       "kind": "simulation",
       "label": "cand-7f4c2dee85e7-montecarlo",
@@ -8088,6 +9247,39 @@
       "meta": {
         "seed": 7,
         "model": "mathmodel-latest",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-9af3c61061d1-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-9af3c61061d1-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-9af3c61061d1-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-9af3c61061d1-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-9af3c61061d1-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-9af3c61061d1-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
         "dataset": "synthetic-anchor-v1/seed-7",
         "simulation_version": "sim-0.1.0"
       }
@@ -8517,6 +9709,39 @@
       "meta": {
         "seed": 7,
         "model": "mathmodel-latest",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-b713e862acdc-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-b713e862acdc-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-b713e862acdc-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-b713e862acdc-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-b713e862acdc-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-b713e862acdc-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
         "dataset": "synthetic-anchor-v1/seed-7",
         "simulation_version": "sim-0.1.0"
       }
@@ -9050,6 +10275,39 @@
       }
     },
     {
+      "id": "sim-cand-d5bf8d515927-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-d5bf8d515927-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-d5bf8d515927-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-d5bf8d515927-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-d5bf8d515927-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-d5bf8d515927-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-cand-db0588dfed1a-montecarlo",
       "kind": "simulation",
       "label": "cand-db0588dfed1a-montecarlo",
@@ -9215,6 +10473,39 @@
       }
     },
     {
+      "id": "sim-cand-e0c80c26b7f3-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-e0c80c26b7f3-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-e0c80c26b7f3-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-e0c80c26b7f3-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-e0c80c26b7f3-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-e0c80c26b7f3-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-cand-e33c18c7a75e-montecarlo",
       "kind": "simulation",
       "label": "cand-e33c18c7a75e-montecarlo",
@@ -9314,6 +10605,72 @@
       }
     },
     {
+      "id": "sim-cand-e626f13713b0-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-e626f13713b0-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-e626f13713b0-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-e626f13713b0-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-e626f13713b0-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-e626f13713b0-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-e74d830a9479-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-e74d830a9479-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-e74d830a9479-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-e74d830a9479-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-e74d830a9479-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-e74d830a9479-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-cand-e8e15b483070-montecarlo",
       "kind": "simulation",
       "label": "cand-e8e15b483070-montecarlo",
@@ -9372,6 +10729,39 @@
       "id": "sim-cand-e8e15b483070-sweep-v2",
       "kind": "simulation",
       "label": "cand-e8e15b483070-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-e98e5859f3f5-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-e98e5859f3f5-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-e98e5859f3f5-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-e98e5859f3f5-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-e98e5859f3f5-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-e98e5859f3f5-sweep-v2",
       "meta": {
         "seed": 7,
         "model": "mathmodel-v2",
@@ -10154,6 +11544,24 @@
       }
     },
     {
+      "id": "source-48",
+      "kind": "source",
+      "label": "Compound governance documentation",
+      "meta": {
+        "url": "https://compound.finance/governance",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-49",
+      "kind": "source",
+      "label": "Curve governance documentation",
+      "meta": {
+        "url": "https://docs.curve.fi/governance",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
       "id": "source-5",
       "kind": "source",
       "label": "Fixture Source",
@@ -10163,12 +11571,138 @@
       }
     },
     {
+      "id": "source-50",
+      "kind": "source",
+      "label": "THORChain protocol documentation",
+      "meta": {
+        "url": "https://docs.thorchain.org",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-51",
+      "kind": "source",
+      "label": "Livepeer protocol documentation",
+      "meta": {
+        "url": "https://livepeer.org",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-52",
+      "kind": "source",
+      "label": "Bandwidth currency literature survey",
+      "meta": {
+        "url": "https://arxiv.org/abs/1904.10096",
+        "source_type": "paper"
+      }
+    },
+    {
+      "id": "source-53",
+      "kind": "source",
+      "label": "Chainlink documentation",
+      "meta": {
+        "url": "https://docs.chain.link",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-54",
+      "kind": "source",
+      "label": "UMA protocol documentation",
+      "meta": {
+        "url": "https://uma.xyz",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-55",
+      "kind": "source",
+      "label": "Optimism Retro Funding",
+      "meta": {
+        "url": "https://retrofunding.optimism.io",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-56",
+      "kind": "source",
+      "label": "Akash network documentation",
+      "meta": {
+        "url": "https://akash.network",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-57",
+      "kind": "source",
+      "label": "Render network documentation",
+      "meta": {
+        "url": "https://rendernetwork.com",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-58",
+      "kind": "source",
+      "label": "Gensyn protocol documentation",
+      "meta": {
+        "url": "https://gensyn.ai",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-59",
+      "kind": "source",
+      "label": "IEA power purchase agreement indexation overview",
+      "meta": {
+        "url": "https://www.iea.org",
+        "source_type": "intl_org"
+      }
+    },
+    {
       "id": "source-6",
       "kind": "source",
       "label": "Fixture Source",
       "meta": {
         "url": "fixture://cand-fb4bfe53914b",
         "source_type": "web"
+      }
+    },
+    {
+      "id": "source-60",
+      "kind": "source",
+      "label": "Luxor hashprice derivatives",
+      "meta": {
+        "url": "https://luxor.com",
+        "source_type": "repo"
+      }
+    },
+    {
+      "id": "source-61",
+      "kind": "source",
+      "label": "MLPerf benchmark methodology",
+      "meta": {
+        "url": "https://mlcommons.org",
+        "source_type": "research_inst"
+      }
+    },
+    {
+      "id": "source-62",
+      "kind": "source",
+      "label": "Registry governance patterns survey",
+      "meta": {
+        "url": "https://arxiv.org",
+        "source_type": "paper"
+      }
+    },
+    {
+      "id": "source-63",
+      "kind": "source",
+      "label": "CME maker rebate schedules (public docs)",
+      "meta": {
+        "url": "https://www.cmegroup.com",
+        "source_type": "other"
       }
     },
     {
@@ -10281,6 +11815,18 @@
     {
       "source": "cand-273882700f28-improvement-v2",
       "target": "cand-273882700f28-attack-security-self-funding-manipulation-recycling",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-27e6a6ae5492-improvement-v2",
+      "target": "cand-27e6a6ae5492-attack-game_theory-curve-front-running",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-27e6a6ae5492-improvement-v2",
+      "target": "cand-27e6a6ae5492-attack-red_team-curve-front-running",
       "kind": "addresses",
       "meta": {}
     },
@@ -10423,6 +11969,30 @@
       "meta": {}
     },
     {
+      "source": "cand-73de8d339542-improvement-v2",
+      "target": "cand-73de8d339542-attack-game_theory-baseline-timing-adverse-selection",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-73de8d339542-improvement-v2",
+      "target": "cand-73de8d339542-attack-red_team-baseline-timing-adverse-selection",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-771f66f9de0a-improvement-v2",
+      "target": "cand-771f66f9de0a-attack-red_team-self-dealing-volume",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-771f66f9de0a-improvement-v2",
+      "target": "cand-771f66f9de0a-attack-security-self-dealing-volume",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
       "source": "cand-7f4c2dee85e7-improvement-v2",
       "target": "cand-7f4c2dee85e7-attack-game_theory-reflexive-vol-pump",
       "kind": "addresses",
@@ -10479,6 +12049,18 @@
     {
       "source": "cand-8359598274f7-improvement-v2",
       "target": "cand-8359598274f7-attack-red_team-calm-band-suppression-then-spike-harvest",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-9af3c61061d1-improvement-v2",
+      "target": "cand-9af3c61061d1-attack-game_theory-index-suppression-via-slow-batches",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-9af3c61061d1-improvement-v2",
+      "target": "cand-9af3c61061d1-attack-red_team-index-suppression-via-slow-batches",
       "kind": "addresses",
       "meta": {}
     },
@@ -10599,6 +12181,18 @@
     {
       "source": "cand-af096f7f6aa2-improvement-v2",
       "target": "cand-af096f7f6aa2-attack-security-wash-volume-floor-farming",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc-improvement-v2",
+      "target": "cand-b713e862acdc-attack-game_theory-probe-route-selection",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc-improvement-v2",
+      "target": "cand-b713e862acdc-attack-red_team-probe-route-selection",
       "kind": "addresses",
       "meta": {}
     },
@@ -10789,6 +12383,54 @@
       "meta": {}
     },
     {
+      "source": "cand-d5bf8d515927-improvement-v2",
+      "target": "cand-d5bf8d515927-attack-game_theory-benchmark-overfitting",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-d5bf8d515927-improvement-v2",
+      "target": "cand-d5bf8d515927-attack-red_team-benchmark-overfitting",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-e0c80c26b7f3-improvement-v2",
+      "target": "cand-e0c80c26b7f3-attack-game_theory-thin-window-anchor-capture",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-e0c80c26b7f3-improvement-v2",
+      "target": "cand-e0c80c26b7f3-attack-red_team-thin-window-anchor-capture",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-e626f13713b0-improvement-v2",
+      "target": "cand-e626f13713b0-attack-game_theory-trough-eligibility-farming",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-e626f13713b0-improvement-v2",
+      "target": "cand-e626f13713b0-attack-red_team-trough-eligibility-farming",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-e74d830a9479-improvement-v2",
+      "target": "cand-e74d830a9479-attack-game_theory-queue-stuffing-refund-farming",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-e74d830a9479-improvement-v2",
+      "target": "cand-e74d830a9479-attack-red_team-queue-stuffing-refund-farming",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
       "source": "cand-e8e15b483070-improvement-v2",
       "target": "cand-e8e15b483070-attack-game_theory-stress-timed-claim-farming",
       "kind": "addresses",
@@ -10803,6 +12445,18 @@
     {
       "source": "cand-e8e15b483070-improvement-v2",
       "target": "cand-e8e15b483070-attack-security-deferral-race-front-running",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-e98e5859f3f5-improvement-v2",
+      "target": "cand-e98e5859f3f5-attack-game_theory-tolerance-band-over-attestation",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-e98e5859f3f5-improvement-v2",
+      "target": "cand-e98e5859f3f5-attack-red_team-tolerance-band-over-attestation",
       "kind": "addresses",
       "meta": {}
     },
@@ -11592,6 +13246,70 @@
       "kind": "attacks",
       "meta": {
         "profitable": true
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492-attack-game_theory-curve-front-running",
+      "target": "cand-27e6a6ae5492",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492-attack-game_theory-delivered-stabilization-farming",
+      "target": "cand-27e6a6ae5492",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492-attack-oracle-index-manipulation-for-rebate-capture",
+      "target": "cand-27e6a6ae5492",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492-attack-oracle-quote-pattern-vol-inflation",
+      "target": "cand-27e6a6ae5492",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492-attack-red_team-curve-front-running",
+      "target": "cand-27e6a6ae5492",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492-attack-red_team-delivered-stabilization-farming",
+      "target": "cand-27e6a6ae5492",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492-attack-security-index-manipulation-for-rebate-capture",
+      "target": "cand-27e6a6ae5492",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492-attack-security-vol-index-inflation-residual",
+      "target": "cand-27e6a6ae5492",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
       }
     },
     {
@@ -12707,6 +14425,134 @@
       }
     },
     {
+      "source": "cand-73de8d339542-attack-game_theory-baseline-timing-adverse-selection",
+      "target": "cand-73de8d339542",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-73de8d339542-attack-game_theory-sustained-regression-mispricing",
+      "target": "cand-73de8d339542",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-73de8d339542-attack-oracle-attribution-gaming",
+      "target": "cand-73de8d339542",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-73de8d339542-attack-oracle-baseline-construction-ambiguity",
+      "target": "cand-73de8d339542",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-73de8d339542-attack-red_team-baseline-timing-adverse-selection",
+      "target": "cand-73de8d339542",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-73de8d339542-attack-red_team-sustained-regression-mispricing",
+      "target": "cand-73de8d339542",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-73de8d339542-attack-security-multi-epoch-wash-inflation",
+      "target": "cand-73de8d339542",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-73de8d339542-attack-security-wash-settlement-revenue-inflation",
+      "target": "cand-73de8d339542",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a-attack-game_theory-external-front-volume-washing",
+      "target": "cand-771f66f9de0a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a-attack-game_theory-sustained-volume-tier-capture",
+      "target": "cand-771f66f9de0a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a-attack-oracle-attribution-evasion",
+      "target": "cand-771f66f9de0a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a-attack-oracle-self-dealing-volume",
+      "target": "cand-771f66f9de0a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a-attack-red_team-external-front-volume-washing",
+      "target": "cand-771f66f9de0a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a-attack-red_team-self-dealing-volume",
+      "target": "cand-771f66f9de0a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a-attack-security-self-dealing-volume",
+      "target": "cand-771f66f9de0a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a-attack-security-sybil-endpoint-splitting",
+      "target": "cand-771f66f9de0a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
       "source": "cand-7f2f07fd4e9a-attack-game_theory-exit-timing-around-anchor-revisions",
       "target": "cand-7f2f07fd4e9a",
       "kind": "attacks",
@@ -13253,6 +15099,70 @@
     {
       "source": "cand-986c8dd65b08-attack-security-stale-data-exploit",
       "target": "cand-986c8dd65b08",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1-attack-game_theory-floor-boundary-erosion",
+      "target": "cand-9af3c61061d1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1-attack-game_theory-index-suppression-via-slow-batches",
+      "target": "cand-9af3c61061d1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1-attack-oracle-efficiency-term-suppression",
+      "target": "cand-9af3c61061d1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1-attack-oracle-proof-metadata-gaming",
+      "target": "cand-9af3c61061d1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1-attack-red_team-floor-boundary-erosion",
+      "target": "cand-9af3c61061d1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1-attack-red_team-index-suppression-via-slow-batches",
+      "target": "cand-9af3c61061d1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1-attack-security-metadata-gaming-residual",
+      "target": "cand-9af3c61061d1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1-attack-security-sample-selection-bias",
+      "target": "cand-9af3c61061d1",
       "kind": "attacks",
       "meta": {
         "profitable": true
@@ -13981,6 +15891,70 @@
     {
       "source": "cand-afe909352ab4-attack-security-stale-data-exploit",
       "target": "cand-afe909352ab4",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-b713e862acdc-attack-game_theory-degraded-peer-shielding",
+      "target": "cand-b713e862acdc",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-b713e862acdc-attack-game_theory-probe-route-selection",
+      "target": "cand-b713e862acdc",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-b713e862acdc-attack-oracle-corroboration-drift-residual",
+      "target": "cand-b713e862acdc",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-b713e862acdc-attack-oracle-joule-over-attestation",
+      "target": "cand-b713e862acdc",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-b713e862acdc-attack-red_team-degraded-peer-shielding",
+      "target": "cand-b713e862acdc",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-b713e862acdc-attack-red_team-probe-route-selection",
+      "target": "cand-b713e862acdc",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-b713e862acdc-attack-security-probe-commons-underfunding",
+      "target": "cand-b713e862acdc",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-b713e862acdc-attack-security-probe-underfunding",
+      "target": "cand-b713e862acdc",
       "kind": "attacks",
       "meta": {
         "profitable": true
@@ -15139,6 +17113,70 @@
       }
     },
     {
+      "source": "cand-d5bf8d515927-attack-game_theory-benchmark-overfitting",
+      "target": "cand-d5bf8d515927",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-d5bf8d515927-attack-game_theory-gap-optimized-tuning",
+      "target": "cand-d5bf8d515927",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-d5bf8d515927-attack-oracle-delivered-proxy-gaming",
+      "target": "cand-d5bf8d515927",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-d5bf8d515927-attack-oracle-harness-capture",
+      "target": "cand-d5bf8d515927",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-d5bf8d515927-attack-red_team-benchmark-overfitting",
+      "target": "cand-d5bf8d515927",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-d5bf8d515927-attack-red_team-gap-optimized-tuning",
+      "target": "cand-d5bf8d515927",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-d5bf8d515927-attack-security-harness-capture-residual",
+      "target": "cand-d5bf8d515927",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-d5bf8d515927-attack-security-score-verification-capture",
+      "target": "cand-d5bf8d515927",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
       "source": "cand-db0588dfed1a-attack-game_theory-exit-timing-around-anchor-revisions",
       "target": "cand-db0588dfed1a",
       "kind": "attacks",
@@ -15475,6 +17513,70 @@
       }
     },
     {
+      "source": "cand-e0c80c26b7f3-attack-game_theory-thick-window-anchor-pressure",
+      "target": "cand-e0c80c26b7f3",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e0c80c26b7f3-attack-game_theory-thin-window-anchor-capture",
+      "target": "cand-e0c80c26b7f3",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e0c80c26b7f3-attack-oracle-gate-threshold-probing",
+      "target": "cand-e0c80c26b7f3",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e0c80c26b7f3-attack-oracle-thin-window-anchor-capture",
+      "target": "cand-e0c80c26b7f3",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e0c80c26b7f3-attack-red_team-thick-window-anchor-pressure",
+      "target": "cand-e0c80c26b7f3",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e0c80c26b7f3-attack-red_team-thin-window-anchor-capture",
+      "target": "cand-e0c80c26b7f3",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e0c80c26b7f3-attack-security-reporter-exodus-cascade",
+      "target": "cand-e0c80c26b7f3",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e0c80c26b7f3-attack-security-reporter-exodus-residual",
+      "target": "cand-e0c80c26b7f3",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
       "source": "cand-e33c18c7a75e-attack-game_theory-exit-timing-around-anchor-revisions",
       "target": "cand-e33c18c7a75e",
       "kind": "attacks",
@@ -15643,6 +17745,134 @@
       }
     },
     {
+      "source": "cand-e626f13713b0-attack-game_theory-minimal-delivery-farming",
+      "target": "cand-e626f13713b0",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e626f13713b0-attack-game_theory-trough-eligibility-farming",
+      "target": "cand-e626f13713b0",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e626f13713b0-attack-oracle-delivery-attestation-quality",
+      "target": "cand-e626f13713b0",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e626f13713b0-attack-oracle-ma-window-gaming",
+      "target": "cand-e626f13713b0",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e626f13713b0-attack-red_team-minimal-delivery-farming",
+      "target": "cand-e626f13713b0",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e626f13713b0-attack-red_team-trough-eligibility-farming",
+      "target": "cand-e626f13713b0",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e626f13713b0-attack-security-index-depression",
+      "target": "cand-e626f13713b0",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e626f13713b0-attack-security-ma-window-gaming-residual",
+      "target": "cand-e626f13713b0",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e74d830a9479-attack-game_theory-capped-cycle-grinding",
+      "target": "cand-e74d830a9479",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e74d830a9479-attack-game_theory-queue-stuffing-refund-farming",
+      "target": "cand-e74d830a9479",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e74d830a9479-attack-oracle-queue-depth-stuffing",
+      "target": "cand-e74d830a9479",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e74d830a9479-attack-oracle-queue-depth-stuffing-residual",
+      "target": "cand-e74d830a9479",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e74d830a9479-attack-red_team-capped-cycle-grinding",
+      "target": "cand-e74d830a9479",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e74d830a9479-attack-red_team-queue-stuffing-refund-farming",
+      "target": "cand-e74d830a9479",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e74d830a9479-attack-security-refund-cap-exhaustion",
+      "target": "cand-e74d830a9479",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e74d830a9479-attack-security-reserve-floor-pressure",
+      "target": "cand-e74d830a9479",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
       "source": "cand-e8e15b483070-attack-game_theory-float-floor-rationing-race",
       "target": "cand-e8e15b483070",
       "kind": "attacks",
@@ -15725,6 +17955,70 @@
     {
       "source": "cand-e8e15b483070-attack-security-premium-withholding-griefing",
       "target": "cand-e8e15b483070",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5-attack-game_theory-bounded-band-skimming",
+      "target": "cand-e98e5859f3f5",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5-attack-game_theory-tolerance-band-over-attestation",
+      "target": "cand-e98e5859f3f5",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5-attack-oracle-index-drift-via-collusive-attestation",
+      "target": "cand-e98e5859f3f5",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5-attack-oracle-tolerance-band-over-attestation",
+      "target": "cand-e98e5859f3f5",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5-attack-red_team-bounded-band-skimming",
+      "target": "cand-e98e5859f3f5",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5-attack-red_team-tolerance-band-over-attestation",
+      "target": "cand-e98e5859f3f5",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5-attack-security-energy-index-drift",
+      "target": "cand-e98e5859f3f5",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5-attack-security-racking-level-meter-spoofing",
+      "target": "cand-e98e5859f3f5",
       "kind": "attacks",
       "meta": {
         "profitable": false
@@ -16523,6 +18817,38 @@
       }
     },
     {
+      "source": "cand-27e6a6ae5492",
+      "target": "source-62",
+      "kind": "cites",
+      "meta": {
+        "query": "volatility adaptive maker rebate; depth location aware rewards market; distribution stabilizing liquidity rewards"
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492",
+      "target": "source-62",
+      "kind": "cites",
+      "meta": {
+        "query": "volatility adaptive maker rebate; depth location aware rewards market; distribution stabilizing liquidity rewards"
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492",
+      "target": "source-63",
+      "kind": "cites",
+      "meta": {
+        "query": "volatility adaptive maker rebate; depth location aware rewards market; distribution stabilizing liquidity rewards"
+      }
+    },
+    {
+      "source": "cand-27e6a6ae5492",
+      "target": "source-63",
+      "kind": "cites",
+      "meta": {
+        "query": "volatility adaptive maker rebate; depth location aware rewards market; distribution stabilizing liquidity rewards"
+      }
+    },
+    {
       "source": "cand-50e511859d99",
       "target": "source-24",
       "kind": "cites",
@@ -16659,6 +18985,70 @@
       }
     },
     {
+      "source": "cand-73de8d339542",
+      "target": "source-48",
+      "kind": "cites",
+      "meta": {
+        "query": "performance bonded governance parameter change; fee contribution weighted voting DAO; outcome slashed governance proposa"
+      }
+    },
+    {
+      "source": "cand-73de8d339542",
+      "target": "source-48",
+      "kind": "cites",
+      "meta": {
+        "query": "performance bonded governance parameter change; fee contribution weighted voting DAO; outcome slashed governance proposa"
+      }
+    },
+    {
+      "source": "cand-73de8d339542",
+      "target": "source-49",
+      "kind": "cites",
+      "meta": {
+        "query": "performance bonded governance parameter change; fee contribution weighted voting DAO; outcome slashed governance proposa"
+      }
+    },
+    {
+      "source": "cand-73de8d339542",
+      "target": "source-49",
+      "kind": "cites",
+      "meta": {
+        "query": "performance bonded governance parameter change; fee contribution weighted voting DAO; outcome slashed governance proposa"
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a",
+      "target": "source-48",
+      "kind": "cites",
+      "meta": {
+        "query": "fee paid voting weight decay governance; usage weighted model registry; volume regression rebate governance"
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a",
+      "target": "source-48",
+      "kind": "cites",
+      "meta": {
+        "query": "fee paid voting weight decay governance; usage weighted model registry; volume regression rebate governance"
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a",
+      "target": "source-62",
+      "kind": "cites",
+      "meta": {
+        "query": "fee paid voting weight decay governance; usage weighted model registry; volume regression rebate governance"
+      }
+    },
+    {
+      "source": "cand-771f66f9de0a",
+      "target": "source-62",
+      "kind": "cites",
+      "meta": {
+        "query": "fee paid voting weight decay governance; usage weighted model registry; volume regression rebate governance"
+      }
+    },
+    {
       "source": "cand-7f4c2dee85e7",
       "target": "source-24",
       "kind": "cites",
@@ -16712,6 +19102,38 @@
       "kind": "cites",
       "meta": {
         "query": "labor supply mechanism; Labor-Backed Escrow prior art"
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1",
+      "target": "source-56",
+      "kind": "cites",
+      "meta": {
+        "query": "compute marketplace productivity indexed pricing; throughput per joule fee split; efficiency gain passthrough compute ma"
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1",
+      "target": "source-56",
+      "kind": "cites",
+      "meta": {
+        "query": "compute marketplace productivity indexed pricing; throughput per joule fee split; efficiency gain passthrough compute ma"
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1",
+      "target": "source-57",
+      "kind": "cites",
+      "meta": {
+        "query": "compute marketplace productivity indexed pricing; throughput per joule fee split; efficiency gain passthrough compute ma"
+      }
+    },
+    {
+      "source": "cand-9af3c61061d1",
+      "target": "source-57",
+      "kind": "cites",
+      "meta": {
+        "query": "compute marketplace productivity indexed pricing; throughput per joule fee split; efficiency gain passthrough compute ma"
       }
     },
     {
@@ -16840,6 +19262,38 @@
       "kind": "cites",
       "meta": {
         "query": "energy supply mechanism; Carbon-Weighted Gas Fees prior art"
+      }
+    },
+    {
+      "source": "cand-b713e862acdc",
+      "target": "source-51",
+      "kind": "cites",
+      "meta": {
+        "query": "bonded bandwidth relay capacity market; verified bandwidth commitment slashing; energy metered bandwidth auction"
+      }
+    },
+    {
+      "source": "cand-b713e862acdc",
+      "target": "source-51",
+      "kind": "cites",
+      "meta": {
+        "query": "bonded bandwidth relay capacity market; verified bandwidth commitment slashing; energy metered bandwidth auction"
+      }
+    },
+    {
+      "source": "cand-b713e862acdc",
+      "target": "source-52",
+      "kind": "cites",
+      "meta": {
+        "query": "bonded bandwidth relay capacity market; verified bandwidth commitment slashing; energy metered bandwidth auction"
+      }
+    },
+    {
+      "source": "cand-b713e862acdc",
+      "target": "source-52",
+      "kind": "cites",
+      "meta": {
+        "query": "bonded bandwidth relay capacity market; verified bandwidth commitment slashing; energy metered bandwidth auction"
       }
     },
     {
@@ -17003,6 +19457,38 @@
       }
     },
     {
+      "source": "cand-d5bf8d515927",
+      "target": "source-60",
+      "kind": "cites",
+      "meta": {
+        "query": "compute output benchmark settled swap; model quality derivative market; performance settled futures compute"
+      }
+    },
+    {
+      "source": "cand-d5bf8d515927",
+      "target": "source-60",
+      "kind": "cites",
+      "meta": {
+        "query": "compute output benchmark settled swap; model quality derivative market; performance settled futures compute"
+      }
+    },
+    {
+      "source": "cand-d5bf8d515927",
+      "target": "source-61",
+      "kind": "cites",
+      "meta": {
+        "query": "compute output benchmark settled swap; model quality derivative market; performance settled futures compute"
+      }
+    },
+    {
+      "source": "cand-d5bf8d515927",
+      "target": "source-61",
+      "kind": "cites",
+      "meta": {
+        "query": "compute output benchmark settled swap; model quality derivative market; performance settled futures compute"
+      }
+    },
+    {
       "source": "cand-db0588dfed1a",
       "target": "source-17",
       "kind": "cites",
@@ -17027,6 +19513,38 @@
       }
     },
     {
+      "source": "cand-e0c80c26b7f3",
+      "target": "source-53",
+      "kind": "cites",
+      "meta": {
+        "query": "oracle deviation slashing realized price anchor; bonded reporter median FX reference feed; self-anchoring oracle design"
+      }
+    },
+    {
+      "source": "cand-e0c80c26b7f3",
+      "target": "source-53",
+      "kind": "cites",
+      "meta": {
+        "query": "oracle deviation slashing realized price anchor; bonded reporter median FX reference feed; self-anchoring oracle design"
+      }
+    },
+    {
+      "source": "cand-e0c80c26b7f3",
+      "target": "source-54",
+      "kind": "cites",
+      "meta": {
+        "query": "oracle deviation slashing realized price anchor; bonded reporter median FX reference feed; self-anchoring oracle design"
+      }
+    },
+    {
+      "source": "cand-e0c80c26b7f3",
+      "target": "source-54",
+      "kind": "cites",
+      "meta": {
+        "query": "oracle deviation slashing realized price anchor; bonded reporter median FX reference feed; self-anchoring oracle design"
+      }
+    },
+    {
       "source": "cand-e33c18c7a75e",
       "target": "source-1",
       "kind": "cites",
@@ -17040,6 +19558,102 @@
       "kind": "cites",
       "meta": {
         "query": "monetary economics supply mechanism; Demographic Reserve Rule prior art"
+      }
+    },
+    {
+      "source": "cand-e626f13713b0",
+      "target": "source-24",
+      "kind": "cites",
+      "meta": {
+        "query": "counter cyclical fee rebate reserve; demand index release rule blockchain; builder subsidy smoothing protocol"
+      }
+    },
+    {
+      "source": "cand-e626f13713b0",
+      "target": "source-24",
+      "kind": "cites",
+      "meta": {
+        "query": "counter cyclical fee rebate reserve; demand index release rule blockchain; builder subsidy smoothing protocol"
+      }
+    },
+    {
+      "source": "cand-e626f13713b0",
+      "target": "source-55",
+      "kind": "cites",
+      "meta": {
+        "query": "counter cyclical fee rebate reserve; demand index release rule blockchain; builder subsidy smoothing protocol"
+      }
+    },
+    {
+      "source": "cand-e626f13713b0",
+      "target": "source-55",
+      "kind": "cites",
+      "meta": {
+        "query": "counter cyclical fee rebate reserve; demand index release rule blockchain; builder subsidy smoothing protocol"
+      }
+    },
+    {
+      "source": "cand-e74d830a9479",
+      "target": "source-24",
+      "kind": "cites",
+      "meta": {
+        "query": "demand indexed fee escalation refund reserve; congestion pricing refund mechanism blockchain; dynamic fee ladder batch s"
+      }
+    },
+    {
+      "source": "cand-e74d830a9479",
+      "target": "source-24",
+      "kind": "cites",
+      "meta": {
+        "query": "demand indexed fee escalation refund reserve; congestion pricing refund mechanism blockchain; dynamic fee ladder batch s"
+      }
+    },
+    {
+      "source": "cand-e74d830a9479",
+      "target": "source-50",
+      "kind": "cites",
+      "meta": {
+        "query": "demand indexed fee escalation refund reserve; congestion pricing refund mechanism blockchain; dynamic fee ladder batch s"
+      }
+    },
+    {
+      "source": "cand-e74d830a9479",
+      "target": "source-50",
+      "kind": "cites",
+      "meta": {
+        "query": "demand indexed fee escalation refund reserve; congestion pricing refund mechanism blockchain; dynamic fee ladder batch s"
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5",
+      "target": "source-58",
+      "kind": "cites",
+      "meta": {
+        "query": "joule denominated compute escrow; energy price index inference market; bonded energy attestation slashing"
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5",
+      "target": "source-58",
+      "kind": "cites",
+      "meta": {
+        "query": "joule denominated compute escrow; energy price index inference market; bonded energy attestation slashing"
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5",
+      "target": "source-59",
+      "kind": "cites",
+      "meta": {
+        "query": "joule denominated compute escrow; energy price index inference market; bonded energy attestation slashing"
+      }
+    },
+    {
+      "source": "cand-e98e5859f3f5",
+      "target": "source-59",
+      "kind": "cites",
+      "meta": {
+        "query": "joule denominated compute escrow; energy price index inference market; bonded energy attestation slashing"
       }
     },
     {
@@ -17149,6 +19763,12 @@
       "meta": {}
     },
     {
+      "source": "cand-27e6a6ae5492-improvement-v2",
+      "target": "cand-27e6a6ae5492-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-3132499bb565-improvement-v2",
       "target": "cand-3132499bb565-model-v2",
       "kind": "derived_from",
@@ -17191,6 +19811,18 @@
       "meta": {}
     },
     {
+      "source": "cand-73de8d339542-improvement-v2",
+      "target": "cand-73de8d339542-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
+      "source": "cand-771f66f9de0a-improvement-v2",
+      "target": "cand-771f66f9de0a-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-7f4c2dee85e7-improvement-v2",
       "target": "cand-7f4c2dee85e7-model-v2",
       "kind": "derived_from",
@@ -17205,6 +19837,12 @@
     {
       "source": "cand-8359598274f7-improvement-v2",
       "target": "cand-8359598274f7-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
+      "source": "cand-9af3c61061d1-improvement-v2",
+      "target": "cand-9af3c61061d1-model-v2",
       "kind": "derived_from",
       "meta": {}
     },
@@ -17241,6 +19879,12 @@
     {
       "source": "cand-afe909352ab4-improvement-v2",
       "target": "cand-afe909352ab4-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc-improvement-v2",
+      "target": "cand-b713e862acdc-model-v2",
       "kind": "derived_from",
       "meta": {}
     },
@@ -17287,6 +19931,12 @@
       "meta": {}
     },
     {
+      "source": "cand-d5bf8d515927-improvement-v2",
+      "target": "cand-d5bf8d515927-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-dc109b36cd60-improvement-v2",
       "target": "cand-dc109b36cd60-model-v2",
       "kind": "derived_from",
@@ -17305,14 +19955,38 @@
       "meta": {}
     },
     {
+      "source": "cand-e0c80c26b7f3-improvement-v2",
+      "target": "cand-e0c80c26b7f3-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-e37c1f655db5-improvement-v2",
       "target": "cand-e37c1f655db5-model-v2",
       "kind": "derived_from",
       "meta": {}
     },
     {
+      "source": "cand-e626f13713b0-improvement-v2",
+      "target": "cand-e626f13713b0-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
+      "source": "cand-e74d830a9479-improvement-v2",
+      "target": "cand-e74d830a9479-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-e8e15b483070-improvement-v2",
       "target": "cand-e8e15b483070-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
+      "source": "cand-e98e5859f3f5-improvement-v2",
+      "target": "cand-e98e5859f3f5-model-v2",
       "kind": "derived_from",
       "meta": {}
     },
@@ -17415,6 +20089,18 @@
     {
       "source": "cand-274537b6fc9c",
       "target": "cand-274537b6fc9c-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-27e6a6ae5492",
+      "target": "cand-27e6a6ae5492-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-27e6a6ae5492",
+      "target": "cand-27e6a6ae5492-model-v2",
       "kind": "formalizes",
       "meta": {}
     },
@@ -17545,6 +20231,30 @@
       "meta": {}
     },
     {
+      "source": "cand-73de8d339542",
+      "target": "cand-73de8d339542-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-73de8d339542",
+      "target": "cand-73de8d339542-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-771f66f9de0a",
+      "target": "cand-771f66f9de0a-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-771f66f9de0a",
+      "target": "cand-771f66f9de0a-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
       "source": "cand-7f4c2dee85e7",
       "target": "cand-7f4c2dee85e7-model-v1",
       "kind": "formalizes",
@@ -17595,6 +20305,18 @@
     {
       "source": "cand-986c8dd65b08",
       "target": "cand-986c8dd65b08-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-9af3c61061d1",
+      "target": "cand-9af3c61061d1-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-9af3c61061d1",
+      "target": "cand-9af3c61061d1-model-v2",
       "kind": "formalizes",
       "meta": {}
     },
@@ -17685,6 +20407,18 @@
     {
       "source": "cand-afe909352ab4",
       "target": "cand-afe909352ab4-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc",
+      "target": "cand-b713e862acdc-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc",
+      "target": "cand-b713e862acdc-model-v2",
       "kind": "formalizes",
       "meta": {}
     },
@@ -17797,6 +20531,18 @@
       "meta": {}
     },
     {
+      "source": "cand-d5bf8d515927",
+      "target": "cand-d5bf8d515927-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-d5bf8d515927",
+      "target": "cand-d5bf8d515927-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
       "source": "cand-db0588dfed1a",
       "target": "cand-db0588dfed1a-model-v1",
       "kind": "formalizes",
@@ -17833,6 +20579,18 @@
       "meta": {}
     },
     {
+      "source": "cand-e0c80c26b7f3",
+      "target": "cand-e0c80c26b7f3-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-e0c80c26b7f3",
+      "target": "cand-e0c80c26b7f3-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
       "source": "cand-e33c18c7a75e",
       "target": "cand-e33c18c7a75e-model-v1",
       "kind": "formalizes",
@@ -17851,6 +20609,30 @@
       "meta": {}
     },
     {
+      "source": "cand-e626f13713b0",
+      "target": "cand-e626f13713b0-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-e626f13713b0",
+      "target": "cand-e626f13713b0-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-e74d830a9479",
+      "target": "cand-e74d830a9479-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-e74d830a9479",
+      "target": "cand-e74d830a9479-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
       "source": "cand-e8e15b483070",
       "target": "cand-e8e15b483070-model-v1",
       "kind": "formalizes",
@@ -17859,6 +20641,18 @@
     {
       "source": "cand-e8e15b483070",
       "target": "cand-e8e15b483070-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-e98e5859f3f5",
+      "target": "cand-e98e5859f3f5-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-e98e5859f3f5",
+      "target": "cand-e98e5859f3f5-model-v2",
       "kind": "formalizes",
       "meta": {}
     },
@@ -17953,6 +20747,12 @@
       "meta": {}
     },
     {
+      "source": "cand-27e6a6ae5492-model-v1",
+      "target": "cand-27e6a6ae5492-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-3132499bb565-model-v1",
       "target": "cand-3132499bb565-model-v2",
       "kind": "patches",
@@ -17995,6 +20795,18 @@
       "meta": {}
     },
     {
+      "source": "cand-73de8d339542-model-v1",
+      "target": "cand-73de8d339542-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
+      "source": "cand-771f66f9de0a-model-v1",
+      "target": "cand-771f66f9de0a-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-7f4c2dee85e7-model-v1",
       "target": "cand-7f4c2dee85e7-model-v2",
       "kind": "patches",
@@ -18009,6 +20821,12 @@
     {
       "source": "cand-8359598274f7-model-v1",
       "target": "cand-8359598274f7-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
+      "source": "cand-9af3c61061d1-model-v1",
+      "target": "cand-9af3c61061d1-model-v2",
       "kind": "patches",
       "meta": {}
     },
@@ -18045,6 +20863,12 @@
     {
       "source": "cand-afe909352ab4-model-v1",
       "target": "cand-afe909352ab4-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc-model-v1",
+      "target": "cand-b713e862acdc-model-v2",
       "kind": "patches",
       "meta": {}
     },
@@ -18091,6 +20915,12 @@
       "meta": {}
     },
     {
+      "source": "cand-d5bf8d515927-model-v1",
+      "target": "cand-d5bf8d515927-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-dc109b36cd60-model-v1",
       "target": "cand-dc109b36cd60-model-v2",
       "kind": "patches",
@@ -18109,14 +20939,38 @@
       "meta": {}
     },
     {
+      "source": "cand-e0c80c26b7f3-model-v1",
+      "target": "cand-e0c80c26b7f3-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-e37c1f655db5-model-v1",
       "target": "cand-e37c1f655db5-model-v2",
       "kind": "patches",
       "meta": {}
     },
     {
+      "source": "cand-e626f13713b0-model-v1",
+      "target": "cand-e626f13713b0-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
+      "source": "cand-e74d830a9479-model-v1",
+      "target": "cand-e74d830a9479-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-e8e15b483070-model-v1",
       "target": "cand-e8e15b483070-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
+      "source": "cand-e98e5859f3f5-model-v1",
+      "target": "cand-e98e5859f3f5-model-v2",
       "kind": "patches",
       "meta": {}
     },
@@ -18363,6 +21217,24 @@
     {
       "source": "cand-274537b6fc9c-model-v1",
       "target": "sim-cand-274537b6fc9c-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-27e6a6ae5492-model-v2",
+      "target": "sim-cand-27e6a6ae5492-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-27e6a6ae5492-model-v2",
+      "target": "sim-cand-27e6a6ae5492-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-27e6a6ae5492-model-v2",
+      "target": "sim-cand-27e6a6ae5492-sweep-v2",
       "kind": "simulates",
       "meta": {}
     },
@@ -18727,6 +21599,42 @@
       "meta": {}
     },
     {
+      "source": "cand-73de8d339542-model-v2",
+      "target": "sim-cand-73de8d339542-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-73de8d339542-model-v2",
+      "target": "sim-cand-73de8d339542-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-73de8d339542-model-v2",
+      "target": "sim-cand-73de8d339542-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-771f66f9de0a-model-v2",
+      "target": "sim-cand-771f66f9de0a-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-771f66f9de0a-model-v2",
+      "target": "sim-cand-771f66f9de0a-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-771f66f9de0a-model-v2",
+      "target": "sim-cand-771f66f9de0a-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-7f4c2dee85e7-model-v1",
       "target": "sim-cand-7f4c2dee85e7-montecarlo",
       "kind": "simulates",
@@ -18885,6 +21793,24 @@
     {
       "source": "cand-986c8dd65b08-model-v1",
       "target": "sim-cand-986c8dd65b08-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-9af3c61061d1-model-v2",
+      "target": "sim-cand-9af3c61061d1-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-9af3c61061d1-model-v2",
+      "target": "sim-cand-9af3c61061d1-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-9af3c61061d1-model-v2",
+      "target": "sim-cand-9af3c61061d1-sweep-v2",
       "kind": "simulates",
       "meta": {}
     },
@@ -19119,6 +22045,24 @@
     {
       "source": "cand-afe909352ab4-model-v1",
       "target": "sim-cand-afe909352ab4-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc-model-v2",
+      "target": "sim-cand-b713e862acdc-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc-model-v2",
+      "target": "sim-cand-b713e862acdc-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc-model-v2",
+      "target": "sim-cand-b713e862acdc-sweep-v2",
       "kind": "simulates",
       "meta": {}
     },
@@ -19411,6 +22355,24 @@
       "meta": {}
     },
     {
+      "source": "cand-d5bf8d515927-model-v2",
+      "target": "sim-cand-d5bf8d515927-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-d5bf8d515927-model-v2",
+      "target": "sim-cand-d5bf8d515927-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-d5bf8d515927-model-v2",
+      "target": "sim-cand-d5bf8d515927-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-db0588dfed1a-model-v1",
       "target": "sim-cand-db0588dfed1a-montecarlo",
       "kind": "simulates",
@@ -19501,6 +22463,24 @@
       "meta": {}
     },
     {
+      "source": "cand-e0c80c26b7f3-model-v2",
+      "target": "sim-cand-e0c80c26b7f3-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e0c80c26b7f3-model-v2",
+      "target": "sim-cand-e0c80c26b7f3-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e0c80c26b7f3-model-v2",
+      "target": "sim-cand-e0c80c26b7f3-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-e33c18c7a75e-model-v1",
       "target": "sim-cand-e33c18c7a75e-montecarlo",
       "kind": "simulates",
@@ -19555,6 +22535,42 @@
       "meta": {}
     },
     {
+      "source": "cand-e626f13713b0-model-v2",
+      "target": "sim-cand-e626f13713b0-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e626f13713b0-model-v2",
+      "target": "sim-cand-e626f13713b0-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e626f13713b0-model-v2",
+      "target": "sim-cand-e626f13713b0-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e74d830a9479-model-v2",
+      "target": "sim-cand-e74d830a9479-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e74d830a9479-model-v2",
+      "target": "sim-cand-e74d830a9479-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e74d830a9479-model-v2",
+      "target": "sim-cand-e74d830a9479-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-e8e15b483070-model-v1",
       "target": "sim-cand-e8e15b483070-montecarlo",
       "kind": "simulates",
@@ -19587,6 +22603,24 @@
     {
       "source": "cand-e8e15b483070-model-v2",
       "target": "sim-cand-e8e15b483070-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e98e5859f3f5-model-v2",
+      "target": "sim-cand-e98e5859f3f5-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e98e5859f3f5-model-v2",
+      "target": "sim-cand-e98e5859f3f5-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e98e5859f3f5-model-v2",
+      "target": "sim-cand-e98e5859f3f5-sweep-v2",
       "kind": "simulates",
       "meta": {}
     },

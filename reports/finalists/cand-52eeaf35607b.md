@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-52eeaf35607b
 - **Category:** oracle design
 - **Overall score:** 6.4500
-- **Rank:** 2
+- **Rank:** 4
 - **Status:** finalist
 
 ## Executive Summary
