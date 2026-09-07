@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-b713e862acdc
 - **Category:** network economics
 - **Overall score:** 6.5250
-- **Rank:** 3
+- **Rank:** 1 (recommended)
 - **Status:** finalist
 
 ## Executive Summary
@@ -127,4 +127,4 @@ See the Mathematical Model section's §13 open questions; unresolved items remai
 
 ## Recommendation
 
-Not the recommended candidate this cycle. See the lab report for the current recommendation.
+**Recommended candidate (§7).** Rank 1 among finalists; selected deterministically from the ranking.

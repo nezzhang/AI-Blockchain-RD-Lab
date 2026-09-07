@@ -1,0 +1,37 @@
+{
+  "researched": 4,
+  "candidates": [
+    {
+      "candidate_id": "cand-b2b411464015",
+      "novelty_class": "adjacent_mechanism",
+      "coherence": 7.2,
+      "demand": 6.4,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-8212f81f4f75",
+      "novelty_class": "adjacent_mechanism",
+      "coherence": 7.0,
+      "demand": 5.8,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-30570d32728a",
+      "novelty_class": "adjacent_mechanism",
+      "coherence": 7.1,
+      "demand": 6.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-31dd017e61de",
+      "novelty_class": "adjacent_mechanism",
+      "coherence": 7.0,
+      "demand": 6.1,
+      "rejected": false,
+      "errors": []
+    }
+  ]
+}

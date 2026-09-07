@@ -712,6 +712,87 @@
       }
     },
     {
+      "id": "cand-30570d32728a-attack-game_theory-residual-cartel-synchronization-exposure-beyond-",
+      "kind": "attack",
+      "label": "Residual cartel synchronization exposure beyond the model gate",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-30570d32728a-attack-game_theory-threshold-hugging-sustained-mis-banding",
+      "kind": "attack",
+      "label": "Threshold-hugging sustained mis-banding",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A reporter stays just outside the band every step \u2014 small enough to keep forecasting credibility, sustained enough that the exceedance EMA integrates upward \u2014 harvesting stabilization-pool compensation while the bond forfeiture is capped by the min() bound."
+      }
+    },
+    {
+      "id": "cand-30570d32728a-attack-oracle-regime-shift-band-exhaustion",
+      "kind": "attack",
+      "label": "Regime-shift band exhaustion",
+      "meta": {
+        "agent": "oracle",
+        "detail": "An attacker engineers a fee-vol regime shift (e.g. congestion spike) that pushes realized movement outside the fixed band; honest reporters integrate exceedance and forfeit while the attacker's own reports sit at the band edge."
+      }
+    },
+    {
+      "id": "cand-30570d32728a-attack-oracle-residual-cartel-capture-exposure-beyond-the-mode",
+      "kind": "attack",
+      "label": "Residual cartel capture exposure beyond the model gate",
+      "meta": {
+        "agent": "oracle",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-30570d32728a-attack-red_team-residual-cartel-capture-exposure-beyond-the-mode",
+      "kind": "attack",
+      "label": "Residual cartel capture exposure beyond the model gate",
+      "meta": {
+        "agent": "red_team",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-30570d32728a-attack-red_team-threshold-hugging-sustained-mis-banding",
+      "kind": "attack",
+      "label": "Threshold-hugging sustained mis-banding",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Persistent small exceedance harvests stabilization compensation against capped forfeiture."
+      }
+    },
+    {
+      "id": "cand-30570d32728a-attack-red_team-vol-regime-band-mis-calibration",
+      "kind": "attack",
+      "label": "Vol-regime band mis-calibration",
+      "meta": {
+        "agent": "red_team",
+        "detail": "A fixed band under a vol-regime shift forfeits honest reporters' bonds; an attacker only triggers the shift."
+      }
+    },
+    {
+      "id": "cand-30570d32728a-attack-security-residual-cartel-band-capture-exposure-beyond-the",
+      "kind": "attack",
+      "label": "Residual cartel band capture exposure beyond the model gate",
+      "meta": {
+        "agent": "security",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-30570d32728a-attack-security-vol-regime-band-mis-calibration",
+      "kind": "attack",
+      "label": "Vol-regime band mis-calibration",
+      "meta": {
+        "agent": "security",
+        "detail": "When realized vol triples (regime shift), the fixed band makes EVERY honest reporter exceed it persistently; the integrated measure forfeits the whole honest bond pool \u2014 an attacker only needs to trigger the regime change."
+      }
+    },
+    {
       "id": "cand-3132499bb565-attack-game_theory-baseline-capacity-farming",
       "kind": "attack",
       "label": "baseline capacity farming",
@@ -799,6 +880,78 @@
       "meta": {
         "agent": "security",
         "detail": "Sequence fills at the crossed spread; with the access fee funding the treasury side, the captured spread is reduced by tau*S_t1 \u2014 sequencing remains a friction, not a dominant extraction."
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-attack-game_theory-fast-crash-capacity-lag-exploitation",
+      "kind": "attack",
+      "label": "Fast-crash capacity lag exploitation",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "An attacker times corridor usage into a crash faster than kappa^-1 steps: the drawdown state has not yet integrated the crash, so tranche capacity and premiums still price pre-crash risk \u2014 the attacker buys tail cover below crash-fair price."
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-attack-game_theory-residual-feed-control-spoofing-exposure-beyond-t",
+      "kind": "attack",
+      "label": "Residual feed-control spoofing exposure beyond the model gate",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-attack-oracle-anchor-crash-engineering-in-the-lag-window",
+      "kind": "attack",
+      "label": "Anchor crash engineering in the lag window",
+      "meta": {
+        "agent": "oracle",
+        "detail": "An attacker with anchor influence engineers a fast down-move (or reports one), consumes corridor capacity at pre-crash premiums inside the EMA lag window, then lets the anchor recover."
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-attack-oracle-residual-reported-crash-exposure-beyond-the-mode",
+      "kind": "attack",
+      "label": "Residual reported-crash exposure beyond the model gate",
+      "meta": {
+        "agent": "oracle",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-attack-red_team-fast-crash-capacity-lag-exploitation",
+      "kind": "attack",
+      "label": "Fast-crash capacity lag exploitation",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Crash faster than kappa^-1, consume corridor capacity at lagged premiums, exit before the EMA reprices."
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-attack-red_team-residual-anchor-spoofing-exposure-beyond-the-mod",
+      "kind": "attack",
+      "label": "Residual anchor spoofing exposure beyond the model gate",
+      "meta": {
+        "agent": "red_team",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-attack-security-flash-crash-drawdown-outrun",
+      "kind": "attack",
+      "label": "Flash-crash drawdown outrun",
+      "meta": {
+        "agent": "security",
+        "detail": "A single-step crash of 40%+ moves X faster than the EMA's kappa tracking; the corridor sells capacity at pre-crash prices through the window \u2014 repeated engineered crashes farm the lag spread."
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-attack-security-residual-anchor-integrity-exposure-beyond-the-mo",
+      "kind": "attack",
+      "label": "Residual anchor integrity exposure beyond the model gate",
+      "meta": {
+        "agent": "security",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
       }
     },
     {
@@ -2476,6 +2629,87 @@
       }
     },
     {
+      "id": "cand-8212f81f4f75-attack-game_theory-residual-index-capture-collusion-exposure-beyond",
+      "kind": "attack",
+      "label": "Residual index-capture collusion exposure beyond the model gate",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-8212f81f4f75-attack-game_theory-slow-walk-energy-divergence-under-the-drift-gate",
+      "kind": "attack",
+      "label": "Slow-walk energy divergence under the drift gate",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Colluding providers nudge the energy index by less than the drift threshold per epoch while over-attesting delivered joules by the same margin; the gap measure never crosses the slash trigger and the over-attestation spread accrues indefinitely."
+      }
+    },
+    {
+      "id": "cand-8212f81f4f75-attack-game_theory-whale-step-escrow-insurance-harvest",
+      "kind": "attack",
+      "label": "Whale-step escrow insurance harvest",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "The escrow carries an instantaneous sqrt(|dX|/X) release kicker (the whale-trace term). An attacker who can time single large anchor moves triggers kicker-priced releases without ever moving the trend index \u2014 extracting per-crash release value at oscillation cost."
+      }
+    },
+    {
+      "id": "cand-8212f81f4f75-attack-oracle-coordinated-index-anchor-co-movement",
+      "kind": "attack",
+      "label": "Coordinated index-anchor co-movement",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Providers push the anchor and the energy index in the same direction by coordinated amounts so their divergence (the slash trigger) stays under threshold while both series drift away from truth."
+      }
+    },
+    {
+      "id": "cand-8212f81f4f75-attack-oracle-residual-index-sourcing-exposure-beyond-the-mode",
+      "kind": "attack",
+      "label": "Residual index sourcing exposure beyond the model gate",
+      "meta": {
+        "agent": "oracle",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-8212f81f4f75-attack-red_team-residual-index-capture-exposure-beyond-the-model",
+      "kind": "attack",
+      "label": "Residual index capture exposure beyond the model gate",
+      "meta": {
+        "agent": "red_team",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-8212f81f4f75-attack-red_team-slow-walk-energy-divergence-under-the-drift-gate",
+      "kind": "attack",
+      "label": "Slow-walk energy divergence under the drift gate",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Coordinated sub-threshold drift plus over-attestation extracts the attested-vs-real energy spread forever."
+      }
+    },
+    {
+      "id": "cand-8212f81f4f75-attack-security-residual-independent-index-sourcing-exposure-bey",
+      "kind": "attack",
+      "label": "Residual independent index sourcing exposure beyond the model gate",
+      "meta": {
+        "agent": "security",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-8212f81f4f75-attack-security-self-attested-energy-index-capture",
+      "kind": "attack",
+      "label": "Self-attested energy index capture",
+      "meta": {
+        "agent": "security",
+        "detail": "Providers who both attest joules and feed the energy index can coordinate the two series to keep the drift gap artificially small while over-attesting \u2014 the gate measures their own divergence from themselves."
+      }
+    },
+    {
       "id": "cand-8359598274f7-attack-game_theory-calm-band-suppression-then-spike-harvest",
       "kind": "attack",
       "label": "calm-band suppression then spike harvest",
@@ -3301,6 +3535,96 @@
       "meta": {
         "agent": "security",
         "detail": "Fixture attack for Carbon-Weighted Gas Fees: oracle_provider acts when the mechanism is most dependent on cooperation."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-attack-game_theory-kicker-extraction-via-repeated-single-spikes",
+      "kind": "attack",
+      "label": "Kicker extraction via repeated single spikes",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "The open-interest index retains a small instantaneous |dX| kicker (30*sqrt term). An attacker who spikes vol once per decay window keeps the kicker's contribution alive while T stays near 1000 \u2014 the extraction is bounded by the kicker's clip range but nonzero."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-attack-game_theory-residual-feed-collusion-exposure-beyond-the-mode",
+      "kind": "attack",
+      "label": "Residual feed-collusion exposure beyond the model gate",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-attack-game_theory-trend-front-running-the-fee-ladder",
+      "kind": "attack",
+      "label": "Trend-front-running the fee ladder",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "An attacker with market power over the anchor builds a sustained directional position over kappa^-1 steps, dragging T_t with it; the fee ladder reprices only after the index tracks the move, so the attacker consumes degraded fallback reads at pre-move fees through the lag window."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-attack-oracle-residual-majority-feed-bias-exposure-beyond-the-",
+      "kind": "attack",
+      "label": "Residual majority feed bias exposure beyond the model gate",
+      "meta": {
+        "agent": "oracle",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-attack-oracle-sustained-anchor-bias-trend-injection",
+      "kind": "attack",
+      "label": "Sustained anchor bias trend injection",
+      "meta": {
+        "agent": "oracle",
+        "detail": "An anchor provider holding majority weight biases the level by a small consistent amount; the EMA integrates the bias as trend and the ladder prices phantom degradation, transferring fees from senders to the insurance pool the provider can drain via compromised senders."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-attack-red_team-kicker-extraction-via-repeated-single-spikes",
+      "kind": "attack",
+      "label": "Kicker extraction via repeated single spikes",
+      "meta": {
+        "agent": "red_team",
+        "detail": "The 30*sqrt instantaneous kicker on the index leaks bounded extraction under repeated isolated spikes timed to the gamma decay."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-attack-red_team-residual-majority-feed-collusion-exposure-beyond",
+      "kind": "attack",
+      "label": "Residual majority feed collusion exposure beyond the model gate",
+      "meta": {
+        "agent": "red_team",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-attack-red_team-trend-front-running-the-fee-ladder",
+      "kind": "attack",
+      "label": "Trend-front-running the fee ladder",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Sustained one-directional flow moves T_t; fees reprice only after the lag; the spread between honest degradation cost and lagged fees is the extraction."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-attack-security-anchor-feed-manipulation-across-the-ema-window",
+      "kind": "attack",
+      "label": "Anchor-feed manipulation across the EMA window",
+      "meta": {
+        "agent": "security",
+        "detail": "A compromised anchor feed that alternates small biases (not zero-mean) accumulates drift in T_t without triggering instantaneous checks; the fee ladder prices a phantom trend."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-attack-security-residual-feed-integrity-exposure-beyond-the-mode",
+      "kind": "attack",
+      "label": "Residual feed-integrity exposure beyond the model gate",
+      "meta": {
+        "agent": "security",
+        "detail": "The v2 gates close the measured extraction paths at the model level; the residual exposure lives outside the model (source corruption, majority collusion on the feed). At model level the extraction is unprofitable: every gated path requires inputs the model treats as exogenous truth."
       }
     },
     {
@@ -5766,6 +6090,16 @@
       }
     },
     {
+      "id": "cand-30570d32728a",
+      "kind": "idea",
+      "label": "Sustained-Band Forecast Fee Meter",
+      "meta": {
+        "category": "oracle design",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
       "id": "cand-3132499bb565",
       "kind": "idea",
       "label": "Dual-Sided Bond Auction Rebalancer",
@@ -5773,6 +6107,16 @@
         "category": "stablecoin routing",
         "status": "finalist",
         "novelty_class": "insufficient_evidence"
+      }
+    },
+    {
+      "id": "cand-31dd017e61de",
+      "kind": "idea",
+      "label": "Trend-Drawdown Liquidity Corridor",
+      "meta": {
+        "category": "two-sided market",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
       }
     },
     {
@@ -5811,7 +6155,7 @@
       "label": "Report-Bonded Forecast Fee Meter",
       "meta": {
         "category": "oracle design",
-        "status": "finalist",
+        "status": "superseded",
         "novelty_class": "appears_substantially_novel"
       }
     },
@@ -5983,6 +6327,16 @@
         "category": "monetary economics",
         "status": "scored",
         "novelty_class": "insufficient_evidence"
+      }
+    },
+    {
+      "id": "cand-8212f81f4f75",
+      "kind": "idea",
+      "label": "Drift-Gap Joule Escrow",
+      "meta": {
+        "category": "energy economics",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
       }
     },
     {
@@ -6176,6 +6530,16 @@
       }
     },
     {
+      "id": "cand-b2b411464015",
+      "kind": "idea",
+      "label": "Trend-Indexed Prediction-Fee Oracle",
+      "meta": {
+        "category": "oracle design",
+        "status": "finalist",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
       "id": "cand-b713e862acdc",
       "kind": "idea",
       "label": "Bandwidth Bond Market for Relay Peers",
@@ -6251,7 +6615,7 @@
       "label": "Prediction-Fee Fallback Oracle",
       "meta": {
         "category": "oracle design",
-        "status": "finalist",
+        "status": "superseded",
         "novelty_class": "appears_substantially_novel"
       }
     },
@@ -6411,7 +6775,7 @@
       "label": "Joule-Bonded Inference Escrow",
       "meta": {
         "category": "energy economics",
-        "status": "finalist",
+        "status": "superseded",
         "novelty_class": "appears_substantially_novel"
       }
     },
@@ -6461,7 +6825,7 @@
       "label": "Drawdown-Underwritten Liquidity Corridor",
       "meta": {
         "category": "two-sided market",
-        "status": "finalist",
+        "status": "superseded",
         "novelty_class": "appears_substantially_novel"
       }
     },
@@ -6528,11 +6892,27 @@
       }
     },
     {
+      "id": "cand-30570d32728a-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-30570d32728a improvement v2",
+      "meta": {
+        "rationale": "Vol-adaptive band: the band widens with realized |dX|/X (omega term), so regime shifts stop forfeiting honest reporters; the forfeit coefficient rises above the compensation ratio (1.1 forfeit vs 0.5 comp share), making sustained mis-banding strictly net-negative for the reporter."
+      }
+    },
+    {
       "id": "cand-3132499bb565-improvement-v2",
       "kind": "improvement",
       "label": "cand-3132499bb565 improvement v2",
       "meta": {
         "rationale": "Stress-proportional access fee on widened capacity so EWMA farmers fund the widening they exploit; sequencing noted for commit-reveal at the execution layer."
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-31dd017e61de improvement v2",
+      "meta": {
+        "rationale": "Spot-vol circuit: a single-step relative crash beyond cb=0.15 floors the drawdown state instantly (the > comparison gates a 400-scale crash term), so fast crashes reprice tranche capacity without waiting for the EMA; sustained regimes remain governed by the trend state, keeping wash-immunity."
       }
     },
     {
@@ -6616,6 +6996,14 @@
       }
     },
     {
+      "id": "cand-8212f81f4f75-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-8212f81f4f75 improvement v2",
+      "meta": {
+        "rationale": "Ratcheting tolerance: the drift threshold now shrinks with escrow turnover (chi term), so a slow-walk consortium shrinks its own tolerance band as it extracts; the release kicker is clipped to 18 so whale-step insurance harvest is bounded small."
+      }
+    },
+    {
       "id": "cand-8359598274f7-improvement-v2",
       "kind": "improvement",
       "label": "cand-8359598274f7 improvement v2",
@@ -6677,6 +7065,14 @@
       "label": "cand-afe909352ab4 improvement v2",
       "meta": {
         "rationale": "Harden the supply rule with a hard single-step cap c_max and EMA anchor smoothing so transient anchor manipulation cannot over-expand supply within the attack window."
+      }
+    },
+    {
+      "id": "cand-b2b411464015-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-b2b411464015 improvement v2",
+      "meta": {
+        "rationale": "Asymmetric-kappa fix: the fee ladder now tracks a FAST EMA (kappa_f=0.45) of the signed level path while the open-interest index keeps the slow EMA \u2014 fees reprice ahead of any drift an attacker can harvest, killing trend-front-running; the instantaneous kicker shrinks to a clip-safe 12.0 scale."
       }
     },
     {
@@ -6976,6 +7372,22 @@
       }
     },
     {
+      "id": "cand-30570d32728a-model-v1",
+      "kind": "mechanism",
+      "label": "cand-30570d32728a model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-30570d32728a-model-v2",
+      "kind": "mechanism",
+      "label": "cand-30570d32728a model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
       "id": "cand-3132499bb565-model-v1",
       "kind": "mechanism",
       "label": "cand-3132499bb565 model v1",
@@ -6987,6 +7399,22 @@
       "id": "cand-3132499bb565-model-v2",
       "kind": "mechanism",
       "label": "cand-3132499bb565 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-model-v1",
+      "kind": "mechanism",
+      "label": "cand-31dd017e61de model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-31dd017e61de-model-v2",
+      "kind": "mechanism",
+      "label": "cand-31dd017e61de model v2",
       "meta": {
         "version": 2
       }
@@ -7216,6 +7644,22 @@
       }
     },
     {
+      "id": "cand-8212f81f4f75-model-v1",
+      "kind": "mechanism",
+      "label": "cand-8212f81f4f75 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-8212f81f4f75-model-v2",
+      "kind": "mechanism",
+      "label": "cand-8212f81f4f75 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
       "id": "cand-8359598274f7-model-v1",
       "kind": "mechanism",
       "label": "cand-8359598274f7 model v1",
@@ -7379,6 +7823,22 @@
       "id": "cand-afe909352ab4-model-v2",
       "kind": "mechanism",
       "label": "cand-afe909352ab4 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
+      "id": "cand-b2b411464015-model-v1",
+      "kind": "mechanism",
+      "label": "cand-b2b411464015 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-b2b411464015-model-v2",
+      "kind": "mechanism",
+      "label": "cand-b2b411464015 model v2",
       "meta": {
         "version": 2
       }
@@ -8229,6 +8689,39 @@
       }
     },
     {
+      "id": "sim-cand-30570d32728a-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-30570d32728a-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-30570d32728a-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-30570d32728a-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-30570d32728a-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-30570d32728a-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-cand-3132499bb565-montecarlo",
       "kind": "simulation",
       "label": "cand-3132499bb565-montecarlo",
@@ -8287,6 +8780,39 @@
       "id": "sim-cand-3132499bb565-sweep-v2",
       "kind": "simulation",
       "label": "cand-3132499bb565-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-31dd017e61de-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-31dd017e61de-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-31dd017e61de-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-31dd017e61de-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-31dd017e61de-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-31dd017e61de-sweep-v2",
       "meta": {
         "seed": 7,
         "model": "mathmodel-v2",
@@ -9120,6 +9646,39 @@
       }
     },
     {
+      "id": "sim-cand-8212f81f4f75-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-8212f81f4f75-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-8212f81f4f75-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-8212f81f4f75-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-8212f81f4f75-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-8212f81f4f75-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-cand-8359598274f7-montecarlo",
       "kind": "simulation",
       "label": "cand-8359598274f7-montecarlo",
@@ -9709,6 +10268,39 @@
       "meta": {
         "seed": 7,
         "model": "mathmodel-latest",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-b2b411464015-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-b2b411464015-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-b2b411464015-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-b2b411464015-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-b2b411464015-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-b2b411464015-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
         "dataset": "synthetic-anchor-v1/seed-7",
         "simulation_version": "sim-0.1.0"
       }
@@ -11166,6 +11758,193 @@
       }
     },
     {
+      "id": "sim-exp-01537120a8b2",
+      "kind": "simulation",
+      "label": "exp-01537120a8b2",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-391d9c171be6",
+      "kind": "simulation",
+      "label": "exp-391d9c171be6",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-3a7ae91132db",
+      "kind": "simulation",
+      "label": "exp-3a7ae91132db",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-47a2d90e0828",
+      "kind": "simulation",
+      "label": "exp-47a2d90e0828",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-56ae43576291",
+      "kind": "simulation",
+      "label": "exp-56ae43576291",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-5b5d741a0452",
+      "kind": "simulation",
+      "label": "exp-5b5d741a0452",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-5d647b8228a9",
+      "kind": "simulation",
+      "label": "exp-5d647b8228a9",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v1",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-6d8add281f22",
+      "kind": "simulation",
+      "label": "exp-6d8add281f22",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-81d20666db2b",
+      "kind": "simulation",
+      "label": "exp-81d20666db2b",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-8db11e09e81e",
+      "kind": "simulation",
+      "label": "exp-8db11e09e81e",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-8e438aa1fb98",
+      "kind": "simulation",
+      "label": "exp-8e438aa1fb98",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-96187aed0ce3",
+      "kind": "simulation",
+      "label": "exp-96187aed0ce3",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v1",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-98dcd43b9237",
+      "kind": "simulation",
+      "label": "exp-98dcd43b9237",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-9eae131b9baf",
+      "kind": "simulation",
+      "label": "exp-9eae131b9baf",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-bb4142aa974f",
+      "kind": "simulation",
+      "label": "exp-bb4142aa974f",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v1",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-c0e968f374e3",
+      "kind": "simulation",
+      "label": "exp-c0e968f374e3",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-f8fcb731082a",
+      "kind": "simulation",
+      "label": "exp-f8fcb731082a",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "source-1",
       "kind": "source",
       "label": "Fixture Source",
@@ -11706,12 +12485,75 @@
       }
     },
     {
+      "id": "source-64",
+      "kind": "source",
+      "label": "Chainlink staking documentation",
+      "meta": {
+        "url": "https://docs.chain.link/",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-65",
+      "kind": "source",
+      "label": "Gensyn protocol documentation",
+      "meta": {
+        "url": "https://gensyn.io/",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-66",
+      "kind": "source",
+      "label": "Akash network documentation",
+      "meta": {
+        "url": "https://akash.network/",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-67",
+      "kind": "source",
+      "label": "IEA electricity price data sources",
+      "meta": {
+        "url": "https://www.iea.org/",
+        "source_type": "intl_org"
+      }
+    },
+    {
+      "id": "source-68",
+      "kind": "source",
+      "label": "Tellor oracle documentation",
+      "meta": {
+        "url": "https://docs.tellor.io/",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-69",
+      "kind": "source",
+      "label": "Opyn protocol documentation",
+      "meta": {
+        "url": "https://www.opyn.io/",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
       "id": "source-7",
       "kind": "source",
       "label": "Fixture Source",
       "meta": {
         "url": "fixture://cand-06418647c270",
         "source_type": "web"
+      }
+    },
+    {
+      "id": "source-70",
+      "kind": "source",
+      "label": "BIS FX liquidity study",
+      "meta": {
+        "url": "https://www.bis.org/",
+        "source_type": "intl_org"
       }
     },
     {
@@ -11831,6 +12673,30 @@
       "meta": {}
     },
     {
+      "source": "cand-30570d32728a-improvement-v2",
+      "target": "cand-30570d32728a-attack-game_theory-threshold-hugging-sustained-mis-banding",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-30570d32728a-improvement-v2",
+      "target": "cand-30570d32728a-attack-red_team-threshold-hugging-sustained-mis-banding",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-30570d32728a-improvement-v2",
+      "target": "cand-30570d32728a-attack-red_team-vol-regime-band-mis-calibration",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-30570d32728a-improvement-v2",
+      "target": "cand-30570d32728a-attack-security-vol-regime-band-mis-calibration",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
       "source": "cand-3132499bb565-improvement-v2",
       "target": "cand-3132499bb565-attack-game_theory-stress-ewma-ping-pong",
       "kind": "addresses",
@@ -11839,6 +12705,18 @@
     {
       "source": "cand-3132499bb565-improvement-v2",
       "target": "cand-3132499bb565-attack-red_team-ping-pong-capacity-farming",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de-improvement-v2",
+      "target": "cand-31dd017e61de-attack-game_theory-fast-crash-capacity-lag-exploitation",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de-improvement-v2",
+      "target": "cand-31dd017e61de-attack-red_team-fast-crash-capacity-lag-exploitation",
       "kind": "addresses",
       "meta": {}
     },
@@ -12041,6 +12919,24 @@
       "meta": {}
     },
     {
+      "source": "cand-8212f81f4f75-improvement-v2",
+      "target": "cand-8212f81f4f75-attack-game_theory-slow-walk-energy-divergence-under-the-drift-gate",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-8212f81f4f75-improvement-v2",
+      "target": "cand-8212f81f4f75-attack-game_theory-whale-step-escrow-insurance-harvest",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-8212f81f4f75-improvement-v2",
+      "target": "cand-8212f81f4f75-attack-red_team-slow-walk-energy-divergence-under-the-drift-gate",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
       "source": "cand-8359598274f7-improvement-v2",
       "target": "cand-8359598274f7-attack-game_theory-calm-band-suppression-then-spike-harvest",
       "kind": "addresses",
@@ -12181,6 +13077,30 @@
     {
       "source": "cand-af096f7f6aa2-improvement-v2",
       "target": "cand-af096f7f6aa2-attack-security-wash-volume-floor-farming",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015-improvement-v2",
+      "target": "cand-b2b411464015-attack-game_theory-kicker-extraction-via-repeated-single-spikes",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015-improvement-v2",
+      "target": "cand-b2b411464015-attack-game_theory-trend-front-running-the-fee-ladder",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015-improvement-v2",
+      "target": "cand-b2b411464015-attack-red_team-kicker-extraction-via-repeated-single-spikes",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015-improvement-v2",
+      "target": "cand-b2b411464015-attack-red_team-trend-front-running-the-fee-ladder",
       "kind": "addresses",
       "meta": {}
     },
@@ -13313,6 +14233,78 @@
       }
     },
     {
+      "source": "cand-30570d32728a-attack-game_theory-residual-cartel-synchronization-exposure-beyond-",
+      "target": "cand-30570d32728a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-30570d32728a-attack-game_theory-threshold-hugging-sustained-mis-banding",
+      "target": "cand-30570d32728a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-30570d32728a-attack-oracle-regime-shift-band-exhaustion",
+      "target": "cand-30570d32728a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-30570d32728a-attack-oracle-residual-cartel-capture-exposure-beyond-the-mode",
+      "target": "cand-30570d32728a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-30570d32728a-attack-red_team-residual-cartel-capture-exposure-beyond-the-mode",
+      "target": "cand-30570d32728a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-30570d32728a-attack-red_team-threshold-hugging-sustained-mis-banding",
+      "target": "cand-30570d32728a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-30570d32728a-attack-red_team-vol-regime-band-mis-calibration",
+      "target": "cand-30570d32728a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-30570d32728a-attack-security-residual-cartel-band-capture-exposure-beyond-the",
+      "target": "cand-30570d32728a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-30570d32728a-attack-security-vol-regime-band-mis-calibration",
+      "target": "cand-30570d32728a",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
       "source": "cand-3132499bb565-attack-game_theory-baseline-capacity-farming",
       "target": "cand-3132499bb565",
       "kind": "attacks",
@@ -13390,6 +14382,70 @@
       "kind": "attacks",
       "meta": {
         "profitable": true
+      }
+    },
+    {
+      "source": "cand-31dd017e61de-attack-game_theory-fast-crash-capacity-lag-exploitation",
+      "target": "cand-31dd017e61de",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-31dd017e61de-attack-game_theory-residual-feed-control-spoofing-exposure-beyond-t",
+      "target": "cand-31dd017e61de",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-31dd017e61de-attack-oracle-anchor-crash-engineering-in-the-lag-window",
+      "target": "cand-31dd017e61de",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-31dd017e61de-attack-oracle-residual-reported-crash-exposure-beyond-the-mode",
+      "target": "cand-31dd017e61de",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-31dd017e61de-attack-red_team-fast-crash-capacity-lag-exploitation",
+      "target": "cand-31dd017e61de",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-31dd017e61de-attack-red_team-residual-anchor-spoofing-exposure-beyond-the-mod",
+      "target": "cand-31dd017e61de",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-31dd017e61de-attack-security-flash-crash-drawdown-outrun",
+      "target": "cand-31dd017e61de",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-31dd017e61de-attack-security-residual-anchor-integrity-exposure-beyond-the-mo",
+      "target": "cand-31dd017e61de",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
       }
     },
     {
@@ -14929,6 +15985,78 @@
       }
     },
     {
+      "source": "cand-8212f81f4f75-attack-game_theory-residual-index-capture-collusion-exposure-beyond",
+      "target": "cand-8212f81f4f75",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-8212f81f4f75-attack-game_theory-slow-walk-energy-divergence-under-the-drift-gate",
+      "target": "cand-8212f81f4f75",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-8212f81f4f75-attack-game_theory-whale-step-escrow-insurance-harvest",
+      "target": "cand-8212f81f4f75",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-8212f81f4f75-attack-oracle-coordinated-index-anchor-co-movement",
+      "target": "cand-8212f81f4f75",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-8212f81f4f75-attack-oracle-residual-index-sourcing-exposure-beyond-the-mode",
+      "target": "cand-8212f81f4f75",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-8212f81f4f75-attack-red_team-residual-index-capture-exposure-beyond-the-model",
+      "target": "cand-8212f81f4f75",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-8212f81f4f75-attack-red_team-slow-walk-energy-divergence-under-the-drift-gate",
+      "target": "cand-8212f81f4f75",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-8212f81f4f75-attack-security-residual-independent-index-sourcing-exposure-bey",
+      "target": "cand-8212f81f4f75",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-8212f81f4f75-attack-security-self-attested-energy-index-capture",
+      "target": "cand-8212f81f4f75",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
       "source": "cand-8359598274f7-attack-game_theory-calm-band-suppression-then-spike-harvest",
       "target": "cand-8359598274f7",
       "kind": "attacks",
@@ -15894,6 +17022,86 @@
       "kind": "attacks",
       "meta": {
         "profitable": true
+      }
+    },
+    {
+      "source": "cand-b2b411464015-attack-game_theory-kicker-extraction-via-repeated-single-spikes",
+      "target": "cand-b2b411464015",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-b2b411464015-attack-game_theory-residual-feed-collusion-exposure-beyond-the-mode",
+      "target": "cand-b2b411464015",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-b2b411464015-attack-game_theory-trend-front-running-the-fee-ladder",
+      "target": "cand-b2b411464015",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-b2b411464015-attack-oracle-residual-majority-feed-bias-exposure-beyond-the-",
+      "target": "cand-b2b411464015",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-b2b411464015-attack-oracle-sustained-anchor-bias-trend-injection",
+      "target": "cand-b2b411464015",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-b2b411464015-attack-red_team-kicker-extraction-via-repeated-single-spikes",
+      "target": "cand-b2b411464015",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-b2b411464015-attack-red_team-residual-majority-feed-collusion-exposure-beyond",
+      "target": "cand-b2b411464015",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-b2b411464015-attack-red_team-trend-front-running-the-fee-ladder",
+      "target": "cand-b2b411464015",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-b2b411464015-attack-security-anchor-feed-manipulation-across-the-ema-window",
+      "target": "cand-b2b411464015",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-b2b411464015-attack-security-residual-feed-integrity-exposure-beyond-the-mode",
+      "target": "cand-b2b411464015",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
       }
     },
     {
@@ -18849,6 +20057,38 @@
       }
     },
     {
+      "source": "cand-30570d32728a",
+      "target": "source-24",
+      "kind": "cites",
+      "meta": {
+        "query": "collateralized fee oracle reporter bonds forfeiture; forecast band exceedance integrated penalty mechanism; gas fee orac"
+      }
+    },
+    {
+      "source": "cand-30570d32728a",
+      "target": "source-68",
+      "kind": "cites",
+      "meta": {
+        "query": "collateralized fee oracle reporter bonds forfeiture; forecast band exceedance integrated penalty mechanism; gas fee orac"
+      }
+    },
+    {
+      "source": "cand-31dd017e61de",
+      "target": "source-69",
+      "kind": "cites",
+      "meta": {
+        "query": "drawdown indexed insurance underwriting tranche; realized trend EMA trigger liquidity provision; cross-border corridor l"
+      }
+    },
+    {
+      "source": "cand-31dd017e61de",
+      "target": "source-70",
+      "kind": "cites",
+      "meta": {
+        "query": "drawdown indexed insurance underwriting tranche; realized trend EMA trigger liquidity provision; cross-border corridor l"
+      }
+    },
+    {
       "source": "cand-50e511859d99",
       "target": "source-24",
       "kind": "cites",
@@ -19081,6 +20321,30 @@
       }
     },
     {
+      "source": "cand-8212f81f4f75",
+      "target": "source-65",
+      "kind": "cites",
+      "meta": {
+        "query": "energy denominated AI inference escrow mechanism; compute proof delivery slashing sustained divergence; joule priced mac"
+      }
+    },
+    {
+      "source": "cand-8212f81f4f75",
+      "target": "source-66",
+      "kind": "cites",
+      "meta": {
+        "query": "energy denominated AI inference escrow mechanism; compute proof delivery slashing sustained divergence; joule priced mac"
+      }
+    },
+    {
+      "source": "cand-8212f81f4f75",
+      "target": "source-67",
+      "kind": "cites",
+      "meta": {
+        "query": "energy denominated AI inference escrow mechanism; compute proof delivery slashing sustained divergence; joule priced mac"
+      }
+    },
+    {
       "source": "cand-84b0ad6d012f",
       "target": "source-3",
       "kind": "cites",
@@ -19262,6 +20526,22 @@
       "kind": "cites",
       "meta": {
         "query": "energy supply mechanism; Carbon-Weighted Gas Fees prior art"
+      }
+    },
+    {
+      "source": "cand-b2b411464015",
+      "target": "source-39",
+      "kind": "cites",
+      "meta": {
+        "query": "oracle failure priced service fee ladder mechanism; open interest indexed fee market degradation; EMA trend indicator or"
+      }
+    },
+    {
+      "source": "cand-b2b411464015",
+      "target": "source-64",
+      "kind": "cites",
+      "meta": {
+        "query": "oracle failure priced service fee ladder mechanism; open interest indexed fee market degradation; EMA trend indicator or"
       }
     },
     {
@@ -19769,8 +21049,20 @@
       "meta": {}
     },
     {
+      "source": "cand-30570d32728a-improvement-v2",
+      "target": "cand-30570d32728a-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-3132499bb565-improvement-v2",
       "target": "cand-3132499bb565-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de-improvement-v2",
+      "target": "cand-31dd017e61de-model-v2",
       "kind": "derived_from",
       "meta": {}
     },
@@ -19835,6 +21127,12 @@
       "meta": {}
     },
     {
+      "source": "cand-8212f81f4f75-improvement-v2",
+      "target": "cand-8212f81f4f75-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-8359598274f7-improvement-v2",
       "target": "cand-8359598274f7-model-v2",
       "kind": "derived_from",
@@ -19879,6 +21177,12 @@
     {
       "source": "cand-afe909352ab4-improvement-v2",
       "target": "cand-afe909352ab4-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015-improvement-v2",
+      "target": "cand-b2b411464015-model-v2",
       "kind": "derived_from",
       "meta": {}
     },
@@ -20105,6 +21409,18 @@
       "meta": {}
     },
     {
+      "source": "cand-30570d32728a",
+      "target": "cand-30570d32728a-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-30570d32728a",
+      "target": "cand-30570d32728a-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
       "source": "cand-3132499bb565",
       "target": "cand-3132499bb565-model-v1",
       "kind": "formalizes",
@@ -20113,6 +21429,18 @@
     {
       "source": "cand-3132499bb565",
       "target": "cand-3132499bb565-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de",
+      "target": "cand-31dd017e61de-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de",
+      "target": "cand-31dd017e61de-model-v2",
       "kind": "formalizes",
       "meta": {}
     },
@@ -20285,6 +21613,18 @@
       "meta": {}
     },
     {
+      "source": "cand-8212f81f4f75",
+      "target": "cand-8212f81f4f75-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-8212f81f4f75",
+      "target": "cand-8212f81f4f75-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
       "source": "cand-8359598274f7",
       "target": "cand-8359598274f7-model-v1",
       "kind": "formalizes",
@@ -20407,6 +21747,18 @@
     {
       "source": "cand-afe909352ab4",
       "target": "cand-afe909352ab4-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015",
+      "target": "cand-b2b411464015-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015",
+      "target": "cand-b2b411464015-model-v2",
       "kind": "formalizes",
       "meta": {}
     },
@@ -20753,8 +22105,20 @@
       "meta": {}
     },
     {
+      "source": "cand-30570d32728a-model-v1",
+      "target": "cand-30570d32728a-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-3132499bb565-model-v1",
       "target": "cand-3132499bb565-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de-model-v1",
+      "target": "cand-31dd017e61de-model-v2",
       "kind": "patches",
       "meta": {}
     },
@@ -20819,6 +22183,12 @@
       "meta": {}
     },
     {
+      "source": "cand-8212f81f4f75-model-v1",
+      "target": "cand-8212f81f4f75-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-8359598274f7-model-v1",
       "target": "cand-8359598274f7-model-v2",
       "kind": "patches",
@@ -20863,6 +22233,12 @@
     {
       "source": "cand-afe909352ab4-model-v1",
       "target": "cand-afe909352ab4-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015-model-v1",
+      "target": "cand-b2b411464015-model-v2",
       "kind": "patches",
       "meta": {}
     },
@@ -21131,6 +22507,12 @@
       "meta": {}
     },
     {
+      "source": "cand-0d8552635f8c-model-v2",
+      "target": "sim-exp-c0e968f374e3",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-108293ca9f4f-model-v1",
       "target": "sim-cand-108293ca9f4f-montecarlo",
       "kind": "simulates",
@@ -21163,6 +22545,12 @@
     {
       "source": "cand-1acbaa9de0b0-model-v1",
       "target": "sim-cand-1acbaa9de0b0-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-1acbaa9de0b0-model-v1",
+      "target": "sim-exp-bb4142aa974f",
       "kind": "simulates",
       "meta": {}
     },
@@ -21239,6 +22627,24 @@
       "meta": {}
     },
     {
+      "source": "cand-30570d32728a-model-v2",
+      "target": "sim-cand-30570d32728a-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-30570d32728a-model-v2",
+      "target": "sim-cand-30570d32728a-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-30570d32728a-model-v2",
+      "target": "sim-cand-30570d32728a-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-3132499bb565-model-v1",
       "target": "sim-cand-3132499bb565-montecarlo",
       "kind": "simulates",
@@ -21271,6 +22677,30 @@
     {
       "source": "cand-3132499bb565-model-v2",
       "target": "sim-cand-3132499bb565-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-3132499bb565-model-v2",
+      "target": "sim-exp-47a2d90e0828",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de-model-v2",
+      "target": "sim-cand-31dd017e61de-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de-model-v2",
+      "target": "sim-cand-31dd017e61de-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de-model-v2",
+      "target": "sim-cand-31dd017e61de-sweep-v2",
       "kind": "simulates",
       "meta": {}
     },
@@ -21329,6 +22759,12 @@
       "meta": {}
     },
     {
+      "source": "cand-52eeaf35607b-model-v2",
+      "target": "sim-exp-8db11e09e81e",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-54c7ce73bf6d-model-v1",
       "target": "sim-cand-54c7ce73bf6d-montecarlo",
       "kind": "simulates",
@@ -21365,6 +22801,12 @@
       "meta": {}
     },
     {
+      "source": "cand-58d7091eb2a7-model-v1",
+      "target": "sim-exp-5d647b8228a9",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-5d41cd41f68d-model-v1",
       "target": "sim-cand-5d41cd41f68d-montecarlo",
       "kind": "simulates",
@@ -21397,6 +22839,12 @@
     {
       "source": "cand-5d41cd41f68d-model-v2",
       "target": "sim-cand-5d41cd41f68d-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-5d41cd41f68d-model-v2",
+      "target": "sim-exp-56ae43576291",
       "kind": "simulates",
       "meta": {}
     },
@@ -21725,6 +23173,24 @@
       "meta": {}
     },
     {
+      "source": "cand-8212f81f4f75-model-v2",
+      "target": "sim-cand-8212f81f4f75-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-8212f81f4f75-model-v2",
+      "target": "sim-cand-8212f81f4f75-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-8212f81f4f75-model-v2",
+      "target": "sim-cand-8212f81f4f75-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-8359598274f7-model-v1",
       "target": "sim-cand-8359598274f7-montecarlo",
       "kind": "simulates",
@@ -21775,6 +23241,12 @@
     {
       "source": "cand-84b0ad6d012f-model-v1",
       "target": "sim-cand-84b0ad6d012f-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-84b0ad6d012f-model-v1",
+      "target": "sim-exp-96187aed0ce3",
       "kind": "simulates",
       "meta": {}
     },
@@ -21977,6 +23449,12 @@
       "meta": {}
     },
     {
+      "source": "cand-a98b49da7189-model-v2",
+      "target": "sim-exp-8e438aa1fb98",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-ac8ec7f59be8-model-v1",
       "target": "sim-cand-ac8ec7f59be8-montecarlo",
       "kind": "simulates",
@@ -22049,6 +23527,24 @@
       "meta": {}
     },
     {
+      "source": "cand-b2b411464015-model-v2",
+      "target": "sim-cand-b2b411464015-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015-model-v2",
+      "target": "sim-cand-b2b411464015-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015-model-v2",
+      "target": "sim-cand-b2b411464015-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-b713e862acdc-model-v2",
       "target": "sim-cand-b713e862acdc-montecarlo-v2",
       "kind": "simulates",
@@ -22063,6 +23559,12 @@
     {
       "source": "cand-b713e862acdc-model-v2",
       "target": "sim-cand-b713e862acdc-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc-model-v2",
+      "target": "sim-exp-81d20666db2b",
       "kind": "simulates",
       "meta": {}
     },
@@ -22193,6 +23695,12 @@
       "meta": {}
     },
     {
+      "source": "cand-cab81fc40bbf-model-v2",
+      "target": "sim-exp-98dcd43b9237",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-cb4d584867ed-model-v1",
       "target": "sim-cand-cb4d584867ed-montecarlo",
       "kind": "simulates",
@@ -22265,6 +23773,12 @@
       "meta": {}
     },
     {
+      "source": "cand-cd39d95ea572-model-v2",
+      "target": "sim-exp-5b5d741a0452",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-ce333ff19e9e-model-v1",
       "target": "sim-cand-ce333ff19e9e-montecarlo",
       "kind": "simulates",
@@ -22297,6 +23811,12 @@
     {
       "source": "cand-ce333ff19e9e-model-v2",
       "target": "sim-cand-ce333ff19e9e-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-ce333ff19e9e-model-v2",
+      "target": "sim-exp-3a7ae91132db",
       "kind": "simulates",
       "meta": {}
     },
@@ -22571,6 +24091,12 @@
       "meta": {}
     },
     {
+      "source": "cand-e74d830a9479-model-v2",
+      "target": "sim-exp-f8fcb731082a",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-e8e15b483070-model-v1",
       "target": "sim-cand-e8e15b483070-montecarlo",
       "kind": "simulates",
@@ -22607,6 +24133,12 @@
       "meta": {}
     },
     {
+      "source": "cand-e8e15b483070-model-v2",
+      "target": "sim-exp-391d9c171be6",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-e98e5859f3f5-model-v2",
       "target": "sim-cand-e98e5859f3f5-montecarlo-v2",
       "kind": "simulates",
@@ -22621,6 +24153,12 @@
     {
       "source": "cand-e98e5859f3f5-model-v2",
       "target": "sim-cand-e98e5859f3f5-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e98e5859f3f5-model-v2",
+      "target": "sim-exp-01537120a8b2",
       "kind": "simulates",
       "meta": {}
     },
@@ -22787,6 +24325,12 @@
       "meta": {}
     },
     {
+      "source": "cand-f8fc37dce6a1-model-v2",
+      "target": "sim-exp-6d8add281f22",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-f9682eb6fc72-model-v1",
       "target": "sim-cand-f9682eb6fc72-montecarlo",
       "kind": "simulates",
@@ -22819,6 +24363,12 @@
     {
       "source": "cand-f9682eb6fc72-model-v2",
       "target": "sim-cand-f9682eb6fc72-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-f9682eb6fc72-model-v2",
+      "target": "sim-exp-9eae131b9baf",
       "kind": "simulates",
       "meta": {}
     },

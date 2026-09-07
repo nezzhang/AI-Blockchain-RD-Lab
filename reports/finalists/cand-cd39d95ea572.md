@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-cd39d95ea572
 - **Category:** transaction fee markets
 - **Overall score:** 5.7000
-- **Rank:** 10
+- **Rank:** 7
 - **Status:** finalist
 
 ## Executive Summary

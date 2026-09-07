@@ -1,1 +1,22 @@
-{}
+{
+  "cand-b2b411464015": {
+    "mc_mean": 1007.4247220798649,
+    "hard_failures": [],
+    "error": null
+  },
+  "cand-8212f81f4f75": {
+    "mc_mean": 1007.4247220798649,
+    "hard_failures": [],
+    "error": null
+  },
+  "cand-30570d32728a": {
+    "mc_mean": 1007.4247220798649,
+    "hard_failures": [],
+    "error": null
+  },
+  "cand-31dd017e61de": {
+    "mc_mean": 1007.4247220798649,
+    "hard_failures": [],
+    "error": null
+  }
+}

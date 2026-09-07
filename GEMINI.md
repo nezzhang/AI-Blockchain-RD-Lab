@@ -116,6 +116,42 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 11 measured-residual improvement round: the 4 finalists carrying
+  the largest r10 §20 pattern-battery edges (Fee Oracle +14.75 F_l,
+  Joule +351.83 J_t, Fee Meter +700 B_m, Corridor +784.99 U_t) were
+  SUPERSEDED with the measured residual recorded as lineage and 4
+  successors minted whose v1 models key the adversarially-sensitive
+  state to a REVERTING EMA of the signed level path (T_t1 = T_t +
+  kappa*((1000 + dX/X*1000) - T_t) — zero-mean oscillation washes out,
+  sustained drift carries it; an integrating signed-EMA drifts forever
+  and saturates, the 1000-reversion makes it a low-pass filter), plus
+  small instantaneous kickers for whale-trace. All 4 smoke-gated
+  13/13-distinct + non-degenerate + whale-distinguishable + wash-edge
+  <=150 (achieved 1.98-5.81), red-teamed VULNERABLE (honest: EMA lag,
+  patience extraction, kicker leakage), patched to v2 (asymmetric-kappa
+  fast-EMA fees + kicker shrink; ratcheting drift threshold; vol-
+  adaptive band + forfeit:comp 1.2:0.5; sign-independent |dX| crash
+  circuit), re-attacked: all 4 SURVIVE. Battery re-measured: 3 of 4
+  near-closed (784.99 -> 1.98, 351.83 -> 1.98, 14.75 -> 7.23);
+  Sustained-Band Meter wash-flow closed (1.98) but pump_park still
+  drains B_m (487) — traced to the band centering on the 1000-anchored
+  trend, so PERMANENT level shifts look like eternal mis-banding;
+  honest finding: that drain is stale-band forfeiture (the design's
+  own consequence, no attacker P&L path), recorded in the r11 docs +
+  4b numbers, open question: band should re-center on an EMA OF THE
+  LEVEL. Ranking: Trend-Indexed Prediction-Fee Oracle 6.36 FINALIST
+  (top-3); successors score below predecessors (6.17-6.36 vs 6.40-6.65)
+  — honest §20-residual patching costs ranking points, exactly the §2
+  trade. Ops lesson (the r9 double-save, new trigger): r11_models
+  --store BEFORE the formalize answer install made the answers carry
+  v1 content, and the formalize replay then bumped it to spurious v2
+  rows (rationale = v1 rationale exposes it); fixed by deleting the
+  spurious v2 rows + purging the stale improve requests minted against
+  them (deterministic rids regenerate on re-run). §33 binding lesson:
+  addressed_attacks must ALSO name the SECURITY/ORACLE vector
+  phrasings (Jaccard >= 0.5 against THEIR text, not the red-team
+  phrasing) or those findings stay unbound and the improve stage
+  re-mints.
 - Round 10 adversarial-residual bounding: the §20 AttackPatternBattery
   (vol_oscillation, wash_flow, pump_unwind, shock_timing) now runs
   against every finalist's FINAL model version and persists as §21

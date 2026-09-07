@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-ce333ff19e9e
 - **Category:** monetary policy
 - **Overall score:** 6.3000
-- **Rank:** 9
+- **Rank:** 6
 - **Status:** finalist
 
 ## Executive Summary
