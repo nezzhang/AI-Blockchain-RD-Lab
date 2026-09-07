@@ -1,28 +1,28 @@
-# Release Package: Vol-Weighted Fee Smoothing Escrow
+# Release Package: Prediction-Fee Fallback Oracle
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-07T01:02:17+00:00
-Candidate: `cand-cd39d95ea572` (§7 recommended, rank 1)
+Generated: 2026-09-07T03:49:56+00:00
+Candidate: `cand-cab81fc40bbf` (§7 recommended, rank 1)
 
 ## 1. Publication Readiness
 
-- Deterministic overall score: **5.7** (§19, 11 dimensions)
-- Model versions stored: [1, 1, 2] (append-only, §21)
+- Deterministic overall score: **6.65** (§19, 11 dimensions)
+- Model versions stored: [1, 2] (append-only, §21)
 - §15 battery: ✅ 13/13 scenarios clean
 - Monte Carlo: 0 failures / 20 trials
 
 ## 2. The Mechanism (as recorded)
 
-**Problem.** Volatile transaction fees make gas costs unpredictable and complicate batch settlement budgets
+**Problem.** Payment rails that read oracles either halt on feed failure or silently switch to a single fallback; both behaviors are unpriced and invite stale-quote griefing.
 
-**Core causal chain.** An escrow contract collects fees into a smoothed pool whose release rate responds to realized volatility: when measured volatility rises, more of each fee is retained to back settlement; when volatility decays, retained buffer releases to proposers, so per-transaction effective cost stays smooth
+**Core causal chain.** Oracle failure becomes a priced service level instead of a halt: the fee ladder makes degraded data expensive to use, which funds sender insurance and suppresses low-stakes use of the degraded mode. The continuously traded prediction book is the last rung because its open-interest floor makes manipulating the fallback costly in proportion to the damage it could do.
 
 ## 3. Evidence Trail
 
-- Prior-art searches recorded: 5 (queries + sources stored, §12)
+- Prior-art searches recorded: 1 (queries + sources stored, §12)
 - Adversarial reports: 8 across ['game_theory', 'oracle', 'red_team', 'security']
-- Improvement cycle: 2 patched version(s) stored; the final version v2 was re-attacked with the patched model in the adversarial prompt (§34 retest)
+- Improvement cycle: 1 patched version(s) stored; the final version v2 was re-attacked with the patched model in the adversarial prompt (§34 retest)
 
 ## 4. Residual Attacks Disclosure (§12 honesty)
 

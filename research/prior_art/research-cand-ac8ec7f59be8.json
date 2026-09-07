@@ -1,0 +1,185 @@
+{
+  "researched": 15,
+  "candidates": [
+    {
+      "candidate_id": "cand-ac8ec7f59be8",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 00ce0ac6671ccf2d is PENDING: answer it with `lab bridge answer 00ce0ac6671ccf2d` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request 417a85d0ce8f3872 is PENDING: answer it with `lab bridge answer 417a85d0ce8f3872` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request 6bc754de6bf82864 is PENDING: answer it with `lab bridge answer 6bc754de6bf82864` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-a3a9b583bdff",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request de4657bfc8e6c3f8 is PENDING: answer it with `lab bridge answer de4657bfc8e6c3f8` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request e754404811323575 is PENDING: answer it with `lab bridge answer e754404811323575` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request 9ab5c6230e0d8e44 is PENDING: answer it with `lab bridge answer 9ab5c6230e0d8e44` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-6643f5fc416d",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request e277a90a744d21f1 is PENDING: answer it with `lab bridge answer e277a90a744d21f1` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request 6ac4639162f3fb73 is PENDING: answer it with `lab bridge answer 6ac4639162f3fb73` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request edc3e5737fcfd0be is PENDING: answer it with `lab bridge answer edc3e5737fcfd0be` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-a764b54f16c5",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 4e745c9fee87e13d is PENDING: answer it with `lab bridge answer 4e745c9fee87e13d` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request f1df89a8223976a1 is PENDING: answer it with `lab bridge answer f1df89a8223976a1` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request 4e9db3346b984485 is PENDING: answer it with `lab bridge answer 4e9db3346b984485` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-d371a6d7e99c",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request c5c1b5c5a3aa3e4b is PENDING: answer it with `lab bridge answer c5c1b5c5a3aa3e4b` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request 84a7d8ca95a30e66 is PENDING: answer it with `lab bridge answer 84a7d8ca95a30e66` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request 4783d14b42504c0d is PENDING: answer it with `lab bridge answer 4783d14b42504c0d` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-ce333ff19e9e",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request d6be4992a9118cf7 is PENDING: answer it with `lab bridge answer d6be4992a9118cf7` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request c89d936558c58133 is PENDING: answer it with `lab bridge answer c89d936558c58133` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request 55f6d9fe7ad55fcf is PENDING: answer it with `lab bridge answer 55f6d9fe7ad55fcf` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-f9682eb6fc72",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 401f60298337b901 is PENDING: answer it with `lab bridge answer 401f60298337b901` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request a152e254cfb5a089 is PENDING: answer it with `lab bridge answer a152e254cfb5a089` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request 7a986a1c8ad63cf9 is PENDING: answer it with `lab bridge answer 7a986a1c8ad63cf9` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-818a442b3d7e",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 6a25f49aef916f6c is PENDING: answer it with `lab bridge answer 6a25f49aef916f6c` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request 02921d2232944956 is PENDING: answer it with `lab bridge answer 02921d2232944956` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request a655ececda965022 is PENDING: answer it with `lab bridge answer a655ececda965022` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-6b5791c8ae9c",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 3d12bd1ea10ddec7 is PENDING: answer it with `lab bridge answer 3d12bd1ea10ddec7` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request 7961bf0d851c94d7 is PENDING: answer it with `lab bridge answer 7961bf0d851c94d7` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request 0d1802aceb738123 is PENDING: answer it with `lab bridge answer 0d1802aceb738123` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-5e05dec83af0",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 54a598b8c5924a83 is PENDING: answer it with `lab bridge answer 54a598b8c5924a83` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request bcc6d5a662447abe is PENDING: answer it with `lab bridge answer bcc6d5a662447abe` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request e756fcc1946f50cd is PENDING: answer it with `lab bridge answer e756fcc1946f50cd` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-0d8552635f8c",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 00d91299a1c08540 is PENDING: answer it with `lab bridge answer 00d91299a1c08540` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request 12aa55cd6d46874f is PENDING: answer it with `lab bridge answer 12aa55cd6d46874f` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request 5e0dbe68243bc40c is PENDING: answer it with `lab bridge answer 5e0dbe68243bc40c` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-cab81fc40bbf",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 69fae95889e60cfb is PENDING: answer it with `lab bridge answer 69fae95889e60cfb` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request 0fb0f70ca547a0a8 is PENDING: answer it with `lab bridge answer 0fb0f70ca547a0a8` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request d8296a293c503e00 is PENDING: answer it with `lab bridge answer d8296a293c503e00` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-52eeaf35607b",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 663f39ace3f57db0 is PENDING: answer it with `lab bridge answer 663f39ace3f57db0` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request 0c49003daae904aa is PENDING: answer it with `lab bridge answer 0c49003daae904aa` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request fc0c0885714111ea is PENDING: answer it with `lab bridge answer fc0c0885714111ea` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-273882700f28",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 4dc6e01fd0f63b53 is PENDING: answer it with `lab bridge answer 4dc6e01fd0f63b53` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request c56aae57e8f727fa is PENDING: answer it with `lab bridge answer c56aae57e8f727fa` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request e9478ea6efcd7506 is PENDING: answer it with `lab bridge answer e9478ea6efcd7506` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    },
+    {
+      "candidate_id": "cand-0572a9589784",
+      "novelty_class": null,
+      "coherence": null,
+      "demand": null,
+      "rejected": false,
+      "errors": [
+        "prior_art: bridge request 4800750da505071f is PENDING: answer it with `lab bridge answer 4800750da505071f` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "economist: bridge request 29e9787f8bfcc1d7 is PENDING: answer it with `lab bridge answer 29e9787f8bfcc1d7` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735).",
+        "market: bridge request 59f67ad04e9a7eeb is PENDING: answer it with `lab bridge answer 59f67ad04e9a7eeb` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
+      ]
+    }
+  ]
+}

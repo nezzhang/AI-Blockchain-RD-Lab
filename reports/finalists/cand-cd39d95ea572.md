@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-cd39d95ea572
 - **Category:** transaction fee markets
 - **Overall score:** 5.7000
-- **Rank:** 1 (recommended)
+- **Rank:** 7
 - **Status:** finalist
 
 ## Executive Summary
@@ -122,4 +122,4 @@ See the Mathematical Model section's §13 open questions; unresolved items remai
 
 ## Recommendation
 
-**Recommended candidate (§7).** Rank 1 among finalists; selected deterministically from the ranking.
+Not the recommended candidate this cycle. See the lab report for the current recommendation.

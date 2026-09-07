@@ -155,11 +155,38 @@
     "novelty_class": "insufficient_evidence"
   },
   {
+    "candidate_id": "cand-0572a9589784",
+    "name": "Dual-Quote Stability Insurance Market",
+    "category": "stablecoin mechanism",
+    "status": "rejected",
+    "rejected_because": "prior-art filter cut (novelty class very_similar_existing); \u00a77/\u00a712",
+    "fatal_flaws": [],
+    "novelty_class": "very_similar_existing"
+  },
+  {
+    "candidate_id": "cand-af096f7f6aa2",
+    "name": "Countercyclical Corridor Insurance Float",
+    "category": "stablecoin routing",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r7 evidence-quality correction): stored model has a dependency cycle today's interpreter rejects; its \u00a715 runs predate the toposort gate and read stale values. Non-finalist, recorded for \u00a726 honesty; no successor needed (idea remains archived with research).",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
     "candidate_id": "cand-636a97854ac8",
     "name": "Dual-Sided Bond Auction Rebalancer",
     "category": "stablecoin routing",
     "status": "superseded",
     "rejected_because": "SUPERSEDED (r7 evidence-quality correction): uninterpretable evidence \u2014 stored v2 model has a dependency cycle (capacity/rebalance/seasoning_depth) today's interpreter rejects; its \u00a715 runs predate the toposort gate and read stale values. Successor candidate with a contract-compliant model follows.",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
+    "candidate_id": "cand-07d9ef676123",
+    "name": "Prediction-Weighted Corridor Risk Pricing",
+    "category": "stablecoin routing",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r7 evidence-quality correction): stored model has a dependency cycle today's interpreter rejects; its \u00a715 runs predate the toposort gate and read stale values. Non-finalist, recorded for \u00a726 honesty; no successor needed (idea remains archived with research).",
     "fatal_flaws": [],
     "novelty_class": "adjacent_mechanism"
   },

@@ -237,3 +237,56 @@ def test_vocabulary_families(text, family):
     cand = make_candidate("X " + family, text)
     fams = {f.family for f in MechanismCombinator().mine_families([cand])}
     assert family in fams
+
+
+def test_gate_is_score_only_compat_pairs_emit() -> None:
+    """§18 regression: propose() previously AND-gated on bridge >= 0.05,
+    silently vetoing compat-only pairs that the score floor itself admits
+    — the `lab combine` table (score-only) and propose() disagreed. The
+    gate must be score-only: this round's market-driven x prediction-
+    driven and oracle-design x prediction-driven pairs (bridge 0, compat
+    ~0.61 from the curated map + corpus cross-vocabulary) MUST emit, and
+    zero-bridge zero-compat mashups NEVER do."""
+
+    class C:
+        def __init__(self, id_: str, name: str, category: str, mech: str) -> None:
+            self.id = id_
+            self.name = name
+            self.category = category
+            self.core_mechanism = mech
+            self.description = mech
+
+    from blockchain_rd_lab.combinator.engine import MechanismCombinator
+
+    comb = MechanismCombinator()
+    # market-driven x prediction-driven: curated compat (0.5 base) plus
+    # shared FAMILY_VOCAB tokens ('market') lifts compat above 0.6 —
+    # the exact pair this round exercised, with ZERO direct vocabulary
+    # bridge between the two candidates' own keywords.
+    pair = [
+        C("c1", "Vol Fee Smoothing Pool", "defi",
+          "market price volatility moves a smoothing buffer for fees"),
+        C("c2", "Forecast Settled Board", "prediction",
+          "forecast event oracle quotes settle prediction markets"),
+    ]
+    fams = sorted(comb.mine_families(pair), key=lambda f: f.family)
+    names = {f.family for f in fams}
+    assert {"market-driven", "prediction-driven"} <= names
+
+    emitted = comb.propose(pair, max_hints=10)
+    saw_pair = any(
+        {h.family_a, h.family_b} == {"market-driven", "prediction-driven"}
+        for h in emitted
+    )
+    assert saw_pair, "market x prediction (bridge 0, curated compat) must emit"
+
+    # anti-mashup: bridge 0 AND compat 0 scores 0 — never emitted
+    mashup = [
+        C("c3", "Art Royalty Registry", "nft",
+          "provenance metadata hashing for artwork identity"),
+        C("c4", "Coupon Waterfall Splitter", "lending",
+          "tranche distribution of lender repayments"),
+    ]
+    mash_hints = [h for h in comb.propose(mashup, max_hints=10)
+                  if h.bridge_strength == 0 and h.compatibility == 0]
+    assert not mash_hints, "zero-bridge zero-compat pairs must never emit"

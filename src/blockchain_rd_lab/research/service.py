@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 from blockchain_rd_lab.agents.base import LLMError, LLMProvider
 from blockchain_rd_lab.database import LabDatabase
@@ -173,31 +174,45 @@ class ResearchService:
             candidate.transition(CandidateStatus.REJECTED)
 
     def _persist_prior_art(self, candidate_id: str, report: PriorArtReport) -> None:
-        """Store queries, sources, findings, similar mechanisms (§12, §22)."""
-        for source in report.sources:
-            try:
-                source_id = self.database.save_source(
-                    title=source.title,
-                    url=source.url or f"unspecified://{source.title[:64]}",
-                    source_type=source.source_type,
-                )
-            except Exception:
-                source_id = None
+        """Store queries, sources, findings, similar mechanisms (§12, §22).
+
+        One row per cited source; a report with NO sources still records
+        its queries, findings, similar mechanisms and conclusion — an
+        evidence trail must not vanish because the search cited nothing
+        (the r8 gap: sourceless reports persisted zero rows silently).
+        """
+        finding = json.dumps(
+            {
+                "conclusion": report.conclusion,
+                "similar_mechanisms": [m.model_dump() for m in report.similar_mechanisms],
+                "findings": report.findings,
+                "novelty_class": report.novelty_class.value,
+            },
+            default=str,
+        )
+        query = "; ".join(report.search_queries) or "(none)"
+        source_ids: list[int | None] = [
+            self._save_source_ref(source) for source in report.sources
+        ] or [None]
+        for source_id in source_ids:
             self.database.save_prior_art(
                 candidate_id=candidate_id,
-                query="; ".join(report.search_queries) or "(none)",
-                finding=json.dumps(
-                    {
-                        "conclusion": report.conclusion,
-                        "similar_mechanisms": [m.model_dump() for m in report.similar_mechanisms],
-                        "findings": report.findings,
-                        "novelty_class": report.novelty_class.value,
-                    },
-                    default=str,
-                ),
+                query=query,
+                finding=finding,
                 similarity_class=report.novelty_class.value,
                 source_id=source_id,
             )
+
+    def _save_source_ref(self, source: Any) -> int | None:
+        """Idempotently persist one research source; None on failure."""
+        try:
+            return self.database.save_source(
+                title=source.title,
+                url=source.url or f"unspecified://{source.title[:64]}",
+                source_type=source.source_type,
+            )
+        except Exception:
+            return None
 
     def _write_artifacts(self, results: list[CandidateResearchResult]) -> None:
         if self.artifacts_dir is None:

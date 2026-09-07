@@ -116,6 +116,26 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 8 combination round (§18 × §34): the two unexercised §18
+  pairs — market×prediction and oracle×prediction — each produced 5
+  bridge-authored ideas driven through the full pipeline (15
+  generated, 14 modeled/simmed/attacked/improved/retested/scored, 6
+  finalists; top-5 of the ranking is now combination candidates,
+  rank-1 Prediction-Fee Fallback Oracle at 6.65). The §18 combinator
+  gate is SCORE-ONLY (a bridge≥0.05 AND-gate silently vetoed
+  compat-only pairs; the CLI table already used score-only —
+  `tests/test_combinator.py::test_gate_is_score_only_compat_pairs_
+  emit` pins it). Prior-art persistence fix: sourceless
+  PriorArtReports now still record their §12 evidence trail (the r8
+  gap — `_persist_prior_art` saved rows only inside the
+  sources loop; `tests/test_priorart_persistence.py`); all 14
+  candidates carry authored prior-art rows. Model-equation
+  discipline: relative |dX|/X responses, concave sqrt() compression,
+  capped level terms, mean-reverting pools; v2 patches close the
+  named attack vectors (rationing, dynamic barriers, probe
+  corroboration, directional accuracy, verified-exposure
+  compensation, slash-to-challengers). Curriculum: ok — 11 families,
+  dominant 19%.
 - Round 7 correction (evidence honesty): the 6 vacuous/cycle
   finalists + 2 replay-duplicates were SUPERSEDED with reasons
   recorded (innovation_claim lineage) and §26-archived; the 2

@@ -1,28 +1,25 @@
 {
   "summary": {
-    "generated": 15,
-    "normalized": 15,
-    "duplicates_removed": 15,
-    "stored": 0,
-    "failed_batches": 0,
+    "generated": 10,
+    "normalized": 10,
+    "duplicates_removed": 5,
+    "stored": 5,
+    "failed_batches": 1,
     "errors": [
       "duplicate skipped: 'Fee-Spike Mutual for Rollup Batches' \u2248 'Fee-Spike Mutual for Rollup Batches' (exact name-key collision)",
       "duplicate skipped: 'Drawdown-Underwritten Liquidity Corridor' \u2248 'Drawdown-Underwritten Liquidity Corridor' (exact name-key collision)",
       "duplicate skipped: 'Counter-Cyclical Fee Sink Insurer' \u2248 'Counter-Cyclical Fee Sink Insurer' (exact name-key collision)",
       "duplicate skipped: 'Relay Congestion Cover Mesh' \u2248 'Relay Congestion Cover Mesh' (exact name-key collision)",
       "duplicate skipped: 'Volatility-Sized Settlement Escrow' \u2248 'Volatility-Sized Settlement Escrow' (exact name-key collision)",
-      "duplicate skipped: 'Forecast-Indexed Fee Smoothing Pool' \u2248 'Forecast-Indexed Fee Smoothing Pool' (exact name-key collision)",
-      "duplicate skipped: 'Prediction-Settled Hashprice Hedge Board' \u2248 'Prediction-Settled Hashprice Hedge Board' (exact name-key collision)",
-      "duplicate skipped: 'Consensus-Odds Liquidity Rebate' \u2248 'Consensus-Odds Liquidity Rebate' (exact name-key collision)",
-      "duplicate skipped: 'Adverse-Selection Taxed Prediction Clearing' \u2248 'Adverse-Selection Taxed Prediction Clearing' (exact name-key collision)",
-      "duplicate skipped: 'Belief-Weighted Volatility Target Fund' \u2248 'Belief-Weighted Volatility Target Fund' (exact name-key collision)",
-      "duplicate skipped: 'Disagreement-Weighted Oracle Quorum' \u2248 'Disagreement-Weighted Oracle Quorum' (exact name-key collision)",
-      "duplicate skipped: 'Prediction-Fee Fallback Oracle' \u2248 'Prediction-Fee Fallback Oracle' (exact name-key collision)",
-      "duplicate skipped: 'Report-Bonded Forecast Fee Meter' \u2248 'Report-Bonded Forecast Fee Meter' (exact name-key collision)",
-      "duplicate skipped: 'Attestation-Locked Prediction Settlement' \u2248 'Attestation-Locked Prediction Settlement' (exact name-key collision)",
-      "duplicate skipped: 'Dual-Quote Stability Insurance Market' \u2248 'Dual-Quote Stability Insurance Market' (exact name-key collision)"
+      "batch failed: bridge request ff610f8eb4f6f398 is PENDING: answer it with `lab bridge answer ff610f8eb4f6f398` (see the request + template files in /Users/zenchong/AI-Blockchain-RD-Lab/.bridge/requests), then re-run. The run is resumable by status (\u00a735)."
     ],
-    "candidate_ids": []
+    "candidate_ids": [
+      "cand-ce333ff19e9e",
+      "cand-f9682eb6fc72",
+      "cand-818a442b3d7e",
+      "cand-6b5791c8ae9c",
+      "cand-5e05dec83af0"
+    ]
   },
   "stored_ideas": [
     {
@@ -316,62 +313,32 @@
     {
       "name": "Forecast-Indexed Fee Smoothing Pool",
       "category": "monetary policy",
-      "domain": "",
+      "domain": "transaction fee markets",
       "description": "Step 1: a fee smoothing pool holds a buffer of protocol fee revenue. Step 2: a prediction market runs continuous no-limit book auctions on the proposition 'median fee next epoch exceeds threshold T', with resolution by on-chain fee statistics. Step 3: the pool's smoothing intensity \u2014 how much buffer it injects or absorbs per epoch \u2014 is keyed to the implied congestion probability from that market rather than to spot congestion. Step 4: traders who stake the forecast wrong fund the buffer that compensates traders who face the realized outcome. Step 5: the pool publishes the implied probability and its action each epoch."
     },
     {
       "name": "Prediction-Settled Hashprice Hedge Board",
       "category": "derivatives",
-      "domain": "",
+      "domain": "ai productivity",
       "description": "Step 1: compute suppliers (or AI-inference providers) post long/short positions on forward hashprice-equivalent compute price boards. Step 2: boards settle against a median of reported realized compute prices from registered suppliers, making the settlement reference a market statistic rather than a single oracle. Step 3: margin is marked to realized volatility of the settlement reference; volatile reference periods raise required margin deterministically. Step 4: suppliers whose realized revenue falls below their hedged band draw from counterparties' margin. Step 5: the board publishes the reference series and margin schedule."
     },
     {
       "name": "Consensus-Odds Liquidity Rebate",
       "category": "incentive design",
-      "domain": "",
+      "domain": "financial markets",
       "description": "Step 1: an exchange allocates a share of its taker-fee revenue to a rebate pool for makers. Step 2: alongside order books, a lightweight prediction book trades 'next-window volume will exceed V' with binary settlement from exchange-published volume. Step 3: makers earn rebate multipliers when their quoted depth persists through windows the forecast market priced as high-demand. Step 4: the multiplier schedule is published per implied probability bucket, so deep quotes during forecast demand earn more than quotes in forecast slack. Step 5: the forecast book's losing side funds part of the rebate pool."
     },
     {
       "name": "Adverse-Selection Taxed Prediction Clearing",
       "category": "market design",
-      "domain": "",
+      "domain": "financial markets",
       "description": "Step 1: a prediction-clearing venue for tokenized claims charges a spread set from realized order-flow imbalance statistics. Step 2: when realized imbalance indicates informed flow (persistent one-sided pressure with subsequent reference moves), the spread widens deterministically for the aggressing side. Step 3: proceeds from the widened spread fund a liquidity-incentive pool paid to balanced two-sided flow. Step 4: the venue publishes the imbalance statistics and the spread schedule. Step 5: reference resolution uses the market's own time-weighted mid rather than last trade, bounding settlement manipulation."
     },
     {
       "name": "Belief-Weighted Volatility Target Fund",
       "category": "portfolio mechanism",
-      "domain": "",
+      "domain": "financial markets",
       "description": "Step 1: a fund tracks a volatility target for its exposure to a basket of protocol assets. Step 2: prediction markets on future realized volatility (bucketed ranges) trade continuously; the fund holds small stakes that pay out when volatility lands in extreme buckets. Step 3: the fund's risk engine blends realized volatility with the market-implied bucket probabilities to set exposure. Step 4: when implied probability of stress buckets rises, the fund de-risks before realized volatility confirms the move, funded partly by the prediction payouts. Step 5: the blend weights and exposures are published per rebalance."
-    },
-    {
-      "name": "Disagreement-Weighted Oracle Quorum",
-      "category": "oracle design",
-      "domain": "",
-      "description": "Step 1: a stablecoin's reference exchange rate is fed by a quorum of independent oracle reporters. Step 2: each reporter also posts a stake into a disagreement market on the proposition 'the quorum median next interval deviates from my report by more than d'. Step 3: reporters whose reports are confirmed outliers against the realized median lose stake to the quorum's accuracy pool; reporters who correctly flagged their own potential deviation keep rewards. Step 4: reports are weighted by the trailing disagreement-market calibration of each reporter, down-weighting persistently mis-calibrated feeds without governance votes. Step 5: the median, weights, and calibration scores are published per interval."
-    },
-    {
-      "name": "Prediction-Fee Fallback Oracle",
-      "category": "oracle design",
-      "domain": "",
-      "description": "Step 1: a payment rail reads a primary price feed for FX conversion, with a declared staleness budget. Step 2: if the primary feed goes stale, a fallback ladder activates: first a secondary quorum, then a time-decayed prediction market quote that has been trading continuously on the same conversion rate. Step 3: each fallback level charges a progressively higher conversion fee, paid into an insurance pool for payment senders. Step 4: the prediction market quote is only used if its open interest exceeds a floor, bounding thin-book manipulation. Step 5: when the primary feed resumes, the fee ladder resets and the pool settles accrued cover."
-    },
-    {
-      "name": "Report-Bonded Forecast Fee Meter",
-      "category": "oracle design",
-      "domain": "",
-      "description": "Step 1: a rollup's fee meter is set from a feed of attested batch-fee levels. Step 2: feed reporters post bonds into a forecast market on the next interval's median batch fee, bucketed into fee bands. Step 3: the meter uses the bucket with the highest bonded probability as its operating band, and adjusts posting requirements for applications inside that band. Step 4: reporters whose bonds land in the wrong bucket forfeit them to the meter's stabilization pool, which compensates applications caught above their band. Step 5: band selection and pool balance publish per interval."
-    },
-    {
-      "name": "Attestation-Locked Prediction Settlement",
-      "category": "market design",
-      "domain": "",
-      "description": "Step 1: prediction markets on payment-flow outcomes (e.g. 'crossrail volume next window exceeds V') settle against attested aggregate flows from registered payment operators. Step 2: each operator's attestation is bound to a settlement bond, slashed on divergence from the cross-attested median. Step 3: settlement of the prediction market waits for a quorum of operator attestations plus a challenge window; any bond-backed challenger can dispute with a corrected attestation. Step 4: slashing proceeds fund the market's liquidity incentives, aligning operator honesty with market depth. Step 5: the attested series is published with each settlement."
-    },
-    {
-      "name": "Dual-Quote Stability Insurance Market",
-      "category": "stablecoin mechanism",
-      "domain": "",
-      "description": "Step 1: a stablecoin maintains primary stability via its existing mechanism (e.g. collateral + redemption). Step 2: an always-on prediction book trades the proposition 'next epoch's dual-quote peg deviation \u2014 median of two independent oracles \u2014 exceeds b', with bounded position sizes. Step 3: epoch-end fees route a share to the book's liquidity when the peg holds, so the insurance market is paid in calm regimes. Step 4: if the dual-quote deviation exceeds b, book payouts fund a peg support tranche that absorbs de-peg redemptions at the bounded rate. Step 5: the tranche refills from book liquidity incentives in the next calm regime."
     }
   ]
 }

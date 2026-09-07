@@ -25,8 +25,7 @@ from blockchain_rd_lab.combinator import (
 )
 from blockchain_rd_lab.discovery.normalize import _STOPWORDS, _TOKEN_RE
 
-_MIN_BRIDGE = 0.05  # some shared vocabulary, however small
-_MIN_SCORE = 0.30  # combined gate for emitting a hint
+_MIN_SCORE = 0.30  # combined gate for emitting a hint (§18: score-only)
 
 
 def _tokens(text: str) -> set[str]:
@@ -46,8 +45,7 @@ def _jaccard(a: frozenset[str], b: frozenset[str]) -> float:
 class MechanismCombinator:
     """Proposes economically compatible mechanism combinations (§18)."""
 
-    def __init__(self, min_bridge: float = _MIN_BRIDGE, min_score: float = _MIN_SCORE) -> None:
-        self.min_bridge = min_bridge
+    def __init__(self, min_score: float = _MIN_SCORE) -> None:
         self.min_score = min_score
 
     # -- family mining --------------------------------------------------------
@@ -114,9 +112,12 @@ class MechanismCombinator:
         for a, b in combinations(sorted(families, key=lambda f: f.family), 2):
             pairs_considered += 1
             bridge = self.bridge_strength(a, b)
-            if bridge < self.min_bridge:
-                continue
             compat = self.compatibility(a, b)
+            # §18 gate: score-only. A minimum-bridge AND-gate here would
+            # silently veto compat-only pairs the master prompt itself
+            # canonizes (Population+Stablecoin, Energy+PoS are bridge-0
+            # pairs); the anti-mashup protection is the score floor —
+            # bridge 0 AND compat 0 scores 0 and never emits.
             score = 0.5 * bridge + 0.5 * compat
             if score < self.min_score:
                 continue
@@ -128,10 +129,15 @@ class MechanismCombinator:
                     compatibility=round(compat, 4),
                     score=round(score, 4),
                     rationale=(
-                        f"vocabulary bridge ({a.family} ∩ {b.family} via shared "
-                        f"terms) plus a compatible control flow "
-                        f"({a.family} can feed {b.family}'s control surface, or "
-                        f"vice versa)"
+                        f"vocabulary bridge ({a.family} ∩ {b.family} via "
+                        f"shared terms) plus a compatible control flow "
+                        f"({a.family} can feed {b.family}'s control "
+                        f"surface, or vice versa)"
+                        if bridge > 0
+                        else f"compatible control flow ({a.family} can "
+                        f"feed {b.family}'s control surface, or vice "
+                        f"versa) with no shared vocabulary — §18 permits "
+                        f"compat-only combinations"
                     ),
                     example_a=", ".join(a.member_ids[:2]),
                     example_b=", ".join(b.member_ids[:2]),
