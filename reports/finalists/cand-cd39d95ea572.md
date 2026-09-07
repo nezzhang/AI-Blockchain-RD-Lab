@@ -79,7 +79,16 @@ Historical replay ran on synthetic anchor series (Phase 4); real-dataset histori
 
 ## Prior Art
 
-No prior-art research recorded yet (run `lab research`).
+- Queries: self-evolving LLM agent simulation verification memory
+  Class: adjacent_mechanism
+- Queries: LLM proposes code tests evidence decides agent design
+  Class: adjacent_mechanism
+- Queries: verification asymmetry LLM agent artifact evaluation
+  Class: adjacent_mechanism
+- Queries: self-evolving agent memory taxonomy episodic procedural semantic
+  Class: adjacent_mechanism
+- Queries: curriculum novelty coverage anti reward hacking agent
+  Class: adjacent_mechanism
 
 ## Competitors
 

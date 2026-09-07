@@ -2,7 +2,7 @@
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-06T16:37:44+00:00
+Generated: 2026-09-07T01:02:17+00:00
 Candidate: `cand-cd39d95ea572` (§7 recommended, rank 1)
 
 ## 1. Publication Readiness
@@ -20,7 +20,7 @@ Candidate: `cand-cd39d95ea572` (§7 recommended, rank 1)
 
 ## 3. Evidence Trail
 
-- Prior-art searches recorded: 0 (queries + sources stored, §12)
+- Prior-art searches recorded: 5 (queries + sources stored, §12)
 - Adversarial reports: 8 across ['game_theory', 'oracle', 'red_team', 'security']
 - Improvement cycle: 2 patched version(s) stored; the final version v2 was re-attacked with the patched model in the adversarial prompt (§34 retest)
 

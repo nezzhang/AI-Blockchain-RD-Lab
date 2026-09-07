@@ -996,6 +996,29 @@ def audit(
         "decision."
     )
 
+    # Curriculum guard (anti-reward-hacking coverage profile, SimSkill-
+    # inspired): does one family dominate the ranked corpus, and if so,
+    # is its evidence real? Measured from the audit's health map.
+    from blockchain_rd_lab.discovery.curriculum import CurriculumGuard
+
+    health = {str(r["candidate_id"]): str(r["verdict"]) for r in report.rows}
+    curriculum = CurriculumGuard(db, health=health).assess()
+    style = {
+        "ok": "green",
+        "warn": "yellow",
+        "degenerate": "red",
+        "starving": "red",
+    }[curriculum.verdict]
+    console.print()
+    console.print(
+        f"[{style}]curriculum: {curriculum.verdict}[/] — "
+        f"{curriculum.families_present} families present, dominant "
+        f"{curriculum.dominant_family or '—'} at "
+        f"{curriculum.dominant_share:.0%} of {curriculum.ranked_total} ranked"
+    )
+    for reason in curriculum.reasons:
+        console.print(f"  · {reason}")
+
 
 def _redteam_provider(mock_fixtures: bool, briefs):
     """Build the LLM provider; fixture mode queues one report set per brief."""

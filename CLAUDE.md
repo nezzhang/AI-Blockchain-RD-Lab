@@ -108,6 +108,17 @@ replacement.
   reports healthy | vacuous | uninterpretable (legacy cycles) —
   the census that exposes ranking evidence authored under older
   gates; §11 corrections remain the operator's decision.
+- Curriculum guard (anti-reward-hacking, SimSkill-inspired):
+  `discovery/curriculum.py` + `lab audit`'s coverage profile — one
+  deterministic measurement of whether the ranked corpus farms a
+  narrow family of trivially-passing candidates (SimSkill's
+  system-level reward-hacking analogue; the round-7 vacuum is the
+  canonical case). Verdicts: ok | warn (honest concentration) |
+  degenerate (dominant family's evidence vacuous) | starving (<3
+  families). Measures only (§2); operator decides. §12 prior-art
+  record for SimSkill (arXiv 2609.03753) stored via
+  scripts/r8_priorart_simskill.py — its 'verification asymmetry'
+  foundation is the academic form of the lab's §2.
 - Round 7 correction (evidence honesty): the 6 vacuous/cycle
   finalists + 2 replay-duplicates were SUPERSEDED with reasons
   recorded (innovation_claim lineage) and §26-archived; the 2

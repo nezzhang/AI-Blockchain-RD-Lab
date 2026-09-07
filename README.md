@@ -125,6 +125,16 @@ LLM proposes. Code tests. Evidence decides.
 - Deterministic code calculates, simulates, validates, scores, and stores results.
 - LLM output never directly controls deterministic parts of the system.
 
+Academic parallel (§12 prior art, recorded): SimSkill (arXiv 2609.03753)
+names the same epistemic stance *"verification asymmetry"* — solution
+generation is open-ended while evaluation decomposes into simple
+deterministic checks — and warns of the system-level analogue of reward
+hacking: agents farming positive verdicts on narrow families of
+trivially-passing tasks. The lab's curriculum guard
+(`lab audit`'s coverage profile, `discovery/curriculum.py`) measures
+exactly that risk, and the lab's round-7 correction (see CLAUDE.md) is
+the documented case of catching it.
+
 ## Research Loop
 
 ```text
