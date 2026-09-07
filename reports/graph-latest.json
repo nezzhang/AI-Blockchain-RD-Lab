@@ -3367,6 +3367,96 @@
       }
     },
     {
+      "id": "cand-a9f161bde5a8-attack-game_theory-intra-band-free-riding-on-divergence-gate",
+      "kind": "attack",
+      "label": "Intra-band free-riding on divergence gate",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A reporter whose band always sits marginally inside the divergence gate collects fees with zero forfeit exposure; if enough reporters do this the meter's band quality degrades to the gate boundary itself."
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-attack-game_theory-repeated-regime-shift-farming-of-the-transient",
+      "kind": "attack",
+      "label": "Repeated regime-shift farming of the transient",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "An attacker engineering alternating permanent shifts harvests the re-centering transient's stabilization payout each cycle \u2014 bounded per cycle (40/step kicker and integral caps) but positive."
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-attack-game_theory-residual-intra-band-free-riding-no-extraction-pa",
+      "kind": "attack",
+      "label": "Residual intra-band free-riding (no extraction path)",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Margin-inside bands collect fees without forfeit exposure; the residual is band-quality dilution priced by reporter fee competition, not pool extraction \u2014 unprofitable as an attack on the mechanism's funds."
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-attack-oracle-anchor-path-shaping-between-ema-speeds",
+      "kind": "attack",
+      "label": "Anchor path shaping between EMA speeds",
+      "meta": {
+        "agent": "oracle",
+        "detail": "A majority anchor provider shapes the path so the fast EMA persistently leads the slow one just beyond the band, farming the transient kicker cycle by cycle."
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-attack-oracle-residual-anchor-integrity-exposure-out-of-model",
+      "kind": "attack",
+      "label": "Residual anchor-integrity exposure (out-of-model)",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Majority anchor corruption moves the slow EMA at will; the counter escalates costs but a corrupted feed wins by definition \u2014 mitigation is feed diversification outside the model."
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-attack-red_team-intra-band-free-riding-on-divergence-gate",
+      "kind": "attack",
+      "label": "Intra-band free-riding on divergence gate",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Margin-inside bands collect fees with no exceedance exposure; band quality converges to the gate boundary."
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-attack-red_team-repeated-regime-shift-farming-of-the-transient",
+      "kind": "attack",
+      "label": "Repeated regime-shift farming of the transient",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Alternating engineered shifts harvest the bounded re-centering payout each cycle."
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-attack-red_team-residual-intra-band-free-riding-no-extraction-pa",
+      "kind": "attack",
+      "label": "Residual intra-band free-riding (no extraction path)",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Band-quality dilution priced by fee competition; no pool-drain path."
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-attack-security-parameter-boundary-squeeze",
+      "kind": "attack",
+      "label": "Parameter-boundary squeeze",
+      "meta": {
+        "agent": "security",
+        "detail": "An attacker with knowledge of band/omega calibration rides the divergence gate's edge: enough sustained divergence to collect stabilization flow while under the asymmetric-accumulation threshold (250)."
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-attack-security-residual-parameter-boundary-exposure-bounded",
+      "kind": "attack",
+      "label": "Residual parameter-boundary exposure (bounded)",
+      "meta": {
+        "agent": "security",
+        "detail": "Boundary riders face the 250-threshold asymmetric accumulation plus the counter-gated escalation; the residual exposure is bounded by the min() caps and pool floors \u2014 no unbounded path exists."
+      }
+    },
+    {
       "id": "cand-af096f7f6aa2-attack-game_theory-float-run-spiral",
       "kind": "attack",
       "label": "Float-run spiral",
@@ -6095,7 +6185,7 @@
       "label": "Sustained-Band Forecast Fee Meter",
       "meta": {
         "category": "oracle design",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "adjacent_mechanism"
       }
     },
@@ -6487,6 +6577,16 @@
         "category": "payments",
         "status": "finalist",
         "novelty_class": "insufficient_evidence"
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8",
+      "kind": "idea",
+      "label": "Divergence-Gated Fee Band Meter",
+      "meta": {
+        "category": "oracle design",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
       }
     },
     {
@@ -7049,6 +7149,14 @@
       "label": "cand-a98b49da7189 improvement v2",
       "meta": {
         "rationale": "Out-of-batch volatility for the impact check plus vested depth tenure in rebates: sequencing loses its seam and fair-weather liquidity earns less."
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-a9f161bde5a8 improvement v2",
+      "meta": {
+        "rationale": "v2 addresses intra-band free-riding and transient farming with the red team's prescription: (1) a transient-frequency counter C_t (EMA of the re-centering kicker intensity) escalates the transient drain and deflates its stabilization payout by (1 + rho_c*C_t) \u2014 repeated engineered regime shifts pay more each cycle and receive less, making shift-farming strictly net-negative; (2) the forfeit/compen"
       }
     },
     {
@@ -7783,6 +7891,22 @@
       "id": "cand-a98b49da7189-model-v2",
       "kind": "mechanism",
       "label": "cand-a98b49da7189 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-model-v1",
+      "kind": "mechanism",
+      "label": "cand-a9f161bde5a8 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-a9f161bde5a8-model-v2",
+      "kind": "mechanism",
+      "label": "cand-a9f161bde5a8 model v2",
       "meta": {
         "version": 2
       }
@@ -10141,6 +10265,72 @@
       }
     },
     {
+      "id": "sim-cand-a9f161bde5a8-montecarlo",
+      "kind": "simulation",
+      "label": "cand-a9f161bde5a8-montecarlo",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7-mc30",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-a9f161bde5a8-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-a9f161bde5a8-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-a9f161bde5a8-scenarios",
+      "kind": "simulation",
+      "label": "cand-a9f161bde5a8-scenarios",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-a9f161bde5a8-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-a9f161bde5a8-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-a9f161bde5a8-sweep",
+      "kind": "simulation",
+      "label": "cand-a9f161bde5a8-sweep",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-a9f161bde5a8-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-a9f161bde5a8-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-cand-ac8ec7f59be8-montecarlo",
       "kind": "simulation",
       "label": "cand-ac8ec7f59be8-montecarlo",
@@ -11846,6 +12036,17 @@
       }
     },
     {
+      "id": "sim-exp-77c3615226ce",
+      "kind": "simulation",
+      "label": "exp-77c3615226ce",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-81d20666db2b",
       "kind": "simulation",
       "label": "exp-81d20666db2b",
@@ -11912,12 +12113,56 @@
       }
     },
     {
+      "id": "sim-exp-b14407e42939",
+      "kind": "simulation",
+      "label": "exp-b14407e42939",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-b711a448769e",
+      "kind": "simulation",
+      "label": "exp-b711a448769e",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-bac8ff2adbf7",
+      "kind": "simulation",
+      "label": "exp-bac8ff2adbf7",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-bb4142aa974f",
       "kind": "simulation",
       "label": "exp-bb4142aa974f",
       "meta": {
         "seed": null,
         "model": "mathmodel-v1",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-c05613c1671c",
+      "kind": "simulation",
+      "label": "exp-c05613c1671c",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
         "dataset": "adversarial_patterns",
         "simulation_version": "sim-0.1.0"
       }
@@ -12557,6 +12802,15 @@
       }
     },
     {
+      "id": "source-71",
+      "kind": "source",
+      "label": "MACD indicator reference",
+      "meta": {
+        "url": "https://www.investopedia.com/terms/m/macd.asp",
+        "source_type": "web"
+      }
+    },
+    {
       "id": "source-8",
       "kind": "source",
       "label": "Fixture Source",
@@ -13011,6 +13265,24 @@
     {
       "source": "cand-a98b49da7189-improvement-v2",
       "target": "cand-a98b49da7189-attack-security-impact-check-sequencing",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8-improvement-v2",
+      "target": "cand-a9f161bde5a8-attack-game_theory-repeated-regime-shift-farming-of-the-transient",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8-improvement-v2",
+      "target": "cand-a9f161bde5a8-attack-red_team-repeated-regime-shift-farming-of-the-transient",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8-improvement-v2",
+      "target": "cand-a9f161bde5a8-attack-security-parameter-boundary-squeeze",
       "kind": "addresses",
       "meta": {}
     },
@@ -16691,6 +16963,86 @@
     {
       "source": "cand-a98b49da7189-attack-security-residual-clearing-rule-sequencing",
       "target": "cand-a98b49da7189",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8-attack-game_theory-intra-band-free-riding-on-divergence-gate",
+      "target": "cand-a9f161bde5a8",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8-attack-game_theory-repeated-regime-shift-farming-of-the-transient",
+      "target": "cand-a9f161bde5a8",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8-attack-game_theory-residual-intra-band-free-riding-no-extraction-pa",
+      "target": "cand-a9f161bde5a8",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8-attack-oracle-anchor-path-shaping-between-ema-speeds",
+      "target": "cand-a9f161bde5a8",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8-attack-oracle-residual-anchor-integrity-exposure-out-of-model",
+      "target": "cand-a9f161bde5a8",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8-attack-red_team-intra-band-free-riding-on-divergence-gate",
+      "target": "cand-a9f161bde5a8",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8-attack-red_team-repeated-regime-shift-farming-of-the-transient",
+      "target": "cand-a9f161bde5a8",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8-attack-red_team-residual-intra-band-free-riding-no-extraction-pa",
+      "target": "cand-a9f161bde5a8",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8-attack-security-parameter-boundary-squeeze",
+      "target": "cand-a9f161bde5a8",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8-attack-security-residual-parameter-boundary-exposure-bounded",
+      "target": "cand-a9f161bde5a8",
       "kind": "attacks",
       "meta": {
         "profitable": false
@@ -20465,6 +20817,30 @@
       }
     },
     {
+      "source": "cand-a9f161bde5a8",
+      "target": "source-68",
+      "kind": "cites",
+      "meta": {
+        "query": "fast slow EMA divergence gate collateral forfeiture; forecast band oracle reporter bond sustained exceedance; level re-c"
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8",
+      "target": "source-70",
+      "kind": "cites",
+      "meta": {
+        "query": "fast slow EMA divergence gate collateral forfeiture; forecast band oracle reporter bond sustained exceedance; level re-c"
+      }
+    },
+    {
+      "source": "cand-a9f161bde5a8",
+      "target": "source-71",
+      "kind": "cites",
+      "meta": {
+        "query": "fast slow EMA divergence gate collateral forfeiture; forecast band oracle reporter bond sustained exceedance; level re-c"
+      }
+    },
+    {
       "source": "cand-abb98e812f6b",
       "target": "source-24",
       "kind": "cites",
@@ -21169,6 +21545,12 @@
       "meta": {}
     },
     {
+      "source": "cand-a9f161bde5a8-improvement-v2",
+      "target": "cand-a9f161bde5a8-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-af096f7f6aa2-improvement-v2",
       "target": "cand-af096f7f6aa2-model-v2",
       "kind": "derived_from",
@@ -21721,6 +22103,18 @@
       "meta": {}
     },
     {
+      "source": "cand-a9f161bde5a8",
+      "target": "cand-a9f161bde5a8-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8",
+      "target": "cand-a9f161bde5a8-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
       "source": "cand-ac8ec7f59be8",
       "target": "cand-ac8ec7f59be8-model-v1",
       "kind": "formalizes",
@@ -22225,6 +22619,12 @@
       "meta": {}
     },
     {
+      "source": "cand-a9f161bde5a8-model-v1",
+      "target": "cand-a9f161bde5a8-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-af096f7f6aa2-model-v1",
       "target": "cand-af096f7f6aa2-model-v2",
       "kind": "patches",
@@ -22645,6 +23045,12 @@
       "meta": {}
     },
     {
+      "source": "cand-30570d32728a-model-v2",
+      "target": "sim-exp-b711a448769e",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-3132499bb565-model-v1",
       "target": "sim-cand-3132499bb565-montecarlo",
       "kind": "simulates",
@@ -22701,6 +23107,12 @@
     {
       "source": "cand-31dd017e61de-model-v2",
       "target": "sim-cand-31dd017e61de-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de-model-v2",
+      "target": "sim-exp-bac8ff2adbf7",
       "kind": "simulates",
       "meta": {}
     },
@@ -23191,6 +23603,12 @@
       "meta": {}
     },
     {
+      "source": "cand-8212f81f4f75-model-v2",
+      "target": "sim-exp-77c3615226ce",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-8359598274f7-model-v1",
       "target": "sim-cand-8359598274f7-montecarlo",
       "kind": "simulates",
@@ -23455,6 +23873,48 @@
       "meta": {}
     },
     {
+      "source": "cand-a9f161bde5a8-model-v1",
+      "target": "sim-cand-a9f161bde5a8-montecarlo",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8-model-v1",
+      "target": "sim-cand-a9f161bde5a8-scenarios",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8-model-v1",
+      "target": "sim-cand-a9f161bde5a8-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8-model-v2",
+      "target": "sim-cand-a9f161bde5a8-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8-model-v2",
+      "target": "sim-cand-a9f161bde5a8-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8-model-v2",
+      "target": "sim-cand-a9f161bde5a8-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8-model-v2",
+      "target": "sim-exp-c05613c1671c",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-ac8ec7f59be8-model-v1",
       "target": "sim-cand-ac8ec7f59be8-montecarlo",
       "kind": "simulates",
@@ -23541,6 +24001,12 @@
     {
       "source": "cand-b2b411464015-model-v2",
       "target": "sim-cand-b2b411464015-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-b2b411464015-model-v2",
+      "target": "sim-exp-b14407e42939",
       "kind": "simulates",
       "meta": {}
     },

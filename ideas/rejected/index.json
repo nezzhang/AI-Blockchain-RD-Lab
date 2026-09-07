@@ -164,6 +164,15 @@
     "novelty_class": "appears_substantially_novel"
   },
   {
+    "candidate_id": "cand-30570d32728a",
+    "name": "Sustained-Band Forecast Fee Meter",
+    "category": "oracle design",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r12 measured design flaw): measured design flaw \u2014 r11 \u00a720 pattern battery: pump_park still drains B_m +487.45 (vol_oscillation +295.76) because the band centers on a 1000-anchored reverting trend EMA: a PERMANENT level shift integrates exceedance forever (eternal mis-banding). The r11 open question ('should the band re-center on an EMA of the level?') is resolved by measurement \u2014 the successor (r12) re-centers the band via a fast/slow level-EMA divergence gate: oscillation keeps both EMAs flat (no excess), a permanent shift yields one bounded re-centering transient, then the band follows the level. The r11 evidence chain stands; the successor re-enters the funnel with the divergence-gate model.",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
     "candidate_id": "cand-06418647c270",
     "name": "Trade-Corridor Clearing Tokens",
     "category": "payments",

@@ -1,15 +1,15 @@
 # Lab Research Report
 
-Generated: 2026-09-07T13:03:04+00:00
+Generated: 2026-09-07T17:01:00+00:00
 
 ## Funnel Status (§7)
 
-- **Total candidates:** 91
+- **Total candidates:** 92
 - **failed:** 4
 - **finalist:** 14
 - **rejected:** 16
 - **scored:** 43
-- **superseded:** 14
+- **superseded:** 15
 
 ## Finalists
 
@@ -30,8 +30,8 @@ cand-b713e862acdc
 | 5 | cand-0d8552635f8c | Disagreement-Weighted Oracle Quorum | 6.3250 |
 | 6 | cand-e0c80c26b7f3 | Quote-Deviation Slashed FX Reference Feed | 6.3250 |
 | 7 | cand-ce333ff19e9e | Forecast-Indexed Fee Smoothing Pool | 6.3000 |
-| 8 | cand-73de8d339542 | Treasury-Backed Fee Parameter Governance | 6.2500 |
-| 9 | cand-30570d32728a | Sustained-Band Forecast Fee Meter | 6.2450 |
+| 8 | cand-a9f161bde5a8 | Divergence-Gated Fee Band Meter | 6.2950 |
+| 9 | cand-73de8d339542 | Treasury-Backed Fee Parameter Governance | 6.2500 |
 | 10 | cand-31dd017e61de | Trend-Drawdown Liquidity Corridor | 6.2350 |
 | 11 | cand-d371a6d7e99c | Volatility-Sized Settlement Escrow | 6.2250 |
 | 12 | cand-d5bf8d515927 | Output-Indexed Compute Swap Board | 6.2000 |

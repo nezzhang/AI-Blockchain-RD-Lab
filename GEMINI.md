@@ -116,6 +116,36 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 12 lineage-fix round (the r11 open question resolved by
+  measurement): the Sustained-Band Forecast Fee Meter's residual
+  (+487.45 pump_park / +295.76 vol_oscillation on B_m) was traced to
+  the band centering on a 1000-anchored reverting trend EMA — a
+  PERMANENT level shift integrates exceedance forever (eternal
+  mis-banding). Superseded (SCORED -> SUPERSEDED, measured-design-flaw
+  lineage) + successor Divergence-Gated Fee Band Meter (cand-a9f161bde5a8)
+  whose v1 re-centers the band on the LEVEL itself via a fast/slow
+  EMA divergence gate (a MACD construction): slow EMA T_t tracks X
+  (wide 200..3000 clip — the r11 saturation defect), fast EMA L_f leads,
+  band excess = sustained |L_f - T_t|/X beyond the band, vol-discounted
+  (omega); asymmetric integral + 1.2:0.5 forfeit/comp; bounded
+  re-centering-transient kicker preserves 13/13 scenario distinctness.
+  Red-teamed VULNERABLE (intra-band free-riding, transient farming),
+  patched to v2 with a transient-frequency counter C_t = EMA of the
+  SLOW-EMA MOVEMENT (genuine re-centering only: oscillation moves X but
+  leaves T flat, so the counter decays — the first draft keyed the
+  counter and pool terms to |X-T| and REGRESSED wash to +498, caught by
+  the smoke's wash gate before install), escalating drain
+  (rho_c*C_t*8) + deflating compensation (rho_c*C_t*4) for repeated
+  shift farmers; re-attacked: SURVIVES. Battery: 700 (r10 pred) ->
+  487.45 (r11) -> 4.68 wash / 0.0 measured zeros elsewhere (r12 v2,
+  §21 exp-c05613c1671c). Score 6.295 vs predecessor 6.245 — the first
+  lineage fix to GAIN ranking points (r11's cost the score; r12's
+  construction closed the residual without trading it away). Ops
+  lesson: pre-storing a model from a mint script then answering the
+  formalize request with it double-saves (formalize stores latest+1);
+  the r12 flow extracts the stored row's JSON, deletes the pre-§15
+  row, and lets the formalize replay be the canonical store — no
+  duplicate rows minted at all.
 - Round 11 measured-residual improvement round: the 4 finalists carrying
   the largest r10 §20 pattern-battery edges (Fee Oracle +14.75 F_l,
   Joule +351.83 J_t, Fee Meter +700 B_m, Corridor +784.99 U_t) were
