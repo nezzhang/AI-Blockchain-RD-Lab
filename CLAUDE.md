@@ -119,6 +119,46 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 16 convergence-census round (the r15 queued work + the corpus
+  honesty debt): (1) recommended-candidate triage — Demand-Index
+  Escalation Ladder's 4b heal signature ('F_t retains 0% of peak')
+  classified BY POLARITY: the premium keys PRESSURE (dX-based u_t),
+  not LEVEL — parked dX=0 is genuine pressure quiet, the r13 flaw
+  class does not apply; its W_t 33% refund retention + F_t edges
+  +0.32 stay honestly disclosed. (2) CORPUS-WIDE CENSUS under the
+  final battery (r13/r14/r15 classifications) — the convergence
+  probe that answers 'is anything profitable left undisclosed?'
+  Found TWO pre-r10 debts the era-specific remediation passes missed:
+  (a) a 913.5-cluster — 6 candidates with IDENTICAL equation sets
+  (an EMA-divergence MULTIPLIER S_t = S_t*(1+clip(alpha*(X_smooth-X)/X))
+  whose pool collapses -94% under vol_oscillation, 1000 -> 60 measured)
+  + Attestation-Locked 700 (A_b pump_unwind) + Fee-Tier Registry 494.7
+  + Vol-Adaptive Rebate 386.2 — all 9 superseded (measured-pool-collapse
+  lineage); exemplar successor Reversion-Keyed Demographic Reserve
+  (cand-47c62aa507b4) minted with the r11 primitive at additive scale:
+  reverting-EMA signal + ADDITIVE bounded flows (no multiplicative
+  ratchet to compound down-legs; 913.5 -> 0.00 vol_osc) — red-teamed
+  VULNERABLE (drift-paced flow farming — patience turns the flow cap
+  into a slow tap; anchor-band standing drain), v2 (flow re-keyed to
+  T-vs-slow-anchor SEPARATION, the r13 three-speed pattern; drain
+  routed to a disclosed beneficiary sink), SURVIVES; 6.25.
+  (b) THE DUPLICATE-CONTENT CENSUS (equation-set signature over the
+  ranked corpus): TWENTY candidates share ONE identical equation set —
+  the pre-r10 corpus block (Demographic Reserve Rule x5, Carbon-Weighted
+  Gas Fees x4, Habitat Bond Curve x4, Labor-Backed Escrow x2,
+  Commodity-Volatility x2, Population-Linked Supply, Bandwidth Futures,
+  AI-Compute Debt) — ALL scoring the 5.050 imputed-median floor, 41% of
+  ranked slots, THREE holding FINALIST positions: the r7 vacuum at 2.5x
+  scale and the hidden driver of the curriculum's 'dominant 19-21%'
+  readings. 19 superseded as duplicates (rank-order exemplar kept,
+  cand-1acbaa9de0b0); the family's honest successor already exists
+  (cand-47c62aa507b4). Corpus: 57 -> 30 ranked, 11 families, dominant
+  23%. CONVERGENCE REACHED: 0 edges above the 400 supersede threshold,
+  median worst-edge 14.3, every top residual a DISCLOSED design
+  property (allocation pass-through 299.7, mutual drawdown 256.8 —
+  insurance semantics). The lab's research loop has converged; what
+  remains is the HUMAN §27 publication decision. §21 census records
+  stored for all superseded + the successor. 395 pass.
 - Round 15 crash_park lineage round (r14 findings triaged, one real
   flaw, three honest verdicts): diagnostic on the 4 candidates the
   r14 re-measurement flagged. BANDWIDTH BOND MARKET (then the

@@ -955,6 +955,96 @@
       }
     },
     {
+      "id": "cand-47c62aa507b4-attack-game_theory-anchor-band-standing-drain",
+      "kind": "attack",
+      "label": "Anchor-band standing drain",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "The -0.02*(S-1000) mean-reversion is a standing drain on the stock whenever it sits off-anchor (whoever holds the counter-side of the flow collects)."
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-attack-game_theory-drift-paced-additive-flow-farming",
+      "kind": "attack",
+      "label": "Drift-paced additive-flow farming",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Pace a small directional level drift at the EMA's carry speed; T departs 1000 and each step's bounded flow pays toward the moved target \u2014 patience turns the flow cap into a slow tap."
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-attack-game_theory-regime-move-flow-payment-bounded-by-design",
+      "kind": "attack",
+      "label": "Regime-move flow payment (bounded, by design)",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A genuine regime move funds the flow \u2014 the intended response; bounded by the flow cap."
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-attack-oracle-feed-corruption-out-of-model",
+      "kind": "attack",
+      "label": "Feed corruption (out-of-model)",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Majority feed corruption wins by definition; feed diversification is infrastructure."
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-attack-oracle-level-feed-pacing-out-of-model",
+      "kind": "attack",
+      "label": "Level-feed pacing (out-of-model)",
+      "meta": {
+        "agent": "oracle",
+        "detail": "A majority level feed could pace drift to farm the flow \u2014 feed diversification is infrastructure."
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-attack-red_team-anchor-band-standing-drain",
+      "kind": "attack",
+      "label": "Anchor-band standing drain",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Off-anchor stock bleeds via mean reversion."
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-attack-red_team-drift-paced-additive-flow-farming",
+      "kind": "attack",
+      "label": "Drift-paced additive-flow farming",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Pace drift; harvest the bounded flow each step."
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-attack-red_team-regime-move-flow-payment-bounded-by-design",
+      "kind": "attack",
+      "label": "Regime-move flow payment (bounded, by design)",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Intended response; flow-capped."
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-attack-security-kicker-scale-accumulation-bounded",
+      "kind": "attack",
+      "label": "Kicker-scale accumulation (bounded)",
+      "meta": {
+        "agent": "security",
+        "detail": "The instantaneous kicker pays on every |dX| pulse but at 0.05 gain \u2014 battery-measured wash edge 1.62 total."
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-attack-security-sink-observation-grooming-bounded",
+      "kind": "attack",
+      "label": "Sink-observation grooming (bounded)",
+      "meta": {
+        "agent": "security",
+        "detail": "Holders can sit at the anchor to keep the sink quiet \u2014 no extraction, just fee avoidance by not being off-anchor."
+      }
+    },
+    {
       "id": "cand-4e292d1b929b-attack-game_theory-persistent-alarm-overcharge-pass-through",
       "kind": "attack",
       "label": "Persistent-alarm overcharge pass-through",
@@ -6325,7 +6415,7 @@
       "label": "Habitat Bond Curve",
       "meta": {
         "category": "ecology",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6335,7 +6425,7 @@
       "label": "Commodity-Volatility Stable Unit",
       "meta": {
         "category": "stablecoins",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6375,7 +6465,7 @@
       "label": "Carbon-Weighted Gas Fees",
       "meta": {
         "category": "energy",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6425,7 +6515,7 @@
       "label": "Attestation-Locked Prediction Settlement",
       "meta": {
         "category": "market design",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "adjacent_mechanism"
       }
     },
@@ -6435,7 +6525,7 @@
       "label": "Habitat Bond Curve",
       "meta": {
         "category": "ecology",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6445,7 +6535,7 @@
       "label": "Vol-Adaptive Market Making Rebate Curve for Compute Futures",
       "meta": {
         "category": "market microstructure",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "adjacent_mechanism"
       }
     },
@@ -6487,6 +6577,16 @@
         "category": "decentralized fx",
         "status": "rejected",
         "novelty_class": "insufficient_evidence"
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4",
+      "kind": "idea",
+      "label": "Reversion-Keyed Demographic Reserve",
+      "meta": {
+        "category": "stablecoin design",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
       }
     },
     {
@@ -6545,7 +6645,7 @@
       "label": "Bandwidth Futures Market",
       "meta": {
         "category": "network economics",
-        "status": "finalist",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6605,7 +6705,7 @@
       "label": "Demographic Reserve Rule",
       "meta": {
         "category": "monetary economics",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6615,7 +6715,7 @@
       "label": "Habitat Bond Curve",
       "meta": {
         "category": "ecology",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6635,7 +6735,7 @@
       "label": "Carbon-Weighted Gas Fees",
       "meta": {
         "category": "energy",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6665,7 +6765,7 @@
       "label": "Fee-Tier Voted Model Registry",
       "meta": {
         "category": "governance",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "adjacent_mechanism"
       }
     },
@@ -6705,7 +6805,7 @@
       "label": "Demographic Reserve Rule",
       "meta": {
         "category": "monetary economics",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6735,7 +6835,7 @@
       "label": "Carbon-Weighted Gas Fees",
       "meta": {
         "category": "energy",
-        "status": "finalist",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6755,7 +6855,7 @@
       "label": "Labor-Backed Escrow",
       "meta": {
         "category": "labor",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6815,7 +6915,7 @@
       "label": "Habitat Bond Curve",
       "meta": {
         "category": "ecology",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6855,7 +6955,7 @@
       "label": "Demographic Reserve Rule",
       "meta": {
         "category": "monetary economics",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6915,7 +7015,7 @@
       "label": "Carbon-Weighted Gas Fees",
       "meta": {
         "category": "energy",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6945,7 +7045,7 @@
       "label": "Habitat Bond Curve",
       "meta": {
         "category": "ecology",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6985,7 +7085,7 @@
       "label": "Carbon-Weighted Gas Fees",
       "meta": {
         "category": "energy",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -6995,7 +7095,7 @@
       "label": "Demographic Reserve Rule",
       "meta": {
         "category": "monetary economics",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -7045,7 +7145,7 @@
       "label": "Demographic Reserve Rule",
       "meta": {
         "category": "monetary economics",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -7095,7 +7195,7 @@
       "label": "Demographic Reserve Rule",
       "meta": {
         "category": "monetary economics",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -7105,7 +7205,7 @@
       "label": "Demographic Reserve Rule",
       "meta": {
         "category": "monetary economics",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -7125,7 +7225,7 @@
       "label": "Population-Linked Supply",
       "meta": {
         "category": "monetary economics",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -7135,7 +7235,7 @@
       "label": "Demographic Reserve Rule",
       "meta": {
         "category": "monetary economics",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -7185,7 +7285,7 @@
       "label": "Commodity-Volatility Stable Unit",
       "meta": {
         "category": "stablecoins",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -7215,7 +7315,7 @@
       "label": "Carbon-Weighted Gas Fees",
       "meta": {
         "category": "energy",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -7255,7 +7355,7 @@
       "label": "Labor-Backed Escrow",
       "meta": {
         "category": "labor",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "insufficient_evidence"
       }
     },
@@ -7313,6 +7413,14 @@
       "label": "cand-31dd017e61de improvement v2",
       "meta": {
         "rationale": "Spot-vol circuit: a single-step relative crash beyond cb=0.15 floors the drawdown state instantly (the > comparison gates a 400-scale crash term), so fast crashes reprice tranche capacity without waiting for the EMA; sustained regimes remain governed by the trend state, keeping wash-immunity."
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-47c62aa507b4 improvement v2",
+      "meta": {
+        "rationale": "v2 closes the named vectors: (1) the additive flow is re-keyed to the T-vs-slow-anchor SEPARATION (the r13 three-speed pattern) \u2014 drift paced at the EMA carry speed cancels in the slow anchor's frame, so only genuine regime moves fund the flow (drift-paced farming stops paying); (2) the mean-reversion magnitude is routed to an explicit beneficiary sink K_b \u2014 a disclosed fee with an owner, not a st"
       }
     },
     {
@@ -7847,6 +7955,22 @@
       "id": "cand-31dd017e61de-model-v2",
       "kind": "mechanism",
       "label": "cand-31dd017e61de model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-model-v1",
+      "kind": "mechanism",
+      "label": "cand-47c62aa507b4 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-47c62aa507b4-model-v2",
+      "kind": "mechanism",
+      "label": "cand-47c62aa507b4 model v2",
       "meta": {
         "version": 2
       }
@@ -9309,6 +9433,72 @@
       "id": "sim-cand-31dd017e61de-sweep-v2",
       "kind": "simulation",
       "label": "cand-31dd017e61de-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-47c62aa507b4-montecarlo",
+      "kind": "simulation",
+      "label": "cand-47c62aa507b4-montecarlo",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7-mc30",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-47c62aa507b4-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-47c62aa507b4-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-47c62aa507b4-scenarios",
+      "kind": "simulation",
+      "label": "cand-47c62aa507b4-scenarios",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-47c62aa507b4-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-47c62aa507b4-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-47c62aa507b4-sweep",
+      "kind": "simulation",
+      "label": "cand-47c62aa507b4-sweep",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-47c62aa507b4-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-47c62aa507b4-sweep-v2",
       "meta": {
         "seed": 7,
         "model": "mathmodel-v2",
@@ -12540,6 +12730,17 @@
       }
     },
     {
+      "id": "sim-exp-240129c57add",
+      "kind": "simulation",
+      "label": "exp-240129c57add",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-2c0b923738a9",
       "kind": "simulation",
       "label": "exp-2c0b923738a9",
@@ -12551,9 +12752,31 @@
       }
     },
     {
+      "id": "sim-exp-2d744b2cdaee",
+      "kind": "simulation",
+      "label": "exp-2d744b2cdaee",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-2e0e170d44be",
       "kind": "simulation",
       "label": "exp-2e0e170d44be",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-3173915eca84",
+      "kind": "simulation",
+      "label": "exp-3173915eca84",
       "meta": {
         "seed": null,
         "model": "mathmodel-v2",
@@ -12639,6 +12862,28 @@
       }
     },
     {
+      "id": "sim-exp-6081db58f108",
+      "kind": "simulation",
+      "label": "exp-6081db58f108",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-679e0a32869a",
+      "kind": "simulation",
+      "label": "exp-679e0a32869a",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-685be6421c86",
       "kind": "simulation",
       "label": "exp-685be6421c86",
@@ -12716,6 +12961,28 @@
       }
     },
     {
+      "id": "sim-exp-84161bae7a92",
+      "kind": "simulation",
+      "label": "exp-84161bae7a92",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v4",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-8591e5d2c3a5",
+      "kind": "simulation",
+      "label": "exp-8591e5d2c3a5",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-87a244763f4c",
       "kind": "simulation",
       "label": "exp-87a244763f4c",
@@ -12752,6 +13019,28 @@
       "id": "sim-exp-8f68aea2bb09",
       "kind": "simulation",
       "label": "exp-8f68aea2bb09",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-907b1b1656e4",
+      "kind": "simulation",
+      "label": "exp-907b1b1656e4",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-9132cd82dbd1",
+      "kind": "simulation",
+      "label": "exp-9132cd82dbd1",
       "meta": {
         "seed": null,
         "model": "mathmodel-v2",
@@ -12964,6 +13253,17 @@
       "meta": {
         "seed": null,
         "model": "mathmodel-v1",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-d2a764ba2ce6",
+      "kind": "simulation",
+      "label": "exp-d2a764ba2ce6",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
         "dataset": "adversarial_patterns",
         "simulation_version": "sim-0.1.0"
       }
@@ -13679,6 +13979,33 @@
       }
     },
     {
+      "id": "source-77",
+      "kind": "source",
+      "label": "Ampleforth docs",
+      "meta": {
+        "url": "https://www.ampleforth.org/",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
+      "id": "source-78",
+      "kind": "source",
+      "label": "W\u00f6rgl demurrage history",
+      "meta": {
+        "url": "https://en.wikipedia.org/wiki/Worgl",
+        "source_type": "web"
+      }
+    },
+    {
+      "id": "source-79",
+      "kind": "source",
+      "label": "Basis whitepaper archive",
+      "meta": {
+        "url": "https://basis.io/",
+        "source_type": "web"
+      }
+    },
+    {
       "id": "source-8",
       "kind": "source",
       "label": "Fixture Source",
@@ -13839,6 +14166,30 @@
     {
       "source": "cand-31dd017e61de-improvement-v2",
       "target": "cand-31dd017e61de-attack-red_team-fast-crash-capacity-lag-exploitation",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-improvement-v2",
+      "target": "cand-47c62aa507b4-attack-game_theory-anchor-band-standing-drain",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-improvement-v2",
+      "target": "cand-47c62aa507b4-attack-game_theory-drift-paced-additive-flow-farming",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-improvement-v2",
+      "target": "cand-47c62aa507b4-attack-red_team-anchor-band-standing-drain",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-improvement-v2",
+      "target": "cand-47c62aa507b4-attack-red_team-drift-paced-additive-flow-farming",
       "kind": "addresses",
       "meta": {}
     },
@@ -15649,6 +16000,86 @@
     {
       "source": "cand-31dd017e61de-attack-security-residual-anchor-integrity-exposure-beyond-the-mo",
       "target": "cand-31dd017e61de",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4-attack-game_theory-anchor-band-standing-drain",
+      "target": "cand-47c62aa507b4",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4-attack-game_theory-drift-paced-additive-flow-farming",
+      "target": "cand-47c62aa507b4",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4-attack-game_theory-regime-move-flow-payment-bounded-by-design",
+      "target": "cand-47c62aa507b4",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4-attack-oracle-feed-corruption-out-of-model",
+      "target": "cand-47c62aa507b4",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4-attack-oracle-level-feed-pacing-out-of-model",
+      "target": "cand-47c62aa507b4",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4-attack-red_team-anchor-band-standing-drain",
+      "target": "cand-47c62aa507b4",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4-attack-red_team-drift-paced-additive-flow-farming",
+      "target": "cand-47c62aa507b4",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4-attack-red_team-regime-move-flow-payment-bounded-by-design",
+      "target": "cand-47c62aa507b4",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4-attack-security-kicker-scale-accumulation-bounded",
+      "target": "cand-47c62aa507b4",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4-attack-security-sink-observation-grooming-bounded",
+      "target": "cand-47c62aa507b4",
       "kind": "attacks",
       "meta": {
         "profitable": false
@@ -21615,6 +22046,30 @@
       }
     },
     {
+      "source": "cand-47c62aa507b4",
+      "target": "source-77",
+      "kind": "cites",
+      "meta": {
+        "query": "elastic supply token oscillation collapse; population linked reserve rule; reversion keyed EMA supply adjustment"
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4",
+      "target": "source-78",
+      "kind": "cites",
+      "meta": {
+        "query": "elastic supply token oscillation collapse; population linked reserve rule; reversion keyed EMA supply adjustment"
+      }
+    },
+    {
+      "source": "cand-47c62aa507b4",
+      "target": "source-79",
+      "kind": "cites",
+      "meta": {
+        "query": "elastic supply token oscillation collapse; population linked reserve rule; reversion keyed EMA supply adjustment"
+      }
+    },
+    {
       "source": "cand-4e292d1b929b",
       "target": "source-64",
       "kind": "cites",
@@ -22689,6 +23144,12 @@
       "meta": {}
     },
     {
+      "source": "cand-47c62aa507b4-improvement-v2",
+      "target": "cand-47c62aa507b4-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-4e292d1b929b-improvement-v2",
       "target": "cand-4e292d1b929b-model-v2",
       "kind": "derived_from",
@@ -23087,6 +23548,18 @@
     {
       "source": "cand-31dd017e61de",
       "target": "cand-31dd017e61de-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4",
+      "target": "cand-47c62aa507b4-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4",
+      "target": "cand-47c62aa507b4-model-v2",
       "kind": "formalizes",
       "meta": {}
     },
@@ -23817,6 +24290,12 @@
       "meta": {}
     },
     {
+      "source": "cand-47c62aa507b4-model-v1",
+      "target": "cand-47c62aa507b4-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-4e292d1b929b-model-v1",
       "target": "cand-4e292d1b929b-model-v2",
       "kind": "patches",
@@ -24321,6 +24800,12 @@
       "meta": {}
     },
     {
+      "source": "cand-273882700f28-model-v2",
+      "target": "sim-exp-240129c57add",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-274537b6fc9c-model-v1",
       "target": "sim-cand-274537b6fc9c-montecarlo",
       "kind": "simulates",
@@ -24353,6 +24838,12 @@
     {
       "source": "cand-27e6a6ae5492-model-v2",
       "target": "sim-cand-27e6a6ae5492-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-27e6a6ae5492-model-v2",
+      "target": "sim-exp-2d744b2cdaee",
       "kind": "simulates",
       "meta": {}
     },
@@ -24461,6 +24952,48 @@
     {
       "source": "cand-31dd017e61de-model-v2",
       "target": "sim-exp-cbc8b492f8b8",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-model-v1",
+      "target": "sim-cand-47c62aa507b4-montecarlo",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-model-v1",
+      "target": "sim-cand-47c62aa507b4-scenarios",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-model-v1",
+      "target": "sim-cand-47c62aa507b4-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-model-v2",
+      "target": "sim-cand-47c62aa507b4-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-model-v2",
+      "target": "sim-cand-47c62aa507b4-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-model-v2",
+      "target": "sim-cand-47c62aa507b4-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-47c62aa507b4-model-v2",
+      "target": "sim-exp-9132cd82dbd1",
       "kind": "simulates",
       "meta": {}
     },
@@ -24951,6 +25484,12 @@
       "meta": {}
     },
     {
+      "source": "cand-771f66f9de0a-model-v2",
+      "target": "sim-exp-d2a764ba2ce6",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-7f4c2dee85e7-model-v1",
       "target": "sim-cand-7f4c2dee85e7-montecarlo",
       "kind": "simulates",
@@ -25199,6 +25738,12 @@
     {
       "source": "cand-a4e0cf125cdf-model-v1",
       "target": "sim-cand-a4e0cf125cdf-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-a4e0cf125cdf-model-v2",
+      "target": "sim-exp-679e0a32869a",
       "kind": "simulates",
       "meta": {}
     },
@@ -25467,6 +26012,12 @@
       "meta": {}
     },
     {
+      "source": "cand-afe909352ab4-model-v2",
+      "target": "sim-exp-6081db58f108",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-b2b411464015-model-v2",
       "target": "sim-cand-b2b411464015-montecarlo-v2",
       "kind": "simulates",
@@ -25607,6 +26158,12 @@
     {
       "source": "cand-c8aaf4f3244e-model-v1",
       "target": "sim-cand-c8aaf4f3244e-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-c8aaf4f3244e-model-v2",
+      "target": "sim-exp-3173915eca84",
       "kind": "simulates",
       "meta": {}
     },
@@ -25977,6 +26534,12 @@
       "meta": {}
     },
     {
+      "source": "cand-dc109b36cd60-model-v4",
+      "target": "sim-exp-84161bae7a92",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-e0c39af1bd66-model-v1",
       "target": "sim-cand-e0c39af1bd66-montecarlo",
       "kind": "simulates",
@@ -26063,6 +26626,12 @@
     {
       "source": "cand-e37c1f655db5-model-v2",
       "target": "sim-cand-e37c1f655db5-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e37c1f655db5-model-v2",
+      "target": "sim-exp-907b1b1656e4",
       "kind": "simulates",
       "meta": {}
     },
@@ -26309,6 +26878,12 @@
     {
       "source": "cand-f84653a7fb9c-model-v2",
       "target": "sim-cand-f84653a7fb9c-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-f84653a7fb9c-model-v2",
+      "target": "sim-exp-8591e5d2c3a5",
       "kind": "simulates",
       "meta": {}
     },

@@ -1,0 +1,13 @@
+{
+  "researched": 1,
+  "candidates": [
+    {
+      "candidate_id": "cand-47c62aa507b4",
+      "novelty_class": "adjacent_mechanism",
+      "coherence": 7.2,
+      "demand": 5.8,
+      "rejected": false,
+      "errors": []
+    }
+  ]
+}

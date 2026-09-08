@@ -27,11 +27,110 @@
     "novelty_class": "insufficient_evidence"
   },
   {
+    "candidate_id": "cand-6aff3509aeaf",
+    "name": "Habitat Bond Curve",
+    "category": "ecology",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-b8188890330a",
+    "name": "Habitat Bond Curve",
+    "category": "ecology",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-274537b6fc9c",
+    "name": "Habitat Bond Curve",
+    "category": "ecology",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-02bfb7635ef0",
+    "name": "Habitat Bond Curve",
+    "category": "ecology",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-a4e0cf125cdf",
+    "name": "Habitat Bond Curve",
+    "category": "ecology",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
     "candidate_id": "cand-9fba1d8cbe98",
     "name": "Habitat Bond Curve",
     "category": "ecology",
     "status": "rejected",
     "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-84b0ad6d012f",
+    "name": "Carbon-Weighted Gas Fees",
+    "category": "energy",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-6e9dedb8b844",
+    "name": "Carbon-Weighted Gas Fees",
+    "category": "energy",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-c7118453cf48",
+    "name": "Carbon-Weighted Gas Fees",
+    "category": "energy",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-0bd19afa908c",
+    "name": "Carbon-Weighted Gas Fees",
+    "category": "energy",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-afe909352ab4",
+    "name": "Carbon-Weighted Gas Fees",
+    "category": "energy",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-f84653a7fb9c",
+    "name": "Carbon-Weighted Gas Fees",
+    "category": "energy",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
     "fatal_flaws": [],
     "novelty_class": "insufficient_evidence"
   },
@@ -61,6 +160,15 @@
     "rejected_because": "SUPERSEDED (r7 evidence-quality correction): replay-duplicate of cand-1acbaa9de0b0 (AI-Compute Denominated Debt) \u2014 same description, replayed evidence; a restorage workaround, not independent ranking evidence. Successor candidate with a contract-compliant model follows.",
     "fatal_flaws": [],
     "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-771f66f9de0a",
+    "name": "Fee-Tier Voted Model Registry",
+    "category": "governance",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
   },
   {
     "candidate_id": "cand-cb4d584867ed",
@@ -126,11 +234,128 @@
     "novelty_class": "adjacent_mechanism"
   },
   {
+    "candidate_id": "cand-fb4bfe53914b",
+    "name": "Labor-Backed Escrow",
+    "category": "labor",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-986c8dd65b08",
+    "name": "Labor-Backed Escrow",
+    "category": "labor",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-273882700f28",
+    "name": "Attestation-Locked Prediction Settlement",
+    "category": "market design",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
+    "candidate_id": "cand-27e6a6ae5492",
+    "name": "Vol-Adaptive Market Making Rebate Curve for Compute Futures",
+    "category": "market microstructure",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
+    "candidate_id": "cand-81eece8ab470",
+    "name": "Demographic Reserve Rule",
+    "category": "monetary economics",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-d14a12373eb5",
+    "name": "Demographic Reserve Rule",
+    "category": "monetary economics",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-e0c39af1bd66",
+    "name": "Demographic Reserve Rule",
+    "category": "monetary economics",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-6aa7f2eaaac0",
+    "name": "Demographic Reserve Rule",
+    "category": "monetary economics",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-a9105451d386",
+    "name": "Demographic Reserve Rule",
+    "category": "monetary economics",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-c8aaf4f3244e",
+    "name": "Demographic Reserve Rule",
+    "category": "monetary economics",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-dc109b36cd60",
+    "name": "Demographic Reserve Rule",
+    "category": "monetary economics",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
     "candidate_id": "cand-9f7f38fbc39b",
     "name": "Demographic Reserve Rule",
     "category": "monetary economics",
     "status": "rejected",
     "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-e37c1f655db5",
+    "name": "Demographic Reserve Rule",
+    "category": "monetary economics",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-e33c18c7a75e",
+    "name": "Population-Linked Supply",
+    "category": "monetary economics",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
     "fatal_flaws": [],
     "novelty_class": "insufficient_evidence"
   },
@@ -153,6 +378,15 @@
     "rejected_because": "SUPERSEDED (r15 measured anchor-tug flaw (r15 crash_park diagnostic): the collateral pool is caught between 1000-mean-reversion and level-tracking magnets \u2014 under a permanent shift it settles 22% from the level, the stress deviation never closes, and the pool burns ~17.7/step forever (C_t drawn 179.24 measured) while A_t holders are relatively enriched (A/C doubles)). The successor re-centers the pool on a slow EMA of the level (single magnet): the stress deviation closes after any permanent shift, bounding the slash to the shift's transient window.",
     "fatal_flaws": [],
     "novelty_class": "appears_substantially_novel"
+  },
+  {
+    "candidate_id": "cand-58d7091eb2a7",
+    "name": "Bandwidth Futures Market",
+    "category": "network economics",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
   },
   {
     "candidate_id": "cand-db0588dfed1a",
@@ -259,6 +493,24 @@
     "category": "stablecoin routing",
     "status": "rejected",
     "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-045642b91848",
+    "name": "Commodity-Volatility Stable Unit",
+    "category": "stablecoins",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-ebab7a8e41db",
+    "name": "Commodity-Volatility Stable Unit",
+    "category": "stablecoins",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r16 duplicate census): duplicate-content census (r16): identical equation set shared by 20 ranked candidates \u2014 one copy-pasted pre-r10 model occupying 41% of ranked slots at the 5.050 imputed-score floor; the family's honest successor is cand-47c62aa507b4 (Reversion-Keyed Demographic Reserve, 6.25, worst battery edge 12.42)",
     "fatal_flaws": [],
     "novelty_class": "insufficient_evidence"
   },
