@@ -59,6 +59,21 @@ class ReleasePackageBuilder:
         top = ranked[0]
         return top.id, top.name
 
+    def _select(self, candidate_id: str | None) -> tuple[str, str] | None:
+        """The §27 subject: an explicit candidate, else the §7 rank-1.
+
+        §27 publication is the HUMAN decision — the ranking's
+        recommended candidate is the DEFAULT subject, not the only
+        one: the human may publish any finalist. An explicit
+        candidate_id is the r23 'incumbent option' path.
+        """
+        if candidate_id is not None:
+            cand = self.database.get_candidate(candidate_id)
+            if cand is None:
+                return None
+            return cand.id, cand.name
+        return self._recommended()
+
     def _adversarial_bounds(self, candidate_id: str) -> str | None:
         """The latest §20 pattern-battery record for this candidate.
 
@@ -77,8 +92,18 @@ class ReleasePackageBuilder:
             return None
         out: list[str] = []
         vacuous_n = int(latest.get("vacuous_count", 0))
+        seen_cals: set[str] = set()
         for b in latest.get("bounds", []):
             kind = str(b.get("kind", "?"))
+            cal = b.get("calibration")
+            if cal is not None:
+                # sweep variants append their calibration so 27 rows
+                # read as 8 defaults + N named recalibrations
+                tag = f"@{cal}"
+                if tag in seen_cals:
+                    continue
+                seen_cals.add(tag)
+                kind = f"{kind} {tag}"
             vacuous = bool(b.get("vacuous"))
             headline = b.get("headline")
             regime = b.get("regime_tracking") or {}
@@ -327,9 +352,11 @@ class ReleasePackageBuilder:
 
     # -- main ----------------------------------------------------------------
 
-    def build(self) -> str | None:
-        """Render the §27 release package as markdown; None if no finalist."""
-        top = self._recommended()
+    def build(self, candidate_id: str | None = None) -> str | None:
+        """Render the §27 release package as markdown; None if no
+        finalist. candidate_id overrides the §7-recommended default
+        (the r23 incumbent path — the human decides, not the rank)."""
+        top = self._select(candidate_id)
         if top is None:
             return None
         cid, name = top
@@ -346,7 +373,13 @@ class ReleasePackageBuilder:
         )
         lines.append("")
         lines.append(f"Generated: {datetime.now(UTC).isoformat(timespec='seconds')}")
-        lines.append(f"Candidate: `{cid}` (§7 recommended, rank 1)")
+        subject_note = (
+            "§7 recommended, rank 1"
+            if candidate_id is None else
+            "finalist (explicit §27 subject — the human's selection, "
+            "not the ranking's)"
+        )
+        lines.append(f"Candidate: `{cid}` ({subject_note})")
         lines.append("")
 
         # 1. readiness
@@ -487,13 +520,16 @@ class ReleasePackageBuilder:
         lines.append("")
         return "\n".join(lines)
 
-    def write(self, reports_dir: Path) -> Path | None:
+    def write(
+        self, reports_dir: Path, candidate_id: str | None = None,
+        filename: str = "release-package-latest.md",
+    ) -> Path | None:
         """Write the package to reports/release/; returns the path."""
-        content = self.build()
+        content = self.build(candidate_id)
         if content is None:
             return None
         out = reports_dir / "release"
         out.mkdir(parents=True, exist_ok=True)
-        path = out / "release-package-latest.md"
+        path = out / filename
         path.write_text(content, encoding="utf-8")
         return path

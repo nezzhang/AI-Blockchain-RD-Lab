@@ -380,3 +380,56 @@ class TestBoundsDisclosureHonesty:
         """No adversarial record → no 4b section (absence is honest)."""
         pkg = ReleasePackageBuilder(seeded_db).build()
         assert "### 4b." not in pkg
+class TestRound23PublicationOptions:
+    """r23: the three §27 options, literally buildable. The release
+    builder takes a candidate override (the incumbent path — the
+    human decides, not the rank), and the decision brief lives in
+    the reporting library (one source of truth, any pair)."""
+
+    def test_explicit_candidate_override_builds_incumbent(
+        self, seeded_db,
+    ) -> None:
+        # the incumbent option: any finalist must be a buildable §27
+        # subject, and the package must SAY it was the human's
+        # selection, not the ranking's
+        cand = _candidate("cand-rel")  # the seeded finalist
+        seeded_db.save_candidate(cand)
+        txt = ReleasePackageBuilder(seeded_db).build(
+            candidate_id="cand-rel")
+        assert txt is not None
+        assert "explicit §27 subject" in txt
+        # and the default path still says §7 recommended
+        txt2 = ReleasePackageBuilder(seeded_db).build()
+        assert txt2 is not None
+        assert "§7 recommended, rank 1" in txt2
+
+    def test_write_custom_filename_and_candidate(
+        self, seeded_db, tmp_path: Path,
+    ) -> None:
+        p = ReleasePackageBuilder(seeded_db).write(
+            tmp_path, candidate_id="cand-rel",
+            filename="release-package-incumbent.md")
+        assert p is not None
+        assert p.name == "release-package-incumbent.md"
+        assert "explicit §27 subject" in p.read_text(encoding="utf-8")
+
+    def test_decision_brief_any_pair_from_library(self, seeded_db):
+        # the brief moved r21-script -> library: any candidate pair,
+        # one source of truth; missing candidates raise, never
+        # silently render a one-sided brief
+        from blockchain_rd_lab.reporting.decision import (
+            build_decision_brief,
+        )
+        cand = _candidate("cand-rel")
+        cand2 = _candidate("cand-rel2")
+        cand2.name = "Second Test Mechanism"
+        seeded_db.save_candidate(cand)
+        seeded_db.save_candidate(cand2)
+        txt = build_decision_brief(
+            seeded_db, candidate_ids=("cand-rel", "cand-rel2"))
+        assert "cand-rel" in txt and "cand-rel2" in txt
+        with pytest.raises(ValueError, match="cand-missing"):
+            build_decision_brief(
+                seeded_db,
+                candidate_ids=("cand-rel", "cand-missing"))
+

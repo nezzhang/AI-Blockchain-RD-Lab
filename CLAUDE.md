@@ -119,6 +119,53 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 23 three-option §27 staging round ("run the remaining
+  options" — all three publication variants made literally
+  buildable; the lab stages, the human posts, §28/§41): the r21
+  brief's remaining options were publish-the-successor /
+  publish-the-incumbent / publish-both-comparatively. Running
+  them within the safety contract = building every option's
+  package so the human's §27 call is a file copy, not a research
+  project. THREE deliverables in reports/release/: (1)
+  release-package-successor.md — the §7 rank-1's §27 package
+  (the default path, restaged with the r22 sweep evidence);
+  (2) release-package-incumbent.md — the same builder with the
+  NEW candidate override (release.py build(candidate_id=...)/
+  write(...): §27 is the human's decision, so ANY finalist must
+  be a publishable subject, not only the rank-1 — the package
+  header says 'finalist (explicit §27 subject — the human's
+  selection, not the ranking's)'; (3) comparative-package.md —
+  the both-option: Part A the decision brief + Part B the
+  successor package + Part C the incumbent package, side by
+  side, PRESENTED AND NEVER RANKED (§2: the comparative scores
+  are the §19 deterministic output and the §21 measurement
+  trail; the lab ranks nothing in prose). REFACTOR: the r21
+  brief builder moved from script into the reporting library
+  (reporting/decision.py, build_decision_brief(db, pair)) — one
+  source of truth, any candidate pair; the r21 script is now a
+  thin CLI driver. Robustness caught by its own test: the brief
+  crashed on a candidate with NO stored model versions (max()
+  over an empty list — candidates pre-formalization); now
+  renders '(no stored model versions)' honestly — the brief
+  renders whatever the evidence trail holds, never assumes
+  depth. 4b CALIBRATION TAGS: the r22 sweep re-stored with
+  per-variant 'calibration' tags and the release 4b renderer
+  names them (wash_flow @wash_level=0.04, resonance @strikes=16
+  ...) — 27 rows now read as 8 defaults + 19 named
+  recalibrations, not 27 ambiguous lines; the successor's
+  honest max renders as 'wash_flow @wash_level=0.04: attacker
+  edge +32.6375' (the r14 regime-tracking design property under
+  a non-park pattern, disclosed) and the incumbent's as
+  'resonance @strikes=16 ... W_t_ratchet +29.0 re-basing in
+  transit' (arriving at the doubled window — the quiet-tail
+  layer classifying the arrival, which is why the sweep-max
+  33.25 is a transit reading, not a standing ratchet; disclosed
+  inline). Tests +3 -> 420 pass (explicit-candidate override
+  builds the incumbent package with the honest subject note;
+  custom filename+candidate write path; decision-brief library
+  accepts any pair and RAISES on missing candidates — never a
+  silently one-sided brief). Nothing was posted anywhere;
+  publication remains the human's §27 act.
 - Round 22 parameter-calibration robustness round (the r21 brief's
   own indicated next step, discharged — AND the round that caught a
   real measurement bug): the honest read of the r21 decision brief

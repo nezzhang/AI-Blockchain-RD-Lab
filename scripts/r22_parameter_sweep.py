@@ -97,13 +97,18 @@ def main() -> None:
             bounds.append(r.model_dump(mode="json"))
             if r.headline is not None:
                 edges.append(r.headline)
-        # then every off-default variant
+        # then every off-default variant, TAGGED with its calibration
+        # (the §21 record's bounds are plain dicts — the tag renders
+        # in the 4b disclosure so 27 runs read as 8 defaults + 19
+        # named recalibrations, not 27 ambiguous rows)
         for kind, variants in SWEEP.items():
             for param, value in variants:
                 spec = PatternSpec(kind=kind, steps=60)
                 setattr(spec, param, value)
                 r = bat.run_pattern(spec)
-                bounds.append(r.model_dump(mode="json"))
+                d = r.model_dump(mode="json")
+                d["calibration"] = f"{param}={value}"
+                bounds.append(d)
                 if r.headline is not None:
                     edges.append(r.headline)
         worst = max(edges) if edges else 0.0
