@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-f9682eb6fc72
 - **Category:** derivatives
 - **Overall score:** 6.3500
-- **Rank:** 2
+- **Rank:** 3
 - **Status:** finalist
 
 ## Executive Summary
@@ -78,6 +78,7 @@ This mechanism requires external data (oracle). See Security and adversarial sec
 - **exp-64a8384a998c** (seed None, sim-0.1.0): results recorded
 - **exp-732cc14c8497** (seed None, none): results recorded
 - **exp-b48b57fae110** (seed None, none): results recorded
+- **exp-237adf2ced7b** (seed None, none): results recorded
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 

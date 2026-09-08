@@ -153,6 +153,15 @@
     "novelty_class": "appears_substantially_novel"
   },
   {
+    "candidate_id": "cand-1acbaa9de0b0",
+    "name": "AI-Compute Denominated Debt",
+    "category": "financial markets",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r20 resonance): multiplicative-supply ratchet at resonance scale (r20): the r16 duplicate-block exemplar kept the family's S_t1 = S_t*(1+g_t) compounding form \u2014 every resonance recovery ramp is 13 consecutive same-sign growth steps, so each cycle compounds the supply again: measured 3583 -> 24352 -> 666931 (exponential in N), persisting under quiet. No prior pattern had consecutive same-sign recovery steps, so the r16 finding measured only the oscillation leg. The class successor (cand-47c62aa507b4, additive flows) already carries the fix lineage \u2014 no second mint (r16 exemplar discipline)",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
+  },
+  {
     "candidate_id": "cand-108293ca9f4f",
     "name": "AI-Compute Denominated Debt",
     "category": "financial markets",
@@ -603,6 +612,15 @@
     "rejected_because": "SUPERSEDED (r7 evidence-quality correction): vacuous evidence \u2014 \u00a715 battery 13/13 degenerate under today's gates (states pinned at clip bounds); v2 'clean' verdicts describe identical saturated trajectories, not stress survival. Successor candidate with a contract-compliant model follows.",
     "fatal_flaws": [],
     "novelty_class": "adjacent_mechanism"
+  },
+  {
+    "candidate_id": "cand-cd39d95ea572",
+    "name": "Vol-Weighted Fee Smoothing Escrow",
+    "category": "transaction fee markets",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r20 resonance): vol-indexed retention ratchet (r20 resonance): retention keys ABSOLUTE realized vol (eta=40 pins r_t at the 0.9 ceiling through every crafted recovery ramp) while the outflow term is 0.05*sigma weaker \u2014 every strike-recovery cycle over-retains monotonic: measured 285 -> 1321 -> 2143 -> 6479 (linear-unbounded in N), persisting under a quiet tail (1321 -> 1081); invisible to every prior pattern (depth metrics are blind to repetition). Successor cand-9200b07691c3 (separation-keyed retention, symmetric band, sign-persistence counter) SURVIVES at 6.45",
+    "fatal_flaws": [],
+    "novelty_class": "insufficient_evidence"
   },
   {
     "candidate_id": "cand-f8fc37dce6a1",

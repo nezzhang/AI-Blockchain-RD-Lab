@@ -79,6 +79,18 @@ class AttackPattern(StrEnum):
     # (same grind, no strike) — so the bound isolates exactly what the
     # TIMED STRIKE adds to a system already under grind.
     GRIND_HARVEST = "grind_harvest"
+    # The repetition choreography: strikes spaced at the model's own
+    # recovery cadence. r19 proved a SINGLE strike's re-basing
+    # transient is not an edge (it is the design re-basing) — the
+    # adversarial response is to trigger that transient REPEATEDLY:
+    # each strike-cycle pays the re-basing cost again (a kicker, a
+    # premium, a slash routed to a beneficiary) while the matched
+    # base pays it once. Depth metrics are structurally blind to
+    # repetition (the state returns to the same level each cycle);
+    # the honest measures are per-state FLOW (total movement volume
+    # — the cycling cost, disclosed) and the END DISPLACEMENT vs
+    # base (what the N strikes leave standing: the ratchet).
+    RESONANCE = "resonance"
 
 
 class PatternSpec(BaseModel):
@@ -104,6 +116,11 @@ class PatternSpec(BaseModel):
     # grind_harvest: the one-shot strike fraction applied at the end
     # of the creep phase (negative = crash into the loaded system)
     harvest_shift: float = -0.6
+    # resonance: the per-strike one-shot level move (negative = down)
+    strike_shift: float = -0.6
+    # resonance: number of strike-cycles in the window (each: strike,
+    # recovery ramp back to the anchor, quiet)
+    strikes: int = 4
 
 
 class AttackBound(BaseModel):
@@ -152,6 +169,14 @@ class AttackBound(BaseModel):
     # battery now CONFIRMS ARRIVAL NUMERICALLY at double the window
     # before a park-style excursion enters the headline; states that
     # arrive by then are disclosed here instead (design re-basing).
+    # r20 resonance: the analogous confirmation is the QUIET TAIL —
+    # append quiet steps at the anchor after the window; a window-end
+    # standing gap that CLOSES (< 25% of its window-end value) was
+    # recovery-in-progress when the last cycle landed (transit), not a
+    # ratchet. A gap that persists under quiet is a true ratchet and
+    # stays in the headline. The per-cycle cost the attacker forced
+    # is disclosed separately as _cycled volume (movement, not
+    # extraction — the r17 attribution discipline).
     in_transit: dict[str, float] = Field(default_factory=dict)
 
 
@@ -452,6 +477,36 @@ class AttackPatternBattery:
                 rows.append({"X_t": x, "dX_t": dx})
                 x += dx
             return rows
+        # RESONANCE: N strike-cycles at the model's own recovery
+        # cadence. Each cycle: one hard strike (the same -60% class
+        # move as crash_park), a deterministic ramp back to the 1000
+        # anchor (full recovery by construction — the attacker GIVES
+        # the level back so the cycle can repeat), one quiet beat
+        # (recovery complete, system settled). The matched base pays
+        # the re-basing cost ONCE; the pattern pays it N times —
+        # the bound isolates exactly what each ADDITIONAL cycle
+        # adds: a ratchet (depth metrics deepen: _drawn edge grows
+        # automatically) or nothing (full re-base each cycle).
+        if spec.kind is AttackPattern.RESONANCE:
+            x = 1000.0
+            n = max(1, spec.strikes)
+            length = spec.steps // n
+            if length < 3:  # strike + >=1 ramp + quiet beat
+                n = max(1, spec.steps // 3)
+                length = max(3, spec.steps // n)
+            for t in range(spec.steps):
+                pos = t % length
+                if pos == 0:
+                    dx = x * spec.strike_shift
+                elif pos < length - 1:
+                    # linear-to-anchor over the remaining ramp steps:
+                    # x lands exactly at 1000 on the last ramp step
+                    dx = (1000.0 - x) / (length - 1 - pos)
+                else:
+                    dx = 0.0  # the settled beat
+                rows.append({"X_t": x, "dX_t": dx})
+                x += dx
+            return rows
         raise ValueError(f"unhandled pattern: {spec.kind}")  # pragma: no cover
 
     def base_series(self, spec: PatternSpec) -> list[dict[str, float]]:
@@ -467,6 +522,33 @@ class AttackPatternBattery:
                                      spec.steps - 2))
             for t in range(spec.steps):
                 dx = x * spec.creep_rate if t < grind_until else 0.0
+                rows.append({"X_t": x, "dX_t": dx})
+                x += dx
+            return rows
+        # RESONANCE's matched base: ONE strike-cycle, placed at the
+        # SAME window position as the pattern's LAST cycle — both
+        # runs then end in the identical phase of an identical cycle
+        # (strike -> full ramp to anchor -> quiet beat), so window-end
+        # recovery-in-progress cancels in the subtraction. The bound
+        # isolates exactly what the N-1 EARLIER cycles leave standing
+        # — the ratchet — not the single-strike cost (crash_park owns
+        # that) and not the window-end lag (matched by construction).
+        if spec.kind is AttackPattern.RESONANCE:
+            x = 1000.0
+            rows = []
+            n = max(1, spec.strikes)
+            length = spec.steps // n
+            if length < 3:
+                n = max(1, spec.steps // 3)
+                length = max(3, spec.steps // n)
+            start = spec.steps - length
+            for t in range(spec.steps):
+                if t == start:
+                    dx = x * spec.strike_shift
+                elif start < t < spec.steps - 1:
+                    dx = (1000.0 - x) / (spec.steps - 1 - t)
+                else:
+                    dx = 0.0
                 rows.append({"X_t": x, "dX_t": dx})
                 x += dx
             return rows
@@ -517,6 +599,25 @@ class AttackPatternBattery:
             vals = [float(r.get(sym, 0.0)) for r in hist if sym in r]
             if vals:
                 out[f"{sym}_drawn"] = vals[0] - min(vals)
+        # r20 resonance-only metrics. Depth (_drawn) is structurally
+        # blind to repetition: a bounded per-cycle drain returns to the
+        # same level each cycle, so pattern and base reach the same
+        # min — the cycling cost is INVISIBLE to depth. The honest
+        # repetition measures: (1) per-state FLOW, the total movement
+        # volume Σ|ΔS| (the cycling the attacker forces — a COST
+        # disclosure, not P&L); (2) the window-END value (feeds the
+        # ratchet metric in run_pattern: what N strikes leave standing
+        # vs one, measured at identical final-cycle timing).
+        if spec.kind is AttackPattern.RESONANCE:
+            for sym in stock_symbols:
+                vals = [float(r.get(sym, 0.0)) for r in hist if sym in r]
+                if len(vals) >= 2:
+                    out[f"{sym}_cycled"] = sum(
+                        abs(vals[i + 1] - vals[i])
+                        for i in range(len(vals) - 1)
+                    )
+                if vals:
+                    out[f"{sym}_final"] = vals[-1]
         if "v_t" in hist[0]:
             out["mean_measured_vol"] = sum(float(r.get("v_t", 0.0)) for r in hist) / len(hist)
         return out
@@ -541,6 +642,91 @@ class AttackPatternBattery:
         bound_candidates = {
             k: v for k, v in edge.items() if v > 0 and k != "mean_measured_vol"
         }
+        in_transit: dict[str, float] = {}
+        # r20 resonance: the repetition edge. The RATCHET is |window-
+        # end value, pattern vs base| per state — the base pays its
+        # single cycle at the pattern's final-cycle position, so a
+        # full-re-basing design ends IDENTICAL in both runs (ratchet
+        # 0: each cycle's cost is paid and closed); a mechanism that
+        # ACCUMULATES across cycles (recovers less each time, draws
+        # a pool down further, accumulates enrichment) ends displaced
+        # — that standing displacement is the resonance harvest.
+        # The generic _drawn edge carries the depth ratchet (N
+        # cycles dipping DEEPER than one). The _cycled/_final metrics
+        # are the COST disclosure (movement volume forced) — they
+        # never enter the headline (the r17 attribution discipline:
+        # movement is not extraction until a consumer response pays
+        # it, and that response lands in premium_paid/_drawn/_ratchet).
+        if spec.kind is AttackPattern.RESONANCE:
+            stock_syms = [
+                v.symbol
+                for v in self.model.variables
+                if v.role == "state" and "1" not in v.symbol
+            ]
+            for sym in stock_syms:
+                pf = pm.get(f"{sym}_final")
+                bf = bm.get(f"{sym}_final")
+                if pf is None or bf is None:
+                    continue
+                ratchet = round(abs(pf - bf), 6)
+                if ratchet > 0:
+                    edge[f"{sym}_ratchet"] = ratchet
+                    bound_candidates[f"{sym}_ratchet"] = ratchet
+            for k in list(bound_candidates):
+                if k.endswith("_cycled") or k.endswith("_final"):
+                    bound_candidates.pop(k)
+            # r20 QUIET-TAIL CONFIRMATION: a window-end ratchet/_drawn
+            # gap may be recovery-in-progress (the last cycle just
+            # landed; slow states mid-recovery) — the same transit
+            # class r19 confirmed by doubling the window. Resonance's
+            # analogue: append QUIET steps at the anchor to BOTH runs
+            # (attacker leaves; the system settles) and re-measure the
+            # pattern-vs-base gap. A gap that closes below 25% of its
+            # window-end value is transit — disclosed in_transit, not
+            # an edge. A gap that persists under quiet is a standing
+            # ratchet (per-cycle damage the design failed to re-base)
+            # and stays in the headline. PIN RULE (r18, holds here):
+            # a state pinned AT a declared clip bound at window end
+            # was STOPPED there — the pin is disclosed, never transit.
+            tail_rows = [{"X_t": 1000.0, "dX_t": 0.0}] * 40
+            p_tail = MechanismSimulation(self.model).run(
+                self.craft_series(spec) + tail_rows).history
+            b_tail = MechanismSimulation(self.model).run(
+                self.base_series(spec) + tail_rows).history
+            if p_tail and b_tail:
+                clip_b = _clip_bounds(self.model)
+                for k in list(bound_candidates):
+                    if not (k.endswith("_ratchet")
+                            or k.endswith("_drawn")):
+                        continue
+                    sym = k[: -len("_ratchet")] if k.endswith(
+                        "_ratchet") else k[: -len("_drawn")]
+                    if sym not in p_tail[0] or sym not in b_tail[0]:
+                        continue
+                    w = len(self.craft_series(spec))
+                    d_end = abs(
+                        float(p_tail[w - 1].get(sym, 0.0))
+                        - float(b_tail[w - 1].get(sym, 0.0))
+                    )
+                    d_tail = abs(
+                        float(p_tail[-1].get(sym, 0.0))
+                        - float(b_tail[-1].get(sym, 0.0))
+                    )
+                    if d_end <= 0.0:
+                        continue
+                    lo, hi = clip_b.get(
+                        f"{sym}1", (float("nan"),) * 2)
+                    pinned_end = (
+                        abs(float(p_tail[w - 1].get(sym, 0.0)) - lo)
+                        < 1e-6
+                        or abs(float(p_tail[w - 1].get(sym, 0.0)) - hi)
+                        < 1e-6
+                    )
+                    if pinned_end:
+                        continue  # pin stays a disclosed edge
+                    if d_tail < 0.25 * d_end:
+                        in_transit[k] = round(d_tail, 6)
+                        bound_candidates.pop(k)
         # r14/r15 4b honesty: under park-style choreographies (crash_park;
         # pump_unwind's parked half), a regime-tracking EMA's _drawn is
         # the state FOLLOWING the moved level — the fix working, not an
@@ -562,7 +748,6 @@ class AttackPatternBattery:
         #     mispriced protection over a grinding regime is exactly
         #     what the drift attacker farms.
         drift_wedges: dict[str, float] = {}
-        in_transit: dict[str, float] = {}
         if spec.kind is AttackPattern.DRIFT_CREEP:
             pat_hist = pat.history
             base_hist = base.history
@@ -913,4 +1098,5 @@ class AttackPatternBattery:
             self.run_pattern(PatternSpec(kind=AttackPattern.CRASH_PARK, steps=steps)),
             self.run_pattern(PatternSpec(kind=AttackPattern.DRIFT_CREEP, steps=steps)),
             self.run_pattern(PatternSpec(kind=AttackPattern.GRIND_HARVEST, steps=steps)),
+            self.run_pattern(PatternSpec(kind=AttackPattern.RESONANCE, steps=steps)),
         ]

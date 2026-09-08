@@ -859,3 +859,168 @@ class TestRound19WindowRobustness:
                                       steps=60))
         assert "V_t_drawn" not in r.in_transit
         assert r.headline is not None and r.headline > 100.0
+class TestRound20Resonance:
+    """r20: the repetition choreography — a ratchet is N-cycles of
+    damage the design failed to re-base; transit is recovery in
+    progress when the last cycle lands. The quiet-tail layer
+    separates them numerically; pins never ride it back in."""
+
+    def _ratchet_model() -> MathModel:
+        """The Vol-Weighted condition: retention keys ABSOLUTE vol —
+        every ramp pins r_t at the ceiling, inflow over-accrues
+        each cycle. K keeps the run non-degenerate."""
+        return MathModel(
+            candidate_id="cand-test-ratchet",
+            variables=[
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "escrow", "symbol": "E_t", "role": "state",
+                 "units": "u", "description": "escrow"},
+                {"name": "escrow_next", "symbol": "E_t1", "role": "state",
+                 "units": "u", "description": "next escrow"},
+                {"name": "retention", "symbol": "r_t", "role": "state",
+                 "units": "frac", "description": "retention"},
+                {"name": "retention_next", "symbol": "r_t1",
+                 "role": "state", "units": "frac",
+                 "description": "next retention"},
+                {"name": "tracker", "symbol": "K_t", "role": "state",
+                 "units": "u", "description": "tracker"},
+                {"name": "tracker_next", "symbol": "K_t1", "role": "state",
+                 "units": "u", "description": "next tracker"},
+                {"name": "vol", "symbol": "sigma_t", "role": "auxiliary",
+                 "units": "frac", "description": "realized vol"},
+            ],
+            parameters=[],
+            equations=[
+                {"name": "vol",
+                 "expression": "sigma_t = abs(dX_t)/max(X_t,1.0)",
+                 "description": "realized vol"},
+                {"name": "retention",
+                 "expression": "r_t1 = clip(0.5 + 40.0*sigma_t,"
+                               " 0.1, 0.9)",
+                 "description": "absolute-vol retention (the flaw: "
+                                "every crafted ramp pins the ceiling)"},
+                {"name": "escrow",
+                 "expression": "E_t1 = clip(E_t + 10.0*r_t"
+                               " - E_t*0.005, 100.0, 100000.0)",
+                 "description": "asymmetric accrual (the flaw)"},
+                {"name": "tracker",
+                 "expression": "K_t1 = clip(K_t*(1-0.25)"
+                               " + 0.25*(X_t + 8.0*abs(dX_t)),"
+                               " 200.0, 3000.0)",
+                 "description": "tracker keeps the run non-degenerate"},
+            ],
+            assumptions=[{"statement": "test fixture assumption",
+                          "critical": True}],
+            constraints=[],
+            open_questions=["test fixture question"],
+            rationale="test fixture",
+            version=1,
+        )
+
+    def _transit_model() -> MathModel:
+        """A full-re-basing pool: each cycle's excursion closes by
+        the window end (the Relay/Fee-Sink condition — recovery in
+        progress when the last cycle lands, closes under quiet)."""
+        return MathModel(
+            candidate_id="cand-test-resonance-transit",
+            variables=[
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "pool", "symbol": "M_t", "role": "state",
+                 "units": "u", "description": "pool"},
+                {"name": "pool_next", "symbol": "M_t1", "role": "state",
+                 "units": "u", "description": "next pool"},
+                {"name": "tracker", "symbol": "K_t", "role": "state",
+                 "units": "u", "description": "tracker"},
+                {"name": "tracker_next", "symbol": "K_t1", "role": "state",
+                 "units": "u", "description": "next tracker"},
+            ],
+            parameters=[],
+            equations=[
+                {"name": "pool",
+                 "expression": "M_t1 = clip(M_t*(1-0.30)"
+                               " + 0.30*(1000.0 + 0.20*(X_t-1000.0)),"
+                               " 150.0, 3000.0)",
+                 "description": "fast reverting EMA of a bounded target "
+                                "(full re-base each cycle)"},
+                {"name": "tracker",
+                 "expression": "K_t1 = clip(K_t*(1-0.25)"
+                               " + 0.25*(X_t + 8.0*abs(dX_t)),"
+                               " 200.0, 3000.0)",
+                 "description": "tracker keeps the run non-degenerate"},
+            ],
+            assumptions=[{"statement": "test fixture assumption",
+                          "critical": True}],
+            constraints=[],
+            open_questions=["test fixture question"],
+            rationale="test fixture",
+            version=1,
+        )
+
+    def test_resonance_craft_full_recovery_each_cycle(self) -> None:
+        bat = AttackPatternBattery(TestRound20Resonance._transit_model())
+        rows = bat.craft_series(PatternSpec(
+            kind=AttackPattern.RESONANCE, steps=60, strikes=4))
+        assert len(rows) == 60
+        # each cycle: strike, linear ramp back to anchor, quiet beat
+        assert abs(rows[0]["dX_t"] - 1000.0 * -0.6) < 1e-9
+        assert abs(rows[13]["dX_t"] - (1000.0 - rows[13]["X_t"])) < 1e-6
+        # the level returns to the anchor by every cycle end
+        for cyc in (1, 2, 3, 4):
+            assert abs(rows[cyc * 15 - 1]["X_t"] - 1000.0) < 1e-6
+
+    def test_resonance_base_is_one_late_cycle(self) -> None:
+        bat = AttackPatternBattery(TestRound20Resonance._transit_model())
+        spec = PatternSpec(kind=AttackPattern.RESONANCE, steps=60,
+                           strikes=4)
+        base = bat.base_series(spec)
+        pat = bat.craft_series(spec)
+        # one strike in the base, at the pattern's LAST-cycle position
+        strikes_b = [t for t, r in enumerate(base) if r["dX_t"] < -100.0]
+        strikes_p = [t for t, r in enumerate(pat) if r["dX_t"] < -100.0]
+        assert len(strikes_b) == 1
+        assert len(strikes_p) == 4
+        assert strikes_b[0] == strikes_p[-1]
+        # both runs end quiet at the anchor: identical final phase
+        assert base[-1]["X_t"] == pat[-1]["X_t"] == 1000.0
+
+    def test_reverting_pool_transit_not_ratchet(self) -> None:
+        m = TestRound20Resonance._transit_model()
+        b = AttackPatternBattery(m)
+        r = b.run_pattern(PatternSpec(kind=AttackPattern.RESONANCE,
+                                      steps=60))
+        # the pool's window-end gap closes under quiet: transit,
+        # never a resonance edge
+        assert (r.headline or 0.0) <= 150.0
+        assert any(k.startswith("M_t") for k in r.in_transit)
+
+    def test_vol_ratchet_stays_visible(self) -> None:
+        m = TestRound20Resonance._ratchet_model()
+        b = AttackPatternBattery(m)
+        r = b.run_pattern(PatternSpec(kind=AttackPattern.RESONANCE,
+                                      steps=60))
+        # the retention ratchet accumulates and PERSISTS under
+        # quiet: it must stay a visible edge, never in_transit
+        assert "E_t_ratchet" in r.edge
+        assert "E_t_ratchet" not in r.in_transit
+        assert r.headline is not None and r.headline > 100.0
+
+    def test_cycled_metrics_disclosed_not_headlined(self) -> None:
+        m = TestRound20Resonance._ratchet_model()
+        b = AttackPatternBattery(m)
+        r = b.run_pattern(PatternSpec(kind=AttackPattern.RESONANCE,
+                                      steps=60))
+        # the movement volume the attacker forced is DISCLOSED...
+        assert "E_t_cycled" in r.pattern_metrics
+        assert r.pattern_metrics["E_t_cycled"] > 100.0
+        # ...but never enters the headline (r17 attribution: flow
+        # volume is a cost, not an extraction until a consumer
+        # pays it)
+        assert all(not k.endswith("_cycled") for k in r.bound_metrics)
+        assert all(not k.endswith("_final") for k in r.bound_metrics)
+

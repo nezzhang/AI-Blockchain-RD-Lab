@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-e0c80c26b7f3
 - **Category:** oracle design
 - **Overall score:** 6.3250
-- **Rank:** 4
+- **Rank:** 5
 - **Status:** finalist
 
 ## Executive Summary
@@ -73,6 +73,7 @@ This mechanism requires external data (oracle). See Security and adversarial sec
 - **exp-d0d42e30123f** (seed None, sim-0.1.0): results recorded
 - **exp-c8267e8b863b** (seed None, none): results recorded
 - **exp-f4379fd91942** (seed None, none): results recorded
+- **exp-11db35183ed1** (seed None, none): results recorded
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 

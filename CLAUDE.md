@@ -119,6 +119,102 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 20 resonance round (the eighth battery pattern — the
+  last claimed-but-never-measured vector class): red teams had
+  asserted "transient farming" since r12; r19 proved a SINGLE
+  strike's re-basing transient is not an edge — the adversarial
+  response is to trigger that transient REPEATEDLY. RESONANCE: N
+  strike-cycles at the model's own recovery cadence (strike ->
+  deterministic ramp back to the 1000 anchor -> quiet beat), N=4
+  default; matched base = ONE cycle placed at the pattern's
+  LAST-cycle position — identical final-cycle timing, so
+  window-end phase (slow-EMA lag, recovery-in-progress) cancels
+  and the bound isolates exactly what the N-1 earlier cycles
+  leave standing. MEASUREMENT DESIGN (three honest iterations of
+  the metric): depth (_drawn) is structurally BLIND to
+  repetition (a bounded per-cycle drain returns to the same
+  level each cycle); the honest measures are (1) per-state FLOW
+  (_cycled, total movement volume — the attacker's forced
+  cycling cost, DISCLOSED, never headlined; the r17 attribution
+  discipline: movement is not extraction until a consumer
+  response pays it) and (2) the RATCHET (window-END value
+  pattern-vs-base, per state — what N strikes leave standing vs
+  one; computed at matched final-cycle timing so full-re-basing
+  designs read 0 by construction). FINDINGS (census over 27
+  ranked, before dispositions): 2 flaws >400, 3 transit, rest
+  healthy. FLAW 1 — Vol-Weighted Fee Smoothing Escrow (FINALIST,
+  1321): vol-indexed retention ratchet — retention keys ABSOLUTE
+  vol (eta=40 pins r_t at the 0.9 ceiling through every crafted
+  ramp) while the outflow term is 0.05*sigma weaker, so every
+  cycle over-retains monotonic; 285 -> 1321 -> 2143 -> 6479
+  LINEAR-unbounded in N, persists under quiet (1321 -> 1081).
+  FLAW 2 — AI-Compute Denominated Debt (the r16 duplicate-block
+  EXEMPLAR, 3583): the multiplicative-supply r16 class at
+  resonance scale — S_t1 = S_t*(1+g_t) compounds every recovery
+  ramp (13 consecutive same-sign steps per cycle; no prior
+  pattern had them, which is why the r16 census measured only
+  the oscillation leg): 3583 -> 24352 -> 666931 EXPONENTIAL in
+  N. Both SUPERSEDED with measured lineage. The class's r16
+  successor (Reversion-Keyed Demographic Reserve, additive flows)
+  is resonance-healthy at 32.6 and carries FLAW 2's fix lineage
+  — NO second mint (one exemplar successor per flaw class, the
+  r16 discipline). FLAW 1's successor minted fresh:
+  Separation-Keyed Fee Smoothing Escrow (cand-9200b07691c3)
+  through the full §34 loop — v1 (integral-form escrow) CAUGHT
+  BY ITS OWN SMOKE at n=8 (ratchet 238: the draft had copied the
+  predecessor's integral structure — the flaw class itself);
+  rebuilt as a bounded REVERTING TARGET (buffer = anchor +
+  cap*retention, the corpus's resonance-healthy designs are all
+  EMAs of bounded targets: cycle-average convergence, N-
+  independent by construction); v1 red-teamed VULNERABLE (saw-
+  tooth retention bias: the v1 clip band [0.1, 0.9] gave up-legs
+  +0.6 but down-legs only -0.2, so zero-mean saw-teeth biased
+  the retention time-average above base); v2 symmetric band
+  delta_r±0.25 + a magnitude-keyed saw counter — honestly
+  RE-BROKEN by the re-attack (the counter's magnitude threshold
+  8 has a flat zone under it to ride, and its other side is
+  worse: a fast GENUINE grind also has large fast-EMA movement,
+  so the counter pinned at 1.0 and retention stayed flat 0.300
+  through a 3%/step sustained move — the smoothing function
+  dead exactly when genuinely needed; the smoke's genuine-lead
+  probe caught the same deadness pre-install); v3 SIGN-
+  PERSISTENCE counter (g_t*G_t, G_t the lagged separation:
+  alternation raises the counter at ANY amplitude — no
+  threshold to ride; persistence decays it — the genuine
+  response rides): measured slow-saw 0.300 = base exactly,
+  duty-cycle saw 0.300, genuine lead 0.428 -> 0.473, resonance
+  heads [0,0,0,0] at N=2/4/8/16. SURVIVES re-attack; 6.45 —
+  above its predecessor and above Demand-Index 6.40, the FIRST
+  successor to take rank 1 (5 of 11 score dimensions imputed at
+  the 5.0 offline floor, like every candidate). TRANSIT (the
+  quiet-tail layer, r19's discipline applied to repetition —
+  the r19 long-window confirmation doubles the window, which a
+  dynamically-crafted pattern cannot do; the resonance analogue
+  appends QUIET steps at the anchor to both runs and re-
+  measures the pattern-vs-base gap: closes < 25% of window-end
+  = recovery-in-progress, in_transit; persists = a true
+  ratchet, stays an edge; the r18 pin rule holds): Relay
+  Congestion Cover Mesh 362 -> 0.0, Counter-Cyclical Fee Sink
+  Insurer 310 -> 0.0, Persistent-Drift Joule Escrow 304 ->
+  111.6 (its disclosed U_s lag) — all close; the r18/r19
+  successors and the recommended candidate all healthy
+  (Symmetric-Cap 156 -> 2.5 disclosure-only U_z; wage pool 127
+  -> 69.5 disclosure-only S_w; Demand-Index 22.7 -> 0.0).
+  Corpus: 26 ranked, curriculum ok (10 families, dominant 23%);
+  census (battery attack_patterns_v7_resonance, 8 patterns, §21
+  for all 26): median worst-edge 13.8, ZERO edges >400 —
+  convergence holds under the repetition pattern; worst
+  survivors are disclosed design properties (299.7 allocation
+  pass-through, 256.8 mutual drawdown). Tests +5 (craft shape:
+  full recovery each cycle; base = one LATE cycle at the
+  pattern's final position; reverting pool transit not
+  ratchet; vol ratchet stays visible, never in_transit;
+  _cycled/_final disclosed never headlined). 415 pass. Lesson:
+  a metric blind to the attack it claims to bound is a false
+  "bounded by zero" claim in disguise — depth metrics cannot
+  see repetition; measure what the Nth cycle leaves standing
+  (ratchet), disclose what it forced (flow), and confirm
+  transit with the pattern's own rest probe (quiet tail).
 - Round 19 window-robustness audit round (the r18 lesson made
   systematic: "every window-end-only classification is window-length
   sensitive — measure the DIRECTION, not the endpoint"): ran the

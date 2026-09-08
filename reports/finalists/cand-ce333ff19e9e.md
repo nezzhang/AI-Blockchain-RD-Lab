@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-ce333ff19e9e
 - **Category:** monetary policy
 - **Overall score:** 6.3000
-- **Rank:** 5
+- **Rank:** 6
 - **Status:** finalist
 
 ## Executive Summary
@@ -75,6 +75,7 @@ No external data dependency declared. See Security and adversarial sections for 
 - **exp-92383004c71e** (seed None, sim-0.1.0): results recorded
 - **exp-f1416fa81e70** (seed None, none): results recorded
 - **exp-f8807fc05676** (seed None, none): results recorded
+- **exp-9eebfb4ca24f** (seed None, none): results recorded
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 
