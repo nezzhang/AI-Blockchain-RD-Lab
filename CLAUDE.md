@@ -119,6 +119,41 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 21 §27 decision brief: the recommended candidate changed
+  in r20 for the first time since r15 (successor 6.45 over
+  incumbent 6.40), and §27 publication is the HUMAN decision — so
+  the round's deliverable is a COMPARATIVE DECISION BRIEF assembled
+  BY CODE from stored evidence only (scripts/r21_decision_brief.py
+  → reports/release/decision-brief-r21.md; §2: no report-writer
+  LLM). It measures; it recommends NOTHING. What the assembly
+  surfaced (all from §21 records + the deterministic scorer + the
+  §33 claim-matched residual disclosure): (1) the ENTIRE 0.05 rank
+  gap is ONE dimension — oracle_feasibility (+0.50 at 10% weight),
+  a bridge-authored OracleReport judgment (r20-authored for the
+  successor vs original-era for the incumbent); every other
+  dimension is EQUAL. The rank change rests on one agent judgment,
+  not a corpus-level difference — disclosed, not smoothed (§12).
+  (2) The incumbent's stability evidence is DEEPER in census
+  generations: five battery revisions (r14 crash_park → r20
+  resonance) of flat worst-edge 0.318 — the same construction
+  measured clean under every classifier the lab shipped. The
+  successor's evidence is deeper in LOOP EXERCISE: three §15
+  battery runs + the full v1→v3 improve/retest cycle (its v2 was
+  honestly re-broken by re-attack and re-fixed). Different kinds
+  of depth; neither dominated. (3) Residual honesty runs AGAINST
+  the incumbent: the successor's final v3 carries ZERO open
+  residuals; the incumbent's final v2 carries one OPEN vector
+  (refund-cap exhaustion, arbitrageur, HYPOTHESIS) — in the brief
+  verbatim. 5 of 11 dimensions imputed at the 5.0 floor on BOTH
+  sides (offline mode; the corpus-wide §2 caveat). The brief's
+  final section hands the human the open options WITHOUT ranking
+  them: publish the successor / the incumbent / neither (accrue
+  stability evidence first) / both as a comparative package. The
+  lab measures; the human decides (§27/§28 — no token, no
+  deployment, publication only on explicit human approval). Ops
+  note: the brief builder reuses ReleasePackageBuilder's private
+  residual matcher rather than re-deriving the §33 logic — one
+  source of truth for the claim-match.
 - Round 20 resonance round (the eighth battery pattern — the
   last claimed-but-never-measured vector class): red teams had
   asserted "transient farming" since r12; r19 proved a SINGLE
