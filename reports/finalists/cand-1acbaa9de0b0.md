@@ -73,6 +73,7 @@ This mechanism requires external data (oracle). See Security and adversarial sec
 - **exp-ccf4f8274666** (seed None, sim-0.1.0): results recorded
 - **exp-835ec0410169** (seed None, sim-0.1.0): results recorded
 - **exp-424d1da9b5fa** (seed None, none): results recorded
+- **exp-4d063f4fe6a7** (seed None, none): results recorded
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 

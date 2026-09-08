@@ -143,6 +143,16 @@ class AttackBound(BaseModel):
     # an attacker edge only when another state keys off it (then it
     # also appears in the headline via the keyed wedge).
     drift_wedges: dict[str, float] = Field(default_factory=dict)
+    # Park-style patterns only: states whose window-end excursion is
+    # RE-BASING IN TRANSIT — slow pools still converging to the moved
+    # level at the measured window. The r19 window-robustness audit
+    # found the class: a pool whose 60-step compound excursion read
+    # 468 while 120/240-step windows verified full arrival (headline
+    # 0.0) — the 60-step number was transit, not extraction. The
+    # battery now CONFIRMS ARRIVAL NUMERICALLY at double the window
+    # before a park-style excursion enters the headline; states that
+    # arrive by then are disclosed here instead (design re-basing).
+    in_transit: dict[str, float] = Field(default_factory=dict)
 
 
 def _state_var_order(model: MathModel) -> list[str]:
@@ -552,6 +562,7 @@ class AttackPatternBattery:
         #     mispriced protection over a grinding regime is exactly
         #     what the drift attacker farms.
         drift_wedges: dict[str, float] = {}
+        in_transit: dict[str, float] = {}
         if spec.kind is AttackPattern.DRIFT_CREEP:
             pat_hist = pat.history
             base_hist = base.history
@@ -617,6 +628,7 @@ class AttackPatternBattery:
         if spec.kind in (AttackPattern.CRASH_PARK, AttackPattern.PUMP_UNWIND,
                          AttackPattern.GRIND_HARVEST):
             pat_hist = pat.history
+            base_hist = base.history
             x_final = float(pat_hist[-1]["X_t"]) if pat_hist else 1000.0
             # r15b shape-independent extension: a state that ENDS AT the
             # moved level (|final - X_final| < 10% of the level) followed
@@ -712,6 +724,103 @@ class AttackPatternBattery:
                                 disp[-1] / peak, 6
                             )
                             bound_candidates.pop(k)
+                # r19b (folded into the long-window confirmation
+                # below): a state whose update reads another STATE
+                # (a declared target — a pool chasing a slow EMA)
+                # does not arrive AT the level; it arrives AT its
+                # design relation to the target. The Symmetric-Cap
+                # finding: its reserve ends 50 above the demand EMA
+                # under crash_park — the SAME +50 drip offset the
+                # base run carries — the pool fully re-based to its
+                # design equilibrium, and reading the raw Z-vs-X
+                # distance as an edge over-attributed a structural
+                # offset the model has whether attacked or not.
+                # Measured at the LONG window (the 60-step offset is
+                # mid-transit): pattern_offset ≈ base_offset within
+                # 10% of the target = followed the regime.
+                # r19 LONG-WINDOW ARRIVAL CONFIRMATION: a park-style
+                # excursion still standing at the measured window may
+                # be a slow pool RE-BASING IN TRANSIT (the audit
+                # finding: 468 at 60 steps, 0.0 at 120/240 — verified
+                # arrival, transit not extraction). Before such a
+                # state enters the headline, CONFIRM NUMERICALLY at
+                # double the window: if the state has arrived by then
+                # (within 10% of the level, not pinned at a clip
+                # bound — the r18 pin rule holds at every window),
+                # it is disclosed as in-transit re-basing, not an
+                # attacker edge. Measurement, not structure: the
+                # state is re-run, not inferred.
+                if spec.kind in (
+                    AttackPattern.CRASH_PARK,
+                    AttackPattern.PUMP_UNWIND,
+                    AttackPattern.GRIND_HARVEST,
+                ):
+                    long_spec = PatternSpec(
+                        kind=spec.kind, steps=spec.steps * 2,
+                        park_at=min(spec.park_at * 2, spec.steps * 2 - 2),
+                    )
+                    long_hist = MechanismSimulation(
+                        self.model
+                    ).run(self.craft_series(long_spec)).history
+                    if long_hist:
+                        lx = float(long_hist[-1]["X_t"])
+                        lb = _clip_bounds(self.model)
+                        for k in list(bound_candidates):
+                            if not k.endswith("_drawn"):
+                                continue
+                            sym = k[: -len("_drawn")]
+                            if sym not in long_hist[0]:
+                                continue
+                            lv = float(long_hist[-1].get(sym, 0.0))
+                            lo, hi = lb.get(
+                                f"{sym}1", (float("nan"),) * 2)
+                            pinned = (
+                                abs(lv - lo) < 1e-6
+                                or abs(lv - hi) < 1e-6
+                            )
+                            arrived = (
+                                abs(lv - lx) < 0.10 * max(lx, 1.0)
+                                and not pinned
+                            )
+                            if not arrived:
+                                # r19b target-relation: arrived at its
+                                # DESIGN relation to a declared target
+                                # state instead (offset from target
+                                # matches the base run's offset)
+                                reads = _eq_symbols(self.model)
+                                state_syms_all = {
+                                    v.symbol
+                                    for v in self.model.variables
+                                    if v.role == "state"
+                                }
+                                syms = reads.get(f"{sym}1", set())
+                                tgts = [
+                                    t for t in syms
+                                    if t != sym
+                                    and t != f"{sym}1"
+                                    and t in state_syms_all
+                                    and t in long_hist[0]
+                                ]
+                                if tgts:
+                                    tgt = tgts[0]
+                                    lbase = MechanismSimulation(
+                                        self.model
+                                    ).run(
+                                        self.base_series(long_spec)
+                                    ).history
+                                    p_off = lv - float(
+                                        long_hist[-1].get(tgt, 0.0))
+                                    b_off = float(
+                                        lbase[-1].get(sym, 0.0)) - float(
+                                            lbase[-1].get(tgt, 0.0))
+                                    t_scale = max(abs(float(
+                                        long_hist[-1].get(tgt, 0.0))), 1.0)
+                                    arrived = (
+                                        abs(p_off - b_off)
+                                        < 0.10 * t_scale
+                                    )
+                            if arrived:
+                                in_transit[k] = bound_candidates.pop(k)
         # vol separation IS the bound for wash/pump (the vol premium is
         # the harvest), so include it when no stock/premium metric moved.
         if not bound_candidates and "mean_measured_vol" in edge:
@@ -787,6 +896,7 @@ class AttackPatternBattery:
             regime_tracking=regime_tracking,
             transient_recovered=transient_recovered,
             drift_wedges=drift_wedges,
+            in_transit=in_transit,
         )
 
     def run_all(self, steps: int = 60) -> list[AttackBound]:

@@ -288,6 +288,7 @@ class TestPackageStructure:
 
 def _bounds_record(
     *, regime_tracking: dict | None = None, heal_flags: dict | None = None,
+    in_transit: dict | None = None,
 ) -> dict:
     """A §20 adversarial-patterns record shaped like the r13/r14 battery:
     crash_park with an EMA excursion reclassified as regime tracking and
@@ -310,7 +311,8 @@ def _bounds_record(
                 {"kind": "crash_park", "headline": 0.0, "headline_metric": None,
                  "vacuous": False, "edge": {},
                  "regime_tracking": regime_tracking or {},
-                 "heal_flags": heal_flags or {}},
+                 "heal_flags": heal_flags or {},
+                 "in_transit": in_transit or {}},
             ],
             "vacuous_count": 0,
         },
@@ -348,6 +350,19 @@ class TestBoundsDisclosureHonesty:
         )
         # next-state symbols (…1) are dropped from the prose
         assert "`F_t1`" not in pkg
+
+    def test_in_transit_rebasing_rendered(self, seeded_db):
+        """r19: a slow pool still re-basing at window end (confirmed
+        arriving at the doubled window, or resting at its base-run
+        offset from its design target) is disclosed as re-basing in
+        transit — never published as an attacker edge, never silently
+        dropped."""
+        seeded_db.save_experiment(_bounds_record(
+            in_transit={"Z_t_drawn": 485.3},
+        ))
+        pkg = ReleasePackageBuilder(seeded_db).build()
+        assert "re-basing in transit" in pkg
+        assert "`Z_t` re-basing (+485.3 in motion at window end)" in pkg
 
     def test_zero_edge_with_tracking_shows_context(self, seeded_db):
         """crash_park headline 0.0 + regime tracking = the honest pair:

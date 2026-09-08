@@ -761,3 +761,101 @@ class TestRound18Classifications:
                 list(r.regime_tracking) + list(r.transient_recovered)
             )
         ] or "U_s_drawn" in r.regime_tracking
+
+
+class TestRound19WindowRobustness:
+    """r19: long-window arrival confirmation — transit is not
+    extraction, but pins and anchor-heals never ride it back in."""
+
+    def _transit_model() -> MathModel:
+        """A slow pool keyed to a slow level-EMA: at 60 steps it is
+        still re-basing toward the moved level (the audit finding);
+        by 120 it has arrived."""
+        return MathModel(
+            candidate_id="cand-test-transit",
+            variables=[
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "pool", "symbol": "W_t", "role": "state",
+                 "units": "u", "description": "pool"},
+                {"name": "pool_next", "symbol": "W_t1", "role": "state",
+                 "units": "u", "description": "next pool"},
+                {"name": "regime", "symbol": "T_w", "role": "state",
+                 "units": "u", "description": "slow regime EMA"},
+                {"name": "regime_next", "symbol": "T_w1", "role": "state",
+                 "units": "u", "description": "next regime EMA"},
+                {"name": "stress", "symbol": "S_w", "role": "state",
+                 "units": "u", "description": "stress memory"},
+                {"name": "stress_next", "symbol": "S_w1", "role": "state",
+                 "units": "u", "description": "next stress memory"},
+                {"name": "flow", "symbol": "f_w", "role": "auxiliary",
+                 "units": "u", "description": "capped flow"},
+            ],
+            parameters=[],
+            equations=[
+                {"name": "regime",
+                 "expression": "T_w1 = clip(T_w + 0.12*clip(X_t - T_w,"
+                               " -500.0, 500.0), 100.0, 9000.0)",
+                 "description": "slow bounded-step EMA of the level"},
+                {"name": "flow",
+                 "expression": "f_w = clip(0.15*clip(T_w - W_t,"
+                               " -3000.0, 3000.0), -60.0, 60.0)",
+                 "description": "symmetric capped flow"},
+                {"name": "stress",
+                 "expression": "S_w1 = clip(S_w*0.97 + 0.05*abs(dX_t)"
+                               " + 0.02*S_w, 0.0, 300.0)",
+                 "description": "stress memory"},
+                {"name": "pool",
+                 "expression": "W_t1 = clip(W_t + f_w"
+                               " + 6.0*abs(dX_t)/max(X_t,1.0),"
+                               " 250.0, 4000.0)",
+                 "description": "pool chases the regime EMA; floor below "
+                               "the crash level"},
+            ],
+            assumptions=[{"statement": "test fixture assumption",
+                          "critical": True}],
+            constraints=[],
+            open_questions=["test fixture question"],
+            rationale="test fixture",
+            version=1,
+        )
+
+    def test_slow_pool_transit_not_headlined(self) -> None:
+        m = TestRound19WindowRobustness._transit_model()
+        b = AttackPatternBattery(m)
+        # at the 60-step window the pool is mid re-basing...
+        r60 = b.run_pattern(PatternSpec(
+            kind=AttackPattern.GRIND_HARVEST, steps=60))
+        # ...and the long-window confirmation reclassifies it as
+        # in-transit (it arrives by 120), so it never headlines
+        assert "W_t_drawn" in r60.in_transit
+        assert r60.in_transit["W_t_drawn"] > 100.0
+        # the raw excursion is disclosed, not hidden: in_transit
+        # carries the value the state was moving by
+        r120 = b.run_pattern(PatternSpec(
+            kind=AttackPattern.GRIND_HARVEST, steps=120))
+        assert (r120.headline or 0.0) <= 150.0
+
+    def test_floor_pin_never_rides_arrival_back_in(self) -> None:
+        # the r19 honesty guard: a state PINNED at its clip bound at
+        # the long window is NOT arrived (the Productivity-Index
+        # condition) — it must stay a visible edge
+        m = TestRound18Classifications._pinned_model()
+        b = AttackPatternBattery(m)
+        r = b.run_pattern(PatternSpec(kind=AttackPattern.CRASH_PARK,
+                                      steps=60))
+        assert "Z_t_drawn" not in r.in_transit
+        assert r.headline is not None and r.headline > 400.0
+
+    def test_anchor_heal_never_rides_arrival_back_in(self) -> None:
+        # the r18 Treasury condition: V heals toward its 1000 anchor
+        # while the level parks at 400 — at the long window V is even
+        # FURTHER from the level; it must stay a visible edge
+        m = TestRound18Classifications._healing_model()
+        b = AttackPatternBattery(m)
+        r = b.run_pattern(PatternSpec(kind=AttackPattern.CRASH_PARK,
+                                      steps=60))
+        assert "V_t_drawn" not in r.in_transit
+        assert r.headline is not None and r.headline > 100.0

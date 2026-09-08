@@ -162,6 +162,15 @@
     "novelty_class": "insufficient_evidence"
   },
   {
+    "candidate_id": "cand-d5bf8d515927",
+    "name": "Output-Indexed Compute Swap Board",
+    "category": "financial markets",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
     "candidate_id": "cand-771f66f9de0a",
     "name": "Fee-Tier Voted Model Registry",
     "category": "governance",
@@ -396,6 +405,15 @@
       "Red team confirmed a profitable structural attack: Coordinate an anchor spike during a low-liquidity window so the mechanism over-expands exactly when exit is cheapest."
     ],
     "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-9af3c61061d1",
+    "name": "Productivity-Index Scaled Compute Clearing",
+    "category": "monetary economics",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
   },
   {
     "candidate_id": "cand-b713e862acdc",

@@ -129,6 +129,18 @@ class ReleasePackageBuilder:
                         "disclosed; an attacker edge only where a "
                         "measured consumer response appears above)"
                     )
+                transit = b.get("in_transit") or {}
+                if transit:
+                    ttxt = ", ".join(
+                        f"`{k.replace('_drawn', '')}` re-basing "
+                        f"({v:+.1f} in motion at window end)"
+                        for k, v in transit.items()
+                    )
+                    line += (
+                        "; re-basing in transit (confirmed arriving at "
+                        "a doubled window, or resting at its base-run "
+                        "offset from its design target): " + ttxt
+                    )
                 out.append(line)
             else:
                 metric = b.get("headline_metric", "?")
@@ -163,6 +175,16 @@ class ReleasePackageBuilder:
                     line += (
                         "; drift responsiveness lag: " + wtxt
                         + " (disclosed design lag, not an extraction)"
+                    )
+                transit = b.get("in_transit") or {}
+                if transit:
+                    ttxt = ", ".join(
+                        f"`{k.replace('_drawn', '')}` {v:+.1f}"
+                        for k, v in transit.items()
+                    )
+                    line += (
+                        "; re-basing in transit (arriving or at design "
+                        "offset): " + ttxt
                     )
                 out.append(line)
             if heals:

@@ -2,7 +2,7 @@
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-08T05:37:11+00:00
+Generated: 2026-09-08T07:14:09+00:00
 Candidate: `cand-e74d830a9479` (§7 recommended, rank 1)
 
 ## 1. Publication Readiness
@@ -37,9 +37,9 @@ The red team found **1 profitable attack surface(s)** the final model version do
 Deterministic bounds from the §20 attack-pattern battery (60-step window, matched base runs).
 - **vol_oscillation**: measured, no positive attacker edge (the state(s) drained no further under attack than base)
 - **wash_flow**: measured, no positive attacker edge (the state(s) drained no further under attack than base)
-- **pump_unwind**: attacker edge **+0.3177** on `F_t_drawn` vs a matched base run
+- **pump_unwind**: measured, no positive attacker edge (the state(s) drained no further under attack than base) — 1 state excursion(s) were reclassified as REGIME TRACKING (EMA states following the moved level: the design working, not extraction): `F_t` +0.3
 - **shock_timing**: attacker edge **+0.3182** on `F_t_drawn` vs a matched base run
-- **crash_park**: attacker edge **+0.3182** on `F_t_drawn` vs a matched base run
+- **crash_park**: measured, no positive attacker edge (the state(s) drained no further under attack than base) — 1 state excursion(s) were reclassified as REGIME TRACKING (EMA states following the moved level: the design working, not extraction): `F_t` +0.3
   - heal disclosure: after the one-shot move, protection `F_t` retains 0% of peak, `W_t` retains 33% of peak while the level stays moved
 - **drift_creep**: measured, no positive attacker edge (the state(s) drained no further under attack than base); drift responsiveness: `Q_t` lags the drifted level by +313.3 more than base, `W_t` lags the drifted level by +318.4 more than base (design lag under a grinding regime, disclosed; an attacker edge only where a measured consumer response appears above)
 - **grind_harvest**: measured, no positive attacker edge (the state(s) drained no further under attack than base)

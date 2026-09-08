@@ -116,6 +116,81 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 19 window-robustness audit round (the r18 lesson made
+  systematic: "every window-end-only classification is window-length
+  sensitive — measure the DIRECTION, not the endpoint"): ran the
+  park-style battery at 60/120/240 steps over the whole ranked corpus
+  and flagged every candidate whose edge classification FLIPS with
+  window length (>100 swing). Three flips found; the diagnosis split
+  them honestly: (1) Symmetric-Cap (the r18 successor, 340 -> 394 ->
+  0.0) — the reserve is in slow transit toward its demand-EMA target
+  at 60/120 steps; convergence verified monotone-stable at 400 steps
+  (Z-T gap 103 -> 50, the design's drip steady-state; no
+  undershoot): HONEST-NEGATIVE, the audit's control case. (2)
+  Level-Recentered (266 -> 230 -> 136) — the longer grind raises
+  BOTH pattern and matched creep-only base, so the difference
+  shrinks: the r18 matched-base subtraction working as intended. NO
+  FLAW either. (3) Productivity-Index (188 -> 400 -> 400):
+  CONFIRMED FLAW — the wage pool's clip floor 600 sits ABOVE the
+  -60% crash level 400 (the r15 bandwidth class exactly: the flow
+  IS symmetrically step-capped ±40 but the floor blocks re-basing,
+  so W_t pins at 600 under the moved regime; the 60-step window
+  read only 188 because the pool was still DRAINING toward the pin —
+  the audit's whole point: short-window-only classification had
+  hidden the pin behind a transit reading). Superseded + successor
+  Regime-Indexed Compute Wage Pool (cand-412f176470fb): single-
+  magnet bounded-step regime EMA (±500/step — battery extremes
+  reach X=706k, a value-clipped EMA saturates; three §15 smoke
+  iterations to 13/13 distinct), symmetric ±f_c flow cap with
+  floor 250 < crash 400, delivery kicker, stress memory S_w
+  disclosure-only; red-teamed VULNERABLE (flow-cap boundary
+  riding; S_w pre-loading), v2 sqrt-compressed quadratic ramp +
+  S_w pinned disclosure-only by constraint, SURVIVES; 6.255, rank
+  10 of 27. BATTERY gained TWO classification layers, both
+  NUMERIC (no structural inference, the r17 discipline): (a) the
+  r19 LONG-WINDOW ARRIVAL CONFIRMATION — a park-style excursion
+  still standing at the measured window is re-run at 2x window;
+  if the state has arrived by then (within 10% of the level, not
+  pinned — the r18 pin rule holds at every window) it is disclosed
+  as in_transit re-basing, never an attacker edge (the wage-pool
+  successor's own 60-step 468 excursion was transit, 0.0 at 120);
+  (b) the r19b TARGET-RELATIVE ARRIVAL — a state whose update
+  reads another STATE (a declared target) arrives at its DESIGN
+  RELATION to the target, not at the raw level: the Symmetric-Cap
+  reserve ends 50 above its demand EMA under crash_park — the
+  SAME +50 drip offset the base run carries (50.0 vs 47.4
+  measured) — the pool fully re-based to its design equilibrium,
+  and the raw Z-vs-X reading (485 "edge") over-attributed a
+  structural offset the model has whether attacked or not;
+  measured at the long window: pattern-vs-target offset ≈
+  base-vs-target offset within 10% of the target = followed the
+  regime. TWO ANTI-HIDING CATCHES in the same round, both caught
+  by probe before any commit: (i) the first r19b draft compared a
+  state to its OWN next-symbol (the §14 feedback puts S_t1 in the
+  history; offsets matched trivially) and re-hid the Treasury
+  anchor-heal + both floor-pins — the target must be a DIFFERENT
+  declared state; (ii) the v5 separation-predicate's self-read leak
+  (fixed r18 but its census consequences only surfaced now):
+  the Output-Indexed swap board's B_t pinned at its 500 floor at
+  ALL windows 60/120/240 (the same floor-above-crash-level class,
+  a SECOND instance) — hidden in every census since r16 by the
+  leak, exposed by the corrected rules; superseded (the audit's
+  post-fix finding; the wage-pool successor carries the family).
+  Corpus: 27 ranked, curriculum ok; census (battery
+  attack_patterns_v6_window_confirmation, §21 for all 27):
+  median worst-edge 4.0, ZERO edges >400 — convergence holds
+  under the window-robust classifier; worst survivors are
+  disclosed design properties (299.7 allocation pass-through,
+  256.8 mutual drawdown — insurance semantics). 4b renders the
+  in_transit class in both zero-edge and positive-edge variants
+  ("re-basing in transit (confirmed arriving at a doubled window,
+  or resting at its base-run offset from its design target)").
+  Recommended unchanged: Demand-Index Escalation Ladder 6.40.
+  Tests +4 (slow-pool-transit-not-headlined; floor-pin never rides
+  arrival back in; anchor-heal never rides arrival back in;
+  in-transit 4b render). 410 pass. Lesson: a classification layer
+  needs its OWN anti-hiding probe the day it ships — run the
+  superseded set through the new rule before trusting it.
 - Round 18 compound-choreography round (GRIND_HARVEST + TWO
   classification-bug fixes + 4 supersessions): added the seventh
   battery pattern — creep `grind_fraction` (0.5) of the window at
