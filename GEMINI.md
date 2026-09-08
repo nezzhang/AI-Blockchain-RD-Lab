@@ -116,6 +116,64 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 22 parameter-calibration robustness round (the r21 brief's
+  own indicated next step, discharged — AND the round that caught a
+  real measurement bug): the honest read of the r21 decision brief
+  was that the 0.05 rank change rests on ONE agent judgment
+  (oracle_feasibility) and that the evidence most directly
+  supported ACCRUE STABILITY EVIDENCE before the human §27 decision.
+  But a RE-RUN of the same battery adds nothing — the battery is
+  deterministic. What made the incumbent's five-generation record
+  was each NEW adversarial lens measuring the same construction
+  clean. The r22 lens: PARAMETER-CALIBRATION ROBUSTNESS — the
+  battery's defaults (strikes=4, amplitude=0.05, park_shift=-0.6,
+  creep_rate=0.005, ...) are PUBLIC; a real attacker does not use
+  the default calibration. The sweep (scripts/r22_parameter_sweep.py)
+  runs every pattern at its default PLUS off-default variants
+  (amplitude 0.02/0.10, wash 0.01/0.04, lag 0.1/0.4, park/harvest
+  shift -0.3/-0.9, creep 0.002/0.01, resonance strikes 2/8/16 +
+  strike_shift -0.3/-0.9) against BOTH decision candidates — the
+  successor (the stability question) and the incumbent (the control).
+  §21 records: battery 'attack_parameter_sweep', round 22, 27 runs
+  per candidate. THE SWEEP IMMEDIATELY CAUGHT ITS OWN BUG (the
+  round's real finding): the r20 RESONANCE craft WRAPPED when
+  steps%strikes != 0 — the modulo restarted cycle phase in the
+  window tail and crafted MORE strikes than labeled (steps=60:
+  labeled strikes=8 measured 9, labeled 16 measured 20): the first
+  sweep's bounds were real measurements of mislabeled calibrations.
+  No committed r20 number was affected (every r20 run used exact
+  divisions 60/2, 60/4, 120/8, 240/16); the mislabeled §21 rows were
+  purged and re-stored. Fix in the craft: distribute the remainder
+  — the first steps%strikes cycles get one extra ramp step, so
+  exactly N strike-cycles tile exactly the window (base block
+  recomputes the same tiling so final-cycle phase still cancels;
+  int coercion on strikes). Corrected RESULT: BOTH constructions
+  hold at every calibration tried — successor sweep max 32.64,
+  incumbent 33.25, ZERO edges >150 in 54 runs (both far under the
+  400 flaw threshold). The maxes are named and honest: the
+  successor's is wash_flow at the elevated 0.04 wash level (L_f
+  32.6 — the fast EMA OF the level tracking the elevated regime,
+  verified end-gap 25.5 with the base at anchor: the r14
+  regime-tracking design property surfacing under wash, a NON-park
+  pattern the classifier does not cover; disclosed, not extracted)
+  and the incumbent's is resonance at strikes=16 (W_t_ratchet 33.25
+  — the r20 ratchet metric working on the incumbent's refund pool,
+  catching what the default-calibration census read as 0.318).
+  Under recalibration the successor's worst edge is the LOWER of
+  the two. The stability question the r21 brief flagged is now
+  MEASURED: closed in the successor's favor. The r21 brief was
+  regenerated from the same script (census tables now show 2 and 7
+  records; the 'accrue stability evidence' option is marked
+  DISCHARGED with the finding; remaining options publish successor
+  / incumbent / both — §27-human). Lesson (twice-earned): a bound
+  measured only at the default calibration is a calibration
+  artifact, not a bound — AND the act of sweeping found the bug the
+  default never exercised: sweeping a choreography's parameters
+  tests the MEASUREMENT CODE as much as the model; sweep the
+  calibration the day the bound is claimed. Tests +2 (off-default
+  calibration changes the run — exact N strikes crafted at every
+  calibration incl. prime windows; sweep variants all non-vacuous
+  — never a silent None-as-zero).
 - Round 21 §27 decision brief: the recommended candidate changed
   in r20 for the first time since r15 (successor 6.45 over
   incumbent 6.40), and §27 publication is the HUMAN decision — so

@@ -1023,4 +1023,58 @@ class TestRound20Resonance:
         # pays it)
         assert all(not k.endswith("_cycled") for k in r.bound_metrics)
         assert all(not k.endswith("_final") for k in r.bound_metrics)
+class TestRound22ParameterSweep:
+    """r22: a bound measured only at the default calibration is a
+    calibration artifact — the sweep's variants must measure REAL
+    off-default attacks (never a silent re-run of the default),
+    and every variant must be non-vacuous (a real bound, not a
+    None-as-zero)."""
+
+    def test_off_default_calibration_changes_the_run(self) -> None:
+        # the sweep's honesty premise: setattr on the spec must
+        # reach the crafted series — a typo'd/ignored param would
+        # silently re-measure the default and the sweep would lie
+        m = TestRound20Resonance._ratchet_model()
+        bat = AttackPatternBattery(m)
+        default = PatternSpec(kind=AttackPattern.RESONANCE, steps=60)
+        off = PatternSpec(kind=AttackPattern.RESONANCE, steps=60)
+        off.strikes = 16
+        rows_d = bat.craft_series(default)
+        rows_o = bat.craft_series(off)
+        # the SAME window now holds 16 strike-cycles, not 4
+        strikes_d = sum(1 for r in rows_d if r["dX_t"] < -100.0)
+        strikes_o = sum(1 for r in rows_o if r["dX_t"] < -100.0)
+        assert strikes_d == 4 and strikes_o == 16
+        # and the measured bound differs (a different attack)
+        assert bat.run_pattern(default).pattern_metrics != \
+            bat.run_pattern(off).pattern_metrics
+
+    def test_sweep_variants_all_non_vacuous(self) -> None:
+        # every off-default variant of the r22 sweep measures a
+        # REAL bound against a model with dynamics: headline is a
+        # float (possibly 0.0 = measured-clean), never None
+        # (vacuous) — a vacuous variant would silently drop out of
+        # the sweep max (the worst-edge number would understate)
+        m = TestRound20Resonance._ratchet_model()
+        bat = AttackPatternBattery(m)
+        sweep: list[tuple[AttackPattern, str, float]] = [
+            (AttackPattern.VOL_OSCILLATION, "amplitude", 0.02),
+            (AttackPattern.VOL_OSCILLATION, "amplitude", 0.10),
+            (AttackPattern.WASH_FLOW, "wash_level", 0.04),
+            (AttackPattern.CRASH_PARK, "park_shift", -0.3),
+            (AttackPattern.CRASH_PARK, "park_shift", -0.9),
+            (AttackPattern.DRIFT_CREEP, "creep_rate", 0.01),
+            (AttackPattern.GRIND_HARVEST, "harvest_shift", -0.9),
+            (AttackPattern.RESONANCE, "strikes", 2.0),
+            (AttackPattern.RESONANCE, "strikes", 8.0),
+            (AttackPattern.RESONANCE, "strikes", 16.0),
+            (AttackPattern.RESONANCE, "strike_shift", -0.9),
+        ]
+        for kind, param, value in sweep:
+            spec = PatternSpec(kind=kind, steps=60)
+            setattr(spec, param, value)
+            r = bat.run_pattern(spec)
+            assert not r.vacuous, f"{kind}/{param}={value}"
+            assert r.headline is not None, f"{kind}/{param}={value}"
+            assert not r.failures, f"{kind}/{param}={value}"
 

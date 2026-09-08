@@ -489,23 +489,42 @@ class AttackPatternBattery:
         # automatically) or nothing (full re-base each cycle).
         if spec.kind is AttackPattern.RESONANCE:
             x = 1000.0
-            n = max(1, spec.strikes)
-            length = spec.steps // n
-            if length < 3:  # strike + >=1 ramp + quiet beat
+            n = max(1, int(spec.strikes))
+            # N cycles must tile the window EXACTLY. The r22 sweep
+            # caught the wrap bug: length = steps//n with steps%n
+            # != 0 let the modulo restart cycle phase in the tail
+            # and craft MORE strikes than labeled (steps=60: n=8
+            # -> 9 strikes, n=16 -> 20) — the bound measured at a
+            # mislabeled calibration. Fix: distribute the remainder
+            # — the first steps%n cycles get one extra ramp step,
+            # so exactly N strike-cycles fill the window; rows the
+            # minimum-length-3 clamp leaves at the end stay QUIET
+            # at the anchor, never a phase restart.
+            if spec.steps < 3 * n:
                 n = max(1, spec.steps // 3)
-                length = max(3, spec.steps // n)
-            for t in range(spec.steps):
-                pos = t % length
-                if pos == 0:
-                    dx = x * spec.strike_shift
-                elif pos < length - 1:
-                    # linear-to-anchor over the remaining ramp steps:
-                    # x lands exactly at 1000 on the last ramp step
-                    dx = (1000.0 - x) / (length - 1 - pos)
-                else:
-                    dx = 0.0  # the settled beat
-                rows.append({"X_t": x, "dX_t": dx})
-                x += dx
+            lengths = [
+                spec.steps // n + (1 if i < spec.steps % n else 0)
+                for i in range(n)
+            ]
+            lengths = [max(3, ln) for ln in lengths]
+            t_used = 0
+            for length in lengths:
+                for pos in range(length):
+                    if t_used >= spec.steps:
+                        break
+                    if pos == 0:
+                        dx = x * spec.strike_shift
+                    elif pos < length - 1:
+                        # linear-to-anchor over the ramp steps: x
+                        # lands exactly at 1000 on the last one
+                        dx = (1000.0 - x) / (length - 1 - pos)
+                    else:
+                        dx = 0.0  # the settled beat
+                    rows.append({"X_t": x, "dX_t": dx})
+                    x += dx
+                    t_used += 1
+            while len(rows) < spec.steps:
+                rows.append({"X_t": x, "dX_t": 0.0})
             return rows
         raise ValueError(f"unhandled pattern: {spec.kind}")  # pragma: no cover
 
@@ -536,12 +555,23 @@ class AttackPatternBattery:
         if spec.kind is AttackPattern.RESONANCE:
             x = 1000.0
             rows = []
-            n = max(1, spec.strikes)
-            length = spec.steps // n
-            if length < 3:
+            n = max(1, int(spec.strikes))
+            # the base's single cycle must sit at the pattern's LAST
+            # cycle position with the SAME length the craft gave it
+            # (the r22 remainder distribution: the last cycle is
+            # length  steps//n + 1 when steps%n > 0 — recompute the
+            # tiling identically so final-cycle phase cancels exactly)
+            if spec.steps < 3 * n:
                 n = max(1, spec.steps // 3)
-                length = max(3, spec.steps // n)
-            start = spec.steps - length
+            lengths = [
+                spec.steps // n + (1 if i < spec.steps % n else 0)
+                for i in range(n)
+            ]
+            lengths = [max(3, ln) for ln in lengths]
+            last = lengths[-1]
+            # rows the length-3 clamp may leave before the final
+            # cycle stay quiet at the anchor
+            start = spec.steps - last
             for t in range(spec.steps):
                 if t == start:
                     dx = x * spec.strike_shift

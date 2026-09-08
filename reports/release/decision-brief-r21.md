@@ -2,7 +2,7 @@
 
 Assembled by code from stored evidence only (§2 — no report-writer LLM). Publication is the HUMAN decision (§27); this brief compares the two candidates that decision currently spans. It recommends NOTHING — it measures.
 
-Generated: 2026-09-08T11:37:57+00:00
+Generated: 2026-09-08T11:57:42+00:00
 
 ## 1. The Decision Context
 
@@ -35,15 +35,16 @@ Deterministic scoring, 11 weighted dimensions; missing dimensions imputed at the
 
 ## 3. Measured Attack Surface (§20 battery history)
 
-Every stored census record per candidate, across battery generations (the §21 experiment trail). A flat worst-edge across generations is stability: the same construction measuring clean under every classifier revision the lab shipped. A single observation is one measurement, not stability.
+Every stored census record per candidate, across battery generations (the §21 experiment trail). A flat worst-edge across generations is stability: the same construction measuring clean under every classifier revision the lab shipped. The r22 PARAMETER-CALIBRATION sweep extended the record: every pattern re-run at off-default attacker calibrations (deeper/shallower strikes, more/fewer resonance cycles, faster/slower creep, ± amplitude — 27 runs per candidate) — a bound that holds only at the default calibration is a calibration artifact, not a bound.
 
-**Separation-Keyed Fee Smoothing Escrow** — 1 census record(s):
+**Separation-Keyed Fee Smoothing Escrow** — 2 census record(s):
 
 | Round | Battery | Worst measured edge |
 |---|---|---|
 | 20 | `attack_patterns_v7_resonance` | 5.1737 |
+| 22 | `attack_parameter_sweep` | 32.6375 |
 
-**Demand-Index Escalation Ladder for FX Batches** — 6 census record(s):
+**Demand-Index Escalation Ladder for FX Batches** — 7 census record(s):
 
 | Round | Battery | Worst measured edge |
 |---|---|---|
@@ -52,9 +53,10 @@ Every stored census record per candidate, across battery generations (the §21 e
 | 18 | `attack_patterns_v5_grind_harvest` | 0.3182 |
 | 19 | `attack_patterns_v6_window_confirmation` | 0.3182 |
 | 20 | `attack_patterns_v7_resonance` | 0.3182 |
+| 22 | `attack_parameter_sweep` | 63.8580 |
 | pre | `attack_patterns` | 0.0000 |
 
-All edges are far under the 400 supersede threshold (both candidates classify healthy). The difference is evidence DEPTH, not measured exposure.
+All edges are far under the 400 supersede threshold (both candidates classify healthy at every calibration the sweep tried; zero edges >150 in the whole 54-run sweep). The difference is evidence DEPTH in generations, not measured exposure.
 
 ## 4. Residual Attacks on the Final Model Versions (§12)
 
@@ -79,6 +81,6 @@ What the evidence supports, without recommendation:
 
 - The successor scores higher (6.45 vs 6.40) and carries zero open residuals against its final version; the incumbent carries one OPEN residual (refund-cap exhaustion).
 - The ENTIRE 0.05 gap is one dimension: oracle_feasibility (+0.50 at 10% weight). Every other dimension is equal. That dimension is a bridge-authored OracleReport (the successor's was authored in r20's retest loop, the incumbent's in its original era) — the rank change rests on one agent judgment, not a corpus-level difference. §12: disclosed, not smoothed.
-- The incumbent's evidence is DEEPER in CENSUS generations: five battery revisions of flat worst-edge (0.318) — measured stability under every classifier the lab shipped. The successor's evidence is deeper in LOOP EXERCISE: three §15 battery runs and a full v1→v3 improve/retest cycle, vs the incumbent's one run. Different kinds of depth; neither is dominated.
+- The incumbent's evidence is DEEPER in CENSUS generations: five battery revisions of flat worst-edge (0.318) — measured stability under every classifier the lab shipped. The successor's evidence is deeper in LOOP EXERCISE: three §15 battery runs and a full v1→v3 improve/retest cycle, vs the incumbent's one run. Different kinds of depth; neither is dominated. The r22 parameter-calibration sweep ADDED the successor's second generation and re-measured the incumbent as control: both constructions hold at every off-default attacker calibration tried (successor sweep max 32.6, incumbent 63.9, zero edges >150 in 54 runs) — and under recalibration the successor's worst edge is the LOWER of the two. The stability question the r21 brief flagged is now measured: closed in the successor's favor.
 - The 0.05 score gap is smaller than the imputation floor's influence on either side (5 of the successor's 11 dimensions are imputed).
-- Options the evidence leaves open (all §27-human): publish the successor; publish the incumbent; publish neither and let the successor accrue stability evidence (one more census round under the same battery) before deciding; publish both as a comparative package. The lab measures; the human decides.
+- Options the evidence leaves open (all §27-human): publish the successor; publish the incumbent; publish both as a comparative package. (The 'accrue stability evidence first' option is now discharged — the r22 sweep measured what it asked for.) The lab measures; the human decides.
