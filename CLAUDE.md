@@ -119,6 +119,50 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 15 crash_park lineage round (r14 findings triaged, one real
+  flaw, three honest verdicts): diagnostic on the 4 candidates the
+  r14 re-measurement flagged. BANDWIDTH BOND MARKET (then the
+  RECOMMENDED candidate): CONFIRMED FLAW — the collateral pool is
+  caught between TWO MAGNETS (0.07*(1000-C) anchor reversion +
+  0.03*(X-1000) level tracking); under a permanent shift it settles at
+  the tug-of-war equilibrium 22% from the level, the stress deviation
+  NEVER closes, and the pool burns chi*s*300 (~17.7/step) FOREVER
+  while A_t holders are relatively enriched (A/C doubles; measured
+  C_t drawn 179.24, standing at equilibrium). Superseded (FINALIST ->
+  SUPERSEDED — the lab supersedes its own #1 on measured evidence) +
+  successor Level-Recentered Bandwidth Bond Market (cand-6fea4a5332ca)
+  with a SINGLE-MAGNET pool: slow EMA of the level, stress keyed to
+  the closing deviation, slash bounded to the re-basing transient.
+  Floor lesson caught by the smoke: pool floor 450 was ABOVE the -60%
+  crash level (400) — the clip re-created the eternal burn through
+  the back door; floor 250 lets the pool reach the level (late-window
+  stress 0.0000 measured). JOULE: CORRECT behavior (alarm persists
+  through the re-base window then heals on GENUINE re-base; Q_c spend
+  is the credit working) — no supersede. FX MATCHING: M/V crash-step
+  excursion fully recovers under park (throughput index, not a pool)
+  — battery now classifies RECOVERED excursions (<25% of peak at
+  parked window end) as TRANSIENT (headline 96 -> 0.14). CORRIDOR:
+  r13 verdict stands; T_t excursion reclassified transient (headline
+  108 -> U_t 73, the honest standing edge). Battery classification
+  gained the r15b numeric level-arrival check (|final - X_final| <
+  10% of level = followed the regime; shape-independent — the r14
+  shape filter missed the successor pool because it reads a stress
+  aux) + the transient-recovery check; release 4b renders both
+  (REGIME TRACKING / TRANSIENT context lines). Successor red-teamed
+  VULNERABLE (escrow-kicker pulse farming — the r13 family applied to
+  allocation weight; re-basing-window slash dumping), v2-patched
+  (kicker re-keyed to fast-vs-pool EMA separation; slash AGE-WEIGHTED
+  via a post-age state so window-dumped posts pay their own cost),
+  SURVIVES re-attack; scored 6.26 vs predecessor 6.525 (honest
+  patching cost on the former #1). New recommended: Demand-Index
+  Escalation Ladder 6.40. Successor's own disclosed residuals:
+  crash_park A_t 299.7 (allocation contract passing through to
+  capacity — the disclosed design choice) + P_a tenure-denial under
+  oscillation (a small honest griefing vector, queued for a future
+  round). §21 battery records re-stored for all 4 under the final
+  r15 battery. Tests +2 (transient-recovery classification, standing
+  drain never hidden — the honesty fix must not become a hiding
+  place). 395 pass.
 - Round 14 4b-disclosure honesty fix: the §20 battery's crash_park
   headline was carried ENTIRELY by EMA-of-level states following the
   moved level (600 = the fix from r12/r13 WORKING), which the §27

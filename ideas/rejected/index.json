@@ -146,6 +146,15 @@
     "novelty_class": "insufficient_evidence"
   },
   {
+    "candidate_id": "cand-b713e862acdc",
+    "name": "Bandwidth Bond Market for Relay Peers",
+    "category": "network economics",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r15 measured anchor-tug flaw (r15 crash_park diagnostic): the collateral pool is caught between 1000-mean-reversion and level-tracking magnets \u2014 under a permanent shift it settles 22% from the level, the stress deviation never closes, and the pool burns ~17.7/step forever (C_t drawn 179.24 measured) while A_t holders are relatively enriched (A/C doubles)). The successor re-centers the pool on a slow EMA of the level (single magnet): the stress deviation closes after any permanent shift, bounding the slash to the shift's transient window.",
+    "fatal_flaws": [],
+    "novelty_class": "appears_substantially_novel"
+  },
+  {
     "candidate_id": "cand-db0588dfed1a",
     "name": "Bandwidth Futures Market",
     "category": "network economics",

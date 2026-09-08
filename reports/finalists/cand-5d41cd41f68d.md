@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-5d41cd41f68d
 - **Category:** settlement guarantees
 - **Overall score:** 5.6000
-- **Rank:** 10
+- **Rank:** 9
 - **Status:** finalist
 
 ## Executive Summary

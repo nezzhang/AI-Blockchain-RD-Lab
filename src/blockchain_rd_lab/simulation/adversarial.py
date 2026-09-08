@@ -104,6 +104,10 @@ class AttackBound(BaseModel):
     # level — a design property, not an attacker extraction; r14 4b
     # honesty fix).
     regime_tracking: dict[str, float] = Field(default_factory=dict)
+    # Park-style patterns only: excursions that RECOVER by the parked
+    # window's end (< 25% of peak displacement) reclassified as
+    # TRANSIENT (the crash's own cost, re-normalized; r15 honesty fix).
+    transient_recovered: dict[str, float] = Field(default_factory=dict)
 
 
 def _state_var_order(model: MathModel) -> list[str]:
@@ -335,18 +339,63 @@ class AttackPatternBattery:
         bound_candidates = {
             k: v for k, v in edge.items() if v > 0 and k != "mean_measured_vol"
         }
-        # r14 4b honesty: under park-style choreographies (crash_park;
+        # r14/r15 4b honesty: under park-style choreographies (crash_park;
         # pump_unwind's parked half), a regime-tracking EMA's _drawn is
         # the state FOLLOWING the moved level — the fix working, not an
         # extraction. Exclude those metrics from the attacker-edge
         # headline and record them separately as regime tracking.
         regime_tracking: dict[str, float] = {}
+        # r15 transient-recovery honesty: an excursion that RECOVERS by
+        # the parked window's end (< 25% of its peak displacement from
+        # the pre-crash baseline) is the crash's own transient cost —
+        # the state re-normalized (the r15 FX-matching finding: M_t's
+        # 96-unit collapse at the crash step recovered fully under
+        # park; publishing it as an 'attacker edge' misreads a one-step
+        # crash cost as an extraction). Measured on the pattern run.
+        transient_recovered: dict[str, float] = {}
         if spec.kind in (AttackPattern.CRASH_PARK, AttackPattern.PUMP_UNWIND):
+            pat_hist = pat.history
+            x_final = float(pat_hist[-1]["X_t"]) if pat_hist else 1000.0
+            # r15b shape-independent extension: a state that ENDS AT the
+            # moved level (|final - X_final| < 10% of the level) followed
+            # the regime — its _drawn excursion is the re-basing itself
+            # (the r15 successor pool reads a stress aux, so the r14
+            # shape filter missed it; the numeric check measures the
+            # actual semantics: did the state arrive at the level?)
+            if pat_hist:
+                for k in list(bound_candidates):
+                    if not k.endswith("_drawn"):
+                        continue
+                    sym = k[: -len("_drawn")]
+                    if sym not in pat_hist[0]:
+                        continue
+                    final_v = float(pat_hist[-1].get(sym, 0.0))
+                    if abs(final_v - x_final) < 0.10 * max(x_final, 1.0):
+                        regime_tracking[k] = bound_candidates.pop(k)
             emas = _ema_of_level_states(self.model)
             for sym in emas:
                 k = f"{sym}_drawn"
                 if k in bound_candidates:
                     regime_tracking[k] = bound_candidates.pop(k)
+            if pat_hist:
+                at = max(1, min(getattr(spec, "park_at", 20),
+                                spec.steps - 2))
+                if spec.kind is AttackPattern.PUMP_UNWIND:
+                    at = spec.steps // 2  # the parked half begins mid-run
+                for k in list(bound_candidates):
+                    if not k.endswith("_drawn"):
+                        continue
+                    sym = k[: -len("_drawn")]
+                    if sym not in pat_hist[0]:
+                        continue
+                    base_v = float(pat_hist[max(0, at - 1)].get(sym, 0.0))
+                    disp = [abs(float(r[sym]) - base_v) for r in pat_hist[at:]]
+                    if not disp:
+                        continue
+                    peak = max(disp)
+                    if peak > 1.0 and disp[-1] < 0.25 * peak:
+                        transient_recovered[k] = round(disp[-1] / peak, 6)
+                        bound_candidates.pop(k)
         # vol separation IS the bound for wash/pump (the vol premium is
         # the harvest), so include it when no stock/premium metric moved.
         if not bound_candidates and "mean_measured_vol" in edge:
@@ -417,6 +466,7 @@ class AttackPatternBattery:
             failures=list(pat.failures) + list(base.failures),
             heal_flags=heal_flags,
             regime_tracking=regime_tracking,
+            transient_recovered=transient_recovered,
         )
 
     def run_all(self, steps: int = 60) -> list[AttackBound]:

@@ -82,6 +82,7 @@ class ReleasePackageBuilder:
             vacuous = bool(b.get("vacuous"))
             headline = b.get("headline")
             regime = b.get("regime_tracking") or {}
+            transient = b.get("transient_recovered") or {}
             heals = b.get("heal_flags") or {}
             if vacuous or headline is None:
                 out.append(
@@ -104,6 +105,17 @@ class ReleasePackageBuilder:
                         "following the moved level: the design working, "
                         "not extraction): " + moved
                     )
+                if transient:
+                    rec_txt = ", ".join(
+                        f"`{k.replace('_drawn', '')}` recovered "
+                        f"to {v:.0%} of peak" for k, v in transient.items()
+                    )
+                    line += (
+                        f"; {len(transient)} excursion(s) reclassified "
+                        "as TRANSIENT (recovered under park: the "
+                        "crash's own cost, not a standing extraction): "
+                        + rec_txt
+                    )
                 out.append(line)
             else:
                 metric = b.get("headline_metric", "?")
@@ -119,6 +131,16 @@ class ReleasePackageBuilder:
                         f" (excludes {len(regime)} regime-tracking "
                         "excursion(s): EMA states following the moved "
                         "level — design property, not extraction: " + moved + ")"
+                    )
+                if transient:
+                    rec_txt = ", ".join(
+                        f"`{k.replace('_drawn', '')}` at {v:.0%} of peak"
+                        for k, v in transient.items()
+                    )
+                    line += (
+                        f"; excludes {len(transient)} transient "
+                        "excursion(s) (recovered under park — the "
+                        "crash's own cost): " + rec_txt
                     )
                 out.append(line)
             if heals:

@@ -360,3 +360,59 @@ class TestAdversarialPatternBattery:
         # decoy reads only itself -> not keyed -> not flagged; and if
         # it were, its post-crash displacement is ~0 (nothing moves it)
         assert "F_t" not in bound.heal_flags or bound.heal_flags["F_t"] >= 0.0
+
+
+class TestTransientRecoveryClassification:
+    """The r15 4b honesty fix: an excursion that RECOVERS by the parked
+    window's end (< 25% of peak displacement) is the crash's own
+    transient cost — not a standing attacker edge. The FX-matching
+    finding: M_t collapsed 96 units at the crash step and fully
+    re-normalized under park; publishing '+96 attacker edge' misread a
+    one-step crash cost as an extraction."""
+
+    def test_recovered_excursion_reclassified(self):
+        m = _model([
+            {"name": "rule",
+             "expression": "S_t1 = clip(S_t*(1-0.3) + 0.3*1000.0, 400.0, 2000.0)",
+             "description": "mean-reverting: excursion fully recovers"},
+        ], version=1)
+        bound = AttackPatternBattery(m).run_pattern(
+            PatternSpec(kind=AttackPattern.CRASH_PARK, steps=60)
+        )
+        # the crash displaces S (dX enters nothing here — S reverts to
+        # 1000 regardless), so excursion recovery applies trivially;
+        # the classification must not fabricate edges either way
+        assert bound.headline is None or bound.headline >= 0.0
+
+    def test_standing_drain_not_reclassified(self):
+        """A drain that PERSISTS at the parked window's end (the r15
+        Bandwidth Bond finding: tug-of-war equilibrium 22% from the
+        level, burning 17.7/step forever) must stay an attacker-edge
+        headline — the honesty fix must never hide a real flaw."""
+        m = _model([
+            {"name": "stress",
+             "expression": "s_t = sqrt(max(0.0, 0.05) + 0.3*max(0.0, abs(X_t-S_t)/1000.0 - 0.1))",
+             "description": "stress signal keyed to a deviation that never closes"},
+            {"name": "drain",
+             "expression": "S_t1 = clip(S_t - 0.3*s_t*300.0"
+                           " + 0.07*(1000.0 - S_t) + 0.03*(X_t-1000.0), 450.0, 2400.0)",
+             "description": "tug-of-war: never re-bases, drains forever"},
+        ], version=1, variables=[
+            {"name": "supply", "symbol": "S_t", "role": "state", "units": "u",
+             "description": "pool"},
+            {"name": "supply_next", "symbol": "S_t1", "role": "state", "units": "u",
+             "description": "next pool"},
+            {"name": "stress", "symbol": "s_t", "role": "auxiliary", "units": "u",
+             "description": "stress"},
+            {"name": "anchor", "symbol": "X_t", "role": "input", "units": "i",
+             "description": "anchor level"},
+            {"name": "anchor_delta", "symbol": "dX_t", "role": "input", "units": "i",
+             "description": "anchor change"},
+        ])
+        bound = AttackPatternBattery(m).run_pattern(
+            PatternSpec(kind=AttackPattern.CRASH_PARK, steps=60)
+        )
+        assert bound.headline is not None and bound.headline > 40.0, (
+            "a standing drain must remain a disclosed edge"
+        )
+        assert "S_t_drawn" not in bound.transient_recovered

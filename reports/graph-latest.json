@@ -2152,6 +2152,96 @@
       }
     },
     {
+      "id": "cand-6fea4a5332ca-attack-game_theory-escrow-kicker-pulse-farming-of-allocation-weight",
+      "kind": "attack",
+      "label": "Escrow-kicker pulse farming of allocation weight",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "E_t keys 250*|dX|/X each step; pulsing |dX| under the kicker's implicit scale inflates escrow demand and with it A_t weight \u2014 the r13 pulse family applied to allocation."
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-attack-game_theory-re-basing-window-slash-dumping",
+      "kind": "attack",
+      "label": "Re-basing-window slash dumping",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "An attacker posts collateral immediately after a level shift opens the re-basing window, then withdraws as it closes: the transient slash lands maximally on incumbents while the attacker's post enjoys the post-close pool weight."
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-attack-game_theory-residual-tenure-floor-accumulation-bounded",
+      "kind": "attack",
+      "label": "Residual tenure-floor accumulation (bounded)",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "An idle incumbent accrues tenure to the 0.3x floor and pays less transient slash per future window \u2014 bounded by the floor and funded by actually being there (idleness forfeits relay revenue)."
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-attack-oracle-anchor-integrity-out-of-model",
+      "kind": "attack",
+      "label": "Anchor integrity (out-of-model)",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Majority index corruption wins by definition; index diversification is infrastructure."
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-attack-oracle-bandwidth-index-pulsing",
+      "kind": "attack",
+      "label": "Bandwidth-index pulsing",
+      "meta": {
+        "agent": "oracle",
+        "detail": "A majority index provider pulses |dX| to inflate escrow demand and allocation weight."
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-attack-red_team-escrow-kicker-pulse-farming-of-allocation-weight",
+      "kind": "attack",
+      "label": "Escrow-kicker pulse farming of allocation weight",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Pulse |dX|; harvest A_t weight via E_t."
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-attack-red_team-re-basing-window-slash-dumping",
+      "kind": "attack",
+      "label": "Re-basing-window slash dumping",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Time posts to dump the transient slash on incumbents."
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-attack-red_team-residual-tenure-floor-accumulation-bounded",
+      "kind": "attack",
+      "label": "Residual tenure-floor accumulation (bounded)",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Bounded discount funded by actual tenure."
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-attack-security-kicker-cap-scale-pulsing",
+      "kind": "attack",
+      "label": "Kicker cap-scale pulsing",
+      "meta": {
+        "agent": "security",
+        "detail": "Pulse |dX|/X to farm the 250-weighted escrow bump each step without moving the level EMA."
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-attack-security-residual-separation-shaping-bounded",
+      "kind": "attack",
+      "label": "Residual separation shaping (bounded)",
+      "meta": {
+        "agent": "security",
+        "detail": "Sustained directional flow separates the fast EMA from the pool and pays the kicker \u2014 a genuine trend cost, bounded at 120 weight and intended."
+      }
+    },
+    {
       "id": "cand-73de8d339542-attack-game_theory-baseline-timing-adverse-selection",
       "kind": "attack",
       "label": "baseline-timing adverse selection",
@@ -6550,6 +6640,16 @@
       }
     },
     {
+      "id": "cand-6fea4a5332ca",
+      "kind": "idea",
+      "label": "Level-Recentered Bandwidth Bond Market",
+      "meta": {
+        "category": "market design",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
       "id": "cand-73de8d339542",
       "kind": "idea",
       "label": "Treasury-Backed Fee Parameter Governance",
@@ -6835,7 +6935,7 @@
       "label": "Bandwidth Bond Market for Relay Peers",
       "meta": {
         "category": "network economics",
-        "status": "finalist",
+        "status": "superseded",
         "novelty_class": "appears_substantially_novel"
       }
     },
@@ -7269,6 +7369,14 @@
       "label": "cand-6b5791c8ae9c improvement v2",
       "meta": {
         "rationale": "v2 patch for Adverse-Selection Taxed Prediction Clearing: targeted fixes against the red-team vectors (rationing / dynamic barriers / verified-exposure compensation / directional accuracy / probe corroboration per candidate). Model smoke-tested 13/13 distinct."
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-6fea4a5332ca improvement v2",
+      "meta": {
+        "rationale": "v2 closes the named vectors: (1) the escrow-demand kicker is re-keyed to fast-vs-pool EMA SEPARATION \u2014 zero-mean pulses average out of the EMAs, so kicker pulse farming stops paying (the r13 fix pattern applied to allocation weight); (2) the transient slash is AGE-WEIGHTED via a post-age state that accrues during quiet regimes: fresh posts pay their own re-basing slash while long-tenure incumbents"
       }
     },
     {
@@ -7909,6 +8017,22 @@
       "label": "cand-6e9dedb8b844 model v1",
       "meta": {
         "version": 1
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-model-v1",
+      "kind": "mechanism",
+      "label": "cand-6fea4a5332ca model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-6fea4a5332ca-model-v2",
+      "kind": "mechanism",
+      "label": "cand-6fea4a5332ca model v2",
+      "meta": {
+        "version": 2
       }
     },
     {
@@ -9848,6 +9972,72 @@
       "meta": {
         "seed": 7,
         "model": "mathmodel-latest",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-6fea4a5332ca-montecarlo",
+      "kind": "simulation",
+      "label": "cand-6fea4a5332ca-montecarlo",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7-mc30",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-6fea4a5332ca-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-6fea4a5332ca-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-6fea4a5332ca-scenarios",
+      "kind": "simulation",
+      "label": "cand-6fea4a5332ca-scenarios",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-6fea4a5332ca-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-6fea4a5332ca-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-6fea4a5332ca-sweep",
+      "kind": "simulation",
+      "label": "cand-6fea4a5332ca-sweep",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-6fea4a5332ca-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-6fea4a5332ca-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
         "dataset": "synthetic-anchor-v1/seed-7",
         "simulation_version": "sim-0.1.0"
       }
@@ -12339,6 +12529,39 @@
       }
     },
     {
+      "id": "sim-exp-1f1417f60037",
+      "kind": "simulation",
+      "label": "exp-1f1417f60037",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-2c0b923738a9",
+      "kind": "simulation",
+      "label": "exp-2c0b923738a9",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-2e0e170d44be",
+      "kind": "simulation",
+      "label": "exp-2e0e170d44be",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-391d9c171be6",
       "kind": "simulation",
       "label": "exp-391d9c171be6",
@@ -12367,6 +12590,17 @@
       "meta": {
         "seed": null,
         "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-4df276ba510c",
+      "kind": "simulation",
+      "label": "exp-4df276ba510c",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v1",
         "dataset": "adversarial_patterns",
         "simulation_version": "sim-0.1.0"
       }
@@ -12405,6 +12639,17 @@
       }
     },
     {
+      "id": "sim-exp-685be6421c86",
+      "kind": "simulation",
+      "label": "exp-685be6421c86",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-6d8add281f22",
       "kind": "simulation",
       "label": "exp-6d8add281f22",
@@ -12416,9 +12661,31 @@
       }
     },
     {
+      "id": "sim-exp-756d73d9aa27",
+      "kind": "simulation",
+      "label": "exp-756d73d9aa27",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-77c3615226ce",
       "kind": "simulation",
       "label": "exp-77c3615226ce",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-7a4fdb35f539",
+      "kind": "simulation",
+      "label": "exp-7a4fdb35f539",
       "meta": {
         "seed": null,
         "model": "mathmodel-v2",
@@ -12449,6 +12716,17 @@
       }
     },
     {
+      "id": "sim-exp-87a244763f4c",
+      "kind": "simulation",
+      "label": "exp-87a244763f4c",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-8db11e09e81e",
       "kind": "simulation",
       "label": "exp-8db11e09e81e",
@@ -12463,6 +12741,39 @@
       "id": "sim-exp-8e438aa1fb98",
       "kind": "simulation",
       "label": "exp-8e438aa1fb98",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-8f68aea2bb09",
+      "kind": "simulation",
+      "label": "exp-8f68aea2bb09",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-94cd2d277999",
+      "kind": "simulation",
+      "label": "exp-94cd2d277999",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-94d3f6de85af",
+      "kind": "simulation",
+      "label": "exp-94d3f6de85af",
       "meta": {
         "seed": null,
         "model": "mathmodel-v2",
@@ -12504,12 +12815,56 @@
       }
     },
     {
+      "id": "sim-exp-a38d70d62fb4",
+      "kind": "simulation",
+      "label": "exp-a38d70d62fb4",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-a3b030c4ae1c",
+      "kind": "simulation",
+      "label": "exp-a3b030c4ae1c",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-a74868effa35",
+      "kind": "simulation",
+      "label": "exp-a74868effa35",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-b14407e42939",
       "kind": "simulation",
       "label": "exp-b14407e42939",
       "meta": {
         "seed": null,
         "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-b2ba2f08fb37",
+      "kind": "simulation",
+      "label": "exp-b2ba2f08fb37",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v1",
         "dataset": "adversarial_patterns",
         "simulation_version": "sim-0.1.0"
       }
@@ -12570,9 +12925,75 @@
       }
     },
     {
+      "id": "sim-exp-caff987ca355",
+      "kind": "simulation",
+      "label": "exp-caff987ca355",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-cbc8b492f8b8",
+      "kind": "simulation",
+      "label": "exp-cbc8b492f8b8",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-cbf422a35f31",
+      "kind": "simulation",
+      "label": "exp-cbf422a35f31",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-ccf4f8274666",
+      "kind": "simulation",
+      "label": "exp-ccf4f8274666",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v1",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-d7f2ed101bd6",
+      "kind": "simulation",
+      "label": "exp-d7f2ed101bd6",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-db90104e98bf",
       "kind": "simulation",
       "label": "exp-db90104e98bf",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-f5939dad3cf1",
+      "kind": "simulation",
+      "label": "exp-f5939dad3cf1",
       "meta": {
         "seed": null,
         "model": "mathmodel-v2",
@@ -13240,6 +13661,24 @@
       }
     },
     {
+      "id": "source-75",
+      "kind": "source",
+      "label": "ICMA treasury practice",
+      "meta": {
+        "url": "https://www.icmagroup.org/",
+        "source_type": "intl_org"
+      }
+    },
+    {
+      "id": "source-76",
+      "kind": "source",
+      "label": "Balancer documentation",
+      "meta": {
+        "url": "https://docs.balancer.fi/",
+        "source_type": "protocol_doc"
+      }
+    },
+    {
       "id": "source-8",
       "kind": "source",
       "label": "Fixture Source",
@@ -13544,6 +13983,36 @@
     {
       "source": "cand-6b5791c8ae9c-improvement-v2",
       "target": "cand-6b5791c8ae9c-attack-security-persistence-gaming-balanced-flow",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-improvement-v2",
+      "target": "cand-6fea4a5332ca-attack-game_theory-escrow-kicker-pulse-farming-of-allocation-weight",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-improvement-v2",
+      "target": "cand-6fea4a5332ca-attack-game_theory-re-basing-window-slash-dumping",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-improvement-v2",
+      "target": "cand-6fea4a5332ca-attack-red_team-escrow-kicker-pulse-farming-of-allocation-weight",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-improvement-v2",
+      "target": "cand-6fea4a5332ca-attack-red_team-re-basing-window-slash-dumping",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-improvement-v2",
+      "target": "cand-6fea4a5332ca-attack-security-kicker-cap-scale-pulsing",
       "kind": "addresses",
       "meta": {}
     },
@@ -16295,6 +16764,86 @@
       "kind": "attacks",
       "meta": {
         "profitable": true
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca-attack-game_theory-escrow-kicker-pulse-farming-of-allocation-weight",
+      "target": "cand-6fea4a5332ca",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca-attack-game_theory-re-basing-window-slash-dumping",
+      "target": "cand-6fea4a5332ca",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca-attack-game_theory-residual-tenure-floor-accumulation-bounded",
+      "target": "cand-6fea4a5332ca",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca-attack-oracle-anchor-integrity-out-of-model",
+      "target": "cand-6fea4a5332ca",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca-attack-oracle-bandwidth-index-pulsing",
+      "target": "cand-6fea4a5332ca",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca-attack-red_team-escrow-kicker-pulse-farming-of-allocation-weight",
+      "target": "cand-6fea4a5332ca",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca-attack-red_team-re-basing-window-slash-dumping",
+      "target": "cand-6fea4a5332ca",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca-attack-red_team-residual-tenure-floor-accumulation-bounded",
+      "target": "cand-6fea4a5332ca",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca-attack-security-kicker-cap-scale-pulsing",
+      "target": "cand-6fea4a5332ca",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca-attack-security-residual-separation-shaping-bounded",
+      "target": "cand-6fea4a5332ca",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
       }
     },
     {
@@ -21226,6 +21775,30 @@
       }
     },
     {
+      "source": "cand-6fea4a5332ca",
+      "target": "source-27",
+      "kind": "cites",
+      "meta": {
+        "query": "collateral pool level rebasing mechanism; bandwidth bond market relay peers; single magnet pool tracking level EMA"
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca",
+      "target": "source-75",
+      "kind": "cites",
+      "meta": {
+        "query": "collateral pool level rebasing mechanism; bandwidth bond market relay peers; single magnet pool tracking level EMA"
+      }
+    },
+    {
+      "source": "cand-6fea4a5332ca",
+      "target": "source-76",
+      "kind": "cites",
+      "meta": {
+        "query": "collateral pool level rebasing mechanism; bandwidth bond market relay peers; single magnet pool tracking level EMA"
+      }
+    },
+    {
       "source": "cand-73de8d339542",
       "target": "source-48",
       "kind": "cites",
@@ -22158,6 +22731,12 @@
       "meta": {}
     },
     {
+      "source": "cand-6fea4a5332ca-improvement-v2",
+      "target": "cand-6fea4a5332ca-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-73de8d339542-improvement-v2",
       "target": "cand-73de8d339542-model-v2",
       "kind": "derived_from",
@@ -22634,6 +23213,18 @@
     {
       "source": "cand-6e9dedb8b844",
       "target": "cand-6e9dedb8b844-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca",
+      "target": "cand-6fea4a5332ca-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca",
+      "target": "cand-6fea4a5332ca-model-v2",
       "kind": "formalizes",
       "meta": {}
     },
@@ -23268,6 +23859,12 @@
       "meta": {}
     },
     {
+      "source": "cand-6fea4a5332ca-model-v1",
+      "target": "cand-6fea4a5332ca-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-73de8d339542-model-v1",
       "target": "cand-73de8d339542-model-v2",
       "kind": "patches",
@@ -23629,6 +24226,12 @@
     },
     {
       "source": "cand-0d8552635f8c-model-v2",
+      "target": "sim-exp-94d3f6de85af",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-0d8552635f8c-model-v2",
       "target": "sim-exp-c0e968f374e3",
       "kind": "simulates",
       "meta": {}
@@ -23672,6 +24275,12 @@
     {
       "source": "cand-1acbaa9de0b0-model-v1",
       "target": "sim-exp-bb4142aa974f",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-1acbaa9de0b0-model-v1",
+      "target": "sim-exp-ccf4f8274666",
       "kind": "simulates",
       "meta": {}
     },
@@ -23809,6 +24418,12 @@
     },
     {
       "source": "cand-3132499bb565-model-v2",
+      "target": "sim-exp-2e0e170d44be",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-3132499bb565-model-v2",
       "target": "sim-exp-47a2d90e0828",
       "kind": "simulates",
       "meta": {}
@@ -23833,7 +24448,19 @@
     },
     {
       "source": "cand-31dd017e61de-model-v2",
+      "target": "sim-exp-a38d70d62fb4",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de-model-v2",
       "target": "sim-exp-bac8ff2adbf7",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-31dd017e61de-model-v2",
+      "target": "sim-exp-cbc8b492f8b8",
       "kind": "simulates",
       "meta": {}
     },
@@ -23876,6 +24503,18 @@
     {
       "source": "cand-4e292d1b929b-model-v2",
       "target": "sim-exp-7f68f860907b",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-model-v2",
+      "target": "sim-exp-87a244763f4c",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-model-v2",
+      "target": "sim-exp-a3b030c4ae1c",
       "kind": "simulates",
       "meta": {}
     },
@@ -23982,6 +24621,12 @@
       "meta": {}
     },
     {
+      "source": "cand-58d7091eb2a7-model-v1",
+      "target": "sim-exp-b2ba2f08fb37",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-5d41cd41f68d-model-v1",
       "target": "sim-cand-5d41cd41f68d-montecarlo",
       "kind": "simulates",
@@ -24020,6 +24665,12 @@
     {
       "source": "cand-5d41cd41f68d-model-v2",
       "target": "sim-exp-56ae43576291",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-5d41cd41f68d-model-v2",
+      "target": "sim-exp-cbf422a35f31",
       "kind": "simulates",
       "meta": {}
     },
@@ -24218,6 +24869,48 @@
     {
       "source": "cand-6e9dedb8b844-model-v1",
       "target": "sim-cand-6e9dedb8b844-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-model-v1",
+      "target": "sim-cand-6fea4a5332ca-montecarlo",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-model-v1",
+      "target": "sim-cand-6fea4a5332ca-scenarios",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-model-v1",
+      "target": "sim-cand-6fea4a5332ca-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-model-v2",
+      "target": "sim-cand-6fea4a5332ca-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-model-v2",
+      "target": "sim-cand-6fea4a5332ca-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-model-v2",
+      "target": "sim-cand-6fea4a5332ca-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-6fea4a5332ca-model-v2",
+      "target": "sim-exp-7a4fdb35f539",
       "kind": "simulates",
       "meta": {}
     },
@@ -24427,6 +25120,12 @@
     },
     {
       "source": "cand-84b0ad6d012f-model-v1",
+      "target": "sim-exp-4df276ba510c",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-84b0ad6d012f-model-v1",
       "target": "sim-exp-96187aed0ce3",
       "kind": "simulates",
       "meta": {}
@@ -24631,7 +25330,19 @@
     },
     {
       "source": "cand-a98b49da7189-model-v2",
+      "target": "sim-exp-2c0b923738a9",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-a98b49da7189-model-v2",
       "target": "sim-exp-8e438aa1fb98",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-a98b49da7189-model-v2",
+      "target": "sim-exp-d7f2ed101bd6",
       "kind": "simulates",
       "meta": {}
     },
@@ -24668,6 +25379,12 @@
     {
       "source": "cand-a9f161bde5a8-model-v2",
       "target": "sim-cand-a9f161bde5a8-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-a9f161bde5a8-model-v2",
+      "target": "sim-exp-8f68aea2bb09",
       "kind": "simulates",
       "meta": {}
     },
@@ -24794,6 +25511,12 @@
     {
       "source": "cand-b713e862acdc-model-v2",
       "target": "sim-exp-81d20666db2b",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-b713e862acdc-model-v2",
+      "target": "sim-exp-caff987ca355",
       "kind": "simulates",
       "meta": {}
     },
@@ -25008,6 +25731,12 @@
       "meta": {}
     },
     {
+      "source": "cand-cd39d95ea572-model-v2",
+      "target": "sim-exp-a74868effa35",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
       "source": "cand-ce333ff19e9e-model-v1",
       "target": "sim-cand-ce333ff19e9e-montecarlo",
       "kind": "simulates",
@@ -25046,6 +25775,12 @@
     {
       "source": "cand-ce333ff19e9e-model-v2",
       "target": "sim-exp-3a7ae91132db",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-ce333ff19e9e-model-v2",
+      "target": "sim-exp-94cd2d277999",
       "kind": "simulates",
       "meta": {}
     },
@@ -25154,6 +25889,12 @@
     {
       "source": "cand-d656eeeaeca1-model-v2",
       "target": "sim-cand-d656eeeaeca1-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-model-v2",
+      "target": "sim-exp-685be6421c86",
       "kind": "simulates",
       "meta": {}
     },
@@ -25363,6 +26104,12 @@
     },
     {
       "source": "cand-e74d830a9479-model-v2",
+      "target": "sim-exp-f5939dad3cf1",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e74d830a9479-model-v2",
       "target": "sim-exp-f8fcb731082a",
       "kind": "simulates",
       "meta": {}
@@ -25400,6 +26147,12 @@
     {
       "source": "cand-e8e15b483070-model-v2",
       "target": "sim-cand-e8e15b483070-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-e8e15b483070-model-v2",
+      "target": "sim-exp-1f1417f60037",
       "kind": "simulates",
       "meta": {}
     },
@@ -25634,6 +26387,12 @@
     {
       "source": "cand-f9682eb6fc72-model-v2",
       "target": "sim-cand-f9682eb6fc72-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-f9682eb6fc72-model-v2",
+      "target": "sim-exp-756d73d9aa27",
       "kind": "simulates",
       "meta": {}
     },

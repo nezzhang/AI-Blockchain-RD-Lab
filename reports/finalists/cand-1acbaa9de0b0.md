@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-1acbaa9de0b0
 - **Category:** financial markets
 - **Overall score:** 5.0500
-- **Rank:** 12
+- **Rank:** 11
 - **Status:** finalist
 
 ## Executive Summary

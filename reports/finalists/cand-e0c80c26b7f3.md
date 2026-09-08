@@ -3,7 +3,7 @@
 - **Candidate ID:** cand-e0c80c26b7f3
 - **Category:** oracle design
 - **Overall score:** 6.3250
-- **Rank:** 5
+- **Rank:** 4
 - **Status:** finalist
 
 ## Executive Summary
