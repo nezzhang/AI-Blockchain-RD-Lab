@@ -1,0 +1,37 @@
+{
+  "candidate_id": "cand-9200b07691c3",
+  "candidate_name": "Separation-Keyed Fee Smoothing Escrow",
+  "deterministic_score": 6.45,
+  "files": {
+    "README.md": {
+      "bytes": 1694,
+      "sha256": "b9041a3d86268d40eda3e0ddff899f9aff936debf14cb32166da7ea8adb285f3"
+    },
+    "adversarial-bounds.json": {
+      "bytes": 223498,
+      "sha256": "433dd6f4f24a9aa23fb6a28a32839247a88a3be55959bdfc5ce4fb3b9a81e195"
+    },
+    "dossier.md": {
+      "bytes": 8834,
+      "sha256": "a1f8fcf773ffb245c32c81a22da0efbdf30fb646432e5e1549d01a6d3a32e1ee"
+    },
+    "model-v3.json": {
+      "bytes": 7982,
+      "sha256": "c7acdafa8f0ecee90f88556e12b4ad8d9598a8039e98f81be3a51d1977f7936c"
+    },
+    "prior-art.json": {
+      "bytes": 3887,
+      "sha256": "17c10c0a26cbcc270de50b37e1ebfd6393d481e57dcd69bc08a9ae7232afa69d"
+    },
+    "redteam-history.json": {
+      "bytes": 22717,
+      "sha256": "b90cd3ccd36fcf991981dfa6c87e58ba89a9d76c235f8a696cda522ac0f1c01d"
+    },
+    "release-package.md": {
+      "bytes": 9373,
+      "sha256": "caa77ad2e901a0979814c4ca1a26307391f634dd80184a16a47b45c843b59468"
+    }
+  },
+  "generated": "2026-09-08T13:48:51.542306+00:00",
+  "model_version": 3
+}

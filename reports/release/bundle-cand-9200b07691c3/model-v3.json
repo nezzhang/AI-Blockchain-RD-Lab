@@ -1,0 +1,230 @@
+{
+  "assumptions": [
+    {
+      "critical": true,
+      "statement": "level observable on-chain"
+    },
+    {
+      "critical": true,
+      "statement": "signed separation observable each step"
+    }
+  ],
+  "candidate_id": "cand-9200b07691c3",
+  "constraints": [
+    {
+      "kind": "invariant",
+      "statement": "retention keys signed separation, not absolute vol"
+    },
+    {
+      "kind": "invariant",
+      "statement": "escrow size keys current policy, not pressure history"
+    }
+  ],
+  "equations": [
+    {
+      "description": "fast pressure EMA of the level \u2014 leads on genuine moves; a broad clip so battery extremes never saturate the state",
+      "expression": "L_f1 = clip(L_f + kappa_f*(X_t - L_f), 100.0, 10000.0)",
+      "name": "fast_ema"
+    },
+    {
+      "description": "slow regime EMA with a BOUNDED STEP (\u00b1500 \u2014 the r19 primitive: battery extremes reach 700k; a value-clipped EMA saturates) \u2014 carries sustained moves, washes oscillation",
+      "expression": "T_s1 = clip(T_s + kappa_s*clip(X_t - T_s, -500.0, 500.0), 100.0, 9000.0)",
+      "name": "slow_ema"
+    },
+    {
+      "description": "SIGNED separation, level-denominated: positive when fast pressure leads the regime (premium inflation), negative on crash legs",
+      "expression": "g_t = (L_f - T_s) / max(T_s, 1.0)",
+      "name": "separation"
+    },
+    {
+      "description": "retention keys the SIGNED separation with a SYMMETRIC clip band around delta_r (0.3\u00b10.25) and a SAW-TOOTH DISCOUNT: the counter C_t (an EMA of the fast EMA's own movement) fades the separation key on oscillating paths \u2014 a zero-mean saw-tooth converges to delta_r at the band CENTER, not the top (the r20 saw-tooth fix; the r12 counter primitive at discount polarity)",
+      "expression": "r_t1 = clip(delta_r + (1.0-C_t)*eta_r*g_t, delta_r - 0.25, delta_r + 0.25)",
+      "name": "retention"
+    },
+    {
+      "description": "the escrow chases a BOUNDED, REVERTING TARGET (buffer = anchor + cap*retention): size keys CURRENT policy, never the HISTORY of pressure \u2014 no free accumulator (the corpus's resonance-healthy designs are all EMAs of bounded targets; the predecessor's integral form E + flows was the ratchet class itself). Converges to the cycle-average of the target under resonance \u2014 N-independent by construction; symmetric in both directions (the r18 mirrored-cap discipline, inherited)",
+      "expression": "E_t1 = clip((1.0-lam_e)*E_t + lam_e*(1000.0 + f_c*r_t), 150.0, 20000.0)",
+      "name": "escrow"
+    },
+    {
+      "description": "sign-alternation counter: g_t*G_t < 0 (the separation FLIPPED \u2014 saw-tooth) drives the inner term to 1 (counter rises, key discounted); g_t*G_t > 0 (PERSISTED \u2014 genuine followed lead) drives it to 0 (counter decays, key rides). SIGN-PERSISTENCE keying, not magnitude: a fast genuine grind also has large fast-EMA movement, so magnitude keying would discount genuine pressure too (caught by the smoke's genuine-lead probe). Keys only the retention discount",
+      "expression": "C_t1 = clip(C_t*(1.0-lam_c) + lam_c*clip(1.0 - 6.0*g_t*G_t, 0.0, 1.0), 0.0, 1.0)",
+      "name": "saw_counter"
+    },
+    {
+      "description": "the previous step's separation, carried as a state \u2014 lets the counter measure sign PERSISTENCE: g_t*G_t > 0 is a persisting lead/lag (genuine), < 0 is alternation (oscillation/saw-tooth)",
+      "expression": "G_t1 = g_t",
+      "name": "lagged_separation"
+    }
+  ],
+  "open_questions": [
+    "can sustained genuine pressure (not crafted) hold the separation key high enough to farm retention?"
+  ],
+  "parameters": [
+    {
+      "default": 0.55,
+      "description": "fast EMA speed",
+      "max_value": 0.9,
+      "min_value": 0.2,
+      "name": "fast_speed",
+      "symbol": "kappa_f"
+    },
+    {
+      "default": 0.06,
+      "description": "slow EMA speed",
+      "max_value": 0.15,
+      "min_value": 0.02,
+      "name": "slow_speed",
+      "symbol": "kappa_s"
+    },
+    {
+      "default": 0.3,
+      "description": "base retention",
+      "max_value": 0.5,
+      "min_value": 0.1,
+      "name": "retention_base",
+      "symbol": "delta_r"
+    },
+    {
+      "default": 0.15,
+      "description": "separation gain on retention",
+      "max_value": 0.4,
+      "min_value": 0.05,
+      "name": "retention_gain",
+      "symbol": "eta_r"
+    },
+    {
+      "default": 18.0,
+      "description": "buffer target range (symmetric)",
+      "max_value": 60.0,
+      "min_value": 5.0,
+      "name": "flow_cap",
+      "symbol": "f_c"
+    },
+    {
+      "default": 0.15,
+      "description": "escrow convergence to target",
+      "max_value": 0.5,
+      "min_value": 0.05,
+      "name": "buffer_speed",
+      "symbol": "lam_e"
+    },
+    {
+      "default": 0.18,
+      "description": "counter decay in quiet",
+      "max_value": 0.5,
+      "min_value": 0.05,
+      "name": "counter_decay",
+      "symbol": "lam_c"
+    }
+  ],
+  "rationale": "The superseded predecessor's retention keyed ABSOLUTE realized vol (eta=40 pinned r_t at the 0.9 ceiling through every crafted ramp) while its outflow was 0.05*sigma weaker \u2014 every resonance cycle over-retained monotonically (measured ratchet 285 -> 6479, linear-unbounded in N, persisting under a quiet tail). This model keys retention to the SIGNED fast-vs-slow separation (the r13 polarity fix) and gives the escrow a BOUNDED, REVERTING target (buffer = anchor + cap*retention): size keys current policy, never the history of pressure. Under resonance the escrow converges to the cycle-average of its target \u2014 N-independent by construction; the predecessor's integral form was the ratchet class itself.",
+  "variables": [
+    {
+      "description": "anchor level",
+      "name": "level",
+      "role": "input",
+      "symbol": "X_t",
+      "units": "u"
+    },
+    {
+      "description": "level change",
+      "name": "delta",
+      "role": "input",
+      "symbol": "dX_t",
+      "units": "u"
+    },
+    {
+      "description": "fee-smoothing escrow level",
+      "name": "escrow",
+      "role": "state",
+      "symbol": "E_t",
+      "units": "u"
+    },
+    {
+      "description": "next escrow level",
+      "name": "escrow_next",
+      "role": "state",
+      "symbol": "E_t1",
+      "units": "u"
+    },
+    {
+      "description": "fast pressure EMA",
+      "name": "fast_ema",
+      "role": "state",
+      "symbol": "L_f",
+      "units": "u"
+    },
+    {
+      "description": "next fast EMA",
+      "name": "fast_next",
+      "role": "state",
+      "symbol": "L_f1",
+      "units": "u"
+    },
+    {
+      "description": "slow regime EMA",
+      "name": "slow_ema",
+      "role": "state",
+      "symbol": "T_s",
+      "units": "u"
+    },
+    {
+      "description": "next slow EMA",
+      "name": "slow_next",
+      "role": "state",
+      "symbol": "T_s1",
+      "units": "u"
+    },
+    {
+      "description": "escrow retention fraction",
+      "name": "retention",
+      "role": "state",
+      "symbol": "r_t",
+      "units": "frac"
+    },
+    {
+      "description": "next retention",
+      "name": "retention_next",
+      "role": "state",
+      "symbol": "r_t1",
+      "units": "frac"
+    },
+    {
+      "description": "signed fast-vs-slow separation",
+      "name": "separation",
+      "role": "auxiliary",
+      "symbol": "g_t",
+      "units": "u"
+    },
+    {
+      "description": "fast-EMA-movement EMA (saw-tooth discount)",
+      "name": "saw_counter",
+      "role": "state",
+      "symbol": "C_t",
+      "units": "frac"
+    },
+    {
+      "description": "next saw counter",
+      "name": "saw_next",
+      "role": "state",
+      "symbol": "C_t1",
+      "units": "frac"
+    },
+    {
+      "description": "previous separation (lag)",
+      "name": "lagged_separation",
+      "role": "state",
+      "symbol": "G_t",
+      "units": "frac"
+    },
+    {
+      "description": "next lagged separation",
+      "name": "lagged_next",
+      "role": "state",
+      "symbol": "G_t1",
+      "units": "frac"
+    }
+  ],
+  "version": 3
+}

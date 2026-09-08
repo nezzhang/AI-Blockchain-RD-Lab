@@ -116,6 +116,49 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 24 publication-bundle round (the human's "publish all no.1
+  files" — §27/§41 approval IN HAND for the rank-1; the lab's part
+  under §28/§41 is still STAGING, and staging is now COMPLETE):
+  assembled the complete, self-contained, VERIFIABLE publication
+  bundle for the §7 rank-1 (Separation-Keyed Fee Smoothing Escrow,
+  cand-9200b07691c3) at reports/release/bundle-cand-9200b07691c3/
+  — scripts/r24_publication_bundle.py, BY CODE from stored
+  evidence only (§2). EIGHT files: README.md (what it is, how to
+  verify, how to cite, scope+honesty: simulation-stage evidence,
+  5/11 dimensions imputed at the offline floor, §4 residual list,
+  no token/no deployment); dossier.md (§23 19-section research
+  dossier, byte-pinned by manifest); release-package.md (rebuilt
+  from the store via the r23 parameterized builder — one code
+  path); model-v3.json (the final MathModel machine-readable);
+  adversarial-bounds.json (every §20 census record, default +
+  sweep calibrations, ALL classifications verbatim — the
+  calibration-tagged r22 rows included); redteam-history.json
+  (every adversarial report ever filed, unfiltered — the full
+  v1→v3 break/fix history); prior-art.json (§12 trail);
+  MANIFEST.json (SHA-256 + byte size of every file, excludes
+  itself — self-reference impossible). VERIFICATION discipline:
+  the manifest is verified by PROBE, not trusted from the
+  generator — tests/test_publication_bundle.py (+4, the r19
+  anti-hiding rule applied to a new artifact class the day it
+  ships): manifest sha256s verify against disk; the manifest
+  lists exactly the directory (nothing ships unhashed); the
+  release package comes from the parameterized r23 builder with
+  the honest explicit-subject note; hashes are stable under
+  re-read (the human's posted copy stays verifiable). The real
+  bundle was independently re-verified against the store after
+  generation (score 6.45, model v3, 6 census records, 12
+  redteam reports — manifest verifies True). Ops notes: the r24
+  script surfaced the raw-JSON returns of get_latest_math_model
+  (parsed, not dict-indexed) and ExperimentRecord.timestamp
+  (not recorded_at); and writing the test fixture was itself a
+  demonstration of §13 — the MathModel integrity check rejected
+  three malformed drafts in a row (undeclared symbol X_t1,
+  missing open_questions, missing rationale) before the fixture
+  passed. NOT DONE by the lab, on purpose (§28/§41: the human
+  acts with the repo's identity): git push to a public remote
+  (none configured), posting to any blog/forum, minting any
+  official-claims language beyond the staged files. The bundle
+  IS the verbatim material; the human posts it. 424 pass.
 - Round 23 three-option §27 staging round ("run the remaining
   options" — all three publication variants made literally
   buildable; the lab stages, the human posts, §28/§41): the r21

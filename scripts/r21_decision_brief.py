@@ -10,8 +10,6 @@ Run: .venv/bin/python scripts/r21_decision_brief.py
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from blockchain_rd_lab.config import REPO_ROOT, load_config
 from blockchain_rd_lab.database import LabDatabase
 from blockchain_rd_lab.reporting.decision import (
