@@ -1,19 +1,19 @@
 # Lab Research Report
 
-Generated: 2026-09-07T17:01:00+00:00
+Generated: 2026-09-08T01:40:44+00:00
 
 ## Funnel Status (§7)
 
-- **Total candidates:** 92
+- **Total candidates:** 94
 - **failed:** 4
 - **finalist:** 14
 - **rejected:** 16
 - **scored:** 43
-- **superseded:** 15
+- **superseded:** 17
 
 ## Finalists
 
-cand-b713e862acdc, cand-e74d830a9479, cand-b2b411464015, cand-f9682eb6fc72, cand-0d8552635f8c, cand-ce333ff19e9e, cand-cd39d95ea572, cand-a98b49da7189, cand-e8e15b483070, cand-5d41cd41f68d, cand-3132499bb565, cand-1acbaa9de0b0, cand-58d7091eb2a7, cand-84b0ad6d012f
+cand-b713e862acdc, cand-e74d830a9479, cand-f9682eb6fc72, cand-0d8552635f8c, cand-e0c80c26b7f3, cand-ce333ff19e9e, cand-cd39d95ea572, cand-a98b49da7189, cand-e8e15b483070, cand-5d41cd41f68d, cand-3132499bb565, cand-1acbaa9de0b0, cand-58d7091eb2a7, cand-84b0ad6d012f
 
 ## Recommended Candidate (§7)
 
@@ -25,18 +25,18 @@ cand-b713e862acdc
 |---|-----------|------|-------|
 | 1 | cand-b713e862acdc | Bandwidth Bond Market for Relay Peers | 6.5250 |
 | 2 | cand-e74d830a9479 | Demand-Index Escalation Ladder for FX Batches | 6.4000 |
-| 3 | cand-b2b411464015 | Trend-Indexed Prediction-Fee Oracle | 6.3600 |
-| 4 | cand-f9682eb6fc72 | Prediction-Settled Hashprice Hedge Board | 6.3500 |
-| 5 | cand-0d8552635f8c | Disagreement-Weighted Oracle Quorum | 6.3250 |
-| 6 | cand-e0c80c26b7f3 | Quote-Deviation Slashed FX Reference Feed | 6.3250 |
-| 7 | cand-ce333ff19e9e | Forecast-Indexed Fee Smoothing Pool | 6.3000 |
-| 8 | cand-a9f161bde5a8 | Divergence-Gated Fee Band Meter | 6.2950 |
+| 3 | cand-f9682eb6fc72 | Prediction-Settled Hashprice Hedge Board | 6.3500 |
+| 4 | cand-0d8552635f8c | Disagreement-Weighted Oracle Quorum | 6.3250 |
+| 5 | cand-e0c80c26b7f3 | Quote-Deviation Slashed FX Reference Feed | 6.3250 |
+| 6 | cand-ce333ff19e9e | Forecast-Indexed Fee Smoothing Pool | 6.3000 |
+| 7 | cand-a9f161bde5a8 | Divergence-Gated Fee Band Meter | 6.2950 |
+| 8 | cand-d656eeeaeca1 | Persistent-Trend Prediction-Fee Oracle | 6.2900 |
 | 9 | cand-73de8d339542 | Treasury-Backed Fee Parameter Governance | 6.2500 |
 | 10 | cand-31dd017e61de | Trend-Drawdown Liquidity Corridor | 6.2350 |
-| 11 | cand-d371a6d7e99c | Volatility-Sized Settlement Escrow | 6.2250 |
-| 12 | cand-d5bf8d515927 | Output-Indexed Compute Swap Board | 6.2000 |
-| 13 | cand-e626f13713b0 | Cyclic Demand Reserve for Fee Recycles | 6.1750 |
-| 14 | cand-8212f81f4f75 | Drift-Gap Joule Escrow | 6.1700 |
+| 11 | cand-4e292d1b929b | Persistent-Drift Joule Escrow | 6.2300 |
+| 12 | cand-d371a6d7e99c | Volatility-Sized Settlement Escrow | 6.2250 |
+| 13 | cand-d5bf8d515927 | Output-Indexed Compute Swap Board | 6.2000 |
+| 14 | cand-e626f13713b0 | Cyclic Demand Reserve for Fee Recycles | 6.1750 |
 | 15 | cand-6b5791c8ae9c | Adverse-Selection Taxed Prediction Clearing | 6.1000 |
 | 16 | cand-818a442b3d7e | Consensus-Odds Liquidity Rebate | 6.1000 |
 | 17 | cand-6643f5fc416d | Counter-Cyclical Fee Sink Insurer | 6.1000 |

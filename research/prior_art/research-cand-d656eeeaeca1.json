@@ -1,0 +1,21 @@
+{
+  "researched": 2,
+  "candidates": [
+    {
+      "candidate_id": "cand-d656eeeaeca1",
+      "novelty_class": "adjacent_mechanism",
+      "coherence": 7.4,
+      "demand": 6.0,
+      "rejected": false,
+      "errors": []
+    },
+    {
+      "candidate_id": "cand-4e292d1b929b",
+      "novelty_class": "adjacent_mechanism",
+      "coherence": 7.2,
+      "demand": 5.8,
+      "rejected": false,
+      "errors": []
+    }
+  ]
+}

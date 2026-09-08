@@ -116,6 +116,44 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 13 anchor-heal round (r12 finding generalized — and corrected
+  by evidence): hypothesis "all 3 r11 anchored-trend siblings heal
+  under move-once-then-park" tested with a new §20 battery pattern
+  CRASH_PARK (the choreography wash/pump/osc/shock all lack: they move
+  repeatedly or revert; nothing parks) + a battery-level heal_flags
+  measurement (per keyed protection state, the parked displacement as a
+  fraction of crash-time peak, POST-crash window only — an earlier draft
+  keyed the init transient and mis-flagged; caught in review). Evidence:
+  Oracle F_t heals to 7% of peak while the level stays -60% moved
+  (tail cover sold at anchor-normal premium — monetizable); Joule
+  drift alarm fires 4 steps then heals under the moved regime
+  (healed-window defaults pay no slash premium); Corridor U_t RETAINS
+  74% (its level term tracks the move — protection persists, NO flaw;
+  the 3/3 hypothesis was wrong, no supersede); r12 meter E_t heals BY
+  DESIGN (re-banding semantics). Superseded the 2 confirmed (lineage =
+  measured heal ratios), minted 2 successors with the r12 primitive at
+  INSURANCE POLARITY: a THREE-SPEED construction (fast kicker + medium
+  EMA + ultra-slow regime-anchor EMA; the gate = |medium - anchor|/anchor
+  — in smooth growth they track together (no false premium), after
+  crash-park the medium EMA stays below the anchor indefinitely
+  (persistent displacement), zero-mean oscillation flattens both (no
+  wash harvest). First v1 draft keyed the fee to a single level-EMA —
+  the §15 battery caught 10/13 scenario collapse (the base scenario's
+  inherent growth carried the level to 2400 and pinned the fee/OI
+  clips), forcing the 3-speed construction. Both v1 smoke-gated
+  (13/13 distinct, wash 1.23, crash-park heal ratios 0.93-1.0), both
+  red-teamed VULNERABLE (kicker-pulse cap-boundary farming;
+  recovery-leg overpay; tranche-sized ratchet evasion; reconvergence
+  overcharge), both v2-patched (kicker re-keyed to fast-vs-medium EMA
+  separation — zero-mean pulses average out, the r11/r12 lesson applied
+  to the kicker itself; ratchet re-keyed to displacement context + a
+  quiet-time delivery credit), both SURVIVE re-attack; scored 6.29 /
+  6.23 (oracle slightly below its predecessor's 6.36 — honest patching
+  cost; joule above its 6.17). §21 battery records stored for both v2.
+  Battery semantics lesson (open): crash_park's _drawn headline (600 =
+  the EMAs moving to the new level) is the FIX working, not extraction;
+  the heal_flags carry the real signal — a headline-metric nuance to
+  fold into 4b disclosure assembly.
 - Round 12 lineage-fix round (the r11 open question resolved by
   measurement): the Sustained-Band Forecast Fee Meter's residual
   (+487.45 pump_park / +295.76 vol_oscillation on B_m) was traced to

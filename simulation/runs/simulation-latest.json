@@ -1,6 +1,11 @@
 {
-  "cand-a9f161bde5a8": {
-    "mc_mean": 2261.952783775783,
+  "cand-d656eeeaeca1": {
+    "mc_mean": 2245.029892928346,
+    "hard_failures": [],
+    "error": null
+  },
+  "cand-4e292d1b929b": {
+    "mc_mean": 2245.029892928346,
     "hard_failures": [],
     "error": null
   }

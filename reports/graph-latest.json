@@ -955,6 +955,96 @@
       }
     },
     {
+      "id": "cand-4e292d1b929b-attack-game_theory-persistent-alarm-overcharge-pass-through",
+      "kind": "attack",
+      "label": "Persistent-alarm overcharge pass-through",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "Providers delivering correctly at the new level still pay the alarm premium during the reconvergence window; a dominant provider passes this cost to customers as a scarcity surcharge."
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-attack-game_theory-ratchet-gaming-via-tranche-refills",
+      "kind": "attack",
+      "label": "Ratchet gaming via tranche refills",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "The ratcheting tolerance chi shrinks with escrow turnover; a provider refilling in many small tranches keeps measured turnover high and tolerance wide, delaying the alarm's persistence discipline."
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-attack-game_theory-residual-first-window-overcharge-bounded",
+      "kind": "attack",
+      "label": "Residual first-window overcharge (bounded)",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A provider's first regime transition still pays the reconvergence premium until quiet credit accrues \u2014 bounded by the 80-unit credit cap and discounted thereafter."
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-attack-oracle-anchor-integrity-out-of-model",
+      "kind": "attack",
+      "label": "Anchor integrity (out-of-model)",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Majority feed corruption wins by definition; diversification is infrastructure, not mechanism."
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-attack-oracle-anchor-shaping-to-keep-the-gate-narrow",
+      "kind": "attack",
+      "label": "Anchor shaping to keep the gate narrow",
+      "meta": {
+        "agent": "oracle",
+        "detail": "A colluding anchor provider smooths the path so the medium EMA tracks the regime anchor closely, keeping the alarm quiet while delivery actually degrades at the new level."
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-attack-red_team-persistent-alarm-overcharge-pass-through",
+      "kind": "attack",
+      "label": "Persistent-alarm overcharge pass-through",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Reconvergence-window premium passed to customers."
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-attack-red_team-ratchet-gaming-via-tranche-refills",
+      "kind": "attack",
+      "label": "Ratchet gaming via tranche refills",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Small tranches keep chi wide; the alarm stays quiet for a drifting provider."
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-attack-red_team-residual-first-window-overcharge-bounded",
+      "kind": "attack",
+      "label": "Residual first-window overcharge (bounded)",
+      "meta": {
+        "agent": "red_team",
+        "detail": "One bounded transition premium; credited thereafter."
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-attack-security-credit-farming-by-idleness-bounded",
+      "kind": "attack",
+      "label": "Credit farming by idleness (bounded)",
+      "meta": {
+        "agent": "security",
+        "detail": "Idling accrues quiet credit up to the 80 cap \u2014 the discount on one future window; idleness forfeits delivery revenue, so farming it is net-negative."
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-attack-security-tranche-sized-ratchet-evasion",
+      "kind": "attack",
+      "label": "Tranche-sized ratchet evasion",
+      "meta": {
+        "agent": "security",
+        "detail": "Small-tranche refills inflate turnover, keeping chi wide and the alarm slow to ratchet against a drifting provider."
+      }
+    },
+    {
       "id": "cand-50e511859d99-attack-game_theory-bond-moat-acceptance-gatekeeping",
       "kind": "attack",
       "label": "Bond-moat acceptance gatekeeping",
@@ -4780,6 +4870,96 @@
       }
     },
     {
+      "id": "cand-d656eeeaeca1-attack-game_theory-kicker-pulse-farming-of-the-crash-kicker",
+      "kind": "attack",
+      "label": "Kicker-pulse farming of the crash kicker",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "The kicker pays 20*min(1,|dX|/X/0.2)*10 into the fee each step; an attacker pulsing |dX| just under the 0.2-cap every step sustains the full kicker without moving the regime gate \u2014 collected as inflated fee spread on wash-traded flow."
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-attack-game_theory-recovery-leg-overpay-harvesting",
+      "kind": "attack",
+      "label": "Recovery-leg overpay harvesting",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "After a genuine recovery the medium EMA lags the anchor for ~1/kappa_l steps; cover sellers hold the elevated premium through the recovery leg and harvest the overpay."
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-attack-game_theory-residual-anchor-drift-premium-not-attacker-contr",
+      "kind": "attack",
+      "label": "Residual anchor-drift premium (not attacker-controlled)",
+      "meta": {
+        "agent": "game_theory",
+        "detail": "A very long growth regime leaves the ultra-slow EMA lagging; the gate sustains a small permanent premium. No attacker P&L path \u2014 it accrues to the pool, not to a position."
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-attack-oracle-anchor-pulsing-to-farm-the-kicker",
+      "kind": "attack",
+      "label": "Anchor pulsing to farm the kicker",
+      "meta": {
+        "agent": "oracle",
+        "detail": "A majority anchor provider pulses |dX| just under the kicker cap; the collected premium spreads to flow while regime displacement stays flat."
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-attack-oracle-sustained-directional-anchor-shaping-out-of-mode",
+      "kind": "attack",
+      "label": "Sustained directional anchor shaping (out-of-model)",
+      "meta": {
+        "agent": "oracle",
+        "detail": "Moving the fast-vs-medium separation requires sustained directional price action \u2014 a market move with real cost, not an oracle exploit; feed diversification remains the out-of-model mitigation."
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-attack-red_team-kicker-pulse-farming-of-the-crash-kicker",
+      "kind": "attack",
+      "label": "Kicker-pulse farming of the crash kicker",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Pulse |dX| under the cap; harvest the fee spread while the gate stays quiet."
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-attack-red_team-recovery-leg-overpay-harvesting",
+      "kind": "attack",
+      "label": "Recovery-leg overpay harvesting",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Cover sellers hold the lagging premium through the recovery leg."
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-attack-red_team-residual-anchor-drift-premium-not-attacker-contr",
+      "kind": "attack",
+      "label": "Residual anchor-drift premium (not attacker-controlled)",
+      "meta": {
+        "agent": "red_team",
+        "detail": "Honest persistence cost; accrues to the pool."
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-attack-security-kicker-cap-boundary-farming",
+      "kind": "attack",
+      "label": "Kicker cap-boundary farming",
+      "meta": {
+        "agent": "security",
+        "detail": "Pulse |dX|/X just under the 0.2 kicker cap each step: max kicker response, no regime-gate movement \u2014 the cap boundary is a cliff, not a smooth decay."
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-attack-security-residual-kicker-separation-shaping-bounded",
+      "kind": "attack",
+      "label": "Residual kicker-separation shaping (bounded)",
+      "meta": {
+        "agent": "security",
+        "detail": "Sustained directional flow does move fast-vs-medium EMAs apart \u2014 the kicker pays for genuine trends, which is its intended function; the response is bounded at 10*min(1, |R-L|/100) and cannot be pulsed cheaply."
+      }
+    },
+    {
       "id": "cand-db0588dfed1a-attack-game_theory-exit-timing-around-anchor-revisions",
       "kind": "attack",
       "label": "exit timing around anchor revisions",
@@ -6230,6 +6410,16 @@
       }
     },
     {
+      "id": "cand-4e292d1b929b",
+      "kind": "idea",
+      "label": "Persistent-Drift Joule Escrow",
+      "meta": {
+        "category": "oracle design",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
       "id": "cand-50e511859d99",
       "kind": "idea",
       "label": "Fee-Relay Escrow Market",
@@ -6425,7 +6615,7 @@
       "label": "Drift-Gap Joule Escrow",
       "meta": {
         "category": "energy economics",
-        "status": "scored",
+        "status": "superseded",
         "novelty_class": "adjacent_mechanism"
       }
     },
@@ -6635,7 +6825,7 @@
       "label": "Trend-Indexed Prediction-Fee Oracle",
       "meta": {
         "category": "oracle design",
-        "status": "finalist",
+        "status": "superseded",
         "novelty_class": "adjacent_mechanism"
       }
     },
@@ -6780,6 +6970,16 @@
       }
     },
     {
+      "id": "cand-d656eeeaeca1",
+      "kind": "idea",
+      "label": "Persistent-Trend Prediction-Fee Oracle",
+      "meta": {
+        "category": "oracle design",
+        "status": "scored",
+        "novelty_class": "adjacent_mechanism"
+      }
+    },
+    {
       "id": "cand-db0588dfed1a",
       "kind": "idea",
       "label": "Bandwidth Futures Market",
@@ -6815,7 +7015,7 @@
       "label": "Quote-Deviation Slashed FX Reference Feed",
       "meta": {
         "category": "oracle design",
-        "status": "scored",
+        "status": "finalist",
         "novelty_class": "adjacent_mechanism"
       }
     },
@@ -7013,6 +7213,14 @@
       "label": "cand-31dd017e61de improvement v2",
       "meta": {
         "rationale": "Spot-vol circuit: a single-step relative crash beyond cb=0.15 floors the drawdown state instantly (the > comparison gates a 400-scale crash term), so fast crashes reprice tranche capacity without waiting for the EMA; sustained regimes remain governed by the trend state, keeping wash-immunity."
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-4e292d1b929b improvement v2",
+      "meta": {
+        "rationale": "v2 closes ratchet gaming by re-keying the tolerance to the displacement context while an accrued quiet-time credit discounts reconvergence-window overcharge \u2014 tranche sizing cannot inflate a displacement-keyed term, and honest providers get the resumption credit instead of a bill."
       }
     },
     {
@@ -7253,6 +7461,14 @@
       "label": "cand-d5bf8d515927 improvement v2",
       "meta": {
         "rationale": "Gap-penalized settlement closes benchmark overfitting."
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-improvement-v2",
+      "kind": "improvement",
+      "label": "cand-d656eeeaeca1 improvement v2",
+      "meta": {
+        "rationale": "v2 closes the kicker-pulse farm by re-keying the kicker to FAST-vs-MEDIUM EMA separation (zero-mean pulses average out of the EMAs \u2014 the r11/r12 lesson applied to the kicker itself) and shrinks its weight; a recovery-leg credit decays the premium faster when the medium EMA is catching up, bounding the recovery overpay."
       }
     },
     {
@@ -7523,6 +7739,22 @@
       "id": "cand-31dd017e61de-model-v2",
       "kind": "mechanism",
       "label": "cand-31dd017e61de model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-model-v1",
+      "kind": "mechanism",
+      "label": "cand-4e292d1b929b model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-4e292d1b929b-model-v2",
+      "kind": "mechanism",
+      "label": "cand-4e292d1b929b model v2",
       "meta": {
         "version": 2
       }
@@ -8131,6 +8363,22 @@
       "id": "cand-d5bf8d515927-model-v2",
       "kind": "mechanism",
       "label": "cand-d5bf8d515927 model v2",
+      "meta": {
+        "version": 2
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-model-v1",
+      "kind": "mechanism",
+      "label": "cand-d656eeeaeca1 model v1",
+      "meta": {
+        "version": 1
+      }
+    },
+    {
+      "id": "cand-d656eeeaeca1-model-v2",
+      "kind": "mechanism",
+      "label": "cand-d656eeeaeca1 model v2",
       "meta": {
         "version": 2
       }
@@ -8937,6 +9185,72 @@
       "id": "sim-cand-31dd017e61de-sweep-v2",
       "kind": "simulation",
       "label": "cand-31dd017e61de-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-4e292d1b929b-montecarlo",
+      "kind": "simulation",
+      "label": "cand-4e292d1b929b-montecarlo",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7-mc30",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-4e292d1b929b-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-4e292d1b929b-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-4e292d1b929b-scenarios",
+      "kind": "simulation",
+      "label": "cand-4e292d1b929b-scenarios",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-4e292d1b929b-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-4e292d1b929b-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-4e292d1b929b-sweep",
+      "kind": "simulation",
+      "label": "cand-4e292d1b929b-sweep",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-4e292d1b929b-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-4e292d1b929b-sweep-v2",
       "meta": {
         "seed": 7,
         "model": "mathmodel-v2",
@@ -11090,6 +11404,72 @@
       }
     },
     {
+      "id": "sim-cand-d656eeeaeca1-montecarlo",
+      "kind": "simulation",
+      "label": "cand-d656eeeaeca1-montecarlo",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7-mc30",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-d656eeeaeca1-montecarlo-v2",
+      "kind": "simulation",
+      "label": "cand-d656eeeaeca1-montecarlo-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7-mc20",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-d656eeeaeca1-scenarios",
+      "kind": "simulation",
+      "label": "cand-d656eeeaeca1-scenarios",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-d656eeeaeca1-scenarios-v2",
+      "kind": "simulation",
+      "label": "cand-d656eeeaeca1-scenarios-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-d656eeeaeca1-sweep",
+      "kind": "simulation",
+      "label": "cand-d656eeeaeca1-sweep",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v1",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-cand-d656eeeaeca1-sweep-v2",
+      "kind": "simulation",
+      "label": "cand-d656eeeaeca1-sweep-v2",
+      "meta": {
+        "seed": 7,
+        "model": "mathmodel-v2",
+        "dataset": "synthetic-anchor-v1/seed-7",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-cand-db0588dfed1a-montecarlo",
       "kind": "simulation",
       "label": "cand-db0588dfed1a-montecarlo",
@@ -12047,6 +12427,17 @@
       }
     },
     {
+      "id": "sim-exp-7f68f860907b",
+      "kind": "simulation",
+      "label": "exp-7f68f860907b",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
       "id": "sim-exp-81d20666db2b",
       "kind": "simulation",
       "label": "exp-81d20666db2b",
@@ -12171,6 +12562,17 @@
       "id": "sim-exp-c0e968f374e3",
       "kind": "simulation",
       "label": "exp-c0e968f374e3",
+      "meta": {
+        "seed": null,
+        "model": "mathmodel-v2",
+        "dataset": "adversarial_patterns",
+        "simulation_version": "sim-0.1.0"
+      }
+    },
+    {
+      "id": "sim-exp-db90104e98bf",
+      "kind": "simulation",
+      "label": "exp-db90104e98bf",
       "meta": {
         "seed": null,
         "model": "mathmodel-v2",
@@ -12811,6 +13213,33 @@
       }
     },
     {
+      "id": "source-72",
+      "kind": "source",
+      "label": "CME education on regime pricing",
+      "meta": {
+        "url": "https://www.cmegroup.com/education/",
+        "source_type": "web"
+      }
+    },
+    {
+      "id": "source-73",
+      "kind": "source",
+      "label": "OCC margin methodology",
+      "meta": {
+        "url": "https://www.optionsclearing.com/",
+        "source_type": "intl_org"
+      }
+    },
+    {
+      "id": "source-74",
+      "kind": "source",
+      "label": "Performance bond practices",
+      "meta": {
+        "url": "https://www.fmi.org/",
+        "source_type": "web"
+      }
+    },
+    {
       "id": "source-8",
       "kind": "source",
       "label": "Fixture Source",
@@ -12971,6 +13400,24 @@
     {
       "source": "cand-31dd017e61de-improvement-v2",
       "target": "cand-31dd017e61de-attack-red_team-fast-crash-capacity-lag-exploitation",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-improvement-v2",
+      "target": "cand-4e292d1b929b-attack-game_theory-ratchet-gaming-via-tranche-refills",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-improvement-v2",
+      "target": "cand-4e292d1b929b-attack-red_team-ratchet-gaming-via-tranche-refills",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-improvement-v2",
+      "target": "cand-4e292d1b929b-attack-security-tranche-sized-ratchet-evasion",
       "kind": "addresses",
       "meta": {}
     },
@@ -13583,6 +14030,24 @@
     {
       "source": "cand-d5bf8d515927-improvement-v2",
       "target": "cand-d5bf8d515927-attack-red_team-benchmark-overfitting",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-improvement-v2",
+      "target": "cand-d656eeeaeca1-attack-game_theory-kicker-pulse-farming-of-the-crash-kicker",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-improvement-v2",
+      "target": "cand-d656eeeaeca1-attack-red_team-kicker-pulse-farming-of-the-crash-kicker",
+      "kind": "addresses",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-improvement-v2",
+      "target": "cand-d656eeeaeca1-attack-security-kicker-cap-boundary-farming",
       "kind": "addresses",
       "meta": {}
     },
@@ -14718,6 +15183,86 @@
       "kind": "attacks",
       "meta": {
         "profitable": false
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b-attack-game_theory-persistent-alarm-overcharge-pass-through",
+      "target": "cand-4e292d1b929b",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b-attack-game_theory-ratchet-gaming-via-tranche-refills",
+      "target": "cand-4e292d1b929b",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b-attack-game_theory-residual-first-window-overcharge-bounded",
+      "target": "cand-4e292d1b929b",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b-attack-oracle-anchor-integrity-out-of-model",
+      "target": "cand-4e292d1b929b",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b-attack-oracle-anchor-shaping-to-keep-the-gate-narrow",
+      "target": "cand-4e292d1b929b",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b-attack-red_team-persistent-alarm-overcharge-pass-through",
+      "target": "cand-4e292d1b929b",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b-attack-red_team-ratchet-gaming-via-tranche-refills",
+      "target": "cand-4e292d1b929b",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b-attack-red_team-residual-first-window-overcharge-bounded",
+      "target": "cand-4e292d1b929b",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b-attack-security-credit-farming-by-idleness-bounded",
+      "target": "cand-4e292d1b929b",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b-attack-security-tranche-sized-ratchet-evasion",
+      "target": "cand-4e292d1b929b",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
       }
     },
     {
@@ -18737,6 +19282,86 @@
       }
     },
     {
+      "source": "cand-d656eeeaeca1-attack-game_theory-kicker-pulse-farming-of-the-crash-kicker",
+      "target": "cand-d656eeeaeca1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1-attack-game_theory-recovery-leg-overpay-harvesting",
+      "target": "cand-d656eeeaeca1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1-attack-game_theory-residual-anchor-drift-premium-not-attacker-contr",
+      "target": "cand-d656eeeaeca1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1-attack-oracle-anchor-pulsing-to-farm-the-kicker",
+      "target": "cand-d656eeeaeca1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1-attack-oracle-sustained-directional-anchor-shaping-out-of-mode",
+      "target": "cand-d656eeeaeca1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1-attack-red_team-kicker-pulse-farming-of-the-crash-kicker",
+      "target": "cand-d656eeeaeca1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1-attack-red_team-recovery-leg-overpay-harvesting",
+      "target": "cand-d656eeeaeca1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1-attack-red_team-residual-anchor-drift-premium-not-attacker-contr",
+      "target": "cand-d656eeeaeca1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1-attack-security-kicker-cap-boundary-farming",
+      "target": "cand-d656eeeaeca1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": true
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1-attack-security-residual-kicker-separation-shaping-bounded",
+      "target": "cand-d656eeeaeca1",
+      "kind": "attacks",
+      "meta": {
+        "profitable": false
+      }
+    },
+    {
       "source": "cand-db0588dfed1a-attack-game_theory-exit-timing-around-anchor-revisions",
       "target": "cand-db0588dfed1a",
       "kind": "attacks",
@@ -20441,6 +21066,30 @@
       }
     },
     {
+      "source": "cand-4e292d1b929b",
+      "target": "source-64",
+      "kind": "cites",
+      "meta": {
+        "query": "persistent drift escrow slash alarm regime; energy delivery performance bond sustained default penalty; multi-speed EMA "
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b",
+      "target": "source-71",
+      "kind": "cites",
+      "meta": {
+        "query": "persistent drift escrow slash alarm regime; energy delivery performance bond sustained default penalty; multi-speed EMA "
+      }
+    },
+    {
+      "source": "cand-4e292d1b929b",
+      "target": "source-74",
+      "kind": "cites",
+      "meta": {
+        "query": "persistent drift escrow slash alarm regime; energy delivery performance bond sustained default penalty; multi-speed EMA "
+      }
+    },
+    {
       "source": "cand-50e511859d99",
       "target": "source-24",
       "kind": "cites",
@@ -21145,6 +21794,30 @@
       }
     },
     {
+      "source": "cand-d656eeeaeca1",
+      "target": "source-71",
+      "kind": "cites",
+      "meta": {
+        "query": "persistent EMA displacement regime gate fee premium; multi-speed EMA separation insurance pricing oracle; crash regime t"
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1",
+      "target": "source-72",
+      "kind": "cites",
+      "meta": {
+        "query": "persistent EMA displacement regime gate fee premium; multi-speed EMA separation insurance pricing oracle; crash regime t"
+      }
+    },
+    {
+      "source": "cand-d656eeeaeca1",
+      "target": "source-73",
+      "kind": "cites",
+      "meta": {
+        "query": "persistent EMA displacement regime gate fee premium; multi-speed EMA separation insurance pricing oracle; crash regime t"
+      }
+    },
+    {
       "source": "cand-db0588dfed1a",
       "target": "source-17",
       "kind": "cites",
@@ -21443,6 +22116,12 @@
       "meta": {}
     },
     {
+      "source": "cand-4e292d1b929b-improvement-v2",
+      "target": "cand-4e292d1b929b-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
       "source": "cand-52eeaf35607b-improvement-v2",
       "target": "cand-52eeaf35607b-model-v2",
       "kind": "derived_from",
@@ -21619,6 +22298,12 @@
     {
       "source": "cand-d5bf8d515927-improvement-v2",
       "target": "cand-d5bf8d515927-model-v2",
+      "kind": "derived_from",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-improvement-v2",
+      "target": "cand-d656eeeaeca1-model-v2",
       "kind": "derived_from",
       "meta": {}
     },
@@ -21823,6 +22508,18 @@
     {
       "source": "cand-31dd017e61de",
       "target": "cand-31dd017e61de-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b",
+      "target": "cand-4e292d1b929b-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b",
+      "target": "cand-4e292d1b929b-model-v2",
       "kind": "formalizes",
       "meta": {}
     },
@@ -22289,6 +22986,18 @@
       "meta": {}
     },
     {
+      "source": "cand-d656eeeaeca1",
+      "target": "cand-d656eeeaeca1-model-v1",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1",
+      "target": "cand-d656eeeaeca1-model-v2",
+      "kind": "formalizes",
+      "meta": {}
+    },
+    {
       "source": "cand-db0588dfed1a",
       "target": "cand-db0588dfed1a-model-v1",
       "kind": "formalizes",
@@ -22517,6 +23226,12 @@
       "meta": {}
     },
     {
+      "source": "cand-4e292d1b929b-model-v1",
+      "target": "cand-4e292d1b929b-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
       "source": "cand-52eeaf35607b-model-v1",
       "target": "cand-52eeaf35607b-model-v2",
       "kind": "patches",
@@ -22693,6 +23408,12 @@
     {
       "source": "cand-d5bf8d515927-model-v1",
       "target": "cand-d5bf8d515927-model-v2",
+      "kind": "patches",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-model-v1",
+      "target": "cand-d656eeeaeca1-model-v2",
       "kind": "patches",
       "meta": {}
     },
@@ -23113,6 +23834,48 @@
     {
       "source": "cand-31dd017e61de-model-v2",
       "target": "sim-exp-bac8ff2adbf7",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-model-v1",
+      "target": "sim-cand-4e292d1b929b-montecarlo",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-model-v1",
+      "target": "sim-cand-4e292d1b929b-scenarios",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-model-v1",
+      "target": "sim-cand-4e292d1b929b-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-model-v2",
+      "target": "sim-cand-4e292d1b929b-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-model-v2",
+      "target": "sim-cand-4e292d1b929b-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-model-v2",
+      "target": "sim-cand-4e292d1b929b-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-4e292d1b929b-model-v2",
+      "target": "sim-exp-7f68f860907b",
       "kind": "simulates",
       "meta": {}
     },
@@ -24355,6 +25118,48 @@
     {
       "source": "cand-d5bf8d515927-model-v2",
       "target": "sim-cand-d5bf8d515927-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-model-v1",
+      "target": "sim-cand-d656eeeaeca1-montecarlo",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-model-v1",
+      "target": "sim-cand-d656eeeaeca1-scenarios",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-model-v1",
+      "target": "sim-cand-d656eeeaeca1-sweep",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-model-v2",
+      "target": "sim-cand-d656eeeaeca1-montecarlo-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-model-v2",
+      "target": "sim-cand-d656eeeaeca1-scenarios-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-model-v2",
+      "target": "sim-cand-d656eeeaeca1-sweep-v2",
+      "kind": "simulates",
+      "meta": {}
+    },
+    {
+      "source": "cand-d656eeeaeca1-model-v2",
+      "target": "sim-exp-db90104e98bf",
       "kind": "simulates",
       "meta": {}
     },

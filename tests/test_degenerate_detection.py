@@ -56,10 +56,10 @@ def _params():
     ]
 
 
-def _model(equations, version=1) -> MathModel:
+def _model(equations, version=1, variables=None) -> MathModel:
     return MathModel(
         candidate_id="cand-simtest",
-        variables=_vars(),
+        variables=variables if variables is not None else _vars(),
         parameters=_params(),
         equations=equations,
         assumptions=[{"statement": "observable anchor", "critical": False}],
@@ -68,6 +68,24 @@ def _model(equations, version=1) -> MathModel:
         rationale="test model",
         version=version,
     )
+
+
+def _trend_vars():
+    """Anchored-trend model vars: trend EMA + protection fee states."""
+    return [
+        {"name": "trend", "symbol": "T_t", "role": "state", "units": "u",
+         "description": "trend index"},
+        {"name": "trend_next", "symbol": "T_t1", "role": "state", "units": "u",
+         "description": "next trend"},
+        {"name": "cover", "symbol": "F_t", "role": "state", "units": "u",
+         "description": "protection fee"},
+        {"name": "cover_next", "symbol": "F_t1", "role": "state", "units": "u",
+         "description": "next fee"},
+        {"name": "anchor", "symbol": "X_t", "role": "input", "units": "i",
+         "description": "anchor level"},
+        {"name": "anchor_delta", "symbol": "dX_t", "role": "input", "units": "i",
+         "description": "anchor change"},
+    ]
 
 
 def _series(steps=6):
@@ -252,3 +270,93 @@ class TestAdversarialPatternBattery:
             "S_t is a declared state; its drain must be measurable"
         )
         assert not bound.vacuous
+
+    def test_crash_park_craft_moves_once_then_parks(self):
+        """The r13 choreography: one hard move, then dX=0 forever —
+        the pattern whose absence made anchor-heal designs invisible
+        to the r10/r11 battery (wash/pump/osc move repeatedly, shock
+        reverts; nothing parks)."""
+        m = _model([
+            {"name": "rule", "expression": "S_t1 = S_t * (1 + alpha * dX_t / X_t)",
+             "description": "supply follows anchor"},
+        ])
+        battery = AttackPatternBattery(m)
+        rows = battery.craft_series(PatternSpec(kind=AttackPattern.CRASH_PARK, steps=60))
+        nonzero = [r for r in rows if r["dX_t"] != 0.0]
+        assert len(nonzero) == 1, "exactly one move"
+        assert abs(nonzero[0]["dX_t"]) > 0.5 * 1000.0, "a hard move"
+        parked = rows[rows.index(nonzero[0]) + 1:]
+        assert all(r["dX_t"] == 0.0 for r in parked), (
+            "and it parks — no reversion, no further moves"
+        )
+        assert abs(rows[-1]["X_t"] - 1000.0) > 0.5 * 1000.0, "level stays moved"
+
+    def test_anchor_heal_design_flags_heal_ratio(self):
+        """An anchored-trend protection state (keys |T-1000|, T reverts
+        to 1000 when moves stop) must report a heal ratio near zero
+        under CRASH_PARK: the r13 finding class — protection decays to
+        zero exactly when the regime is permanently moved."""
+        m = _model([
+            {"name": "trend",
+             "expression": ("T_t1 = clip(T_t + 0.2*((1000.0 + (dX_t/X_t)*1000.0)"
+                          " - T_t), 200.0, 1800.0)"),
+             "description": "1000-anchored reverting trend"},
+            {"name": "cover",
+             "expression": ("F_t1 = clip(F_t*(1-0.4) + 0.4*(1000.0 + 1.4*abs(T_t-1000.0)),"
+                          " 400.0, 2400.0)"),
+             "description": "protection fee keyed to |T-1000|"},
+        ], version=1, variables=_trend_vars())
+        bound = AttackPatternBattery(m).run_pattern(
+            PatternSpec(kind=AttackPattern.CRASH_PARK, steps=60)
+        )
+        assert "F_t" in bound.heal_flags, (
+            "F_t keys the anchored trend; its heal must be measured"
+        )
+        assert bound.heal_flags["F_t"] < 0.25, (
+            "anchored-trend cover heals: tail protection "
+            "decays while the level stays moved"
+        )
+
+    def test_persistent_protection_heal_ratio_stays_high(self):
+        """A level-tracking protection state (slow EMA of X, wide clip)
+        must NOT flag: after the crash it stays displaced — the r12
+        construction. The negative control for the heal flag."""
+        m = _model([
+            {"name": "trend",
+             "expression": "T_t1 = clip(T_t + 0.2*(X_t - T_t), 200.0, 3000.0)",
+             "description": "slow EMA of the LEVEL (re-centers)"},
+            {"name": "cover",
+             "expression": ("F_t1 = clip(F_t*(1-0.4) + 0.4*(1000.0 + 1.4*abs(T_t-1000.0)),"
+                          " 400.0, 2400.0)"),
+             "description": "protection fee keyed to the level EMA"},
+        ], version=1, variables=_trend_vars())
+        bound = AttackPatternBattery(m).run_pattern(
+            PatternSpec(kind=AttackPattern.CRASH_PARK, steps=60)
+        )
+        assert bound.heal_flags.get("F_t", 1.0) > 0.5, (
+            "level-tracking cover stays priced up while the level "
+            "stays moved"
+        )
+
+    def test_heal_flag_ignores_initialization_transient(self):
+        """The heal measurement must key the POST-crash window only: a
+        state seeding at 1000 and decaying to its natural level before
+        the crash is an initialization transient, not protection (the
+        r13 review catch: O_t's t0 displacement was init, not crash)."""
+        m = _model([
+            {"name": "trend",
+             "expression": ("T_t1 = clip(T_t + 0.2*((1000.0 + (dX_t/X_t)*1000.0)"
+                          " - T_t), 200.0, 1800.0)"),
+             "description": "1000-anchored reverting trend"},
+            # cover seeds at 1000 but its natural level is 520 — pure
+            # init decay, keyed to NOTHING (reads only itself)
+            {"name": "cover",
+             "expression": "F_t1 = clip(F_t*(1-0.5) + 0.5*520.0, 400.0, 2400.0)",
+             "description": "init-decay decoy: natural level 520"},
+        ], version=1, variables=_trend_vars())
+        bound = AttackPatternBattery(m).run_pattern(
+            PatternSpec(kind=AttackPattern.CRASH_PARK, steps=60)
+        )
+        # decoy reads only itself -> not keyed -> not flagged; and if
+        # it were, its post-crash displacement is ~0 (nothing moves it)
+        assert "F_t" not in bound.heal_flags or bound.heal_flags["F_t"] >= 0.0

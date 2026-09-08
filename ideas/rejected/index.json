@@ -36,6 +36,15 @@
     "novelty_class": "insufficient_evidence"
   },
   {
+    "candidate_id": "cand-8212f81f4f75",
+    "name": "Drift-Gap Joule Escrow",
+    "category": "energy economics",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r13 measured anchor-heal flaw (r13 CRASH_PARK battery pattern): protection keyed to a 1000-anchored reverting trend EMA heals to the anchor once moves stop, while a permanently-shifted regime stays moved \u2014 tail cover / slash premium decays to zero exactly when risk is maximal): drift-gap slash alarm a_t fires 4 steps then heals to 0 under the moved regime \u2014 defaults timed to healed windows pay no slash premium. The successor keys protection to a persistent slow EMA of the LEVEL (r12 primitive, insurance polarity: stays displaced while the regime stays moved).",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
     "candidate_id": "cand-e98e5859f3f5",
     "name": "Joule-Bonded Inference Escrow",
     "category": "energy economics",
@@ -169,6 +178,15 @@
     "category": "oracle design",
     "status": "superseded",
     "rejected_because": "SUPERSEDED (r12 measured design flaw): measured design flaw \u2014 r11 \u00a720 pattern battery: pump_park still drains B_m +487.45 (vol_oscillation +295.76) because the band centers on a 1000-anchored reverting trend EMA: a PERMANENT level shift integrates exceedance forever (eternal mis-banding). The r11 open question ('should the band re-center on an EMA of the level?') is resolved by measurement \u2014 the successor (r12) re-centers the band via a fast/slow level-EMA divergence gate: oscillation keeps both EMAs flat (no excess), a permanent shift yields one bounded re-centering transient, then the band follows the level. The r11 evidence chain stands; the successor re-enters the funnel with the divergence-gate model.",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
+    "candidate_id": "cand-b2b411464015",
+    "name": "Trend-Indexed Prediction-Fee Oracle",
+    "category": "oracle design",
+    "status": "superseded",
+    "rejected_because": "SUPERSEDED (r13 measured anchor-heal flaw (r13 CRASH_PARK battery pattern): protection keyed to a 1000-anchored reverting trend EMA heals to the anchor once moves stop, while a permanently-shifted regime stays moved \u2014 tail cover / slash premium decays to zero exactly when risk is maximal): fee F_t heals to 7% of peak displacement while the level stays -60% moved (heal_flags F_t=0.069). The successor keys protection to a persistent slow EMA of the LEVEL (r12 primitive, insurance polarity: stays displaced while the regime stays moved).",
     "fatal_flaws": [],
     "novelty_class": "adjacent_mechanism"
   },

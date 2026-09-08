@@ -30,6 +30,7 @@ replacing adjectives.
 
 from __future__ import annotations
 
+import re
 from enum import StrEnum
 
 from pydantic import BaseModel, Field
@@ -49,6 +50,14 @@ class AttackPattern(StrEnum):
     WASH_FLOW = "wash_flow"  # sustained wash patterns pinning measured vol high
     PUMP_UNWIND = "pump_unwind"  # manufacture vol, harvest premium, unwind
     SHOCK_TIMING = "shock_timing"  # spike timed into the subsidy trough
+    # Move once, then PARK: a permanent level shift that stops moving.
+    # Exposes anchor-heal designs — protection keyed to a 1000-anchored
+    # reverting EMA "heals" to the anchor once dX=0, right when the
+    # regime is permanently moved (tail cover sold at zero premium).
+    # None of the four original choreographies parks: wash/pump/osc move
+    # repeatedly, shock reverts. The r13 heal findings were invisible to
+    # the r10/r11 battery exactly because this pattern was missing.
+    CRASH_PARK = "crash_park"
 
 
 class PatternSpec(BaseModel):
@@ -62,6 +71,10 @@ class PatternSpec(BaseModel):
     wash_level: float = 0.02
     # shock_timing: fraction of the window the defender lags
     lag_fraction: float = 0.2
+    # crash_park: the one-shot level shift fraction (negative = crash)
+    park_shift: float = -0.6
+    # crash_park: step index of the one-shot shift (mid-window default)
+    park_at: int = 20
 
 
 class AttackBound(BaseModel):
@@ -81,11 +94,57 @@ class AttackBound(BaseModel):
     headline_metric: str | None = None
     vacuous: bool = False
     failures: list[str] = Field(default_factory=list)
+    # CRASH_PARK only: per keyed protection state, the parked signal as a
+    # fraction of its crash-time peak (heal ratio). < 0.25 while the
+    # level stays moved = the anchor-heal flaw (r13 finding class):
+    # protection decays to zero right when tail risk is maximal.
+    heal_flags: dict[str, float] = Field(default_factory=dict)
 
 
 def _state_var_order(model: MathModel) -> list[str]:
     """State symbols in declaration order (primary first)."""
     return [v.symbol for v in model.variables if v.role == "state"]
+
+
+def _eq_symbols(model: MathModel) -> dict[str, set[str]]:
+    """Map each equation's LHS symbol -> symbols its RHS reads."""
+    out: dict[str, set[str]] = {}
+    for eq in model.equations:
+        lhs = eq.expression.split("=", 1)[0].strip()
+        if lhs:
+            out[lhs] = set(re.findall(r"[A-Za-z_][A-Za-z_0-9]*", eq.expression))
+    return out
+
+
+def _keyed_protection_states(model: MathModel, hist: list[dict[str, float]]) -> list[str]:
+    """States whose dynamics depend on the model's trend/EMA states.
+
+    The protection signal in anchored-trend designs is the state keyed
+    to |T-1000| or the drawdown/alarm derived from T. We approximate
+    "keyed" structurally: a state whose defining equation reads a state
+    OTHER than itself (its response is driven by the protection-signal
+    chain), excluding the EMA states themselves (they ARE the flaw, not
+    the signal). Falls back to the primary state when nothing matches —
+    the primary state is the mechanism's headline stock.
+    """
+    states = _state_var_order(model)
+    eqs = _eq_symbols(model)
+    # a state's defining equation assigns <symbol>1
+    def reads_of(sym: str) -> set[str]:
+        return eqs.get(f"{sym}1", set()) | eqs.get(sym, set())
+
+    emas = [
+        s for s in states
+        if (r := reads_of(s)) and r <= {s, f"{s}1", "X_t", "dX_t"}
+    ]
+    keyed = [
+        s for s in states
+        if s not in emas and reads_of(s) & (set(states) - {s, f"{s}1"})
+    ]
+    if not keyed:
+        keyed = [states[0]] if states else []
+    # only report states that actually appear in the run history
+    return [s for s in keyed if s in hist[0]]
 
 
 class AttackPatternBattery:
@@ -139,13 +198,27 @@ class AttackPatternBattery:
             return rows
         # SHOCK_TIMING: a spike timed into the defender's lag window —
         # quiet until mid-window, one hard shock, then quiet again.
-        x = 1000.0
-        hit = max(1, int(spec.steps * (1.0 - spec.lag_fraction)))
-        for t in range(spec.steps):
-            dx = x * 0.5 if t == hit else 0.0
-            rows.append({"X_t": x, "dX_t": dx})
-            x += dx
-        return rows
+        if spec.kind is AttackPattern.SHOCK_TIMING:
+            x = 1000.0
+            hit = max(1, int(spec.steps * (1.0 - spec.lag_fraction)))
+            for t in range(spec.steps):
+                dx = x * 0.5 if t == hit else 0.0
+                rows.append({"X_t": x, "dX_t": dx})
+                x += dx
+            return rows
+        # CRASH_PARK: move once, then park — dX=0 forever after. The
+        # choreography that exposes anchor-heal designs: protection keyed
+        # to a 1000-anchored reverting EMA heals to the anchor right
+        # when the regime is permanently moved.
+        if spec.kind is AttackPattern.CRASH_PARK:
+            x = 1000.0
+            at = max(1, min(spec.park_at, spec.steps - 2))
+            for t in range(spec.steps):
+                dx = x * spec.park_shift if t == at else 0.0
+                rows.append({"X_t": x, "dX_t": dx})
+                x += dx
+            return rows
+        raise ValueError(f"unhandled pattern: {spec.kind}")  # pragma: no cover
 
     def base_series(self, spec: PatternSpec) -> list[dict[str, float]]:
         """The matched no-attack base: same length, mild natural noise."""
@@ -245,6 +318,39 @@ class AttackPatternBattery:
         if not edge and not vacuous:
             vacuous = True
 
+        # ANCHOR-HEAL flag (the r13 finding class): under CRASH_PARK the
+        # keyed states are the model's PROTECTION signals. A signal whose
+        # DISPLACEMENT from its pre-crash baseline peaks at the crash then
+        # heals below ~25% of peak while the level stays >50% moved means
+        # protection decays to zero exactly when tail risk is maximal —
+        # tail cover sold at anchor-normal premium. Displacement, not raw
+        # magnitude: a state sitting near 1000 by convention must not
+        # read as "signal" merely for being large. This is a MEASUREMENT
+        # on the bound; interpretation is per-mechanism — a re-banding
+        # design (the r12 meter) INTENDS its exceedance to heal after
+        # re-centering; an insurance/alarm design must not heal.
+        heal_flags: dict[str, float] = {}
+        if spec.kind is AttackPattern.CRASH_PARK:
+            hist = pat.history
+            if hist:
+                moved = abs(hist[-1]["X_t"] - 1000.0) > 0.5 * 1000.0
+                if moved:
+                    at = max(1, min(spec.park_at, spec.steps - 2))
+                    keyed = _keyed_protection_states(self.model, hist)
+                    post = hist[at:]  # crash response only — exclude the
+                    # model's own initialization transient (state seeding
+                    # at 1000 and decaying to its natural level is not a
+                    # protection signal; r13 measurement bug caught in
+                    # review: O_t's t0 displacement was init, not crash)
+                    for sym in keyed:
+                        base_v = float(hist[at - 1].get(sym, 0.0))
+                        disp = [
+                            abs(float(r[sym]) - base_v) for r in post if sym in r
+                        ]
+                        peak = max(disp)
+                        if peak > 1.0:  # a real signal, not noise floor
+                            heal_flags[sym] = round(disp[-1] / peak, 6)
+
         return AttackBound(
             kind=spec.kind,
             pattern_metrics=pm,
@@ -255,6 +361,7 @@ class AttackPatternBattery:
             headline_metric=None if vacuous else headline_metric,
             vacuous=vacuous,
             failures=list(pat.failures) + list(base.failures),
+            heal_flags=heal_flags,
         )
 
     def run_all(self, steps: int = 60) -> list[AttackBound]:
@@ -268,4 +375,5 @@ class AttackPatternBattery:
                 PatternSpec(kind=AttackPattern.PUMP_UNWIND, steps=steps)
             ),
             self.run_pattern(PatternSpec(kind=AttackPattern.SHOCK_TIMING, steps=steps)),
+            self.run_pattern(PatternSpec(kind=AttackPattern.CRASH_PARK, steps=steps)),
         ]
