@@ -2,7 +2,7 @@
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-08T03:27:03+00:00
+Generated: 2026-09-08T04:13:18+00:00
 Candidate: `cand-e74d830a9479` (§7 recommended, rank 1)
 
 ## 1. Publication Readiness
@@ -39,8 +39,9 @@ Deterministic bounds from the §20 attack-pattern battery (60-step window, match
 - **wash_flow**: measured, no positive attacker edge (the state(s) drained no further under attack than base)
 - **pump_unwind**: attacker edge **+0.3177** on `F_t_drawn` vs a matched base run
 - **shock_timing**: attacker edge **+0.3182** on `F_t_drawn` vs a matched base run
-- **crash_park**: attacker edge **+0.3182** on `F_t_drawn` vs a matched base run
+- **crash_park**: measured, no positive attacker edge (the state(s) drained no further under attack than base); 1 excursion(s) reclassified as TRANSIENT (recovered under park: the crash's own cost, not a standing extraction): `F_t` recovered to 0% of peak
   - heal disclosure: after the one-shot move, protection `F_t` retains 0% of peak, `W_t` retains 33% of peak while the level stays moved
+- **drift_creep**: measured, no positive attacker edge (the state(s) drained no further under attack than base); drift responsiveness: `Q_t` lags the drifted level by +313.3 more than base, `W_t` lags the drifted level by +318.4 more than base (design lag under a grinding regime, disclosed; an attacker edge only where a measured consumer response appears above)
 
 ## 5. Build-in-Public Progression (§27)
 

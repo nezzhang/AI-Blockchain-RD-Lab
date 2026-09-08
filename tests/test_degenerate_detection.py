@@ -416,3 +416,86 @@ class TestTransientRecoveryClassification:
             "a standing drain must remain a disclosed edge"
         )
         assert "S_t_drawn" not in bound.transient_recovered
+
+
+class TestDriftCreepPattern:
+    """The r17 choreography: sustained sub-threshold drift (boiling
+    frog). Pins (a) the craft shape — constant grind, no spike; (b)
+    the wedge disclosure — level-denominated states that lag the
+    regime are disclosed as responsiveness gaps; (c) attribution
+    honesty — a wedge enters the attacker-edge headline ONLY through a
+    measured consumer response, never by structural inference (the r16
+    v2's slow anchor lags 326 under drift but its consumer keys the
+    anchor SEPARATION, which stays ~1: nothing to harvest, headline 0).
+    """
+
+    def test_craft_is_constant_grind_no_spike(self):
+        m = _model([
+            {"name": "pool",
+             "expression": "S_t1 = clip(S_t + 0.1*(X_t - S_t), 200.0, 4000.0)",
+             "description": "level-tracking pool"},
+        ], version=1)
+        b = AttackPatternBattery(m)
+        rows = b.craft_series(PatternSpec(kind=AttackPattern.DRIFT_CREEP, steps=60))
+        assert len(rows) == 60
+        assert abs(rows[0]["X_t"] - 1000.0) < 1e-9
+        # constant per-step relative drift, never a spike
+        rates = [r["dX_t"] / max(r["X_t"], 1.0) for r in rows]
+        assert all(abs(rate - 0.005) < 1e-9 for rate in rates)
+        # cumulative +~35%, monotonically up
+        assert rows[-1]["X_t"] > 1300.0
+        assert all(rows[i + 1]["X_t"] >= rows[i]["X_t"] for i in range(59))
+
+    def test_level_tracking_pool_has_no_wedge(self):
+        # kappa 0.5: equilibrium lag under a 0.5%/step grind is
+        # growth/kappa = 13.5 — a genuinely fast tracker keeps pace
+        m = _model([
+            {"name": "pool",
+             "expression": "S_t1 = clip(S_t + 0.5*(X_t - S_t), 200.0, 4000.0)",
+             "description": "fast level-tracking pool keeps pace"},
+        ], version=1)
+        bound = AttackPatternBattery(m).run_pattern(
+            PatternSpec(kind=AttackPattern.DRIFT_CREEP, steps=60)
+        )
+        # a fast tracker ends near the level: no responsiveness lag
+        assert not bound.drift_wedges or all(
+            v < 25.0 for v in bound.drift_wedges.values()
+        )
+
+    def test_slow_state_wedge_disclosed_not_headlined(self):
+        m = _model([
+            {"name": "slow",
+             "expression": "S_t1 = clip(S_t + 0.01*(X_t - S_t), 200.0, 4000.0)",
+             "description": "slow tracker: lags a grinding regime"},
+        ], version=1)
+        bound = AttackPatternBattery(m).run_pattern(
+            PatternSpec(kind=AttackPattern.DRIFT_CREEP, steps=60)
+        )
+        # the lag is disclosed as a responsiveness wedge...
+        assert "S_t_wedge" in bound.drift_wedges
+        assert bound.drift_wedges["S_t_wedge"] > 100.0
+        # ...but must NOT enter the headline: no consumer response to
+        # harvest (attribution honesty — the r17 lesson)
+        assert not any(k.endswith("_wedge") for k in bound.pattern_metrics
+                       ) or bound.headline == 0.0 or "wedge" not in str(
+                       bound.headline_metric)
+
+    def test_wedge_metric_ignores_non_level_states(self):
+        # a fee keyed to pressure (not level): |F - X| is meaningless;
+        # the denomination gate must skip it
+        m = _model([
+            {"name": "fee",
+             "expression": "F_t1 = clip(600.0 + 20.0*abs(dX_t)/max(X_t,1.0)*"
+                           "100.0, 200.0, 1500.0)",
+             "description": "pressure-keyed fee (never at level scale)"},
+        ], version=1, variables=[
+            *_trend_vars(),
+            {"name": "fee", "symbol": "F_t", "role": "state", "units": "u",
+             "description": "fee level"},
+            {"name": "fee_next", "symbol": "F_t1", "role": "state", "units": "u",
+             "description": "next fee"},
+        ])
+        bound = AttackPatternBattery(m).run_pattern(
+            PatternSpec(kind=AttackPattern.DRIFT_CREEP, steps=60)
+        )
+        assert "F_t_wedge" not in bound.drift_wedges

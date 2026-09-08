@@ -83,6 +83,7 @@ class ReleasePackageBuilder:
             headline = b.get("headline")
             regime = b.get("regime_tracking") or {}
             transient = b.get("transient_recovered") or {}
+            wedges = b.get("drift_wedges") or {}
             heals = b.get("heal_flags") or {}
             if vacuous or headline is None:
                 out.append(
@@ -116,6 +117,18 @@ class ReleasePackageBuilder:
                         "crash's own cost, not a standing extraction): "
                         + rec_txt
                     )
+                if wedges:
+                    wtxt = ", ".join(
+                        f"`{k.replace('_wedge', '')}` lags the drifted "
+                        f"level by {v:+.1f} more than base"
+                        for k, v in wedges.items()
+                    )
+                    line += (
+                        "; drift responsiveness: " + wtxt
+                        + " (design lag under a grinding regime, "
+                        "disclosed; an attacker edge only where a "
+                        "measured consumer response appears above)"
+                    )
                 out.append(line)
             else:
                 metric = b.get("headline_metric", "?")
@@ -141,6 +154,15 @@ class ReleasePackageBuilder:
                         f"; excludes {len(transient)} transient "
                         "excursion(s) (recovered under park — the "
                         "crash's own cost): " + rec_txt
+                    )
+                if wedges:
+                    wtxt = ", ".join(
+                        f"`{k.replace('_wedge', '')}` {v:+.1f}"
+                        for k, v in wedges.items()
+                    )
+                    line += (
+                        "; drift responsiveness lag: " + wtxt
+                        + " (disclosed design lag, not an extraction)"
                     )
                 out.append(line)
             if heals:

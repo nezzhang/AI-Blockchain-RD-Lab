@@ -58,6 +58,15 @@ class AttackPattern(StrEnum):
     # repeatedly, shock reverts. The r13 heal findings were invisible to
     # the r10/r11 battery exactly because this pattern was missing.
     CRASH_PARK = "crash_park"
+    # Sustained sub-threshold drift: a constant grind (+0.5%/step by
+    # default, +35% cumulative over the window) that never trips any
+    # single-step spike trigger. Exposes LEAKAGE designs — protection
+    # states that lag a slowly-moving regime accumulate a standing
+    # wedge (fee/pool mispricing) for the drift's whole duration,
+    # while single-step defenses see nothing. The r16 v2 separation-key
+    # claim ("drift-paced farming closed") was red-team HYPOTHESIS;
+    # this choreography measures it (§2: code tests).
+    DRIFT_CREEP = "drift_creep"
 
 
 class PatternSpec(BaseModel):
@@ -75,6 +84,8 @@ class PatternSpec(BaseModel):
     park_shift: float = -0.6
     # crash_park: step index of the one-shot shift (mid-window default)
     park_at: int = 20
+    # drift_creep: the constant per-step drift fraction (the grind rate)
+    creep_rate: float = 0.005
 
 
 class AttackBound(BaseModel):
@@ -108,6 +119,12 @@ class AttackBound(BaseModel):
     # window's end (< 25% of peak displacement) reclassified as
     # TRANSIENT (the crash's own cost, re-normalized; r15 honesty fix).
     transient_recovered: dict[str, float] = Field(default_factory=dict)
+    # drift_creep only: per level-denominated state, how much MORE the
+    # state lags the level under sustained drift than under base — the
+    # RESPONSIVENESS gap (r17). Disclosed as a design cost; it becomes
+    # an attacker edge only when another state keys off it (then it
+    # also appears in the headline via the keyed wedge).
+    drift_wedges: dict[str, float] = Field(default_factory=dict)
 
 
 def _state_var_order(model: MathModel) -> list[str]:
@@ -264,6 +281,17 @@ class AttackPatternBattery:
                 rows.append({"X_t": x, "dX_t": dx})
                 x += dx
             return rows
+        # DRIFT_CREEP: a constant per-step grind — movement too slow to
+        # trip any single-step spike trigger, sustained the whole window.
+        # The boiling-frog family: leakage designs (protection lagging a
+        # slowly-moving regime) accumulate a standing wedge every step.
+        if spec.kind is AttackPattern.DRIFT_CREEP:
+            x = 1000.0
+            for _ in range(spec.steps):
+                dx = x * spec.creep_rate
+                rows.append({"X_t": x, "dX_t": dx})
+                x += dx
+            return rows
         raise ValueError(f"unhandled pattern: {spec.kind}")  # pragma: no cover
 
     def base_series(self, spec: PatternSpec) -> list[dict[str, float]]:
@@ -345,6 +373,75 @@ class AttackPatternBattery:
         # extraction. Exclude those metrics from the attacker-edge
         # headline and record them separately as regime tracking.
         regime_tracking: dict[str, float] = {}
+        # r17 drift-creep honesty. TWO layers:
+        # (1) METRIC: the extraction this pattern farms is the WEDGE —
+        #     how much MORE the protection lags the level under drift
+        #     than under base. The generic _drawn metric (pattern-vs-
+        #     base STATE delta) is blind to it: under drift BOTH runs
+        #     move their states, and the lag-vs-level cancels out of
+        #     the subtraction. The honest metric is per-state
+        #     |state - X| at window end, pattern minus base.
+        # (2) CLASSIFICATION: a state that ends AT the drifted level
+        #     kept pace — its excursion is the tracking itself (regime
+        #     tracking, not a harvest). A state that lags accumulates
+        #     the standing wedge: that stays in the headline, because
+        #     mispriced protection over a grinding regime is exactly
+        #     what the drift attacker farms.
+        drift_wedges: dict[str, float] = {}
+        if spec.kind is AttackPattern.DRIFT_CREEP:
+            pat_hist = pat.history
+            base_hist = base.history
+            if pat_hist and base_hist:
+                x_p = float(pat_hist[-1]["X_t"])
+                x_b = float(base_hist[-1]["X_t"])
+                state_syms = {
+                    k[: -len("_drawn")]
+                    for k in edge
+                    if k.endswith("_drawn")
+                }
+                for sym in sorted(state_syms):
+                    if sym not in pat_hist[-1] or sym not in base_hist[-1]:
+                        continue
+                    # Level-denominated only (deterministic): under the
+                    # BASE run the state sits at level scale (within 25%
+                    # of X). A fee (F_t ~600 at X~1000), a pressure
+                    # signal, or a zero-scale kicker is NOT level-
+                    # denominated — its |state - X| is meaningless and a
+                    # wedge metric on it would be a false disclosure.
+                    if abs(float(base_hist[-1][sym]) - x_b) > 0.25 * max(x_b, 1.0):
+                        continue
+                    wedge_p = abs(float(pat_hist[-1][sym]) - x_p)
+                    wedge_b = abs(float(base_hist[-1][sym]) - x_b)
+                    wedge = round(wedge_p - wedge_b, 6)
+                    if wedge > 0:
+                        drift_wedges[f"{sym}_wedge"] = wedge
+                        # r17 attribution honesty (measured, not assumed):
+                        # the wedge itself is a RESPONSIVENESS gap — the
+                        # state lags the regime. It is an attacker edge
+                        # ONLY if the lag propagates into a consumer
+                        # response the attacker harvests (a paid flow /
+                        # fee / premium). That harvest is exactly the
+                        # consumer-response metric this battery already
+                        # measures per pattern; asserting it from
+                        # structure (keyed-state shape) alone would
+                        # over-attribute — the r16 v2's slow anchor lags
+                        # 326 under drift, but its consumer keys the
+                        # ANCHOR SEPARATION, which stays at 1.04: nothing
+                        # to harvest. So wedges are DISCLOSED here and
+                        # enter the headline only via measured consumer
+                        # responses (the generic metrics), never by
+                        # structural inference.
+            if pat_hist:
+                x_final = float(pat_hist[-1]["X_t"])
+                for k in list(bound_candidates):
+                    if not k.endswith("_drawn"):
+                        continue
+                    sym = k[: -len("_drawn")]
+                    if sym not in pat_hist[0]:
+                        continue
+                    final_v = float(pat_hist[-1].get(sym, 0.0))
+                    if abs(final_v - x_final) < 0.10 * max(x_final, 1.0):
+                        regime_tracking[k] = bound_candidates.pop(k)
         # r15 transient-recovery honesty: an excursion that RECOVERS by
         # the parked window's end (< 25% of its peak displacement from
         # the pre-crash baseline) is the crash's own transient cost —
@@ -467,6 +564,7 @@ class AttackPatternBattery:
             heal_flags=heal_flags,
             regime_tracking=regime_tracking,
             transient_recovered=transient_recovered,
+            drift_wedges=drift_wedges,
         )
 
     def run_all(self, steps: int = 60) -> list[AttackBound]:
@@ -481,4 +579,5 @@ class AttackPatternBattery:
             ),
             self.run_pattern(PatternSpec(kind=AttackPattern.SHOCK_TIMING, steps=steps)),
             self.run_pattern(PatternSpec(kind=AttackPattern.CRASH_PARK, steps=steps)),
+            self.run_pattern(PatternSpec(kind=AttackPattern.DRIFT_CREEP, steps=steps)),
         ]

@@ -72,6 +72,7 @@ No external data dependency declared. See Security and adversarial sections for 
 - **cand-ce333ff19e9e-sweep-v2** (seed 7, sim-0.1.0): results recorded
 - **exp-3a7ae91132db** (seed None, sim-0.1.0): results recorded
 - **exp-94cd2d277999** (seed None, sim-0.1.0): results recorded
+- **exp-92383004c71e** (seed None, sim-0.1.0): results recorded
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 

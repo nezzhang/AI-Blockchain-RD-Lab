@@ -116,6 +116,50 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 17 drift-creep choreography round (new pattern → new
+  disclosure layer; zero new flaws): added DRIFT_CREEP to the §20
+  battery — the boiling-frog family: a constant sub-threshold grind
+  (+0.5%/step, +35% cumulative) that never trips any single-step
+  spike trigger. The motivation was §2 itself: the r16 v2's central
+  claim ("drift-paced farming closed by the separation key") was
+  red-team HYPOTHESIS, never measured — the battery had no drift
+  pattern. Measurement design took three honest iterations:
+  (1) the generic _drawn metric is BLIND to drift (both pattern and
+  base runs move their states; the lag-vs-level cancels in the
+  subtraction) — first probe showed the r16 v2 at headline 0.0 while
+  its states sat 266-337 below the drifted level;
+  (2) the per-state WEDGE metric (|state - X| at window end, pattern
+  vs base) exposed the lag — but wedge-on-every-state FALSE-POSITIVEd
+  (a pressure-keyed fee 40% off the level is not "lagging"; a slow
+  anchor whose consumer keys the SEPARATION lags 326 while the
+  harvestable quantity stays at 1.04). Fixes: a level-denomination
+  gate (wedges only for states at level scale in the base run,
+  within 25% of X) and ATTRIBUTION HONESTY — a wedge enters the
+  attacker-edge headline ONLY through a measured consumer response,
+  never by structural inference: the lag itself is a RESPONSIVENESS
+  gap (disclosed per state as drift_wedges on the AttackBound),
+  and asserting harvest from keyed-shape alone would over-attribute
+  (the r16 v2's slow anchor is keyed, but its consumer keys the
+  anchor separation, which correctly stays tiny).
+  VERDICT BY MEASUREMENT: the r16 v2 separation-key claim SURVIVES
+  (drift headline 0.0; its harvest quantity — separation — stays
+  ~1.04 under drift vs 0.04 base). Corpus census under the 6-pattern
+  battery: NO new attacker edge above threshold anywhere (max drift
+  headline 64.2 = the Joule's quiet credit Q_c paying during a GENUINE
+  sustained regime move — insurance semantics, the r13 design doing
+  its job; 48.4 = the bandwidth successor's P_a tenure-denial, the
+  same small griefing vector r15 measured under oscillation, now seen
+  under a second pattern). Drift WEDGES are large across the corpus
+  (177-330) — a UNIVERSAL responsiveness lag of level-denominated
+  states under grinding regimes, now disclosed per state in §4b
+  ("lags the drifted level by +N more than base; design lag, not an
+  extraction"). Release 4b renders the drift line (both zero-edge and
+  positive-edge variants). §21 r17 battery records stored for all 30
+  ranked candidates. Tests +4 (craft shape: constant grind no spike;
+  fast tracker small wedge; slow state wedge disclosed not headlined;
+  non-level states skipped by the denomination gate). No supersede,
+  no successor — the pattern found a DISCLOSURE class, not a flaw
+  class: the strongest possible outcome for corpus honesty. 399 pass.
 - Round 16 convergence-census round (the r15 queued work + the corpus
   honesty debt): (1) recommended-candidate triage — Demand-Index
   Escalation Ladder's 4b heal signature ('F_t retains 0% of peak')
