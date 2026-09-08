@@ -99,6 +99,11 @@ class AttackBound(BaseModel):
     # level stays moved = the anchor-heal flaw (r13 finding class):
     # protection decays to zero right when tail risk is maximal.
     heal_flags: dict[str, float] = Field(default_factory=dict)
+    # Park-style patterns only: EMA-of-level states' _drawn excursions
+    # reclassified as REGIME TRACKING (the state following the moved
+    # level — a design property, not an attacker extraction; r14 4b
+    # honesty fix).
+    regime_tracking: dict[str, float] = Field(default_factory=dict)
 
 
 def _state_var_order(model: MathModel) -> list[str]:
@@ -115,6 +120,43 @@ def _eq_symbols(model: MathModel) -> dict[str, set[str]]:
             out[lhs] = set(re.findall(r"[A-Za-z_][A-Za-z_0-9]*", eq.expression))
     return out
 
+
+
+def _ema_of_level_states(model: MathModel) -> set[str]:
+    """States that are EMAs of the input level itself (r14 4b honesty).
+
+    A state whose defining equation reads only itself and X_t (an EMA
+    of the level) REGIME-TRACKS: under a move-then-park choreography
+    its _drawn excursion is the state FOLLOWING the moved level — a
+    design property, not an attacker extraction. The r13/r14 finding:
+    the crash_park headline (and pump_unwind's parked half) was carried
+    entirely by such states (600 = the EMA moving to the new level =
+    the FIX working), which the 4b disclosure then published as a
+    'measured attacker edge' — a misleading disclosure. Classified
+    here, measured once, reported as regime-tracking downstream.
+    """
+    eqs = _eq_symbols(model)
+    # symbols that are NOT structural: function names (clip/max/min/...)
+    # and parameters may appear in an EMA's equation without breaking
+    # the "reads itself + the level only" shape.
+    nonstructural = {"clip", "max", "min", "abs", "sqrt", "ln", "exp",
+                     "sum", "mean", "std"} | {
+        v.symbol for v in model.parameters
+    } if hasattr(model, "parameters") else {"clip", "max", "min", "abs",
+                                            "sqrt", "ln", "exp", "sum",
+                                            "mean", "std"}
+    out: set[str] = set()
+    for v in model.variables:
+        if v.role != "state":
+            continue
+        sym = v.symbol
+        reads = eqs.get(f"{sym}1", set()) | eqs.get(sym, set())
+        if not reads:
+            continue
+        structural = {r for r in reads if r not in nonstructural}
+        if structural <= {sym, f"{sym}1", "X_t"}:
+            out.add(sym)
+    return out
 
 def _keyed_protection_states(model: MathModel, hist: list[dict[str, float]]) -> list[str]:
     """States whose dynamics depend on the model's trend/EMA states.
@@ -293,6 +335,18 @@ class AttackPatternBattery:
         bound_candidates = {
             k: v for k, v in edge.items() if v > 0 and k != "mean_measured_vol"
         }
+        # r14 4b honesty: under park-style choreographies (crash_park;
+        # pump_unwind's parked half), a regime-tracking EMA's _drawn is
+        # the state FOLLOWING the moved level — the fix working, not an
+        # extraction. Exclude those metrics from the attacker-edge
+        # headline and record them separately as regime tracking.
+        regime_tracking: dict[str, float] = {}
+        if spec.kind in (AttackPattern.CRASH_PARK, AttackPattern.PUMP_UNWIND):
+            emas = _ema_of_level_states(self.model)
+            for sym in emas:
+                k = f"{sym}_drawn"
+                if k in bound_candidates:
+                    regime_tracking[k] = bound_candidates.pop(k)
         # vol separation IS the bound for wash/pump (the vol premium is
         # the harvest), so include it when no stock/premium metric moved.
         if not bound_candidates and "mean_measured_vol" in edge:
@@ -362,6 +416,7 @@ class AttackPatternBattery:
             vacuous=vacuous,
             failures=list(pat.failures) + list(base.failures),
             heal_flags=heal_flags,
+            regime_tracking=regime_tracking,
         )
 
     def run_all(self, steps: int = 60) -> list[AttackBound]:

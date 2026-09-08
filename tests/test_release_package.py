@@ -284,3 +284,84 @@ class TestPackageStructure:
         a = ReleasePackageBuilder(seeded_db).build()
         b = ReleasePackageBuilder(seeded_db).build()
         assert a == b
+
+
+def _bounds_record(
+    *, regime_tracking: dict | None = None, heal_flags: dict | None = None,
+) -> dict:
+    """A §20 adversarial-patterns record shaped like the r13/r14 battery:
+    crash_park with an EMA excursion reclassified as regime tracking and
+    (optionally) heal flags on the keyed protection states."""
+    from blockchain_rd_lab.schemas import ExperimentRecord
+
+    return ExperimentRecord(
+        candidate_id="cand-rel",
+        timestamp=NOW,
+        git_commit="test",
+        parameters={"battery": "attack_patterns_v2_crash_park", "steps": 60},
+        dataset="adversarial_patterns",
+        model="mathmodel-v2",
+        seed=None,
+        simulation_version="test",
+        results={
+            "bounds": [
+                {"kind": "wash_flow", "headline": 4.68, "headline_metric": "T_t_drawn",
+                 "vacuous": False, "edge": {"T_t_drawn": 4.68}},
+                {"kind": "crash_park", "headline": 0.0, "headline_metric": None,
+                 "vacuous": False, "edge": {},
+                 "regime_tracking": regime_tracking or {},
+                 "heal_flags": heal_flags or {}},
+            ],
+            "vacuous_count": 0,
+        },
+    )
+
+
+class TestBoundsDisclosureHonesty:
+    """The r14 4b fix: an EMA-of-level excursion under crash_park is the
+    design FOLLOWING the moved level (regime tracking), not an attacker
+    edge — publishing it as 'measured attacker edge +600' would be a
+    misleading disclosure (§12/§2). The heal_flags carry the real
+    crash-park signal: which protection states heal, by how much."""
+
+    def test_regime_tracking_not_published_as_attacker_edge(self, seeded_db):
+        seeded_db.save_experiment(_bounds_record(
+            regime_tracking={"L_t_drawn": 600.0, "U_s_drawn": 262.1},
+        ))
+        pkg = ReleasePackageBuilder(seeded_db).build()
+        assert "REGIME TRACKING" in pkg, (
+            "the reclassification must be disclosed, not silently dropped"
+        )
+        # the excursion appears as regime tracking, explicitly NOT extraction
+        assert "not extraction" in pkg
+        assert "`L_t` +600.0" in pkg and "`U_s` +262.1" in pkg
+
+    def test_heal_disclosure_rendered(self, seeded_db):
+        seeded_db.save_experiment(_bounds_record(
+            heal_flags={"F_t": 0.93, "F_t1": 0.93, "L_t": 1.0},
+        ))
+        pkg = ReleasePackageBuilder(seeded_db).build()
+        assert "heal disclosure" in pkg
+        assert "`F_t` retains 93% of peak" in pkg, (
+            "the heal ratio is the real crash-park signal (r13): "
+            "protection persistence, measured and disclosed"
+        )
+        # next-state symbols (…1) are dropped from the prose
+        assert "`F_t1`" not in pkg
+
+    def test_zero_edge_with_tracking_shows_context(self, seeded_db):
+        """crash_park headline 0.0 + regime tracking = the honest pair:
+        'no positive attacker edge' PLUS why (the excursions were
+        reclassified)."""
+        seeded_db.save_experiment(_bounds_record(
+            regime_tracking={"L_t_drawn": 599.7, "T_t_drawn": 599.7},
+        ))
+        pkg = ReleasePackageBuilder(seeded_db).build()
+        block = pkg.split("### 4b.")[1].split("## 5.")[0]
+        assert "no positive attacker edge" in block
+        assert "REGIME TRACKING" in block
+
+    def test_no_record_still_renders_without_4b(self, seeded_db):
+        """No adversarial record → no 4b section (absence is honest)."""
+        pkg = ReleasePackageBuilder(seeded_db).build()
+        assert "### 4b." not in pkg

@@ -2,7 +2,7 @@
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-08T01:40:44+00:00
+Generated: 2026-09-08T01:55:26+00:00
 Candidate: `cand-b713e862acdc` (§7 recommended, rank 1)
 
 ## 1. Publication Readiness
@@ -39,6 +39,8 @@ Deterministic bounds from the §20 attack-pattern battery (60-step window, match
 - **wash_flow**: attacker edge **+2.4958** on `A_t_drawn` vs a matched base run
 - **pump_unwind**: measured, no positive attacker edge (the state(s) drained no further under attack than base)
 - **shock_timing**: measured, no positive attacker edge (the state(s) drained no further under attack than base)
+- **crash_park**: attacker edge **+179.2377** on `C_t_drawn` vs a matched base run
+  - heal disclosure: after the one-shot move, protection `A_t` retains 100% of peak while the level stays moved
 
 ## 5. Build-in-Public Progression (§27)
 

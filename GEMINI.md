@@ -116,6 +116,33 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 14 4b-disclosure honesty fix: the §20 battery's crash_park
+  headline was carried ENTIRELY by EMA-of-level states following the
+  moved level (600 = the fix from r12/r13 WORKING), which the §27
+  4b section then published as a 'measured attacker edge' — a
+  misleading disclosure, exactly what the lab exists to prevent. Fix
+  in two layers: (1) the battery now classifies EMA-of-level states
+  (equation reads itself + X_t only, ignoring function names and
+  parameters) as REGIME-TRACKING: under park-style choreographies
+  (crash_park, pump_unwind's parked half) their _drawn excursions are
+  excluded from the attacker-edge headline and recorded separately as
+  regime_tracking on the AttackBound — measured once where the
+  measurement happens; (2) the release 4b renderer discloses BOTH
+  layers: the honest attacker edge (if any) AND the regime-tracking
+  reclassification AND the r13 heal_flags (per keyed protection state,
+  % of crash-time peak retained while parked; next-state symbols
+  dropped). Pinned by 4 tests (TestBoundsDisclosureHonesty).
+  Re-measured all 17 stored SCORED/FINALIST battery records under the
+  r14 code — which surfaced crash_park exposure the OLD battery was
+  structurally blind to across the corpus: Bandwidth Bond Market (the
+  RECOMMENDED candidate) C_t collateral drains 179 under crash_park
+  (its stress slash chi*s_t*300 has no beneficiary — insurance-payout
+  semantics, honestly ambiguous: the 4b now shows the raw edge and
+  the heal disclosure 'A_t retains 100% of peak' on the release page);
+  Corridor T_t 108; FX Matching M_t 96; Joule Q_c credit 66. These are
+  now disclosed, not hidden — the r13 battery semantics lesson closed
+  with the classification living in the measurement, and the new
+  corpus-wide crash_park findings queue the next round's work.
 - Round 13 anchor-heal round (r12 finding generalized — and corrected
   by evidence): hypothesis "all 3 r11 anchored-trend siblings heal
   under move-once-then-park" tested with a new §20 battery pattern

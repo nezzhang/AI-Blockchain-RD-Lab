@@ -81,23 +81,58 @@ class ReleasePackageBuilder:
             kind = str(b.get("kind", "?"))
             vacuous = bool(b.get("vacuous"))
             headline = b.get("headline")
+            regime = b.get("regime_tracking") or {}
+            heals = b.get("heal_flags") or {}
             if vacuous or headline is None:
                 out.append(
                     f"- **{kind}**: no measurable edge (§20 vacuous — the "
                     "battery measured nothing; this is NOT a zero bound)"
                 )
             elif float(headline) == 0.0:
-                out.append(
+                line = (
                     f"- **{kind}**: measured, no positive attacker edge "
                     "(the state(s) drained no further under attack than "
                     "base)"
                 )
+                if regime:
+                    moved = ", ".join(
+                        f"`{k.replace('_drawn', '')}` {v:+.1f}" for k, v in regime.items()
+                    )
+                    line += (
+                        f" — {len(regime)} state excursion(s) were "
+                        "reclassified as REGIME TRACKING (EMA states "
+                        "following the moved level: the design working, "
+                        "not extraction): " + moved
+                    )
+                out.append(line)
             else:
                 metric = b.get("headline_metric", "?")
-                out.append(
+                line = (
                     f"- **{kind}**: attacker edge **{float(headline):+.4f}** "
                     f"on `{metric}` vs a matched base run"
                 )
+                if regime:
+                    moved = ", ".join(
+                        f"`{k.replace('_drawn', '')}` {v:+.1f}" for k, v in regime.items()
+                    )
+                    line += (
+                        f" (excludes {len(regime)} regime-tracking "
+                        "excursion(s): EMA states following the moved "
+                        "level — design property, not extraction: " + moved + ")"
+                    )
+                out.append(line)
+            if heals:
+                # the r13 heal disclosure: which protection states heal
+                # under park, by how much (fraction of crash-time peak)
+                keyed = {k: v for k, v in heals.items() if not k.endswith("1")}
+                if keyed:
+                    shown = ", ".join(
+                        f"`{k}` retains {v:.0%} of peak" for k, v in keyed.items()
+                    )
+                    out.append(
+                        f"  - heal disclosure: after the one-shot move, "
+                        f"protection {shown} while the level stays moved"
+                    )
         if not out:
             return None
         header = "Deterministic bounds from the §20 attack-pattern battery "
