@@ -116,6 +116,68 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 18 compound-choreography round (GRIND_HARVEST + TWO
+  classification-bug fixes + 4 supersessions): added the seventh
+  battery pattern — creep `grind_fraction` (0.5) of the window at
+  +0.5%/step then a one-shot `harvest_shift` (-0.6) strike into the
+  loaded system, park; matched base is CREEP-ONLY (isolates what the
+  timed strike adds). The compound found TWO candidates whose edges
+  the single-pattern battery read as zero — and diagnosing WHY
+  exposed two window-sensitive classification bugs, both fixed in
+  the measurement layer: (1) PIN-AWARE ARRIVAL — Cyclic's Z_t sat
+  EXACTLY at its 400 clip floor, which EQUALS the crashed level 400,
+  and the r15b arrival check (|final - X| < 10% of X) read the pin
+  as 'tracking the level', hiding a fully-drained pool (its inflow
+  cap min(200, 0.10*(X-1000)) has NO mirrored outflow cap — the
+  pool bleeds ~60/step under any sub-anchor regime; 509.7 standing
+  under crash_park, 579.0 under the compound). A state AT a declared
+  clip bound was STOPPED there, it did not arrive; the amendment
+  (applied to BOTH the r15b arrival check and the r14 EMA-shape pop)
+  keeps pins as disclosed edges. (2) HEAL-CONTRADICTION GUARD —
+  Treasury's V_t (a 1000-anchored vote-signal EMA) heals toward its
+  anchor while X parks at 400; at the 60-step window end its
+  displacement sits under the 25% transient threshold and the r15
+  transient check popped the 600 edge as 'recovered' — the r13
+  anchor-heal flaw class HIDDEN by the honesty fix itself. The guard
+  requires a transient to recover NEAR the moved level (|final - X|
+  < 25% of X); anchor-heals stay visible (the honesty fix must not
+  become a hiding place — pinned by the r15 standing-drain test,
+  which caught a first-draft separation-consumption class that would
+  have hidden the same drains a second way). Census under the fixed
+  classifier re-exposed TWO more pre-r18 hidden edges (Adverse-
+  Selection I_t/A_t heal to 1000 exactly — excursion 750, the r13
+  class on clearing cover; Belief-Weighted V_t floor-pin 301.3, the
+  uncapped-outflow family) — 4 SCORED candidates superseded with
+  measured lineage (2 per flaw class, r16 exemplar discipline: ONE
+  successor per class): Three-Speed Adverse-Selection Premium
+  (cand-dcde8a9d5b19, the r13 insurance polarity on clearing cover;
+  v2: sqrt-compressed quadratic premium ramp — monotone marginal
+  cost kills the cap-boundary cliff; kicker gated on separation
+  context — pulse farming stops paying; SURVIVES re-attack; 6.265)
+  + Symmetric-Cap Fee Recycle Reserve (cand-47db6e78b1ea, the
+  mirrored outflow cap f_t = clip(r_f*dX/X*1000, -f_c, f_c); v2:
+  quadratic ramp near the boundary kills the flat riding zone; the
+  utilization index U_z pinned DISCLOSURE-ONLY by an explicit
+  constraint; SURVIVES; 6.255). Separation-consumed anchors
+  (EMA-anchors whose consumers key the DIFFERENCE — the class-A
+  successor's ultra-slow U_s lags 385.7 by design; its premium keys
+  |I-U_s|) excluded from park-style headlines, narrowed after
+  review to anchors whose OWN update reads another state (a pool
+  keyed to a stress aux is a drainable stock, not an anchor).
+  Corpus: 28 ranked, 10 families, dominant 21%, curriculum ok;
+  census (battery attack_patterns_v5_grind_harvest, §21 records for
+  all 28): median worst-edge 2.2, ZERO edges >400 — convergence
+  RESTORED under the corrected classifier; worst survivors are
+  disclosed design properties (299.7 allocation pass-through, 96
+  corridor U_t standing). Recommended unchanged: Demand-Index
+  Escalation Ladder 6.40 (grind_harvest renders in 4b: no positive
+  edge + F_t 33%/W_t 79% heal disclosure). Tests +7 (two-phase
+  craft, creep-only base, compound edge bound, pin-not-arrival,
+  anchor-heal-not-transient, genuine-transient preserved, separation
+  anchor excluded). 406 pass. Lesson (re-learned): every
+  window-end-only classification is window-length-sensitive —
+  measure the DIRECTION (toward anchor vs toward level), not the
+  endpoint.
 - Round 17 drift-creep choreography round (new pattern → new
   disclosure layer; zero new flaws): added DRIFT_CREEP to the §20
   battery — the boiling-frog family: a constant sub-threshold grind

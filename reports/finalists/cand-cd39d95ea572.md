@@ -73,6 +73,7 @@ No external data dependency declared. See Security and adversarial sections for 
 - **exp-5b5d741a0452** (seed None, sim-0.1.0): results recorded
 - **exp-a74868effa35** (seed None, sim-0.1.0): results recorded
 - **exp-0c16b5ade63f** (seed None, sim-0.1.0): results recorded
+- **exp-5045315878a3** (seed None, none): results recorded
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 

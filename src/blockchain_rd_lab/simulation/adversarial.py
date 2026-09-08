@@ -67,6 +67,18 @@ class AttackPattern(StrEnum):
     # claim ("drift-paced farming closed") was red-team HYPOTHESIS;
     # this choreography measures it (§2: code tests).
     DRIFT_CREEP = "drift_creep"
+    # The compound choreography: creep up slowly (pre-dispose the slow
+    # states, never trip a single-step spike trigger), then crash-park
+    # into the loaded system. Sequenced attacks are the coordination
+    # dimension this battery can represent — and the structural blind
+    # spot of per-pattern bounds: 4b publishes each pattern's edge in
+    # isolation, but a grind that DEPLETES the protection pool before
+    # the crash lands (e.g. a quiet credit paying out through the whole
+    # creep phase) leaves the system crashed into a pre-drained state
+    # no single-pattern bound can see. The matched base is CREEP-ONLY
+    # (same grind, no strike) — so the bound isolates exactly what the
+    # TIMED STRIKE adds to a system already under grind.
+    GRIND_HARVEST = "grind_harvest"
 
 
 class PatternSpec(BaseModel):
@@ -86,6 +98,12 @@ class PatternSpec(BaseModel):
     park_at: int = 20
     # drift_creep: the constant per-step drift fraction (the grind rate)
     creep_rate: float = 0.005
+    # grind_harvest: fraction of the window spent creeping (the rest
+    # is the post-strike parked observation window)
+    grind_fraction: float = 0.5
+    # grind_harvest: the one-shot strike fraction applied at the end
+    # of the creep phase (negative = crash into the loaded system)
+    harvest_shift: float = -0.6
 
 
 class AttackBound(BaseModel):
@@ -178,6 +196,119 @@ def _ema_of_level_states(model: MathModel) -> set[str]:
         if structural <= {sym, f"{sym}1", "X_t"}:
             out.add(sym)
     return out
+
+def _clip_bounds(model: MathModel) -> dict[str, tuple[float, float]]:
+    """Per state symbol, the (lo, hi) clip bounds of its defining
+    equation, when it is a clip(...) — (nan, nan) otherwise. The r18
+    pin-aware arrival check needs this: a state sitting exactly AT a
+    clip bound was STOPPED there, it did not 'arrive at the level'.
+    """
+    params = {
+        p.symbol: p.default
+        for p in model.parameters
+        if p.default is not None
+    }
+    num = r"(?:-?\d+(?:\.\d+)?)"
+    bounds: dict[str, tuple[float, float]] = {}
+    for eq in model.equations:
+        expr = eq.expression
+        lhs = expr.split("=", 1)[0].strip()
+        if not lhs:
+            continue
+        m = re.search(
+            rf"clip\s*\(.*?,\s*({num}|[A-Za-z_][A-Za-z_0-9]*)\s*,"
+            rf"\s*({num}|[A-Za-z_][A-Za-z_0-9]*)\s*\)\s*$",
+            expr,
+        )
+        if not m:
+            continue
+        lo_s, hi_s = m.group(1), m.group(2)
+
+        def resolve(tok: str) -> float:
+            try:
+                return float(tok)
+            except ValueError:
+                got = params.get(tok)
+                return float(got) if got is not None else float("nan")
+
+        bounds[lhs] = (resolve(lo_s), resolve(hi_s))
+    return bounds
+
+
+def _separation_consumed_anchors(model: MathModel) -> set[str]:
+    """States every one of whose consumers reads them only inside a
+    DIFFERENCE with another state (the r17/r18 anchor classes).
+
+    An ultra-slow anchor whose consumer keys the SEPARATION (medium -
+    anchor) lags the level by design: the separation — not the anchor
+    magnitude — is the protection quantity, and under park-style or
+    grind patterns it stays OPEN by construction (the r13 insurance
+    polarity: persistent displacement while the regime stays moved).
+    The anchor's own lag is therefore a design property, not an
+    extraction: its _drawn excursion is excluded from the headline
+    (r17 drift lesson formalized for park-style too, r18).
+    """
+    # symbol -> set of OTHER state symbols read in the same expression
+    readers: dict[str, set[str]] = {}
+    for eq in model.equations:
+        expr = eq.expression
+        lhs = expr.split("=", 1)[0].strip()
+        syms = set(re.findall(r"[A-Za-z_][A-Za-z_0-9]*", expr))
+        readers.setdefault(lhs, set()).update(
+            s2 for s2 in syms if s2 != lhs and not s2[0].isdigit()
+        )
+    state_syms = {v.symbol for v in model.variables if v.role == "state"}
+
+    def strip_next(tok: str) -> str:
+        return tok[:-1] if tok.endswith("1") and tok[:-1] in state_syms else tok
+
+    consumed_via_separation: set[str] = set()
+    for sym in state_syms:
+        # a consumer is a DIFFERENT equation whose LHS is not the
+        # anchor's own update (the r18 review catch: an anchor's own
+        # update reads itself + X, which is the EMA-of-level shape,
+        # not a separation consumption — Treasury's V matched the
+        # first draft and its anchor-heal edge would have been hidden
+        # AGAIN, this time by the separation class). Consumption may
+        # read the anchor via its next-symbol (the §14 bridge
+        # convention declares both S and S1), so match either form.
+        own_next = {f"{sym}1", sym}
+        consumers = [
+            lhs for lhs, syms in readers.items()
+            if (sym in syms or f"{sym}1" in syms) and lhs not in own_next
+        ]
+        if not consumers:
+            continue
+        # r18 review catch (the r15 standing-drain regression): a
+        # POOL keyed to a stress/level aux is a drainable stock —
+        # popping it because some consumer also reads it via a
+        # difference would hide standing drains again. The class is
+        # narrower: an anchor's OWN update must read ANOTHER STATE
+        # (it anchors an EMA — U_s reads I_t; a pool reads itself +
+        # inputs only). Only EMA-anchors qualify.
+        own_reads = {strip_next(o) for o in readers.get(f"{sym}1", set())}
+        own_reads_state = any(
+            o != sym and o != "X_t" and (o in state_syms)
+            for o in own_reads
+        )
+        if not own_reads_state:
+            continue
+        ok = True
+        for c in consumers:
+            # the consumer must read at least one OTHER state (a
+            # difference/separation key), never the anchor alone
+            others = {strip_next(o) for o in readers[c]}
+            others = {
+                o for o in others
+                if o != sym and (o in state_syms or o == "X_t")
+            }
+            if not others:
+                ok = False
+                break
+        if ok:
+            consumed_via_separation.add(sym)
+    return consumed_via_separation
+
 
 def _keyed_protection_states(model: MathModel, hist: list[dict[str, float]]) -> list[str]:
     """States whose dynamics depend on the model's trend/EMA states.
@@ -292,12 +423,45 @@ class AttackPatternBattery:
                 rows.append({"X_t": x, "dX_t": dx})
                 x += dx
             return rows
+        # GRIND_HARVEST: creep, then strike into the loaded system and
+        # park. The sequenced-attack family: the creep phase pre-disposes
+        # every slow state (no spike trigger ever fires), then the one
+        # crash lands on the pre-loaded system. The observation window
+        # after the strike is what the per-pattern bounds never see.
+        if spec.kind is AttackPattern.GRIND_HARVEST:
+            x = 1000.0
+            grind_until = max(1, min(int(spec.steps * spec.grind_fraction),
+                                     spec.steps - 2))
+            for t in range(spec.steps):
+                if t < grind_until:
+                    dx = x * spec.creep_rate
+                elif t == grind_until:
+                    dx = x * spec.harvest_shift
+                else:
+                    dx = 0.0
+                rows.append({"X_t": x, "dX_t": dx})
+                x += dx
+            return rows
         raise ValueError(f"unhandled pattern: {spec.kind}")  # pragma: no cover
 
     def base_series(self, spec: PatternSpec) -> list[dict[str, float]]:
         """The matched no-attack base: same length, mild natural noise."""
+        # GRIND_HARVEST's matched base is CREEP-ONLY: the same grind,
+        # no strike — the bound then isolates exactly what the timed
+        # strike adds to a system already under grind (not the grind's
+        # own drift_creep bound, which has its own pattern).
+        if spec.kind is AttackPattern.GRIND_HARVEST:
+            x = 1000.0
+            rows: list[dict[str, float]] = []
+            grind_until = max(1, min(int(spec.steps * spec.grind_fraction),
+                                     spec.steps - 2))
+            for t in range(spec.steps):
+                dx = x * spec.creep_rate if t < grind_until else 0.0
+                rows.append({"X_t": x, "dX_t": dx})
+                x += dx
+            return rows
         x = 1000.0
-        rows: list[dict[str, float]] = []
+        rows = []
         for _ in range(spec.steps):
             dx = x * 0.0002  # §15 BASE mean drift
             rows.append({"X_t": x, "dX_t": dx})
@@ -450,7 +614,8 @@ class AttackPatternBattery:
         # park; publishing it as an 'attacker edge' misreads a one-step
         # crash cost as an extraction). Measured on the pattern run.
         transient_recovered: dict[str, float] = {}
-        if spec.kind in (AttackPattern.CRASH_PARK, AttackPattern.PUMP_UNWIND):
+        if spec.kind in (AttackPattern.CRASH_PARK, AttackPattern.PUMP_UNWIND,
+                         AttackPattern.GRIND_HARVEST):
             pat_hist = pat.history
             x_final = float(pat_hist[-1]["X_t"]) if pat_hist else 1000.0
             # r15b shape-independent extension: a state that ENDS AT the
@@ -459,6 +624,14 @@ class AttackPatternBattery:
             # (the r15 successor pool reads a stress aux, so the r14
             # shape filter missed it; the numeric check measures the
             # actual semantics: did the state arrive at the level?)
+            # r18 PIN-AWARE amendment: a state sitting exactly AT a
+            # declared clip bound was STOPPED there, it did not
+            # "arrive" — when the bound coincides with the crashed
+            # level (the r18 Cyclic finding: Z_t pinned at its 400
+            # floor while X sits at 400) the arrival check read the
+            # pin as tracking and hid a drained pool. Pins are
+            # disclosed edges, never regime tracking.
+            clip_b = _clip_bounds(self.model)
             if pat_hist:
                 for k in list(bound_candidates):
                     if not k.endswith("_drawn"):
@@ -467,18 +640,46 @@ class AttackPatternBattery:
                     if sym not in pat_hist[0]:
                         continue
                     final_v = float(pat_hist[-1].get(sym, 0.0))
-                    if abs(final_v - x_final) < 0.10 * max(x_final, 1.0):
+                    lo, hi = clip_b.get(f"{sym}1", (float("nan"),) * 2)
+                    pinned = (
+                        abs(final_v - lo) < 1e-6 or abs(final_v - hi) < 1e-6
+                    )
+                    if (
+                        abs(final_v - x_final) < 0.10 * max(x_final, 1.0)
+                        and not pinned
+                    ):
                         regime_tracking[k] = bound_candidates.pop(k)
             emas = _ema_of_level_states(self.model)
-            for sym in emas:
+            # r18 PIN-AWARE amendment applies here too: an EMA-shaped
+            # state pinned at its clip bound did not 'follow the moved
+            # level' — it was STOPPED at the bound (the Cyclic finding:
+            # the r14 shape filter and the r15b arrival check BOTH read
+            # the pin as tracking). A pinned EMA stays a disclosed edge.
+            for sym in emas | _separation_consumed_anchors(self.model):
                 k = f"{sym}_drawn"
-                if k in bound_candidates:
-                    regime_tracking[k] = bound_candidates.pop(k)
+                if k not in bound_candidates:
+                    continue
+                ema_final: float | None = None
+                if pat_hist and sym in pat_hist[0]:
+                    ema_final = float(pat_hist[-1].get(sym, 0.0))
+                if ema_final is not None:
+                    lo, hi = clip_b.get(
+                        f"{sym}1", (float("nan"),) * 2)
+                    if (
+                        abs(ema_final - lo) < 1e-6
+                        or abs(ema_final - hi) < 1e-6
+                    ):
+                        continue  # pinned at a bound: stays an edge
+                regime_tracking[k] = bound_candidates.pop(k)
             if pat_hist:
                 at = max(1, min(getattr(spec, "park_at", 20),
                                 spec.steps - 2))
                 if spec.kind is AttackPattern.PUMP_UNWIND:
                     at = spec.steps // 2  # the parked half begins mid-run
+                if spec.kind is AttackPattern.GRIND_HARVEST:
+                    # the strike lands at the end of the creep phase
+                    at = max(1, min(int(spec.steps * spec.grind_fraction),
+                                    spec.steps - 2))
                 for k in list(bound_candidates):
                     if not k.endswith("_drawn"):
                         continue
@@ -491,8 +692,26 @@ class AttackPatternBattery:
                         continue
                     peak = max(disp)
                     if peak > 1.0 and disp[-1] < 0.25 * peak:
-                        transient_recovered[k] = round(disp[-1] / peak, 6)
-                        bound_candidates.pop(k)
+                        # r18 HEAL-CONTRADICTION guard: the transient
+                        # classification reads the WINDOW END only, on
+                        # states that may still be moving toward their
+                        # ANCHOR (the r13 flaw signature: reverting to
+                        # 1000 while the level stays moved). The state's
+                        # final-vs-level distance decides: healed to
+                        # the anchor (far from the moved level) is the
+                        # anchor-heal flaw staying VISIBLE, not a
+                        # transient. Only near-the-level recoveries
+                        # are genuine transients.
+                        x_fin = float(pat_hist[-1]["X_t"])
+                        final_v = float(pat_hist[-1].get(sym, 0.0))
+                        near_level = (
+                            abs(final_v - x_fin) < 0.25 * max(x_fin, 1.0)
+                        )
+                        if near_level:
+                            transient_recovered[k] = round(
+                                disp[-1] / peak, 6
+                            )
+                            bound_candidates.pop(k)
         # vol separation IS the bound for wash/pump (the vol premium is
         # the harvest), so include it when no stock/premium metric moved.
         if not bound_candidates and "mean_measured_vol" in edge:
@@ -530,12 +749,15 @@ class AttackPatternBattery:
         # design (the r12 meter) INTENDS its exceedance to heal after
         # re-centering; an insurance/alarm design must not heal.
         heal_flags: dict[str, float] = {}
-        if spec.kind is AttackPattern.CRASH_PARK:
+        if spec.kind in (AttackPattern.CRASH_PARK, AttackPattern.GRIND_HARVEST):
             hist = pat.history
             if hist:
                 moved = abs(hist[-1]["X_t"] - 1000.0) > 0.5 * 1000.0
                 if moved:
                     at = max(1, min(spec.park_at, spec.steps - 2))
+                    if spec.kind is AttackPattern.GRIND_HARVEST:
+                        at = max(1, min(int(spec.steps * spec.grind_fraction),
+                                        spec.steps - 2))
                     keyed = _keyed_protection_states(self.model, hist)
                     post = hist[at:]  # crash response only — exclude the
                     # model's own initialization transient (state seeding
@@ -580,4 +802,5 @@ class AttackPatternBattery:
             self.run_pattern(PatternSpec(kind=AttackPattern.SHOCK_TIMING, steps=steps)),
             self.run_pattern(PatternSpec(kind=AttackPattern.CRASH_PARK, steps=steps)),
             self.run_pattern(PatternSpec(kind=AttackPattern.DRIFT_CREEP, steps=steps)),
+            self.run_pattern(PatternSpec(kind=AttackPattern.GRIND_HARVEST, steps=steps)),
         ]

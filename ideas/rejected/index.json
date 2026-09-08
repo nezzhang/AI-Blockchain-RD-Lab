@@ -171,6 +171,15 @@
     "novelty_class": "adjacent_mechanism"
   },
   {
+    "candidate_id": "cand-73de8d339542",
+    "name": "Treasury-Backed Fee Parameter Governance",
+    "category": "governance",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
     "candidate_id": "cand-cb4d584867ed",
     "name": "Tranche-Segmented Settlement Guarantee Stack",
     "category": "institutional settlement",
@@ -252,6 +261,15 @@
     "novelty_class": "insufficient_evidence"
   },
   {
+    "candidate_id": "cand-6b5791c8ae9c",
+    "name": "Adverse-Selection Taxed Prediction Clearing",
+    "category": "market design",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
     "candidate_id": "cand-273882700f28",
     "name": "Attestation-Locked Prediction Settlement",
     "category": "market design",
@@ -264,6 +282,15 @@
     "candidate_id": "cand-27e6a6ae5492",
     "name": "Vol-Adaptive Market Making Rebate Curve for Compute Futures",
     "category": "market microstructure",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
+  },
+  {
+    "candidate_id": "cand-e626f13713b0",
+    "name": "Cyclic Demand Reserve for Fee Recycles",
+    "category": "monetary economics",
     "status": "superseded",
     "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
     "fatal_flaws": [],
@@ -450,6 +477,15 @@
     "rejected_because": "research-funnel cut (class A/B or \u00a77 overflow); see filter records",
     "fatal_flaws": [],
     "novelty_class": "insufficient_evidence"
+  },
+  {
+    "candidate_id": "cand-5e05dec83af0",
+    "name": "Belief-Weighted Volatility Target Fund",
+    "category": "portfolio mechanism",
+    "status": "superseded",
+    "rejected_because": "superseded by successor with corrected evidence (see innovation_claim lineage); \u00a711",
+    "fatal_flaws": [],
+    "novelty_class": "adjacent_mechanism"
   },
   {
     "candidate_id": "cand-0572a9589784",
