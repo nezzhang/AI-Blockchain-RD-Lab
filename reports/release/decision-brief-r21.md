@@ -2,7 +2,7 @@
 
 Assembled by code from stored evidence only (§2 — no report-writer LLM). Publication is the HUMAN decision (§27); this brief compares the two candidates that decision currently spans. It recommends NOTHING — it measures.
 
-Generated: 2026-09-08T12:53:34+00:00
+Generated: 2026-09-09T03:04:31+00:00
 
 ## 1. The Decision Context
 
@@ -37,18 +37,14 @@ Deterministic scoring, 11 weighted dimensions; missing dimensions imputed at the
 
 Every stored census record per candidate, across battery generations (the §21 experiment trail). A flat worst-edge across generations is stability: the same construction measuring clean under every classifier revision the lab shipped. The r22 PARAMETER-CALIBRATION sweep extended the record: every pattern re-run at off-default attacker calibrations (deeper/shallower strikes, more/fewer resonance cycles, faster/slower creep, ± amplitude — 27 runs per candidate) — a bound that holds only at the default calibration is a calibration artifact, not a bound.
 
-**Separation-Keyed Fee Smoothing Escrow** — 6 census record(s):
+**Separation-Keyed Fee Smoothing Escrow** — 2 census record(s):
 
 | Round | Battery | Worst measured edge |
 |---|---|---|
 | 20 | `attack_patterns_v7_resonance` | 5.1737 |
 | 22 | `attack_parameter_sweep` | 32.6375 |
-| 22 | `attack_parameter_sweep` | 32.6375 |
-| 22 | `attack_parameter_sweep` | 32.6375 |
-| 22 | `attack_parameter_sweep` | 32.6375 |
-| 22 | `attack_parameter_sweep` | 32.6375 |
 
-**Demand-Index Escalation Ladder for FX Batches** — 11 census record(s):
+**Demand-Index Escalation Ladder for FX Batches** — 7 census record(s):
 
 | Round | Battery | Worst measured edge |
 |---|---|---|
@@ -57,10 +53,6 @@ Every stored census record per candidate, across battery generations (the §21 e
 | 18 | `attack_patterns_v5_grind_harvest` | 0.3182 |
 | 19 | `attack_patterns_v6_window_confirmation` | 0.3182 |
 | 20 | `attack_patterns_v7_resonance` | 0.3182 |
-| 22 | `attack_parameter_sweep` | 63.8580 |
-| 22 | `attack_parameter_sweep` | 33.2546 |
-| 22 | `attack_parameter_sweep` | 33.2546 |
-| 22 | `attack_parameter_sweep` | 33.2546 |
 | 22 | `attack_parameter_sweep` | 33.2546 |
 | pre | `attack_patterns` | 0.0000 |
 

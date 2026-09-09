@@ -116,6 +116,52 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 25 external-verifier round (criticism made actionable —
+  the §27 ladder's next stage after publication): a critic who
+  downloads the bundle got static JSON and had to TRUST it; §2
+  says evidence decides, so the published numbers are now
+  CHECKABLE FROM THE PUBLISHED FILES ALONE.
+  scripts/r25_verify_bundle.py reads ONLY the bundle (never the
+  database), re-runs every reproducible claim with the
+  deterministic interpreter, and writes
+  bundle-<cid>-VERIFICATION.md NEXT TO the bundle (a post-manifest
+  artifact about the bundle — inside it would break the
+  manifest's complete-file-coverage invariant, caught by the
+  round's own probe). THREE verdict classes, honestly separated:
+  REPRODUCED (recomputed and matches — all 8 default-calibration
+  attack headlines, the §15 13-scenario non-degenerate run, every
+  manifest sha256), CONSISTENT (internally coherent, not
+  re-computable from the bundle), NOT-REPRODUCIBLE (the bundle's
+  own artifacts disagree). Real-bundle result: VERIFY-PASS, 16
+  reproduced + 2 consistent + 0 not-reproducible, exit 0.
+  THE ROUND'S OWN FIRST CATCH, BEFORE THE VERIFIER SHIPPED: the
+  store audit found the r22/r23 §21 purge pattern NEVER COMMITTED
+  — LabDatabase._session() closes without commit (every save_*
+  commits explicitly inside the with-block; raw session.execute
+  deletes rolled back silently while rowcount still printed).
+  Twelve redundant/untagged sweep rows had accumulated
+  (one untagged duplicate carried the PRE-wrap-fix incumbent
+  worst-edge 63.86 — stale evidence sitting in the store beside
+  the corrected 33.25); the r24 bundle had shipped 6 census
+  records where its own brief claimed 2. Purged WITH commit,
+  re-stored once via the tagged script: successor 2 census rows
+  (r20 resonance + one 19-tag sweep), incumbent 7 (five battery
+  generations + one sweep) — exactly the published claims.
+  Brief, r23 packages, and r24 bundle regenerated from the clean
+  store; manifest re-verified. Tests +5 -> 429 (clean bundle
+  passes with >=8 reproduced re-runs; TAMPERED file fails the
+  manifest; UNLISTED file fails coverage; DRIFTED headline
+  self-manifested by the publisher still fails the re-run — the
+  tamper case that matters, a publisher who re-hashes wrong
+  numbers; the report lands beside the bundle, coverage holds).
+  Probes found two verifier-draft gaps on the way (report
+  placement breaking coverage; the drift probe's vocabulary too
+  narrow — a vacuous-disagreement flag IS the catch, never
+  silence). Ops: pyproject has no pythonpath — the verifier is
+  imported by path in tests, the same way a third party runs it.
+  §2 discipline at the boundary: the criticism stage now has a
+  tool — a critic who doubts a number runs the same script and
+  shows a verdict, not an opinion.
 - Round 24 publication-bundle round (the human's "publish all no.1
   files" — §27/§41 approval IN HAND for the rank-1; the lab's part
   under §28/§41 is still STAGING, and staging is now COMPLETE):

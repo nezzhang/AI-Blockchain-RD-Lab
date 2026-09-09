@@ -10,7 +10,7 @@ The third §27 option: publish BOTH decision candidates. Assembled by code from 
 
 Assembled by code from stored evidence only (§2 — no report-writer LLM). Publication is the HUMAN decision (§27); this brief compares the two candidates that decision currently spans. It recommends NOTHING — it measures.
 
-Generated: 2026-09-08T12:57:40+00:00
+Generated: 2026-09-09T03:04:33+00:00
 
 ## 1. The Decision Context
 
@@ -45,18 +45,14 @@ Deterministic scoring, 11 weighted dimensions; missing dimensions imputed at the
 
 Every stored census record per candidate, across battery generations (the §21 experiment trail). A flat worst-edge across generations is stability: the same construction measuring clean under every classifier revision the lab shipped. The r22 PARAMETER-CALIBRATION sweep extended the record: every pattern re-run at off-default attacker calibrations (deeper/shallower strikes, more/fewer resonance cycles, faster/slower creep, ± amplitude — 27 runs per candidate) — a bound that holds only at the default calibration is a calibration artifact, not a bound.
 
-**Separation-Keyed Fee Smoothing Escrow** — 6 census record(s):
+**Separation-Keyed Fee Smoothing Escrow** — 2 census record(s):
 
 | Round | Battery | Worst measured edge |
 |---|---|---|
 | 20 | `attack_patterns_v7_resonance` | 5.1737 |
 | 22 | `attack_parameter_sweep` | 32.6375 |
-| 22 | `attack_parameter_sweep` | 32.6375 |
-| 22 | `attack_parameter_sweep` | 32.6375 |
-| 22 | `attack_parameter_sweep` | 32.6375 |
-| 22 | `attack_parameter_sweep` | 32.6375 |
 
-**Demand-Index Escalation Ladder for FX Batches** — 11 census record(s):
+**Demand-Index Escalation Ladder for FX Batches** — 7 census record(s):
 
 | Round | Battery | Worst measured edge |
 |---|---|---|
@@ -65,10 +61,6 @@ Every stored census record per candidate, across battery generations (the §21 e
 | 18 | `attack_patterns_v5_grind_harvest` | 0.3182 |
 | 19 | `attack_patterns_v6_window_confirmation` | 0.3182 |
 | 20 | `attack_patterns_v7_resonance` | 0.3182 |
-| 22 | `attack_parameter_sweep` | 63.8580 |
-| 22 | `attack_parameter_sweep` | 33.2546 |
-| 22 | `attack_parameter_sweep` | 33.2546 |
-| 22 | `attack_parameter_sweep` | 33.2546 |
 | 22 | `attack_parameter_sweep` | 33.2546 |
 | pre | `attack_patterns` | 0.0000 |
 
@@ -110,7 +102,7 @@ What the evidence supports, without recommendation:
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-08T12:57:38+00:00
+Generated: 2026-09-09T03:04:32+00:00
 Candidate: `cand-9200b07691c3` (§7 recommended, rank 1)
 
 ## 1. Publication Readiness
@@ -143,10 +135,10 @@ Deterministic bounds from the §20 attack-pattern battery (60-step window, match
 - **wash_flow**: attacker edge **+5.1737** on `L_f_drawn` vs a matched base run
 - **pump_unwind**: attacker edge **+0.9999** on `C_t_drawn` vs a matched base run
 - **shock_timing**: attacker edge **+0.4017** on `C_t_drawn` vs a matched base run
-- **crash_park**: attacker edge **+0.5175** on `G_t_drawn` vs a matched base run (excludes 3 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `L_f` +600.0, `r_t` +0.1, `T_s` +541.4); re-basing in transit (arriving or at design offset): `C_t` +0.9
+- **crash_park**: attacker edge **+0.5175** on `G_t_drawn` vs a matched base run (excludes 3 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `L_f` +600.0, `T_s` +541.4, `r_t` +0.1); re-basing in transit (arriving or at design offset): `C_t` +0.9
   - heal disclosure: after the one-shot move, protection `E_t` retains 100% of peak while the level stays moved
 - **drift_creep**: attacker edge **+0.0300** on `C_t_drawn` vs a matched base run; drift responsiveness lag: `E_t` +330.3, `L_f` +11.7, `T_s` +98.0 (disclosed design lag, not an extraction)
-- **grind_harvest**: attacker edge **+0.4915** on `G_t_drawn` vs a matched base run (excludes 3 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `L_f` +535.4, `r_t` +0.1, `T_s` +421.2); re-basing in transit (arriving or at design offset): `C_t` +0.9
+- **grind_harvest**: attacker edge **+0.4915** on `G_t_drawn` vs a matched base run (excludes 3 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `L_f` +535.4, `T_s` +421.2, `r_t` +0.1); re-basing in transit (arriving or at design offset): `C_t` +0.9
   - heal disclosure: after the one-shot move, protection `E_t` retains 100% of peak while the level stays moved
 - **resonance**: measured, no positive attacker edge (the state(s) drained no further under attack than base); re-basing in transit (confirmed arriving at a doubled window, or resting at its base-run offset from its design target): `L_f` re-basing (+0.0 in motion at window end), `T_s` re-basing (+8.4 in motion at window end), `E_t_ratchet` re-basing (+0.0 in motion at window end), `L_f_ratchet` re-basing (+0.0 in motion at window end), `T_s_ratchet` re-basing (+8.4 in motion at window end), `r_t_ratchet` re-basing (+0.0 in motion at window end), `C_t_ratchet` re-basing (+0.0 in motion at window end), `G_t_ratchet` re-basing (+0.0 in motion at window end)
 - **vol_oscillation @amplitude=0.02**: attacker edge **+0.1187** on `C_t_drawn` vs a matched base run
@@ -156,12 +148,12 @@ Deterministic bounds from the §20 attack-pattern battery (60-step window, match
 - **shock_timing @lag_fraction=0.1**: attacker edge **+0.1862** on `C_t_drawn` vs a matched base run
 - **shock_timing @lag_fraction=0.4**: attacker edge **+0.4017** on `C_t_drawn` vs a matched base run
 - **crash_park @park_shift=-0.3**: attacker edge **+0.2375** on `G_t_drawn` vs a matched base run (excludes 3 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `L_f` +300.0, `T_s` +271.4, `r_t` +0.0); re-basing in transit (arriving or at design offset): `C_t` +0.2
-- **crash_park @park_shift=-0.9**: attacker edge **+0.8692** on `G_t_drawn` vs a matched base run (excludes 2 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `r_t` +0.1, `T_s` +791.3); re-basing in transit (arriving or at design offset): `L_f` +900.0, `C_t` +1.0
+- **crash_park @park_shift=-0.9**: attacker edge **+0.8692** on `G_t_drawn` vs a matched base run (excludes 2 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `T_s` +791.3, `r_t` +0.1); re-basing in transit (arriving or at design offset): `L_f` +900.0, `C_t` +1.0
   - heal disclosure: after the one-shot move, protection `E_t` retains 100% of peak while the level stays moved
 - **drift_creep @creep_rate=0.002**: attacker edge **+0.0048** on `C_t_drawn` vs a matched base run; drift responsiveness lag: `E_t` +113.2, `L_f` +3.7, `T_s` +32.2 (disclosed design lag, not an extraction)
 - **drift_creep @creep_rate=0.01**: attacker edge **+0.1196** on `C_t_drawn` vs a matched base run; drift responsiveness lag: `E_t` +786.8, `L_f` +31.8, `T_s` +250.0 (disclosed design lag, not an extraction)
 - **grind_harvest @harvest_shift=-0.3**: attacker edge **+0.1957** on `G_t_drawn` vs a matched base run (excludes 3 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `L_f` +187.0, `T_s` +138.3, `r_t` +0.0); re-basing in transit (arriving or at design offset): `C_t` +0.1
-- **grind_harvest @harvest_shift=-0.9**: attacker edge **+0.8634** on `G_t_drawn` vs a matched base run (excludes 3 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `L_f` +883.9, `r_t` +0.1, `T_s` +649.4); re-basing in transit (arriving or at design offset): `C_t` +1.0
+- **grind_harvest @harvest_shift=-0.9**: attacker edge **+0.8634** on `G_t_drawn` vs a matched base run (excludes 3 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `L_f` +883.9, `T_s` +649.4, `r_t` +0.1); re-basing in transit (arriving or at design offset): `C_t` +1.0
   - heal disclosure: after the one-shot move, protection `E_t` retains 100% of peak while the level stays moved
 - **resonance @strikes=2**: measured, no positive attacker edge (the state(s) drained no further under attack than base); re-basing in transit (confirmed arriving at a doubled window, or resting at its base-run offset from its design target): `L_f` re-basing (+0.0 in motion at window end), `T_s` re-basing (+2.6 in motion at window end), `E_t_ratchet` re-basing (+0.0 in motion at window end), `T_s_ratchet` re-basing (+2.6 in motion at window end), `r_t_ratchet` re-basing (+0.0 in motion at window end), `C_t_ratchet` re-basing (+0.0 in motion at window end), `G_t_ratchet` re-basing (+0.0 in motion at window end)
 - **resonance @strikes=8**: attacker edge **+0.0002** on `E_t_ratchet` vs a matched base run; re-basing in transit (arriving or at design offset): `L_f` +0.0, `T_s` +14.1, `r_t` +0.0, `C_t` +0.0, `G_t` +0.0, `L_f_ratchet` +0.0, `T_s_ratchet` +14.1, `r_t_ratchet` +0.0, `C_t_ratchet` +0.0, `G_t_ratchet` +0.0
@@ -194,7 +186,7 @@ The lab is a research system (§28): no token, no contract deployment, no funds.
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-08T12:57:39+00:00
+Generated: 2026-09-09T03:04:32+00:00
 Candidate: `cand-e74d830a9479` (finalist (explicit §27 subject — the human's selection, not the ranking's))
 
 ## 1. Publication Readiness

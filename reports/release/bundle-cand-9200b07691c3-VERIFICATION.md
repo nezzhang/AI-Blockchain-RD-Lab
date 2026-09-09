@@ -1,0 +1,33 @@
+# External Verification Report
+
+Bundle: `bundle-cand-9200b07691c3` — verified from the published files alone (no database access), {__import__('datetime').UTC.datetime.now(__import__('datetime').UTC).isoformat()[:19]}Z
+
+The verifier re-runs every reproducible claim with the lab's deterministic interpreter. A third party can re-run this script against the bundle and must obtain this report.
+
+| Check | Verdict | Detail |
+|---|---|---|
+| README.md | **REPRODUCED** | sha256 verifies against the file |
+| adversarial-bounds.json | **REPRODUCED** | sha256 verifies against the file |
+| dossier.md | **REPRODUCED** | sha256 verifies against the file |
+| model-v3.json | **REPRODUCED** | sha256 verifies against the file |
+| prior-art.json | **REPRODUCED** | sha256 verifies against the file |
+| redteam-history.json | **REPRODUCED** | sha256 verifies against the file |
+| release-package.md | **REPRODUCED** | sha256 verifies against the file |
+| manifest coverage | **REPRODUCED** | every bundle file is hashed; nothing unlisted ships |
+| model integrity | **REPRODUCED** | parses and passes §13 checks (v3, 7 equations) |
+| census records | **CONSISTENT** | 2 §20 census record(s) in the bundle (the §21 store is not part of the bundle; the re-run below recomputes them) |
+| re-run crash_park | **REPRODUCED** | headline 0.5175 == published 0.5175 |
+| re-run drift_creep | **REPRODUCED** | headline 0.0300 == published 0.0300 |
+| re-run grind_harvest | **REPRODUCED** | headline 0.4915 == published 0.4915 |
+| re-run pump_unwind | **REPRODUCED** | headline 0.9999 == published 0.9999 |
+| re-run resonance | **REPRODUCED** | headline 0.0000 == published 0.0000 |
+| re-run shock_timing | **REPRODUCED** | headline 0.4017 == published 0.4017 |
+| re-run vol_oscillation | **REPRODUCED** | headline 0.9940 == published 0.9940 |
+| re-run wash_flow | **REPRODUCED** | headline 5.1737 == published 5.1737 |
+| default battery re-run (summary) | **REPRODUCED** | 8/8 default-calibration headlines reproduced from the published model JSON |
+| §15 battery | **REPRODUCED** | 13 scenarios run non-degenerately under the current interpreter |
+| release package subject | **CONSISTENT** | release package names the manifest's candidate |
+
+Totals: 19 reproduced, 2 consistent, 0 not-reproducible.
+
+**OVERALL: VERIFY-PASS** — every reproducible claim reproduces from the published files.

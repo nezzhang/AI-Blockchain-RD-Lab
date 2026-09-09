@@ -2,7 +2,7 @@
 
 Assembled by code from stored evidence only (§2 — no report-writer
 LLM). The bundle is the complete public evidence set for the §7
-rank-1 research candidate as of 2026-09-08T13:48:51.542306+00:00.
+rank-1 research candidate as of 2026-09-09T03:04:34.022615+00:00.
 
 - **Candidate ID:** `cand-9200b07691c3`
 - **Deterministic §19 score:** 6.45
