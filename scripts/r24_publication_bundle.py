@@ -225,6 +225,28 @@ def main() -> None:
 
     # 9. README: what this is, how to verify, how to cite
     score = cand.overall_score
+    # the shipped file list — computed ONCE, used by both the README's
+    # sha256sum command (generated from the manifest keys, so it can
+    # never drift from what ships) and the manifest itself
+    files = [
+        "README.md", "dossier.md", "release-package.md", modelp.name,
+        "adversarial-bounds.json", "redteam-history.json", "prior-art.json",
+        "score-decomposition.json", "scenario-results.json", "verify.py",
+    ] + [r.relative_to(out).as_posix()
+         for r in sorted((out / "lab-runtime").rglob("*.py"))]
+    # wrap the names at ~72 cols for the README command block
+    _names = sorted(f for f in files if f != "README.md")
+    _lines: list[str] = []
+    _cur = ""
+    for _n in _names:
+        if _cur and len(_cur) + 1 + len(_n) > 72:
+            _lines.append(_cur)
+            _cur = _n
+        else:
+            _cur = f"{_cur} {_n}".strip()
+    if _cur:
+        _lines.append(_cur)
+    files_block = " \\\n    ".join(_lines)
     readme = f"""# Publication Bundle: {cand.name}
 
 Assembled by code from stored evidence only (§2 — no report-writer
@@ -258,10 +280,11 @@ rank-1 research candidate as of {generated}.
 Two levels, both self-service:
 
 ```bash
-# 1. integrity: sha256 of every file vs MANIFEST.json (all files listed)
-sha256sum README.md dossier.md release-package.md model-v{model['version']}.json \\
-    adversarial-bounds.json redteam-history.json prior-art.json \\
-    score-decomposition.json verify.py
+# 1. integrity: sha256 of EVERY file vs MANIFEST.json — the file
+#    list below is GENERATED from the manifest keys, so it can
+#    never drift from what actually ships
+sha256sum \\
+{files_block}
 
 # 2. substance: re-run the §20 attack battery, §15 scenarios, and §19
 #    score arithmetic against the PUBLISHED model — the deterministic
@@ -290,12 +313,8 @@ no deployment, no live contract — §27/§28.
     (out / "README.md").write_text(readme, encoding="utf-8")
 
     # 8. MANIFEST: sha256 of every file, written last
-    files = [
-        "README.md", "dossier.md", "release-package.md", modelp.name,
-        "adversarial-bounds.json", "redteam-history.json", "prior-art.json",
-        "score-decomposition.json", "scenario-results.json", "verify.py",
-    ] + [r.relative_to(out).as_posix()
-         for r in sorted((out / "lab-runtime").rglob("*.py"))]
+    # (the file list was computed before the README so both share
+    # one source of truth — the sha256sum command cannot drift)
     manifest = {
         "candidate_id": cand.id,
         "candidate_name": cand.name,

@@ -2,7 +2,7 @@
 
 Assembled by code from stored evidence only (§2 — no report-writer
 LLM). The bundle is the complete public evidence set for the §7
-rank-1 research candidate as of 2026-09-10T04:27:17.337788+00:00.
+rank-1 research candidate as of 2026-09-10T04:41:29.522598+00:00.
 
 - **Candidate ID:** `cand-9200b07691c3`
 - **Deterministic §19 score:** 6.45
@@ -31,10 +31,18 @@ rank-1 research candidate as of 2026-09-10T04:27:17.337788+00:00.
 Two levels, both self-service:
 
 ```bash
-# 1. integrity: sha256 of every file vs MANIFEST.json (all files listed)
-sha256sum README.md dossier.md release-package.md model-v3.json \
-    adversarial-bounds.json redteam-history.json prior-art.json \
-    score-decomposition.json verify.py
+# 1. integrity: sha256 of EVERY file vs MANIFEST.json — the file
+#    list below is GENERATED from the manifest keys, so it can
+#    never drift from what actually ships
+sha256sum \
+adversarial-bounds.json dossier.md \
+    lab-runtime/blockchain_rd_lab/__init__.py \
+    lab-runtime/blockchain_rd_lab/formalization/__init__.py \
+    lab-runtime/blockchain_rd_lab/simulation/__init__.py \
+    lab-runtime/blockchain_rd_lab/simulation/adversarial.py \
+    lab-runtime/blockchain_rd_lab/simulation/interpreter.py model-v3.json \
+    prior-art.json redteam-history.json release-package.md \
+    scenario-results.json score-decomposition.json verify.py
 
 # 2. substance: re-run the §20 attack battery, §15 scenarios, and §19
 #    score arithmetic against the PUBLISHED model — the deterministic

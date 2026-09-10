@@ -2,7 +2,7 @@
   "finalists": [
     {
       "rank": 1,
-      "candidate_id": "cand-887878f82369",
+      "candidate_id": "cand-e168e568d380",
       "name": "Beta Rule",
       "overall_score": 5.3,
       "fatal_flaw_applied": false,
@@ -23,7 +23,7 @@
     },
     {
       "rank": 2,
-      "candidate_id": "cand-f2520014cf56",
+      "candidate_id": "cand-7f6acd4b1e2b",
       "name": "Alpha Rule",
       "overall_score": 5.1,
       "fatal_flaw_applied": false,
@@ -46,7 +46,7 @@
   "ranking": [
     {
       "rank": 1,
-      "candidate_id": "cand-887878f82369",
+      "candidate_id": "cand-e168e568d380",
       "name": "Beta Rule",
       "overall_score": 5.3,
       "fatal_flaw_applied": false,
@@ -67,7 +67,7 @@
     },
     {
       "rank": 2,
-      "candidate_id": "cand-f2520014cf56",
+      "candidate_id": "cand-7f6acd4b1e2b",
       "name": "Alpha Rule",
       "overall_score": 5.1,
       "fatal_flaw_applied": false,

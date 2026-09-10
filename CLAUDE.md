@@ -119,6 +119,27 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 28 pre-audit sweep (the human's "I will ask other LLM to
+  audit" — the lab ran its own hostile pass FIRST so the next
+  auditor finds nothing the lab could have found): re-read the
+  shipped README as an auditor would and executed its own
+  commands verbatim. ONE real defect found and fixed: the README's
+  sha256sum command hand-listed 9 files while the manifest ships
+  15 — an auditor running the README's integrity step verbatim
+  got a PARTIAL check (the six unlisted files included verify.py
+  itself and the whole lab-runtime). STRUCTURAL FIX: the command
+  is now GENERATED from the manifest keys (computed once, shared
+  by README and MANIFEST — one source of truth, drift
+  impossible), wrapped at 72 cols; pinned by two probes (command
+  lists exactly the manifest's files; command EXECUTES verbatim
+  and every hash matches). Also swept and found CLEAN: all 20
+  §4b edges trace to adversarial-bounds.json at full precision
+  (4-decimal render; the '13/13 scenarios' claim counts 'base'
+  — ALL_SCENARIOS in the shipped runtime is 13 incl. base, and
+  scenario-results.json keys match exactly); score 6.45 coherent
+  across decomp/dossier/README; runtime closure complete on disk;
+  isolated-environment verify still exit 0 (33 checks, 30
+  reproduced, zero pycache). Tests +2 -> 446.
 - Round 27 external-audit response round (the criticism stage
   arrived as a real artifact — cand-9200b07691c3-FIXES.md, an
   independent audit of the published bundle; §2 applies to audits

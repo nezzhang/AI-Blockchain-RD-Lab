@@ -9,6 +9,7 @@ store before fixing, and each fix gets an anti-regression probe.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -226,6 +227,45 @@ class TestAuditFix7OpenQuestionsInSection4:
         section = rp[idx4:idx5]
         assert "OPEN QUESTION" in section
         assert "separation key" in section
+
+
+class TestReadmeCommandMatchesManifest:
+    """r28: the README's sha256sum command listed 9 files while the
+    manifest had 15 — an auditor running it verbatim got a PARTIAL
+    integrity check. The command is now GENERATED from the manifest
+    keys; this probe pins it (a hand-maintained list always drifts)."""
+
+    def test_sha_command_lists_every_shipped_file(self) -> None:
+        import re
+        readme = (BUNDLE / "README.md").read_text(encoding="utf-8")
+        man = json.loads(
+            (BUNDLE / "MANIFEST.json").read_text(encoding="utf-8"))
+        i = readme.find("sha256sum")
+        j = readme.find("python verify")
+        block = readme[i:j]
+        listed = set(re.findall(r"[\w./-]+\.(?:md|json|py)", block))
+        expect = set(man["files"]) - {"README.md"}
+        assert listed == expect, (
+            f"command drift: missing {sorted(expect - listed)}, "
+            f"extra {sorted(listed - expect)}"
+        )
+
+    def test_sha_command_executes_verbatim(self) -> None:
+        import subprocess
+        readme = (BUNDLE / "README.md").read_text(encoding="utf-8")
+        block = re.search(
+            r"sha256sum .*?\n\n", readme, re.S).group(0)
+        cmd = block.replace("\\\n", " ").strip()
+        r = subprocess.run(
+            cmd, shell=True, capture_output=True, text=True, cwd=BUNDLE)
+        assert r.returncode == 0
+        man = json.loads(
+            (BUNDLE / "MANIFEST.json").read_text(encoding="utf-8"))
+        for line in r.stdout.splitlines():
+            if not line.strip():
+                continue
+            h, f = line.split()
+            assert h == man["files"][f]["sha256"], f"hash drift: {f}"
 
 
 class TestAuditChecklist:
