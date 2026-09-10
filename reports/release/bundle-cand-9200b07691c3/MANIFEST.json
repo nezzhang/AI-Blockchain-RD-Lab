@@ -5,7 +5,7 @@
   "files": {
     "README.md": {
       "bytes": 3147,
-      "sha256": "40a6259278642492337fa959e906cce404562a434165ed4c8d0ee62f2327d628"
+      "sha256": "ef1158a929fe688e943e97b89f5f832a065a0750dfa0bf76658eeacd8c64f467"
     },
     "adversarial-bounds.json": {
       "bytes": 54381,
@@ -48,8 +48,8 @@
       "sha256": "b90cd3ccd36fcf991981dfa6c87e58ba89a9d76c235f8a696cda522ac0f1c01d"
     },
     "release-package.md": {
-      "bytes": 9565,
-      "sha256": "aefa4b74b4fd7a33ae95a621adef393ecd6490fc318abc74f1aae59957627f09"
+      "bytes": 9760,
+      "sha256": "41ad138322cbe076eee1f4081805656a2b2a5e190f3d93fdde110ec4f7c4292c"
     },
     "scenario-results.json": {
       "bytes": 12400,
@@ -60,10 +60,10 @@
       "sha256": "05440067f67112f7472718c1d4ff26f99e24778fd388534464154b3b1f67069e"
     },
     "verify.py": {
-      "bytes": 13333,
-      "sha256": "be225bc28a1e8f7e526a196c9c4c40e96215e1669d2a64d25b756ba1d19d9514"
+      "bytes": 13582,
+      "sha256": "32605cd31b0da2f2b65cef8cd2fe556c72160ff86dafd969b9490034068f7d86"
     }
   },
-  "generated": "2026-09-10T04:41:29.522598+00:00",
+  "generated": "2026-09-10T09:19:01.730984+00:00",
   "model_version": 3
 }

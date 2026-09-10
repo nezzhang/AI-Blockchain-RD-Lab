@@ -162,10 +162,11 @@ class TestAuditFix3RuntimeShipsInBundle:
         man = json.loads(
             (BUNDLE / "MANIFEST.json").read_text(encoding="utf-8"))
         listed = set(man["files"])
+        _skip = {"__pycache__", ".DS_Store"}
         on_disk = {
             f.relative_to(BUNDLE).as_posix()
             for f in BUNDLE.rglob("*")
-            if f.is_file() and "__pycache__" not in f.parts
+            if f.is_file() and not (_skip & set(f.parts))
         } - {"MANIFEST.json"}
         assert listed == on_disk
 

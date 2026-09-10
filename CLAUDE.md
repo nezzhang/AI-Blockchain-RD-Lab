@@ -119,6 +119,44 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 29 external-audit round-2 response (cand-9200b07691c3-
+  FIXES-ROUND2.md — the auditor EXECUTED the bundle's own code:
+  interpreter, scenario battery, Monte Carlo, and the full attack
+  battery incl. all 27 default+calibrated variants; EVERYTHING
+  REPRODUCED — round-1 fixes #1-#4 confirmed resolved under real
+  execution, the strongest possible validation of the r27 work).
+  TWO new findings, both confirmed. F1 (SHOULD FIX, the real bug):
+  §4b rendered 17 of 19 calibration-tagged lines — the two
+  pump_unwind sweep variants (@amplitude=0.02 edge +0.3374,
+  @amplitude=0.1 edge +0.9999) existed in adversarial-bounds.json
+  but never reached the disclosure document. MY FIRST FIX WAS A
+  MISDIAGNOSIS (kept as the round's lesson): I patched "render
+  from the FULLEST census record, not the newest" — wrong: the
+  renderer ALREADY used the 27-bound record; the in-memory build
+  still produced 17. The auditor's own 19-vs-17 numbers re-checked
+  against the store localized the REAL cause: the §4b dedupe key
+  was the CALIBRATION TAG ALONE — vol_oscillation and pump_unwind
+  BOTH sweep amplitude=0.02/0.1, so whichever pattern rendered
+  first added the tag and the other pattern's variants were
+  silently skipped. Fix: the dedupe key is now kind+calibration
+  (the same calibration under two patterns is two different
+  measurements); §4b now renders 19/19 and the checklist
+  "count per kind: JSON == markdown" passes for every kind.
+  THE FULLEST-RECORD CHANGE IS KEPT anyway (it is more honest:
+  "newest wins" would render 8 defaults if a newer default-only
+  census landed; more measured bounds = more complete disclosure,
+  ties keep newest) — but it was NOT this bug's cause. Pinned by
+  TestRound2AuditCalibrationCompleteness (two patterns sharing a
+  calibration name both render — 4/4 lines, the exact collision
+  case). F2 (minor): verify.py's module docstring still said
+  '.venv/bin/python scripts/r25_verify_bundle.py ...' — predates
+  the self-contained runtime; now says 'python verify.py .'
+  matching the README. ALSO THIS ROUND (not the auditor's): the
+  r27 manifest-coverage probe caught a Finder-dropped .DS_Store
+  inside the bundle — coverage now excludes non-content artifacts
+  (__pycache__, .DS_Store) by explicit policy; anything else
+  unlisted remains a real stray. Tests +1 -> 447; isolated
+  third-party verify exit 0 (33 checks, 30 reproduced).
 - Round 28 pre-audit sweep (the human's "I will ask other LLM to
   audit" — the lab ran its own hostile pass FIRST so the next
   auditor finds nothing the lab could have found): re-read the

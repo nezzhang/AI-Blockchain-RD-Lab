@@ -2,7 +2,7 @@
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-10T04:17:23+00:00
+Generated: 2026-09-10T09:16:25+00:00
 Candidate: `cand-9200b07691c3` (§7 recommended, rank 1)
 
 ## 1. Publication Readiness
@@ -48,6 +48,8 @@ Deterministic bounds from the §20 attack-pattern battery (60-step window, match
 - **vol_oscillation @amplitude=0.1**: attacker edge **+0.9999** on `C_t_drawn` vs a matched base run
 - **wash_flow @wash_level=0.01**: attacker edge **+0.0023** on `G_t_drawn` vs a matched base run
 - **wash_flow @wash_level=0.04**: attacker edge **+32.6375** on `L_f_drawn` vs a matched base run
+- **pump_unwind @amplitude=0.02**: attacker edge **+0.3374** on `C_t_drawn` vs a matched base run
+- **pump_unwind @amplitude=0.1**: attacker edge **+0.9999** on `C_t_drawn` vs a matched base run
 - **shock_timing @lag_fraction=0.1**: attacker edge **+0.1862** on `C_t_drawn` vs a matched base run
 - **shock_timing @lag_fraction=0.4**: attacker edge **+0.4017** on `C_t_drawn` vs a matched base run
 - **crash_park @park_shift=-0.3**: attacker edge **+0.2375** on `G_t_drawn` vs a matched base run (excludes 3 regime-tracking excursion(s): EMA states following the moved level — design property, not extraction: `L_f` +300.0, `T_s` +271.4, `r_t` +0.0); re-basing in transit (arriving or at design offset): `C_t` +0.2

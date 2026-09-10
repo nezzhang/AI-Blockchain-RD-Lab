@@ -83,15 +83,36 @@ class ReleasePackageBuilder:
         measured all-nonpositive edge is a genuine measured bound.
         Returns None when no adversarial-patterns record is stored.
         """
+        # r29 audit fix (round-2 F1): render from the FULLEST census
+        # record, not merely the newest — the store holds BOTH the
+        # r20 default battery (8 bounds) and the r22 parameter sweep
+        # (27 bounds incl. all 19 calibrations), and "latest wins"
+        # silently dropped the 2 pump_unwind sweep variants from §4b
+        # (17 of 19 calibration lines rendered; the JSON shipped both
+        # records, only the markdown was lossy). A record with MORE
+        # measured bounds is the more complete disclosure; ties keep
+        # the newest.
         latest = None
+        latest_n = -1
         for rec in self.database.iter_experiments(candidate_id=candidate_id):
             results = rec.results
-            if isinstance(results, dict) and "bounds" in results:
+            if not (isinstance(results, dict) and "bounds" in results):
+                continue
+            n = len(results["bounds"])
+            if n >= latest_n:
                 latest = results
+                latest_n = n
         if latest is None:
             return None
         out: list[str] = []
         vacuous_n = int(latest.get("vacuous_count", 0))
+        # r29 audit fix (round-2 F1, the REAL root cause): the dedupe
+        # key was the CALIBRATION TAG ALONE — vol_oscillation and
+        # pump_unwind both sweep amplitude=0.02/0.1, so whichever
+        # pattern rendered first ADDED the tag and the other pattern's
+        # variants were silently skipped (17 of 19 lines rendered).
+        # The key must be kind+calibration: the same calibration under
+        # two different patterns are two different measurements.
         seen_cals: set[str] = set()
         for b in latest.get("bounds", []):
             kind = str(b.get("kind", "?"))
@@ -100,9 +121,10 @@ class ReleasePackageBuilder:
                 # sweep variants append their calibration so 27 rows
                 # read as 8 defaults + N named recalibrations
                 tag = f"@{cal}"
-                if tag in seen_cals:
+                dedupe_key = f"{kind}{tag}"
+                if dedupe_key in seen_cals:
                     continue
-                seen_cals.add(tag)
+                seen_cals.add(dedupe_key)
                 kind = f"{kind} {tag}"
             vacuous = bool(b.get("vacuous"))
             headline = b.get("headline")

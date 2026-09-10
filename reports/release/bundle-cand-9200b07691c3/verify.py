@@ -23,10 +23,9 @@ verdict classes:
                     re-run cannot produce)
 
 Usage:
-    .venv/bin/python scripts/r25_verify_bundle.py \\
-        reports/release/bundle-cand-9200b07691c3
-
-Run: .venv/bin/python scripts/r25_verify_bundle.py
+    python verify.py .
+    (from inside the bundle directory — the deterministic runtime
+    ships in lab-runtime/, so no lab package install is needed)
 """
 
 from __future__ import annotations
@@ -95,10 +94,14 @@ def _verify_manifest(bundle: Path, rep: Report) -> dict[str, dict]:
         else:
             rep.add(name, "REPRODUCED", "sha256 verifies against the file")
     # nothing unhashed ships
+    # non-content artifacts excluded from coverage: __pycache__ (the
+    # runtime's own bytecode) and .DS_Store (Finder metadata) are not
+    # evidence and never ship; anything else unlisted is a real stray
+    _skip = {"__pycache__", ".DS_Store"}
     on_disk = {
         f.relative_to(bundle).as_posix()
         for f in bundle.rglob("*")
-        if f.is_file() and "__pycache__" not in f.parts
+        if f.is_file() and not (_skip & set(f.parts))
     } - {"MANIFEST.json"}
     listed = set(man.get("files", {}))
     if on_disk != listed:

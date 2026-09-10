@@ -319,6 +319,54 @@ def _bounds_record(
     )
 
 
+class TestRound2AuditCalibrationCompleteness:
+    """r29 (round-2 audit F1): §4b rendered 17 of 19 calibration
+    lines — the dedupe key was the CALIBRATION TAG ALONE, and
+    vol_oscillation/pump_unwind both sweep amplitude=0.02/0.1, so
+    the second pattern's variants were silently dropped. The key
+    must be kind+calibration: the same calibration under two
+    patterns is two different measurements.
+
+    Also pins the misdiagnosis lesson: 'render from the fullest
+    record' was WRONG — the renderer already used the 27-bound
+    record; verify the root cause against the store before fixing
+    (the auditor's own numbers 19-vs-17 localized it)."""
+
+    def test_two_patterns_sharing_a_calibration_both_render(
+        self, memory_db, tmp_path,
+    ) -> None:
+        # a sweep record where TWO kinds share calibration names
+        bounds = []
+        for kind in ("vol_oscillation", "pump_unwind"):
+            for amp in ("0.02", "0.1"):
+                bounds.append({
+                    "kind": kind, "calibration": f"amplitude={amp}",
+                    "headline": 0.5, "vacuous": False,
+                    "regime_tracking": {}, "transient_recovered": {},
+                    "drift_wedges": {}, "heal_flags": {},
+                })
+        from blockchain_rd_lab.schemas import ExperimentRecord
+        memory_db.save_candidate(_candidate("cand-x"))
+        memory_db.save_experiment(ExperimentRecord(
+            experiment_id="exp-sweep", candidate_id="cand-x",
+            dataset="attack_parameter_sweep", seed=7,
+            simulation_version="sim-0.1.0", parameters={},
+            results={"bounds": bounds, "vacuous_count": 0},
+        ))
+        builder = ReleasePackageBuilder(memory_db)
+        md = builder.build(candidate_id="cand-x")
+        assert md is not None
+        i = md.find("## 4b")
+        assert i >= 0, "no 4b section rendered"
+        section = md[i:]
+        import re as _re
+        tagged = _re.findall(r"\*\*(\w+) @([^\n]*?)\*\*", section)
+        assert len(tagged) == 4, f"expected 4 lines, got {len(tagged)}"
+        kinds = [k for k, _ in tagged]
+        assert kinds.count("vol_oscillation") == 2
+        assert kinds.count("pump_unwind") == 2
+
+
 class TestBoundsDisclosureHonesty:
     """The r14 4b fix: an EMA-of-level excursion under crash_park is the
     design FOLLOWING the moved level (regime tracking), not an attacker
