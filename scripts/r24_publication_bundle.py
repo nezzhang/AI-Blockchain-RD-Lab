@@ -108,6 +108,33 @@ def main() -> None:
         json.dumps(bounds, indent=2, sort_keys=True,
                    default=_json_default) + "\n", encoding="utf-8")
 
+    # 4b. §15 scenario battery + Monte Carlo records for the FINAL
+    # model version — r27 audit fix #6: the prose's "13/13 clean"
+    # and mean_final/failures figures get the same raw backing file
+    # treatment the attack bounds already had
+    ver_suffix = f"-v{model['version']}"
+    scen_recs = {}
+    for exp in db.iter_experiments(candidate_id=RANK1):
+        if not exp.experiment_id.endswith(ver_suffix):
+            continue
+        res = exp.results or {}
+        if "bounds" in res:
+            continue  # adversarial census, already shipped
+        if not any(k in res for k in ("base", "trials")):
+            continue
+        scen_recs[exp.experiment_id] = {
+            "experiment_id": exp.experiment_id,
+            "recorded_at": exp.timestamp.isoformat()
+            if hasattr(exp.timestamp, "isoformat") else str(exp.timestamp),
+            "seed": exp.seed,
+            "parameters": exp.parameters or {},
+            "results": res,
+        }
+    spath = out / "scenario-results.json"
+    spath.write_text(
+        json.dumps(list(scen_recs.values()), indent=2, sort_keys=True,
+                   default=_json_default) + "\n", encoding="utf-8")
+
     # 5. every red-team report ever filed against it, verbatim
     rt = db.list_redteam_results(candidate_id=RANK1)
     rtp = out / "redteam-history.json"
@@ -115,8 +142,25 @@ def main() -> None:
         json.dumps(rt, indent=2, sort_keys=True,
                    default=_json_default) + "\n", encoding="utf-8")
 
-    # 6. §12 prior-art trail
-    pa = db.list_prior_art(candidate_id=RANK1)
+    # 6. §12 prior-art trail — DEDUPED on identical finding content
+    # (r27 audit fix #5: one review recorded under two source rows
+    # double-counted "searches recorded"; the row carries the full
+    # multi-source review, so the duplicate is the same search)
+    pa_all = db.list_prior_art(candidate_id=RANK1)
+    pa_seen: dict[str, dict] = {}
+    for row in pa_all:
+        key = row["finding"]
+        if key in pa_seen:
+            # record the merge on the kept row, never silently drop
+            kept = pa_seen[key]
+            merged = kept.setdefault("merged_source_ids", [])
+            if row["source_id"] not in merged:
+                merged.append(row["source_id"])
+        else:
+            pa_seen[key] = row
+    pa = list(pa_seen.values())
+    for row in pa:
+        row.setdefault("merged_source_ids", [])
     pap = out / "prior-art.json"
     pap.write_text(
         json.dumps(pa, indent=2, sort_keys=True,
@@ -155,6 +199,30 @@ def main() -> None:
     (out / "verify.py").write_text(
         vsrc.read_text(encoding="utf-8"), encoding="utf-8")
 
+    # 8b. the deterministic RUNTIME ships inside the bundle (r27
+    # audit fix #3): verify.py's whole dependency closure is 4
+    # files (formalization schema, simulation init, interpreter,
+    # adversarial battery) + stdlib + pydantic — small enough to
+    # ship, so the substance tier is self-service, not repo-dependent
+    rt = out / "lab-runtime" / "blockchain_rd_lab"
+    rt.mkdir(parents=True, exist_ok=True)
+    for sub in ("formalization", "simulation"):
+        srcd = REPO_ROOT / "src" / "blockchain_rd_lab" / sub
+        dstd = rt / sub
+        dstd.mkdir(exist_ok=True)
+        for fn in ("__init__.py",):
+            (dstd / fn).write_text(
+                (srcd / fn).read_text(encoding="utf-8"), encoding="utf-8")
+    for extra in ("interpreter.py", "adversarial.py"):
+        (rt / "simulation" / extra).write_text(
+            (REPO_ROOT / "src" / "blockchain_rd_lab" / "simulation" / extra
+             ).read_text(encoding="utf-8"), encoding="utf-8")
+    # the namespace package root needs an __init__ so
+    # 'blockchain_rd_lab' resolves as a package on sys.path
+    (rt / "__init__.py").write_text(
+        "# namespace root of the shipped runtime (r27)\n",
+        encoding="utf-8")
+
     # 9. README: what this is, how to verify, how to cite
     score = cand.overall_score
     readme = f"""# Publication Bundle: {cand.name}
@@ -177,8 +245,12 @@ rank-1 research candidate as of {generated}.
 | `release-package.md` | §27 build-in-public release package |
 | `model-v{model['version']}.json` | final MathModel (machine-readable) |
 | `adversarial-bounds.json` | every stored §20 battery census record |
+| `scenario-results.json` | §15 scenarios + Monte Carlo records for the final model |
 | `redteam-history.json` | every adversarial report filed against the candidate, verbatim |
 | `prior-art.json` | §12 prior-art trail |
+| `score-decomposition.json` | §19 score breakdown (recomputable) |
+| `verify.py` | the external verifier — run it, check this bundle yourself |
+| `lab-runtime/` | deterministic runtime: interpreter, §15 + §20 batteries, MathModel schema |
 | `MANIFEST.json` | SHA-256 of every file in this bundle |
 
 ## How to verify
@@ -191,16 +263,18 @@ sha256sum README.md dossier.md release-package.md model-v{model['version']}.json
     adversarial-bounds.json redteam-history.json prior-art.json \\
     score-decomposition.json verify.py
 
-# 2. substance: re-run the §20 attack battery and §15 scenarios against
-#    model-v{model['version']}.json — recomputes the published headlines
+# 2. substance: re-run the §20 attack battery, §15 scenarios, and §19
+#    score arithmetic against the PUBLISHED model — the deterministic
+#    runtime ships in lab-runtime/ (interpreter + both batteries +
+#    MathModel schema; needs only Python 3.12+ and pydantic)
 python verify.py .
 ```
 
 `verify.py` reads only this bundle (never any database), re-runs every
-reproducible claim with the deterministic interpreter, and writes a
-verification report next to the bundle. Requires the lab package
-installed (`pip install -e .` from the repo) — the interpreter is code,
-and code is the only evidence that counts (§2).
+reproducible claim with the deterministic interpreter in `lab-runtime/`,
+and writes a verification report beside the bundle. No lab package
+install needed — the interpreter is code, and the code ships with the
+claims (§2).
 
 ## Scope and honesty
 
@@ -219,8 +293,9 @@ no deployment, no live contract — §27/§28.
     files = [
         "README.md", "dossier.md", "release-package.md", modelp.name,
         "adversarial-bounds.json", "redteam-history.json", "prior-art.json",
-        "score-decomposition.json", "verify.py",
-    ]
+        "score-decomposition.json", "scenario-results.json", "verify.py",
+    ] + [r.relative_to(out).as_posix()
+         for r in sorted((out / "lab-runtime").rglob("*.py"))]
     manifest = {
         "candidate_id": cand.id,
         "candidate_name": cand.name,

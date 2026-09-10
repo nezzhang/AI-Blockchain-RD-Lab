@@ -2,7 +2,7 @@
 
 Assembled by code from stored evidence only (§2 — no report-writer
 LLM). The bundle is the complete public evidence set for the §7
-rank-1 research candidate as of 2026-09-10T02:40:26.126701+00:00.
+rank-1 research candidate as of 2026-09-10T04:27:17.337788+00:00.
 
 - **Candidate ID:** `cand-9200b07691c3`
 - **Deterministic §19 score:** 6.45
@@ -18,8 +18,12 @@ rank-1 research candidate as of 2026-09-10T02:40:26.126701+00:00.
 | `release-package.md` | §27 build-in-public release package |
 | `model-v3.json` | final MathModel (machine-readable) |
 | `adversarial-bounds.json` | every stored §20 battery census record |
+| `scenario-results.json` | §15 scenarios + Monte Carlo records for the final model |
 | `redteam-history.json` | every adversarial report filed against the candidate, verbatim |
 | `prior-art.json` | §12 prior-art trail |
+| `score-decomposition.json` | §19 score breakdown (recomputable) |
+| `verify.py` | the external verifier — run it, check this bundle yourself |
+| `lab-runtime/` | deterministic runtime: interpreter, §15 + §20 batteries, MathModel schema |
 | `MANIFEST.json` | SHA-256 of every file in this bundle |
 
 ## How to verify
@@ -32,16 +36,18 @@ sha256sum README.md dossier.md release-package.md model-v3.json \
     adversarial-bounds.json redteam-history.json prior-art.json \
     score-decomposition.json verify.py
 
-# 2. substance: re-run the §20 attack battery and §15 scenarios against
-#    model-v3.json — recomputes the published headlines
+# 2. substance: re-run the §20 attack battery, §15 scenarios, and §19
+#    score arithmetic against the PUBLISHED model — the deterministic
+#    runtime ships in lab-runtime/ (interpreter + both batteries +
+#    MathModel schema; needs only Python 3.12+ and pydantic)
 python verify.py .
 ```
 
 `verify.py` reads only this bundle (never any database), re-runs every
-reproducible claim with the deterministic interpreter, and writes a
-verification report next to the bundle. Requires the lab package
-installed (`pip install -e .` from the repo) — the interpreter is code,
-and code is the only evidence that counts (§2).
+reproducible claim with the deterministic interpreter in `lab-runtime/`,
+and writes a verification report beside the bundle. No lab package
+install needed — the interpreter is code, and the code ships with the
+claims (§2).
 
 ## Scope and honesty
 

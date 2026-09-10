@@ -52,30 +52,27 @@ Fast pressure EMA vs slow regime EMA; retention = clip(delta + eta * separation 
 
 ## Economic Analysis
 
-- **economic_coherence**: 7.50 (INFERENCE; confidence 0.80)
-- **game_theory**: 7.50 (INFERENCE; confidence 0.80)
-- **market_demand**: 6.50 (INFERENCE; confidence 0.70)
 - **novelty**: 6.00 (INFERENCE; confidence 0.80)
-- **oracle_feasibility**: 8.00 (FACT; confidence 0.70)
-- **security**: 7.00 (INFERENCE; confidence 0.80)
+- **economic_coherence**: 7.50 (INFERENCE; confidence 0.80)
+- **capital_efficiency**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 
 ## Game Theory
 
-- **Red Team verdict:** vulnerable (strongest attack: Saw-tooth retention bias: the retention clip band 0.1..0.9 is asymmetric around the base delta_r=0.3, so a crafted zero-mean saw-tooth (slow negative separation legs, fast positive legs) biases the ti…)
-- **game_theory:** 3 attack vector(s) recorded; evidence level INFERENCE
-- **security:** 3 attack vector(s) recorded; evidence level INFERENCE
-- **oracle:** 2 attack vector(s) recorded; evidence level FACT
+- **Red Team verdict:** survives (strongest attack: Long-period alternation partial ride: a saw-tooth with period well above the counter's time constant spends the first fraction of each leg at partial discount (the EMA discount's own handoff lag) — bu…)
+- **game_theory**: 7.50 (INFERENCE; confidence 0.80)
+- **game_theory:** 1 attack vector(s) recorded; evidence level INFERENCE
+- v3's sign-persistence counter closes both named v2 flaws: there is no magnitude threshold to ride (alternation raises the counter at ANY amplitude — measured slow saw-tooth mean retention 0.300 = base with C_t pinned 1.0), and genuine sustained pressure is no longer discounted (measured 3%/step grin
 
 ## Oracle Design
 
+- **oracle_feasibility**: 8.00 (FACT; confidence 0.70)
 No external data dependency declared. See Security and adversarial sections for manipulation analysis.
 
 ## Security
 
-- **Red Team verdict:** vulnerable (strongest attack: Saw-tooth retention bias: the retention clip band 0.1..0.9 is asymmetric around the base delta_r=0.3, so a crafted zero-mean saw-tooth (slow negative separation legs, fast positive legs) biases the ti…)
-- **game_theory:** 3 attack vector(s) recorded; evidence level INFERENCE
-- **security:** 3 attack vector(s) recorded; evidence level INFERENCE
-- **oracle:** 2 attack vector(s) recorded; evidence level FACT
+- **security**: 7.00 (INFERENCE; confidence 0.80)
+- **security:** 1 attack vector(s) recorded; evidence level INFERENCE
+- The sign-persistence key removes the exploitable boundary entirely: the counter's input g_t*G_t is a sign test, not a magnitude test — no threshold to sit under. Measured: slow saw-tooth 0.300 (= base), duty-cycle saw 0.300, genuine lead 0.428 (response preserved). Residual: the counter is a DISCOUN
 
 ## Simulation
 
@@ -89,6 +86,7 @@ No external data dependency declared. See Security and adversarial sections for 
 - **cand-9200b07691c3-montecarlo-v3** (seed 7, sim-0.1.0): mean_final=1005.6340499998557, p5_final=1005.6293537946926, p95_final=1005.6386936934243, failures=0
 - **cand-9200b07691c3-sweep-v3** (seed 7, sim-0.1.0): results recorded
 - **exp-779ad60c78f9** (seed None, none): results recorded
+- **exp-15a351751f2c** (seed None, none): results recorded
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 
@@ -109,15 +107,14 @@ See Prior Art; competitor synthesis pending real research.
 
 ## Market
 
-- **economic_coherence**: 7.50 (INFERENCE; confidence 0.80)
-- **game_theory**: 7.50 (INFERENCE; confidence 0.80)
 - **market_demand**: 6.50 (INFERENCE; confidence 0.70)
-- **novelty**: 6.00 (INFERENCE; confidence 0.80)
-- **oracle_feasibility**: 8.00 (FACT; confidence 0.70)
-- **security**: 7.00 (INFERENCE; confidence 0.80)
+- **network_effects**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **communication**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **viral_potential**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 
 ## Technical Architecture
 
+- **technical_feasibility**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 Blockchain required: yes; token required: no. Detailed architecture arrives with the Blockchain Architect review (future phase).
 
 ## Regulatory Risks

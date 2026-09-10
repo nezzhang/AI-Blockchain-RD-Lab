@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from blockchain_rd_lab.database import LabDatabase
 from blockchain_rd_lab.reporting import (
@@ -24,6 +25,7 @@ from blockchain_rd_lab.reporting import (
     ReportSection,
 )
 from blockchain_rd_lab.schemas import Candidate, CandidateStatus
+from blockchain_rd_lab.scoring import ScoringEngine
 
 # §23 finalist dossier section titles (fixed order).
 SECTIONS = (
@@ -68,6 +70,41 @@ class ReportBuilder:
                 f"({s.evidence_level}; confidence {s.confidence:.2f})"
             )
         return lines
+
+    def _dimension_lines(
+        self, candidate: Candidate, dims: tuple[str, ...],
+    ) -> list[str]:
+        """Score lines for ONE section's own dimensions (r27 audit
+        fix #2: Economic Analysis and Market rendered byte-identical
+        because both dumped the full score list).
+
+        r27 fix (regression caught by the existing suite): imputed
+        dimensions (no authored agent evidence -> §19 5.0 floor)
+        were silently dropped. They now render with the IMPUTED
+        flag — the dossier must disclose the floor, not hide it."""
+        if not candidate.scores:
+            return ["No dimension scores recorded yet."]
+        lines = []
+        for dim in dims:
+            s = candidate.scores.get(dim)
+            if s is not None:
+                lines.append(
+                    f"- **{dim}**: {s.score:.2f} "
+                    f"({s.evidence_level}; confidence {s.confidence:.2f})"
+                )
+                continue
+            # no authored row: §19 imputes at the floor — render the
+            # imputation, never silence it
+            res = ScoringEngine().score(candidate)
+            for d in res.dimensions:
+                if d.dimension == dim:
+                    lines.append(
+                        f"- **{dim}**: {d.score:.2f} "
+                        f"(IMPUTED at the 5.0 floor; no authored "
+                        "agent evidence, §19)"
+                    )
+                    break
+        return lines or ["No scores recorded for these dimensions yet."]
 
     def _math_model_section(self, candidate: Candidate) -> str:
         dump = self.database.get_latest_math_model(candidate.id)
@@ -132,30 +169,73 @@ class ReportBuilder:
         )
         return "\n".join(lines)
 
-    def _redteam_section(self, candidate: Candidate) -> str:
+    def _verdict_line(self, candidate: Candidate) -> str:
+        """The overall red-team verdict from the LATEST round (r27
+        audit fix #1: the dossier once quoted round 1 of 3 —
+        selection bug, fixed by latest-per-agent overwrite)."""
+        rows = self.database.list_redteam_results(candidate.id)
+        rt = [r for r in rows if r["agent_name"] == "red_team"]
+        if not rt:
+            return ""
+        latest = max(rt, key=lambda r: str(r.get("created_at", "")))
+        report = json.loads(latest["report_json"])
+        return (
+            f"- **Red Team verdict:** {report['verdict']}"
+            f" (strongest attack: {report['strongest_attack'][:200]}…)"
+        )
+
+    def _redteam_section(
+        self, candidate: Candidate, agent_focus: str | None = None,
+    ) -> str:
+        """§23 adversarial sections, assembled from the LATEST
+        red-team round per agent (r27 audit fix: a dict comprehension
+        over all rounds silently kept the EARLIEST record — the
+        dossier quoted the superseded v1 'vulnerable' verdict while
+        the release package carried the final 'survives')."""
         rows = self.database.list_redteam_results(candidate.id)
         if not rows:
             return "No adversarial review recorded yet (run `lab redteam`)."
-        by_agent = {r["agent_name"]: r for r in rows}
-        lines = []
-        rt = by_agent.get("red_team")
-        if rt:
-            report = json.loads(rt["report_json"])
-            lines.append(
-                f"- **Red Team verdict:** {report['verdict']}"
-                f" (strongest attack: {report['strongest_attack'][:200]}…)"
-            )
-        for agent in ("game_theory", "security", "oracle"):
-            row = by_agent.get(agent)
+
+        def sort_key(r: dict[str, Any]) -> str:
+            return str(r.get("created_at", ""))
+
+        latest: dict[str, dict[str, Any]] = {}
+        for r in sorted(rows, key=sort_key):
+            latest[r["agent_name"]] = r  # later rounds overwrite
+
+        lines: list[str] = []
+
+        if agent_focus is None:
+            rt = latest.get("red_team")
+            if rt:
+                report = json.loads(rt["report_json"])
+                lines.append(
+                    f"- **Red Team verdict:** {report['verdict']}"
+                    f" (strongest attack: {report['strongest_attack'][:200]}…)"
+                )
+                if len(rows) > len(latest):
+                    lines.append(
+                        f"- {len(rows)} adversarial reports across "
+                        f"{len(latest)} agent(s), {len(latest)} latest "
+                        "shown (earlier rounds superseded; full history "
+                        "in the bundle's redteam-history.json)"
+                    )
+        else:
+            row = latest.get(agent_focus)
             if row:
                 report = json.loads(row["report_json"])
                 vectors = report.get(
                     "attack_vectors", report.get("manipulation_vectors", [])
                 )
                 lines.append(
-                    f"- **{agent}:** {len(vectors)} attack vector(s) recorded; "
-                    f"evidence level {report.get('evidence_level', '?')}"
+                    f"- **{agent_focus}:** {len(vectors)} attack vector(s) "
+                    f"recorded; evidence level "
+                    f"{report.get('evidence_level', '?')}"
                 )
+                summary = report.get("summary") or report.get("rationale")
+                if summary:
+                    lines.append(f"- {str(summary)[:300]}")
+
         if candidate.fatal_flaws:
             confirmed = [f for f in candidate.fatal_flaws if f.confirmed]
             lines.append(
@@ -203,18 +283,45 @@ class ReportBuilder:
             "Mechanism": candidate.core_mechanism,
             "Mathematical Model": self._math_model_section(candidate),
             "Economic Analysis": "\n".join(
-                self._score_lines(candidate)
-            ),
-            "Game Theory": self._redteam_section(candidate)
-            if self.database.list_redteam_results(candidate.id)
-            else "No game-theoretic review yet.",
-            "Oracle Design": (
-                "This mechanism requires external data (oracle)."
-                if candidate.oracle_required
-                else "No external data dependency declared."
+                self._dimension_lines(
+                    candidate,
+                    ("novelty", "economic_coherence",
+                     "capital_efficiency"))),
+            "Game Theory": (
+                # the OVERALL red-team verdict (latest round) leads
+                # this section — r27 audit fix #1: the quote must be
+                # the final round's, never the earliest
+                self._verdict_line(candidate)
+                + "\n"
+                + "\n".join(self._dimension_lines(
+                    candidate, ("game_theory",)))
+                + "\n"
+                + self._redteam_section(
+                    candidate, agent_focus="game_theory")
             )
-            + " See Security and adversarial sections for manipulation analysis.",
-            "Security": self._redteam_section(candidate),
+            if self.database.list_redteam_results(candidate.id)
+            else "\n".join(self._dimension_lines(
+                candidate, ("game_theory",)))
+                or "No game-theoretic review yet.",
+            "Oracle Design": (
+                "\n".join(self._dimension_lines(
+                    candidate, ("oracle_feasibility",)))
+                + "\n"
+                + (
+                    "This mechanism requires external data (oracle)."
+                    if candidate.oracle_required
+                    else "No external data dependency declared."
+                )
+                + " See Security and adversarial sections for "
+                "manipulation analysis."
+            ),
+            "Security": (
+                "\n".join(self._dimension_lines(
+                    candidate, ("security",)))
+                + "\n"
+                + self._redteam_section(
+                    candidate, agent_focus="security")
+            ),
             "Simulation": self._simulation_section(candidate),
             "Historical Analysis": (
                 "Historical replay ran on synthetic anchor series (Phase 4); "
@@ -222,9 +329,15 @@ class ReportBuilder:
             ),
             "Prior Art": self._prior_art_section(candidate),
             "Competitors": "See Prior Art; competitor synthesis pending real research.",
-            "Market": "\n".join(self._score_lines(candidate)),
+            "Market": "\n".join(
+                self._dimension_lines(
+                    candidate,
+                    ("market_demand", "network_effects",
+                     "communication", "viral_potential"))),
             "Technical Architecture": (
-                "Blockchain required: "
+                "\n".join(self._dimension_lines(
+                    candidate, ("technical_feasibility",)))
+                + "\nBlockchain required: "
                 + ("yes" if candidate.blockchain_required else "no")
                 + "; token required: "
                 + ("yes" if candidate.token_required else "no")

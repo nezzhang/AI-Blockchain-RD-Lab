@@ -38,27 +38,27 @@ Guarantee capital is segmented into tranches with risk-weighted collateral; a so
 
 ## Economic Analysis
 
-- **game_theory**: 7.00 (HYPOTHESIS; confidence 0.80)
-- **oracle_feasibility**: 7.50 (HYPOTHESIS; confidence 0.70)
-- **security**: 6.50 (HYPOTHESIS; confidence 0.80)
+- **novelty**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **economic_coherence**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **capital_efficiency**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 
 ## Game Theory
 
-- **Red Team verdict:** vulnerable (strongest attack: Senior tranche free-riding: guarantee fees price exposure growth, not exposure level or tranche risk, so senior capital harvests fees and exits before slowly accumulated exposure (Q_t toward cap 2500)…)
-- **game_theory:** 2 attack vector(s) recorded; evidence level HYPOTHESIS
-- **security:** 2 attack vector(s) recorded; evidence level HYPOTHESIS
-- **oracle:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
+- **Red Team verdict:** survives (strongest attack: Pre-rise senior exit: withdraw senior capital one batch before a queued-exposure rise crystallizes in the level-priced fee — a bounded one-batch friction arbitrage worth at most a single batch's drift…)
+- **game_theory**: 7.00 (HYPOTHESIS; confidence 0.80)
+- **game_theory:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
+- FACT: v2 prices the fee on exposure LEVEL above floor: F_t1 = f0 + psi*(Q_t1 - 100). INFERENCE: senior free-riding now pays — seniors holding risk through elevated exposure are charged proportionally, and queue spam charges the spammer's own queued exposure at the same level-priced rate, making spam
 
 ## Oracle Design
 
+- **oracle_feasibility**: 7.50 (HYPOTHESIS; confidence 0.70)
 No external data dependency declared. See Security and adversarial sections for manipulation analysis.
 
 ## Security
 
-- **Red Team verdict:** vulnerable (strongest attack: Senior tranche free-riding: guarantee fees price exposure growth, not exposure level or tranche risk, so senior capital harvests fees and exits before slowly accumulated exposure (Q_t toward cap 2500)…)
-- **game_theory:** 2 attack vector(s) recorded; evidence level HYPOTHESIS
-- **security:** 2 attack vector(s) recorded; evidence level HYPOTHESIS
-- **oracle:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
+- **security**: 6.50 (HYPOTHESIS; confidence 0.80)
+- **security:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
+- FACT: v2's fee is a pure function of measured exposure level. INFERENCE: queue spam no longer extracts — the spammer pays level-priced fees on their own queued exposure; the cap-ceiling freeze now costs the attacker maximum fees continuously.
 
 ## Simulation
 
@@ -91,12 +91,14 @@ See Prior Art; competitor synthesis pending real research.
 
 ## Market
 
-- **game_theory**: 7.00 (HYPOTHESIS; confidence 0.80)
-- **oracle_feasibility**: 7.50 (HYPOTHESIS; confidence 0.70)
-- **security**: 6.50 (HYPOTHESIS; confidence 0.80)
+- **market_demand**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **network_effects**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **communication**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **viral_potential**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 
 ## Technical Architecture
 
+- **technical_feasibility**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 Blockchain required: yes; token required: no. Detailed architecture arrives with the Blockchain Architect review (future phase).
 
 ## Regulatory Risks

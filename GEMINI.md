@@ -116,6 +116,83 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 27 external-audit response round (the criticism stage
+  arrived as a real artifact — cand-9200b07691c3-FIXES.md, an
+  independent audit of the published bundle; §2 applies to audits
+  too: every finding VERIFIED against the store before fixing,
+  every fix pinned by a probe the day it ships). TRIAGE: 2
+  blocking, 2 "check it yourself is false", 3 minor — ALL
+  CONFIRMED REAL. F1 (BLOCKING, the worst): dossier.md's Game
+  Theory and Security sections quoted the SUPERSEDED v1
+  'vulnerable' verdict (round 1 of 3, 10:34) as current while
+  the release package carried the final 'survives' (11:04) —
+  the bundle contradicted itself about the same candidate. Root
+  cause in the generator, not the file: _redteam_section's
+  by_agent dict comprehension kept the FIRST record per agent
+  across 12 rows/3 rounds. Fix: latest-per-agent overwrite
+  (sorted by created_at, later rounds win) + a _verdict_line
+  that max()es the red_team rows explicitly; the sections now
+  lead with 'survives — Long-period alternation partial ride',
+  exactly the final-round content the audit quoted from ids
+  574-577. F2 (BLOCKING): the same generator dumped one shared
+  block under four headings — Game Theory and Security were
+  byte-identical, Economic Analysis and Market both dumped the
+  full score list. Fix: agent_focus sections render their OWN
+  agent's latest content + their OWN §19 dimensions; all 11
+  dimensions now map to exactly one section each (regression
+  caught by the suite: imputed dimensions initially rendered
+  NOWHERE — candidate.scores holds only authored rows — now
+  imputed dims render with an 'IMPUTED at the 5.0 floor' flag;
+  two Python ternary-precedence traps in the section wiring
+  caught before commit: a+b if c else d swallows the prefix).
+  F3 (the "check it yourself" claim was FALSE): verify.py
+  imports blockchain_rd_lab — a third party with only the
+  bundle hit ModuleNotFoundError; the README said pip install
+  from "the repo" but linked nothing. Fix: the full dependency
+  closure measured (4 files ~100KB, stdlib + pydantic only) and
+  SHIPPED as lab-runtime/ inside the bundle (interpreter,
+  §15 + §20 batteries, MathModel schema); verify.py prepends
+  it to sys.path and sets sys.dont_write_bytecode (bytecode
+  inside the bundle would violate its own manifest coverage —
+  caught live when the isolated run wrote __pycache__ and the
+  coverage check failed on it; also: 'python verify.py .' with
+  Path('.') has .name=='' — resolve() first or the report
+  lands INSIDE as '-VERIFICATION.md', the stray-file lesson
+  twice-earned). ISOLATED-ENVIRONMENT PROOF: /usr/bin/env -i
+  with no lab paths importable — exit 0, 33 checks, 30
+  REPRODUCED, clean environment, zero pycache. F4: the
+  verification report's header printed the LITERAL text
+  {__import__('datetime')...} — an f-prefix lost across
+  implicit string concatenation (and datetime.UTC.datetime is
+  not a thing); fixed, headers now render real ISO timestamps.
+  F5: prior-art.json double-counted one multi-source review as
+  two searches (identical finding JSON under source_ids 84 and
+  85 — one blob that itself names both BIS sources inside
+  similar_mechanisms); the bundle now dedupes identical
+  findings and RECORDS THE MERGE (merged_source_ids), and the
+  release package counts DISTINCT findings ('1 (2 source
+  rows; identical findings merged, §12)'). F6: the '13/13
+  clean' and Monte Carlo mean_final/failures figures had no raw
+  backing file while every attack number had one; the final-
+  version §21 records now ship as scenario-results.json
+  (-scenarios-v3, -montecarlo-v3, -sweep-v3 excluded as
+  adversarial-census duplicates) — same backing standard as
+  adversarial-bounds.json. F7: the model's one open question
+  ('can sustained genuine pressure hold the separation key high
+  enough to farm retention?') lived only in model JSON; §4
+  now renders the model's open_questions verbatim right after
+  the residual list. THE AUDIT'S OWN VERIFICATION CHECKLIST is
+  test-enforced (TestAuditChecklist: latest-round verdict in
+  the dossier; sections distinct; score arithmetic; no literal
+  template text). Tests +15 -> 444 (all seven findings probed;
+  ops lesson: the first test draft patched
+  LabDatabase._session as a CLASS attribute and 90 tests in
+  the full suite failed from the leak — monkeypatch on the
+  INSTANCE, never a bare class-attribute assignment; also
+  lab report <id> prints the dossier, only bare lab report
+  writes the files). The bundle is 12 files + runtime; every
+  number reproducible from the published files ALONE, no
+  package install, no repo, no database.
 - Round 26 publication-hardening round ("make sure all these can
   publish with heavy study by others" — heavy study made a TESTABLE
   standard): a hostile expert with ONLY the published artifacts

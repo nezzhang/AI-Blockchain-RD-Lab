@@ -37,30 +37,27 @@ A prediction market becomes the fee market's forward curve: instead of reacting 
 
 ## Economic Analysis
 
-- **economic_coherence**: 7.50 (INFERENCE; confidence 0.80)
-- **game_theory**: 7.50 (HYPOTHESIS; confidence 0.80)
-- **market_demand**: 6.50 (INFERENCE; confidence 0.70)
 - **novelty**: 6.00 (INFERENCE; confidence 0.55)
-- **oracle_feasibility**: 7.00 (HYPOTHESIS; confidence 0.70)
-- **security**: 6.50 (HYPOTHESIS; confidence 0.80)
+- **economic_coherence**: 7.50 (INFERENCE; confidence 0.80)
+- **capital_efficiency**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 
 ## Game Theory
 
-- **Red Team verdict:** vulnerable (strongest attack: belief-whale buffer farming: uncapped forecast positions let one wallet set the implied congestion probability, steering buffer injections toward their own fee-paying transactions…)
+- **Red Team verdict:** survives (strongest attack: belief-whale buffer farming (v2 re-test): per-address caps bound the whale to 20% of the belief signal and the buffer mean-reverts — one-shot pushes decay and sustained pushes pay carry costs against …)
+- **game_theory**: 7.50 (HYPOTHESIS; confidence 0.80)
 - **game_theory:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
-- **security:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
-- **oracle:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
+- v2 caps per-address forecast positions (pos_cap=0.2 share) and the buffer mean-reverts to a belief-scaled target. The belief whale capped at 20% of the book cannot set q unilaterally; pushing q repeatedly no longer ratchets the buffer (it reverts).
 
 ## Oracle Design
 
+- **oracle_feasibility**: 7.00 (HYPOTHESIS; confidence 0.70)
 No external data dependency declared. See Security and adversarial sections for manipulation analysis.
 
 ## Security
 
-- **Red Team verdict:** vulnerable (strongest attack: belief-whale buffer farming: uncapped forecast positions let one wallet set the implied congestion probability, steering buffer injections toward their own fee-paying transactions…)
-- **game_theory:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
+- **security**: 6.50 (HYPOTHESIS; confidence 0.80)
 - **security:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
-- **oracle:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
+- Position caps convert whale dominance into a market-depth question; the remaining surface is sub-division (many whales acting as one) — a collusion problem bounded by cap enforcement per address.
 
 ## Simulation
 
@@ -94,15 +91,14 @@ See Prior Art; competitor synthesis pending real research.
 
 ## Market
 
-- **economic_coherence**: 7.50 (INFERENCE; confidence 0.80)
-- **game_theory**: 7.50 (HYPOTHESIS; confidence 0.80)
 - **market_demand**: 6.50 (INFERENCE; confidence 0.70)
-- **novelty**: 6.00 (INFERENCE; confidence 0.55)
-- **oracle_feasibility**: 7.00 (HYPOTHESIS; confidence 0.70)
-- **security**: 6.50 (HYPOTHESIS; confidence 0.80)
+- **network_effects**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **communication**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **viral_potential**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 
 ## Technical Architecture
 
+- **technical_feasibility**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 Blockchain required: yes; token required: no. Detailed architecture arrives with the Blockchain Architect review (future phase).
 
 ## Regulatory Risks

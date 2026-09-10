@@ -40,30 +40,27 @@ An oracle design whose integrity check is endogenous: the reference rate is disc
 
 ## Economic Analysis
 
-- **economic_coherence**: 7.00 (INFERENCE; confidence 0.80)
-- **game_theory**: 7.50 (INFERENCE; confidence 0.80)
-- **market_demand**: 6.50 (INFERENCE; confidence 0.70)
 - **novelty**: 6.00 (INFERENCE; confidence 0.60)
-- **oracle_feasibility**: 7.50 (INFERENCE; confidence 0.70)
-- **security**: 7.00 (INFERENCE; confidence 0.80)
+- **economic_coherence**: 7.00 (INFERENCE; confidence 0.80)
+- **capital_efficiency**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 
 ## Game Theory
 
-- **Red Team verdict:** vulnerable (strongest attack: Thin-window anchor capture: cheap realized-price moves in low-flow windows weaponize deviation slashes against honest reporters; profitable below the flow floor.…)
+- **Red Team verdict:** survives (strongest attack: Thick-window anchor pressure: costs real execution losses exceeding any extractable bond value.…)
+- **game_theory**: 7.50 (INFERENCE; confidence 0.80)
 - **game_theory:** 1 attack vector(s) recorded; evidence level INFERENCE
-- **security:** 1 attack vector(s) recorded; evidence level INFERENCE
-- **oracle:** 1 attack vector(s) recorded; evidence level INFERENCE
+- v2's flow-gated slashing scales the slash with realized flow — thin windows carry near-zero slash, so cheap anchor movement buys nothing; capture requires moving prices in windows too thick to move cheaply.
 
 ## Oracle Design
 
+- **oracle_feasibility**: 7.50 (INFERENCE; confidence 0.70)
 This mechanism requires external data (oracle). See Security and adversarial sections for manipulation analysis.
 
 ## Security
 
-- **Red Team verdict:** vulnerable (strongest attack: Thin-window anchor capture: cheap realized-price moves in low-flow windows weaponize deviation slashes against honest reporters; profitable below the flow floor.…)
-- **game_theory:** 1 attack vector(s) recorded; evidence level INFERENCE
+- **security**: 7.00 (INFERENCE; confidence 0.80)
 - **security:** 1 attack vector(s) recorded; evidence level INFERENCE
-- **oracle:** 1 attack vector(s) recorded; evidence level INFERENCE
+- Bond-pool drain now self-limits: slashes vanish exactly where reporters are vulnerable.
 
 ## Simulation
 
@@ -98,15 +95,14 @@ See Prior Art; competitor synthesis pending real research.
 
 ## Market
 
-- **economic_coherence**: 7.00 (INFERENCE; confidence 0.80)
-- **game_theory**: 7.50 (INFERENCE; confidence 0.80)
 - **market_demand**: 6.50 (INFERENCE; confidence 0.70)
-- **novelty**: 6.00 (INFERENCE; confidence 0.60)
-- **oracle_feasibility**: 7.50 (INFERENCE; confidence 0.70)
-- **security**: 7.00 (INFERENCE; confidence 0.80)
+- **network_effects**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **communication**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **viral_potential**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 
 ## Technical Architecture
 
+- **technical_feasibility**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 Blockchain required: yes; token required: no. Detailed architecture arrives with the Blockchain Architect review (future phase).
 
 ## Regulatory Risks

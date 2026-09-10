@@ -2,7 +2,7 @@
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-09T03:04:33+00:00
+Generated: 2026-09-10T04:17:23+00:00
 Candidate: `cand-9200b07691c3` (§7 recommended, rank 1)
 
 ## 1. Publication Readiness
@@ -20,13 +20,16 @@ Candidate: `cand-9200b07691c3` (§7 recommended, rank 1)
 
 ## 3. Evidence Trail
 
-- Prior-art searches recorded: 2 (queries + sources stored, §12)
+- Prior-art searches recorded: 1 (2 source rows; identical findings merged, §12)
 - Adversarial reports: 12 across ['game_theory', 'oracle', 'red_team', 'security']
 - Improvement cycle: 2 patched version(s) stored; the final version v3 was re-attacked with the patched model in the adversarial prompt (§34 retest)
 
 ## 4. Residual Attacks Disclosure (§12 honesty)
 
 No profitable attack remains unaddressed by the final model version. This is a statement about the searched attack space, not an absolute claim of security (§12: no absolute claims).
+
+The model's own recorded open questions (§13, verbatim):
+- OPEN QUESTION: can sustained genuine pressure (not crafted) hold the separation key high enough to farm retention?
 
 ### 4b. Measured Attack-Pattern Bounds (§20)
 

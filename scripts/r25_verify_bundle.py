@@ -35,14 +35,23 @@ import hashlib
 import json
 import sys
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
 
-from blockchain_rd_lab.formalization import MathModel
-from blockchain_rd_lab.simulation import (
+# r27 audit fix #3: prefer the runtime SHIPPED IN THE BUNDLE over
+# any installed lab package — the substance tier is self-service.
+# The runtime directory layout is lab-runtime/blockchain_rd_lab/...
+_runtime = Path(__file__).resolve().parent / "lab-runtime"
+if _runtime.is_dir():
+    sys.dont_write_bytecode = True
+    sys.path.insert(0, str(_runtime))
+
+from blockchain_rd_lab.formalization import MathModel  # noqa: E402
+from blockchain_rd_lab.simulation import (  # noqa: E402
     MechanismSimulation,
     ScenarioBattery,
 )
-from blockchain_rd_lab.simulation.adversarial import (
+from blockchain_rd_lab.simulation.adversarial import (  # noqa: E402
     AttackPatternBattery,
     PatternSpec,
 )
@@ -86,7 +95,11 @@ def _verify_manifest(bundle: Path, rep: Report) -> dict[str, dict]:
         else:
             rep.add(name, "REPRODUCED", "sha256 verifies against the file")
     # nothing unhashed ships
-    on_disk = {p.name for p in bundle.iterdir()} - {"MANIFEST.json"}
+    on_disk = {
+        f.relative_to(bundle).as_posix()
+        for f in bundle.rglob("*")
+        if f.is_file() and "__pycache__" not in f.parts
+    } - {"MANIFEST.json"}
     listed = set(man.get("files", {}))
     if on_disk != listed:
         rep.add("manifest coverage", "NOT-REPRODUCIBLE",
@@ -255,7 +268,13 @@ def _verify_release_package(bundle: Path, man: dict[str, dict],
 
 
 def main() -> None:
-    bundle = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_BUNDLE
+    # resolve: `python verify.py .` from inside the bundle would
+    # otherwise give bundle.name == "" and drop the report INSIDE
+    # (the r27 stray-file lesson, twice-earned)
+    bundle = (
+        Path(sys.argv[1]).resolve()
+        if len(sys.argv) > 1 else DEFAULT_BUNDLE
+    )
     if not bundle.is_dir():
         print(f"no bundle at {bundle}", file=sys.stderr)
         raise SystemExit(2)
@@ -278,8 +297,7 @@ def main() -> None:
         "# External Verification Report",
         "",
         f"Bundle: `{bundle.name}` — verified from the published files "
-        "alone (no database access), {__import__('datetime').UTC"
-        ".datetime.now(__import__('datetime').UTC).isoformat()[:19]}Z",
+        f"alone (no database access), {datetime.now(UTC).isoformat()[:19]}Z",
         "",
         "The verifier re-runs every reproducible claim with the lab's "
         "deterministic interpreter. A third party can re-run this "

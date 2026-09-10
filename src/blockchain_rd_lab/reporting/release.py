@@ -432,7 +432,10 @@ class ReleasePackageBuilder:
         lines.append("## 3. Evidence Trail")
         lines.append("")
         pa = self.database.list_prior_art(cid)
-        lines.append(f"- Prior-art searches recorded: {len(pa)} (queries + sources stored, §12)")
+        distinct = {r["finding"] for r in pa}
+        lines.append(
+            f"- Prior-art searches recorded: {len(distinct)} "
+            f"({len(pa)} source rows; identical findings merged, §12)")
         redteam = self.database.list_redteam_results(candidate_id=cid)
         agents = sorted({r["agent_name"] for r in redteam})
         lines.append(f"- Adversarial reports: {len(redteam)} across {agents}")
@@ -481,6 +484,27 @@ class ReleasePackageBuilder:
                 "attack space, not an absolute claim of security (§12: no "
                 "absolute claims)."
             )
+        # r27 audit fix #7: the model's own open questions belong IN §4,
+        # where a reader looks for caveats — not only in the model JSON
+        oqs: list[str] = []
+        model_json = self.database.get_latest_math_model(cid)
+        if model_json:
+            try:
+                parsed = (
+                    json.loads(model_json)
+                    if isinstance(model_json, str) else model_json
+                )
+                oqs = list(parsed.get("open_questions") or [])
+            except (json.JSONDecodeError, TypeError):
+                oqs = []
+            if oqs:
+                lines.append("")
+                lines.append(
+                    "The model's own recorded open questions (§13, "
+                    "verbatim):"
+                )
+                for q in oqs:
+                    lines.append(f"- OPEN QUESTION: {q}")
         lines.append("")
 
         # 4b. quantitative residual bounds (§20 pattern battery) — the

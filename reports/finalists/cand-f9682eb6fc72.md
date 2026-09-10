@@ -40,30 +40,27 @@ A market-priced hedge whose settlement reference is itself a market statistic: s
 
 ## Economic Analysis
 
-- **economic_coherence**: 7.00 (INFERENCE; confidence 0.80)
-- **game_theory**: 7.50 (HYPOTHESIS; confidence 0.80)
-- **market_demand**: 7.00 (INFERENCE; confidence 0.70)
 - **novelty**: 6.00 (INFERENCE; confidence 0.55)
-- **oracle_feasibility**: 7.00 (HYPOTHESIS; confidence 0.70)
-- **security**: 7.00 (HYPOTHESIS; confidence 0.80)
+- **economic_coherence**: 7.00 (INFERENCE; confidence 0.80)
+- **capital_efficiency**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 
 ## Game Theory
 
-- **Red Team verdict:** survives (strongest attack: supplier-median inflation double dip: a majority cartel over-reports compute prices to collect on short hedges while raising their own market revenue — but the majority requirement in a competitive su…)
+- **Red Team verdict:** survives (strongest attack: supplier-median inflation double dip (v2 re-test): majority-cartel requirement remains self-defeating and the bond surcharge now taxes minority tilting — both reporter paths cost more than they yield…)
+- **game_theory**: 7.50 (HYPOTHESIS; confidence 0.80)
 - **game_theory:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
-- **security:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
-- **oracle:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
+- v2 adds a reporter-bond surcharge (report_bond=500) to margin when reference vol exceeds tolerance: unbonded reporter tilting now carries bond cost scaled with deviation. The minority-tilt vector closes; the majority-cartel double-dip was already self-defeating.
 
 ## Oracle Design
 
+- **oracle_feasibility**: 7.00 (HYPOTHESIS; confidence 0.70)
 This mechanism requires external data (oracle). See Security and adversarial sections for manipulation analysis.
 
 ## Security
 
-- **Red Team verdict:** survives (strongest attack: supplier-median inflation double dip: a majority cartel over-reports compute prices to collect on short hedges while raising their own market revenue — but the majority requirement in a competitive su…)
-- **game_theory:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
+- **security**: 7.00 (HYPOTHESIS; confidence 0.80)
 - **security:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
-- **oracle:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
+- Margin-squeeze vol manufacture now meets the bond surcharge funding reporter discipline — manufactured vol raises the manipulator's own bond cost through their reporter positions.
 
 ## Simulation
 
@@ -97,15 +94,14 @@ See Prior Art; competitor synthesis pending real research.
 
 ## Market
 
-- **economic_coherence**: 7.00 (INFERENCE; confidence 0.80)
-- **game_theory**: 7.50 (HYPOTHESIS; confidence 0.80)
 - **market_demand**: 7.00 (INFERENCE; confidence 0.70)
-- **novelty**: 6.00 (INFERENCE; confidence 0.55)
-- **oracle_feasibility**: 7.00 (HYPOTHESIS; confidence 0.70)
-- **security**: 7.00 (HYPOTHESIS; confidence 0.80)
+- **network_effects**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **communication**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **viral_potential**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 
 ## Technical Architecture
 
+- **technical_feasibility**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 Blockchain required: yes; token required: no. Detailed architecture arrives with the Blockchain Architect review (future phase).
 
 ## Regulatory Risks
