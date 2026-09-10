@@ -119,6 +119,46 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 26 publication-hardening round ("make sure all these can
+  publish with heavy study by others" — heavy study made a TESTABLE
+  standard): a hostile expert with ONLY the published artifacts
+  must be able to (1) reproduce every number, (2) find no absolute
+  claim, (3) find no internal contradiction. The lab ran that
+  audit on its own bundle BEFORE the critics do. PASS 1 — prose
+  scan for §12-forbidden language (first ever / nobody /
+  guarantee / provably / unhackable / novel-as-claim): CLEAN; the
+  only ABSOLUTE/100% hits are MEASURED facts (the predecessor's
+  flaw description, a heal ratio), and the §12 disclaimer ships
+  verbatim. PASS 2 — prose↔JSON numeric linkage: every attack
+  headline in prose ties to full-precision values in
+  adversarial-bounds.json (4-decimal render; a first-grep false
+  alarm resolved by precision analysis, not by trusting prose).
+  PASS 3 — three REAL gaps found and closed: (a) the external
+  verifier (r25) was not IN the bundle — a critic needed the
+  repo; verify.py now ships INSIDE (the r24 builder copies it;
+  tested by running the SHIPPED copy against the bundle from
+  inside the directory — 8/8 headlines + 13 §15 scenarios +
+  manifest all reproduce from the bundle alone); (b) the §19
+  headline 6.45 had no recomputable provenance in the bundle —
+  score-decomposition.json now ships every dimension's
+  score/weight/weighted/imputed plus the recomputation rule,
+  and the verifier RECOMPUTES sum(score*weight) = 6.4500 ==
+  published, checks the README carries the same headline, and
+  confirms the 5/11 imputation disclosure per dimension; (c)
+  a stray -VERIFICATION.md (from a cwd-relative test write)
+  violated manifest complete-coverage — removed; final audit:
+  10 files, manifest complete, all hashes verify, weights sum
+  1.00. README "How to verify" rewritten for the two-level
+  self-service check (integrity: sha256sum vs MANIFEST;
+  substance: python verify.py . — needs pip install -e . from
+  the repo, stated honestly: the interpreter is code, and code
+  is the only evidence that counts). Tests: verifier +score
+  recomputation fixture (0-10 scale — the first draft's 0.56
+  was a real scale bug the check itself caught); clean-bundle
+  probe asserts the score recomputes and the imputation
+  discloses; 429 pass. The bundle is now heavy-study ready:
+  every number reproducible from the published files, every
+  claim scoped, every artifact hashed.
 - Round 25 external-verifier round (criticism made actionable —
   the §27 ladder's next stage after publication): a critic who
   downloads the bundle got static JSON and had to TRUST it; §2

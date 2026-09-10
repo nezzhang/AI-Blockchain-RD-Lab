@@ -13,6 +13,8 @@ The verifier re-runs every reproducible claim with the lab's deterministic inter
 | prior-art.json | **REPRODUCED** | sha256 verifies against the file |
 | redteam-history.json | **REPRODUCED** | sha256 verifies against the file |
 | release-package.md | **REPRODUCED** | sha256 verifies against the file |
+| score-decomposition.json | **REPRODUCED** | sha256 verifies against the file |
+| verify.py | **REPRODUCED** | sha256 verifies against the file |
 | manifest coverage | **REPRODUCED** | every bundle file is hashed; nothing unlisted ships |
 | model integrity | **REPRODUCED** | parses and passes §13 checks (v3, 7 equations) |
 | census records | **CONSISTENT** | 2 §20 census record(s) in the bundle (the §21 store is not part of the bundle; the re-run below recomputes them) |
@@ -26,8 +28,11 @@ The verifier re-runs every reproducible claim with the lab's deterministic inter
 | re-run wash_flow | **REPRODUCED** | headline 5.1737 == published 5.1737 |
 | default battery re-run (summary) | **REPRODUCED** | 8/8 default-calibration headlines reproduced from the published model JSON |
 | §15 battery | **REPRODUCED** | 13 scenarios run non-degenerately under the current interpreter |
+| §19 score recomputation | **REPRODUCED** | sum(score*weight) = 6.4500 == published 6.4500 |
+| score headline consistency | **REPRODUCED** | README carries the same 6.45 headline |
+| imputation disclosure | **REPRODUCED** | 5 of 11 dimensions imputed at the 5.0 floor — disclosed per dimension |
 | release package subject | **CONSISTENT** | release package names the manifest's candidate |
 
-Totals: 19 reproduced, 2 consistent, 0 not-reproducible.
+Totals: 24 reproduced, 2 consistent, 0 not-reproducible.
 
 **OVERALL: VERIFY-PASS** — every reproducible claim reproduces from the published files.

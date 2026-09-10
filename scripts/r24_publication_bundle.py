@@ -40,6 +40,7 @@ from blockchain_rd_lab.config import REPO_ROOT, load_config
 from blockchain_rd_lab.database import LabDatabase
 from blockchain_rd_lab.reporting.decision import DECISION_CANDIDATES
 from blockchain_rd_lab.reporting.release import ReleasePackageBuilder
+from blockchain_rd_lab.scoring import ScoringEngine
 
 RANK1 = DECISION_CANDIDATES[0]  # cand-9200b07691c3, §7 rank 1
 
@@ -57,6 +58,7 @@ def _json_default(obj: object) -> str:
 def main() -> None:
     db = LabDatabase(REPO_ROOT / load_config().storage.database)
     rb = ReleasePackageBuilder(db)
+    eng = ScoringEngine()
 
     cand = db.get_candidate(RANK1)
     assert cand is not None, RANK1
@@ -120,7 +122,40 @@ def main() -> None:
         json.dumps(pa, indent=2, sort_keys=True,
                    default=_json_default) + "\n", encoding="utf-8")
 
-    # 7. README: what this is, how to verify, how to cite
+    # 7. score decomposition: the §19 breakdown behind the headline
+    res = eng.score(cand)
+    sd = out / "score-decomposition.json"
+    sd.write_text(
+        json.dumps({
+            "candidate_id": cand.id,
+            "overall_score": res.overall_score,
+            "fatal_flaw_applied": res.fatal_flaw_applied,
+            "fatal_flaw_count": res.fatal_flaw_count,
+            "notes": res.notes,
+            "recomputation": (
+                "overall = sum(dimension.score * dimension.weight) "
+                "over the dimensions below; missing agent-authored "
+                "evidence imputes at the 5.0 floor (flagged)"
+            ),
+            "dimensions": [
+                {
+                    "dimension": d.dimension,
+                    "score": d.score,
+                    "weight": d.weight,
+                    "weighted": d.weighted,
+                    "imputed": d.imputed,
+                }
+                for d in res.dimensions
+            ],
+        }, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    # 8. the verifier ships INSIDE the bundle: heavy study is
+    # self-service — a critic needs nothing but the bundle itself
+    vsrc = REPO_ROOT / "scripts" / "r25_verify_bundle.py"
+    (out / "verify.py").write_text(
+        vsrc.read_text(encoding="utf-8"), encoding="utf-8")
+
+    # 9. README: what this is, how to verify, how to cite
     score = cand.overall_score
     readme = f"""# Publication Bundle: {cand.name}
 
@@ -148,11 +183,24 @@ rank-1 research candidate as of {generated}.
 
 ## How to verify
 
+Two levels, both self-service:
+
 ```bash
-sha256sum dossier.md release-package.md model-v{model['version']}.json \\
-    adversarial-bounds.json redteam-history.json prior-art.json
-# compare against MANIFEST.json
+# 1. integrity: sha256 of every file vs MANIFEST.json (all files listed)
+sha256sum README.md dossier.md release-package.md model-v{model['version']}.json \\
+    adversarial-bounds.json redteam-history.json prior-art.json \\
+    score-decomposition.json verify.py
+
+# 2. substance: re-run the §20 attack battery and §15 scenarios against
+#    model-v{model['version']}.json — recomputes the published headlines
+python verify.py .
 ```
+
+`verify.py` reads only this bundle (never any database), re-runs every
+reproducible claim with the deterministic interpreter, and writes a
+verification report next to the bundle. Requires the lab package
+installed (`pip install -e .` from the repo) — the interpreter is code,
+and code is the only evidence that counts (§2).
 
 ## Scope and honesty
 
@@ -171,6 +219,7 @@ no deployment, no live contract — §27/§28.
     files = [
         "README.md", "dossier.md", "release-package.md", modelp.name,
         "adversarial-bounds.json", "redteam-history.json", "prior-art.json",
+        "score-decomposition.json", "verify.py",
     ]
     manifest = {
         "candidate_id": cand.id,

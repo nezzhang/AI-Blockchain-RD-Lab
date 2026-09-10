@@ -4,8 +4,8 @@
   "deterministic_score": 6.45,
   "files": {
     "README.md": {
-      "bytes": 1694,
-      "sha256": "a9cfe33415edb79c3536aae13a0be2ec1279df89532e1ce8dd156297a292bd9a"
+      "bytes": 2298,
+      "sha256": "7c72be718828f5e15a577340873fd3a33ffe7cd09dff707e4f90c46cb9425fd1"
     },
     "adversarial-bounds.json": {
       "bytes": 54381,
@@ -29,9 +29,17 @@
     },
     "release-package.md": {
       "bytes": 9373,
-      "sha256": "03cbdfe8c3e0cba6e0bd0d83337c603cc491970f96cc519b50d214f719c1dc8b"
+      "sha256": "4237a3beb8946e453093a182e842d37c7571688b229302c88dffe0f670c151b0"
+    },
+    "score-decomposition.json": {
+      "bytes": 2040,
+      "sha256": "05440067f67112f7472718c1d4ff26f99e24778fd388534464154b3b1f67069e"
+    },
+    "verify.py": {
+      "bytes": 12641,
+      "sha256": "6117145c36468d5a5677ba1a8a29c3047298df65f20cdf9386e501469449dc51"
     }
   },
-  "generated": "2026-09-09T03:04:34.022615+00:00",
+  "generated": "2026-09-10T02:40:26.126701+00:00",
   "model_version": 3
 }

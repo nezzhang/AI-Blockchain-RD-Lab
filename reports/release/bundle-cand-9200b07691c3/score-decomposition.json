@@ -1,0 +1,93 @@
+{
+  "candidate_id": "cand-9200b07691c3",
+  "dimensions": [
+    {
+      "dimension": "novelty",
+      "imputed": false,
+      "score": 6.0,
+      "weight": 0.1,
+      "weighted": 0.6000000000000001
+    },
+    {
+      "dimension": "economic_coherence",
+      "imputed": false,
+      "score": 7.5,
+      "weight": 0.15,
+      "weighted": 1.125
+    },
+    {
+      "dimension": "game_theory",
+      "imputed": false,
+      "score": 7.5,
+      "weight": 0.1,
+      "weighted": 0.75
+    },
+    {
+      "dimension": "technical_feasibility",
+      "imputed": true,
+      "score": 5.0,
+      "weight": 0.1,
+      "weighted": 0.5
+    },
+    {
+      "dimension": "oracle_feasibility",
+      "imputed": false,
+      "score": 8.0,
+      "weight": 0.1,
+      "weighted": 0.8
+    },
+    {
+      "dimension": "security",
+      "imputed": false,
+      "score": 7.0,
+      "weight": 0.1,
+      "weighted": 0.7000000000000001
+    },
+    {
+      "dimension": "market_demand",
+      "imputed": false,
+      "score": 6.5,
+      "weight": 0.15,
+      "weighted": 0.975
+    },
+    {
+      "dimension": "capital_efficiency",
+      "imputed": true,
+      "score": 5.0,
+      "weight": 0.05,
+      "weighted": 0.25
+    },
+    {
+      "dimension": "network_effects",
+      "imputed": true,
+      "score": 5.0,
+      "weight": 0.05,
+      "weighted": 0.25
+    },
+    {
+      "dimension": "communication",
+      "imputed": true,
+      "score": 5.0,
+      "weight": 0.05,
+      "weighted": 0.25
+    },
+    {
+      "dimension": "viral_potential",
+      "imputed": true,
+      "score": 5.0,
+      "weight": 0.05,
+      "weighted": 0.25
+    }
+  ],
+  "fatal_flaw_applied": false,
+  "fatal_flaw_count": 0,
+  "notes": [
+    "imputed:technical_feasibility",
+    "imputed:capital_efficiency",
+    "imputed:network_effects",
+    "imputed:communication",
+    "imputed:viral_potential"
+  ],
+  "overall_score": 6.45,
+  "recomputation": "overall = sum(dimension.score * dimension.weight) over the dimensions below; missing agent-authored evidence imputes at the 5.0 floor (flagged)"
+}

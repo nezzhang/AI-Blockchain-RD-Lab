@@ -92,7 +92,10 @@ def bundle(tmp_path: Path) -> Path:
 
     out = tmp_path / "bundle-cand-ver"
     out.mkdir()
-    (out / "README.md").write_text("b\n", encoding="utf-8")
+    headline = f"{6.0 * 0.6 + 5.0 * 0.4:.2f}"
+    (out / "README.md").write_text(
+        f"bundle\n\n- **Deterministic §19 score:** {headline}\n",
+        encoding="utf-8")
     (out / "release-package.md").write_text(rel, encoding="utf-8")
     (out / "model-v1.json").write_text(
         _mm("cand-ver").model_dump_json(), encoding="utf-8")
@@ -115,6 +118,18 @@ def bundle(tmp_path: Path) -> Path:
                      "bounds": bounds, "vacuous_count": 0,
                      "worst_edge": None}]), encoding="utf-8")
     (out / "prior-art.json").write_text("[]", encoding="utf-8")
+    # §19 score decomposition: 2 dims, one imputed — recomputable
+    # (scores on the 0-10 scale; overall = sum(score*weight))
+    (out / "score-decomposition.json").write_text(json.dumps({
+        "overall_score": 6.0 * 0.6 + 5.0 * 0.4,
+        "dimensions": [
+            {"dimension": "novelty", "score": 6.0, "weight": 0.6,
+             "weighted": 3.6, "imputed": False},
+            {"dimension": "security", "score": 5.0, "weight": 0.4,
+             "weighted": 2.0, "imputed": True},
+        ],
+    }), encoding="utf-8")
+    (out / "verify.py").write_text("shipped verifier copy\n", encoding="utf-8")
     (out / "redteam-history.json").write_text("[]", encoding="utf-8")
     files = [f.name for f in out.iterdir()]
     (out / "MANIFEST.json").write_text(json.dumps({
@@ -136,12 +151,18 @@ class TestRound25Verifier:
         pub = v._verify_bounds(bundle, mm, rep)
         v._rerun_attack_battery(mm, pub, rep)
         v._verify_scenarios(mm, rep)
+        v._verify_score(bundle, rep)
         v._verify_release_package(bundle, man, rep)
         assert rep.ok, [c.label for c in rep.checks
                         if c.verdict == "NOT-REPRODUCIBLE"]
         # and the battery re-run reproduced the published headlines
         rerun = [c for c in rep.checks if c.label.startswith("re-run ")]
         assert len(rerun) >= 8
+        # and the §19 score recomputes from the decomposition alone
+        score = [c for c in rep.checks if "score recomputation" in c.label]
+        assert score and score[0].verdict == "REPRODUCED"
+        imp = [c for c in rep.checks if "imputation" in c.label]
+        assert imp and imp[0].verdict == "REPRODUCED"
 
     def test_tampered_file_fails_manifest(self, bundle: Path) -> None:
         (bundle / "README.md").write_text("tampered\n", encoding="utf-8")
