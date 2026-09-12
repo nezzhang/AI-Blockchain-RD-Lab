@@ -149,7 +149,7 @@ replacement.
   calibration line fails the completeness check. Verifier now:
   53 checks (was 33), 51 reproduced + 2 consistent + 0 not-
   reproducible, isolated third-party run exit 0, zero pycache,
-  report beside the bundle. ALso swept and found CLEAN: all 27
+  report beside the bundle. Also swept and found CLEAN: all 27
   §4b prose edges tie to JSON at 4-decimal precision (0
   unbacked); '13/13 scenarios clean' backed by the shipped
   record (13 scenarios, 0 failures, 0 degenerate flags, 13/13
