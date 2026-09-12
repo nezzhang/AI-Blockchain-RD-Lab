@@ -119,6 +119,47 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 30 pre-audit sweep for the approved highest-tier LLM
+  auditor (the r28 discipline repeated at the new tier — the lab
+  reads CODE now, so the sweep targeted the verifier's own
+  coverage): ONE real gap found and closed. THE GAP: the README
+  claimed verify.py "re-runs EVERY reproducible claim" while the
+  re-run covered only the 8 default-calibration headlines — the
+  19 calibrated-sweep variants published in §4b (with full-
+  precision values in adversarial-bounds.json) were NEVER
+  recomputed by the verifier; the round-2 auditor had verified
+  them by MANUAL execution, which no third party would repeat.
+  Same claim-vs-reality class as round-1 F3. FIXED IN THE
+  VERIFIER (the shipped copy + scripts/r25_verify_bundle.py, one
+  source): _compare_one() factors the run-and-compare (default or
+  calibrated — the calibration tag IS a PatternSpec field
+  assignment, 'amplitude=0.02' -> spec.amplitude = 0.02, the
+  same mechanical construction the r22 sweep used to author
+  it), and _rerun_attack_battery() now re-runs BOTH sets. Real
+  bundle: 8/8 defaults + 19/19 calibrated = 27/27 headlines
+  reproduce at machine precision. SECOND NEW CHECK (round-2
+  audit F1 made structural): _verify_release_package() now
+  counts calibration-tagged records per kind in the JSON vs
+  @-tagged lines per kind in §4b — the exact 17-vs-19 bug is now
+  IMPOSSIBLE to ship undetected (a dropped §4b line fails the
+  verifier's NOT-REPRODUCIBLE class). PINNED BY TWO TAMPER
+  PROBES (tests/test_verify_bundle.py, +2 -> 449): a drifted
+  calibrated headline (self-manifested by a honest publisher)
+  fails the sweep re-run AND its summary; a dropped §4b
+  calibration line fails the completeness check. Verifier now:
+  53 checks (was 33), 51 reproduced + 2 consistent + 0 not-
+  reproducible, isolated third-party run exit 0, zero pycache,
+  report beside the bundle. ALso swept and found CLEAN: all 27
+  §4b prose edges tie to JSON at 4-decimal precision (0
+  unbacked); '13/13 scenarios clean' backed by the shipped
+  record (13 scenarios, 0 failures, 0 degenerate flags, 13/13
+  distinct final signatures); README sha256sum command executes
+  verbatim 14/14 match (README.md correctly self-excluded);
+  manifest 15 files, builder-regenerated (a hand-rolled re-
+  manifest in the sweep hashed MANIFEST.json into itself and
+  broke its own self-exclusion — the lesson re-earned: regenerate
+  through the builder, never hand-patch the manifest); two
+  Finder .DS_Store strays removed from lab-runtime/.
 - Round 29 external-audit round-2 response (cand-9200b07691c3-
   FIXES-ROUND2.md — the auditor EXECUTED the bundle's own code:
   interpreter, scenario battery, Monte Carlo, and the full attack

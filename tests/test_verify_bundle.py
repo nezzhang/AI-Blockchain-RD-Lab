@@ -96,6 +96,12 @@ def bundle(tmp_path: Path) -> Path:
     (out / "README.md").write_text(
         f"bundle\n\n- **Deterministic §19 score:** {headline}\n",
         encoding="utf-8")
+    # §4b with the matching @-tagged lines
+    tag_lines = "\n".join(
+        f"- **pump_unwind @amplitude={v}**: attacker edge +0.1"
+        for v in ("0.02", "0.1"))
+    rel = rel + (
+        "\n## 4b Measured Attack-Pattern Bounds\n\n" + tag_lines + "\n")
     (out / "release-package.md").write_text(rel, encoding="utf-8")
     (out / "model-v1.json").write_text(
         _mm("cand-ver").model_dump_json(), encoding="utf-8")
@@ -112,6 +118,18 @@ def bundle(tmp_path: Path) -> Path:
     for kind in kinds:
         b = bat.run_pattern(PatternSpec(kind=kind))
         bounds.append(b.model_dump(mode="json"))
+    # r30: calibrated-sweep variants (the §4b @-tagged lines) so the
+    # sweep re-run + completeness checks have real material
+    for kind, param, value in (
+        ("pump_unwind", "amplitude", 0.02),
+        ("pump_unwind", "amplitude", 0.1),
+    ):
+        spec = PatternSpec(kind=kind)
+        setattr(spec, param, value)
+        d = bat.run_pattern(spec).model_dump(mode="json")
+        d["calibration"] = f"{param}={value}"
+        bounds.append(d)
+
     (out / "adversarial-bounds.json").write_text(
         json.dumps([{"experiment_id": "exp-test", "recorded_at": "t",
                      "parameters": {"battery": "attack_patterns"},
@@ -212,6 +230,89 @@ class TestRound25Verifier:
                    if c.label.startswith("re-run ")
                    and c.verdict == "NOT-REPRODUCIBLE"]
         assert flagged, "re-run must flag the tampered headline"
+
+    def test_drifted_calibrated_headline_fails_sweep_rerun(
+        self, bundle: Path,
+    ) -> None:
+        # r30: a publisher who self-certifies a wrong CALIBRATED
+        # number must fail the sweep re-run — the 19 @-tagged §4b
+        # lines are published claims now, not decoration (the r29
+        # auditor had to execute them by hand; the verifier does it
+        # automatically since r30)
+        b = json.loads((bundle / "adversarial-bounds.json").read_text())
+        target = None
+        for rec in b:
+            for bd in rec["bounds"]:
+                if bd.get("calibration"):
+                    bd["headline"] = 123.456
+                    target = f"re-run {bd['kind']} @{bd['calibration']}"
+                    break
+            if target:
+                break
+        assert target is not None, "fixture must carry calibrated bounds"
+        (bundle / "adversarial-bounds.json").write_text(
+            json.dumps(b), encoding="utf-8")
+        files = [f.name for f in bundle.iterdir()
+                 if f.name != "MANIFEST.json"]
+        (bundle / "MANIFEST.json").write_text(json.dumps({
+            "candidate_id": "cand-ver",
+            "files": {f: {"sha256": _sha(bundle / f),
+                          "bytes": (bundle / f).stat().st_size}
+                      for f in files},
+        }), encoding="utf-8")
+        rep = Report()
+        v = V
+        mm = v._verify_model(bundle, rep)
+        assert mm is not None
+        pub = v._verify_bounds(bundle, mm, rep)
+        v._rerun_attack_battery(mm, pub, rep)
+        assert not rep.ok
+        flagged = [c for c in rep.checks
+                   if c.label == target
+                   and c.verdict == "NOT-REPRODUCIBLE"]
+        assert flagged, f"sweep re-run must flag {target}"
+        summary = [c for c in rep.checks
+                   if c.label == "calibrated-sweep re-run (summary)"]
+        assert summary and summary[0].verdict == "NOT-REPRODUCIBLE"
+
+    def test_dropped_4b_calibration_line_fails_completeness(
+        self, bundle: Path,
+    ) -> None:
+        # r30 (round-2 audit F1, structural): a §4b that renders
+        # fewer calibration lines than the JSON holds must FAIL the
+        # verifier — the exact round-2 audit bug, now impossible to
+        # ship undetected (dedupe key was the tag alone; kind+cal
+        # fixed in the renderer, this probe pins the VERIFIER side)
+        rel = (bundle / "release-package.md").read_text(encoding="utf-8")
+        # remove one @-tagged line entirely (the dropped-line bug)
+        lines = rel.splitlines(keepends=True)
+        dropped = False
+        out = []
+        for ln in lines:
+            if not dropped and " @amplitude=" in ln and ln.startswith(
+                    "- **pump_unwind"):
+                dropped = True  # drop exactly one tagged line
+                continue
+            out.append(ln)
+        assert dropped, "fixture §4b must carry a tagged line"
+        (bundle / "release-package.md").write_text(
+            "".join(out), encoding="utf-8")
+        files = [f.name for f in bundle.iterdir()
+                 if f.name != "MANIFEST.json"]
+        (bundle / "MANIFEST.json").write_text(json.dumps({
+            "candidate_id": "cand-ver",
+            "files": {f: {"sha256": _sha(bundle / f),
+                          "bytes": (bundle / f).stat().st_size}
+                      for f in files},
+        }), encoding="utf-8")
+        rep = Report()
+        v = V
+        man = v._verify_manifest(bundle, rep)
+        v._verify_release_package(bundle, man, rep)
+        flagged = [c for c in rep.checks
+                   if c.label == "§4b calibration completeness"
+                   and c.verdict == "NOT-REPRODUCIBLE"]
+        assert flagged, "completeness check must flag the dropped line"
 
     def test_report_lands_beside_bundle(self, bundle: Path) -> None:
         # main() writes the report to bundle.parent — the manifest's

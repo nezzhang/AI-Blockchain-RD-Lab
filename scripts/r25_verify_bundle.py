@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -144,21 +145,61 @@ def _verify_bounds(bundle: Path, mm: MathModel,
     return bounds
 
 
+def _compare_one(bat: AttackPatternBattery, kind: str, cal: str | None,
+                 pub_headline: object, rep: Report, tag: str) -> bool:
+    """Run one pattern (default or calibrated) and compare its
+    headline to the published value. Returns True on a match."""
+    try:
+        spec = PatternSpec(kind=kind)
+        if cal is not None:
+            # the calibration tag IS a PatternSpec field assignment
+            # ('amplitude=0.02' -> spec.amplitude = 0.02) — the same
+            # mechanical construction the r22 sweep used to author it
+            param, _, value = cal.partition("=")
+            setattr(spec, param, float(value) if "." in value else int(value))
+        res = bat.run_pattern(spec)
+    except Exception as exc:
+        rep.add(tag, "NOT-REPRODUCIBLE", f"battery raised: {exc}")
+        return False
+    if res.headline is None or pub_headline is None:
+        # both must be vacuous-or-zero the same way
+        if (res.headline is None) == (pub_headline is None):
+            rep.add(tag, "REPRODUCED",
+                    f"headline class agrees (vacuous={res.headline is None})")
+            return True
+        rep.add(tag, "NOT-REPRODUCIBLE",
+                f"vacuous disagreement: re-run {res.headline} "
+                f"vs published {pub_headline}")
+        return False
+    if abs(res.headline - float(pub_headline)) <= TOL:
+        rep.add(tag, "REPRODUCED",
+                f"headline {res.headline:.4f} == published "
+                f"{float(pub_headline):.4f}")
+        return True
+    rep.add(tag, "NOT-REPRODUCIBLE",
+            f"headline drift: re-run {res.headline:.4f} vs "
+            f"published {float(pub_headline):.4f}")
+    return False
+
+
 def _rerun_attack_battery(mm: MathModel, published: list[dict],
                           rep: Report) -> None:
     """The core check: re-run the §20 battery against the PUBLISHED
-    model JSON and compare every default-calibration headline to
-    the published bounds."""
+    model JSON and compare every default-calibration AND every
+    calibrated-sweep headline to the published bounds (r30: the
+    calibrated variants are published claims in §4b — the README's
+    'every reproducible claim' must include them)."""
     bat = AttackPatternBattery(mm)
 
-    # find the record whose bounds carry no calibration tags =
-    # the default-calibration run
+    # split published bounds: defaults (no tag) vs calibrated variants
     defaults: dict[str, dict] = {}
+    cals: list[tuple[str, str, dict]] = []
     for rec in published:
         for b in rec["bounds"]:
             if b.get("calibration"):
-                continue
-            defaults[str(b["kind"])] = b
+                cals.append((str(b["kind"]), str(b["calibration"]), b))
+            else:
+                defaults[str(b["kind"])] = b
 
     if not defaults:
         rep.add("default battery re-run", "NOT-REPRODUCIBLE",
@@ -167,38 +208,29 @@ def _rerun_attack_battery(mm: MathModel, published: list[dict],
 
     matches, total = 0, 0
     for kind, pub in sorted(defaults.items()):
-        try:
-            spec = PatternSpec(kind=kind)  # default calibration
-            res = bat.run_pattern(spec)
-        except Exception as exc:
-            rep.add(f"re-run {kind}", "NOT-REPRODUCIBLE",
-                    f"battery raised: {exc}")
-            continue
         total += 1
-        pub_headline = pub.get("headline")
-        if res.headline is None or pub_headline is None:
-            # both must be vacuous-or-zero the same way
-            if (res.headline is None) == (pub_headline is None):
-                matches += 1
-                rep.add(f"re-run {kind}", "REPRODUCED",
-                        f"headline class agrees (vacuous={res.headline is None})")
-            else:
-                rep.add(f"re-run {kind}", "NOT-REPRODUCIBLE",
-                        f"vacuous disagreement: re-run {res.headline} "
-                        f"vs published {pub_headline}")
-            continue
-        if abs(res.headline - float(pub_headline)) <= TOL:
+        if _compare_one(bat, kind, None, pub.get("headline"), rep,
+                        f"re-run {kind}"):
             matches += 1
-            rep.add(f"re-run {kind}", "REPRODUCED",
-                    f"headline {res.headline:.4f} == published "
-                    f"{float(pub_headline):.4f}")
-        else:
-            rep.add(f"re-run {kind}", "NOT-REPRODUCIBLE",
-                    f"headline drift: re-run {res.headline:.4f} vs "
-                    f"published {float(pub_headline):.4f}")
     rep.add("default battery re-run (summary)", "REPRODUCED",
             f"{matches}/{total} default-calibration headlines "
             f"reproduced from the published model JSON")
+
+    # the r30 extension: every calibrated variant is a published §4b
+    # line with a full-precision value in adversarial-bounds.json —
+    # re-run it under the same deterministic battery and the same
+    # exact-match tolerance
+    if cals:
+        cmatches, ctotal = 0, 0
+        for kind, cal, pub in sorted(cals):
+            ctotal += 1
+            if _compare_one(bat, kind, cal, pub.get("headline"), rep,
+                            f"re-run {kind} @{cal}"):
+                cmatches += 1
+        verdict = "REPRODUCED" if cmatches == ctotal else "NOT-REPRODUCIBLE"
+        rep.add("calibrated-sweep re-run (summary)", verdict,
+                f"{cmatches}/{ctotal} calibrated-sweep headlines "
+                f"reproduced (the §4b @-tagged lines)")
 
 
 def _verify_scenarios(mm: MathModel, rep: Report) -> None:
@@ -268,6 +300,44 @@ def _verify_release_package(bundle: Path, man: dict[str, dict],
     else:
         rep.add("release package subject", "CONSISTENT",
                 "release package names the manifest's candidate")
+
+    # r30 (round-2 audit F1, made structural): every calibration-
+    # tagged record in adversarial-bounds.json must have a
+    # corresponding @-tagged line in §4b — the round-2 audit caught
+    # this by hand (17 of 19 rendered); the verifier now enforces
+    # it so the next auditor cannot find it first
+    i4b = txt.find("## 4b")
+    if i4b >= 0:
+        section = txt[i4b:]
+        bounds = json.loads(
+            (bundle / "adversarial-bounds.json").read_text(encoding="utf-8"))
+        from collections import Counter
+        json_c: Counter[str] = Counter()
+        for rec in bounds:
+            for b in rec["bounds"]:
+                if b.get("calibration"):
+                    json_c[str(b["kind"])] += 1
+        md_c: Counter[str] = Counter()
+        for k, _t in re.findall(r"\*\*(\w+) @([^\n]*?)\*\*", section):
+            md_c[k] += 1
+        mismatches = {
+            k: (json_c.get(k, 0), md_c.get(k, 0))
+            for k in set(json_c) | set(md_c)
+            if json_c.get(k, 0) != md_c.get(k, 0)
+        }
+        if not json_c:
+            rep.add("§4b calibration completeness", "CONSISTENT",
+                    "no calibrated-sweep records published")
+        elif mismatches:
+            detail = "; ".join(
+                f"{k}: json {j} vs §4b {m}" for k, (j, m) in
+                sorted(mismatches.items()))
+            rep.add("§4b calibration completeness", "NOT-REPRODUCIBLE",
+                    f"calibration lines dropped from §4b — {detail}")
+        else:
+            rep.add("§4b calibration completeness", "REPRODUCED",
+                    f"{sum(json_c.values())} calibration-tagged records; "
+                    "§4b renders every one per kind")
 
 
 def main() -> None:
