@@ -9,6 +9,12 @@ simulating, attacking, and ranking **novel blockchain economic mechanisms**.
 > and to eliminate bad ideas through research, mathematical modeling,
 > simulation, and adversarial testing.
 
+**Auditing this repo?** Start with [`AUDITING.md`](./AUDITING.md) —
+where the load-bearing code lives, what three external audits already
+fixed, and the honest open weaknesses. Every published number in the
+[release bundle](./reports/release/bundle-cand-9200b07691c3/)
+reproduces from the published files alone.
+
 ## Definition of Success (§42) — verified
 
 ```bash
