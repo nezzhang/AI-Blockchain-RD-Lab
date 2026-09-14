@@ -116,6 +116,30 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 31 §27 PUBLICATION (the human pushed; the ladder's
+  publication stage is COMPLETE): the repo is public at
+  https://github.com/nezzhang/AI-Blockchain-RD-Lab (56 commits,
+  MIT license, main). §41 note: the human created the repo,
+  fixed the GitHub email gate + token auth (password auth was
+  rejected — the 2021 policy), and executed `git push -u origin
+  main` personally; the lab never pushed on its own. POST-PUSH
+  ACCEPTANCE, run the way any stranger would: (1) fresh
+  ANONYMOUS clone of the public URL; (2) all 15 manifest
+  sha256s verify against the copy GitHub serves — byte-identical
+  from bundle to public copy; (3) the SHIPPED verify.py executed
+  against the fresh clone in an isolated environment (/usr/bin/
+  env -i, no lab paths importable): exit 0, 51 REPRODUCED + 2
+  CONSISTENT + 0 NOT-REPRODUCIBLE, zero pycache — VERIFY-PASS
+  FROM THE PUBLISHED FILES ALONE, the exact claim the README
+  makes, now true at a public URL. The criticism stage now has
+  its global surface: anyone can download the bundle, re-run
+  the battery, and file findings (the r27/round-2 audit
+  discipline, now open to the world). Ops notes: pushing the
+  docs commit requires the human's authenticated session
+  (gh auth / Keychain token) — the lab commits locally, the
+  human pushes; and `git push` after email-gate fixes needs
+  the USERNAME (nezzhang) not the account email in the
+  username prompt.
 - Round 30 pre-audit sweep for the approved highest-tier LLM
   auditor (the r28 discipline repeated at the new tier — the lab
   reads CODE now, so the sweep targeted the verifier's own
