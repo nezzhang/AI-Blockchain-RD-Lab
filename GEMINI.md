@@ -116,6 +116,99 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 33 external-audit response (the human delivered
+  2026-09-14-auditor-FIXES.md: "they might be correct but might be
+  wrong" — §2 applies to audits: every finding VERIFIED against the
+  store and by LIVE EXECUTION before fixing; three findings, three
+  confirmed, all fixed at the generator, each pinned by tests the
+  day it shipped; +8 → 457). F1 (HIGH, the real one): the §20 gate's
+  decisive economic predicate — rt.strongest_attack_is_profitable —
+  was an LLM-SUPPLIED FREE FIELD: deterministic code whose fatal
+  verdict rejected a candidate on an agent's unverified assertion
+  ("deterministic gate" trusted a trust bit). Store ground truth: 16
+  REJECTED candidates, exactly ONE via the §20 gate
+  (Population-Linked Supply, 2026-09-04) — and it has NO stored
+  MathModel and ZERO battery records: the one historical rejection
+  rested entirely on the assertion. FIX: the gate now MEASURES —
+  fatal+profitable rejects ONLY when the deterministic battery's
+  worst headline edge on the latest stored model exceeds the
+  CANONICAL FLAW_EDGE_THRESHOLD (400, now a library constant in
+  simulation/adversarial.py, the same number every census since
+  r16 used — gate and censuses can no longer drift apart);
+  unmeasured (no model/vacuous/all under threshold) fails CLOSED
+  for rejection; the LLM boolean is recorded as HYPOTHESIS (audit
+  point 4); every gate evaluation persists a §21 record
+  (fatal_flaw_v2_measured: verdict, hypothesis, measured evidence,
+  decision — the audit trail point 5 asked for). The historical
+  rejection got its gate-v2 re-evaluation record (evidence class
+  documented; §11 correction stays the operator's decision, §2 —
+  REJECTED is terminal by design, no resurrection path exists).
+  Pinned by 3 probes incl. the audit's own regression: fatal+
+  profitable+healthy-measured-model → NOT rejected; flawed model
+  (the r20 multiplicative-ratchet class, worst edge 2266) →
+  rejected with the MEASUREMENT in the flaw description.
+  F2 (MEDIUM): the r19 long-window transit confirmation rebuilt
+  the doubled-window spec from kind/steps/park_at alone — every
+  other calibration field silently reset to dataclass defaults, so
+  a calibrated variant's transit decision was made by the DEFAULT
+  attack. Fix: spec.model_copy(update={steps*2, park_at*2}) — full
+  calibration carried. F3 (MEDIUM): e/pi are §13-valid symbols
+  (MathModel._MATH_CONSTANTS) but EquationInterpreter rejected them
+  ("used but not declared") — a schema-valid model that could not
+  execute; confirmed by live execution before fixing. Fix: the
+  interpreter evaluates bare e/pi (declared variables still win —
+  the schema is the contract). THE F2 FIX'S OWN FINDING (the round's
+  real work): re-sweeping the calibrated grid under the fixed
+  constructor surfaced a classification ambiguity the r18 pin rule
+  cannot resolve by position — crash_park @-0.9 on the successor
+  reads L_f_drawn 900.0: L_f (fast EMA) ends at 100.0 = BOTH its
+  clip floor AND the crashed level. r18's Cyclic precedent (drained
+  pool stopped at a floor that coincides with the level) says PIN =
+  disclosed edge; but L_f measured INERT (relax the floor to -1e9,
+  re-run the same attack: identical trajectory — the EMA converged
+  to its fixed point, the clip never bound; X→50 probe: the only
+  case the floor binds). Position cannot tell a stopped drain from
+  a converged EMA; the COUNTERFACTUAL can. FIX: _pin_is_load_bearing
+  (relax-and-rerun, cached per battery): final value unchanged →
+  inert bound → the state ARRIVED (classifies by the layers that
+  follow); final value moves below the bound → LOAD-BEARING → the
+  r18 pin stands. Wired at all four guard sites (r15b arrival,
+  EMA-shape filter, long-window confirmation, resonance
+  quiet-tail). ANTI-HIDING caught live in the first draft: the
+  draft's unbuildable-counterfactual branch returned INERT (False)
+  — Cyclic's parameter-bounded floor (z_floor) would have
+  exonerated a genuinely drained pool back into regime_tracking;
+  the branch now fails CLOSED (unmeasurable is never exonerated),
+  and parameter bounds resolve via their defaults so Cyclic keeps
+  its pin. Pinned by 6 probes incl. all three historical pin
+  lineages (Cyclic Z_t load-bearing; wage-pool W_t: 60-step
+  draining → 120/240 pinned-and-convicted; swap-board B_t
+  convicted). RE-SWEEP (both decision candidates, 8 defaults + all
+  19 calibrations, r33 §21 records): incumbent — ZERO drift, all
+  27 rows reproduce the published numbers exactly (r22's "zero
+  edges >150 in 54 runs" claim SURVIVES the fix; worst 33.25);
+  successor — 4 honest drifts, every one an honesty improvement:
+  crash_park @-0.9 L_f_drawn 900.0 moves in_transit→regime_tracking
+  (measured exoneration; honest headline G_t_drawn 0.869 unchanged),
+  grind_harvest @-0.9 headline 0.8634→0.9739 (its transit now
+  decided by its own attack), pump_unwind @amplitude=0.02 headline
+  0.3374→0.0 with C_t honestly in_transit (confirmed by its own
+  low-amplitude attack at the doubled window); worst headline
+  UNCHANGED at 32.6375 (wash_flow @0.04, unaffected as predicted).
+  VERIFIER BUGS the regeneration surfaced (both fixed at the one
+  source, scripts/r25_verify_bundle.py, and re-shipped):
+  sorted() over tuples containing dicts (TypeError under a fresh
+  3.12 — the r30 isolated run's interpreter differs from this
+  machine's; lesson: the isolated-environment proof must pin the
+  interpreter, not just the PATH) and generation-overlap handling
+  (the bundle JSON now carries r20+r22+r33 census records; both the
+  calibrated re-run comparison and the §4b completeness check must
+  take the NEWEST record per kind+calibration / count DISTINCT
+  pairs — the same rule §4b renders by). Bundle regenerated through
+  the builder (never hand-patched): isolated verify (/usr/bin/env
+  -i, framework 3.12, no lab paths) exit 0 — 51 REPRODUCED + 2
+  CONSISTENT + 0 NOT-REPRODUCIBLE, 8/8 defaults + 19/19 calibrated
+  headlines reproduce from the published files alone.
 - Round 31 §27 PUBLICATION (the human pushed; the ladder's
   publication stage is COMPLETE): the repo is public at
   https://github.com/nezzhang/AI-Blockchain-RD-Lab (56 commits,

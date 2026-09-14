@@ -7,8 +7,16 @@ Per candidate (SIMULATING): Game Theory → Security → Oracle → Red Team
   - attack-vector inventory persisted to redteam_results
   - §20 fatal-flaw gate: a flaw is CONFIRMED only when deterministic code
     agrees — the red-team verdict is "fatal" AND the strongest attack is
-    profitable for the attacker. Both conditions are structured fields the
-    schema enforces; the prompt alone can never reject a candidate (§2).
+    profitable for the attacker, AND (r33, external-audit F1) a MEASURED
+    §20 battery edge over the canonical FLAW_EDGE_THRESHOLD backs the
+    economic claim. The agent's `strongest_attack_is_profitable` boolean
+    alone never rejects anything: it is recorded as the agent's HYPOTHESIS
+    (the audit finding: an LLM-supplied free field was the gate's
+    decisive economic predicate — the "deterministic gate" trusted an
+    assertion). No stored model / no battery run / all edges under
+    threshold → the fatal verdict is recorded but NOT confirmed
+    (fail-closed for rejection: an unmeasured claim can never reject a
+    candidate; every gate evaluation is persisted as a §21 record).
   - verdict fatal → REJECTED (§11); otherwise SIMULATING → RED_TEAM,
     ready for improvement/Phase 6.
 
@@ -42,8 +50,15 @@ from blockchain_rd_lab.research import CandidateBrief
 from blockchain_rd_lab.schemas import (
     Candidate,
     CandidateStatus,
+    ExperimentRecord,
     FatalFlaw,
     ScoreBreakdown,
+)
+from blockchain_rd_lab.simulation.adversarial import (
+    FLAW_EDGE_THRESHOLD,
+    AttackPattern,
+    AttackPatternBattery,
+    PatternSpec,
 )
 
 # Dimension names must match config/scoring.yaml.
@@ -171,6 +186,56 @@ class RedTeamService:
 
     # -- deterministic post-processing -------------------------------------------
 
+    def _measured_flaw_edge(self, candidate: Candidate) -> dict[str, Any] | None:
+        """§20 gate evidence (r33, audit F1): run the deterministic
+        attack battery against the candidate's LATEST stored model and
+        return the measured evidence the gate decides on — worst
+        headline edge, per-pattern edges, run count. None when no
+        model is stored (fail-closed: the gate cannot confirm on an
+        unmeasured claim; the fatal verdict is recorded, not
+        confirmed).
+
+        The battery is the SAME deterministic code the censuses and the
+        published bundle run; the gate cites its canonical
+        FLAW_EDGE_THRESHOLD. This method MEASURES; it never rejects.
+        """
+        model_json = self.database.get_latest_math_model(candidate.id)
+        if not model_json:
+            return None
+        try:
+            from blockchain_rd_lab.formalization import MathModel
+
+            model = MathModel.model_validate_json(model_json)
+        except Exception:
+            return None
+        battery = AttackPatternBattery(model)
+        per_pattern: dict[str, Any] = {}
+        worst: float | None = None
+        worst_kind: str | None = None
+        for kind in AttackPattern:
+            try:
+                bound = battery.run_pattern(
+                    PatternSpec(kind=kind, steps=60)
+                )
+            except Exception:
+                continue
+            if bound.vacuous or bound.headline is None:
+                per_pattern[kind.value] = None
+                continue
+            per_pattern[kind.value] = bound.headline
+            if worst is None or bound.headline > worst:
+                worst = bound.headline
+                worst_kind = kind.value
+        return {
+            "worst_headline_edge": worst,
+            "worst_pattern": worst_kind,
+            "per_pattern": per_pattern,
+            "threshold": FLAW_EDGE_THRESHOLD,
+            "exceeds_threshold": bool(
+                worst is not None and worst > FLAW_EDGE_THRESHOLD
+            ),
+        }
+
     def _apply_findings(self, candidate: Candidate, result: RedTeamResult) -> None:
         gt = result.game_theory
         if gt is not None:
@@ -206,29 +271,106 @@ class RedTeamService:
         if candidate.status is CandidateStatus.SIMULATING and result.complete:
             candidate.transition(CandidateStatus.RED_TEAM)
 
-        # §20 fatal-flaw gate (deterministic code, not the prompt):
-        # fatal verdict AND a profitable strongest attack → confirmed flaw.
+        # §20 fatal-flaw gate (deterministic code, not the prompt).
+        # r33 (external-audit F1): the agent's profitable-attack
+        # boolean is a HYPOTHESIS, never the decisive economic
+        # predicate. A fatal verdict rejects ONLY when the
+        # deterministic battery MEASURES a worst headline edge above
+        # the canonical FLAW_EDGE_THRESHOLD (400) on the candidate's
+        # latest stored model. Unmeasured (no model / vacuous runs /
+        # every edge under threshold) → the fatal verdict is recorded,
+        # the candidate stays un-rejected (fail-closed for rejection:
+        # an LLM assertion can never reject; it can only point, and
+        # the code then measures). Every gate evaluation is persisted
+        # as a §21 record — the audit trail the audit asked for.
         rt = result.red_team
+        gate_evaluated = False
+        gate_evidence: dict[str, Any] | None = None
         if (
             rt is not None
             and rt.verdict == _VERDICT_FATAL
             and rt.strongest_attack_is_profitable
             and candidate.status not in _TERMINAL
         ):
-            flaw = FatalFlaw(
-                flaw_id=f"ff-{candidate.id}-redteam",
-                category="game_theory",
-                description=(
-                    f"Red team confirmed a profitable structural attack: "
-                    f"{rt.strongest_attack}"
-                ),
-                confirmed=True,
-                identified_by="red_team",
+            gate_evidence = self._measured_flaw_edge(candidate)
+            gate_evaluated = True
+            measured_confirmed = (
+                gate_evidence is not None
+                and gate_evidence["exceeds_threshold"]
             )
-            candidate.fatal_flaws.append(flaw)
-            result.confirmed_flaws.append(flaw.flaw_id)
-            result.rejected = True
-            candidate.transition(CandidateStatus.REJECTED)
+            self._persist_gate_record(
+                candidate, rt, gate_evidence, measured_confirmed
+            )
+            if measured_confirmed and gate_evidence is not None:
+                flaw = FatalFlaw(
+                    flaw_id=f"ff-{candidate.id}-redteam",
+                    category="game_theory",
+                    description=(
+                        f"Red team confirmed a profitable structural attack: "
+                        f"{rt.strongest_attack} — measured worst battery "
+                        f"edge {gate_evidence['worst_headline_edge']} "
+                        f"(pattern {gate_evidence['worst_pattern']}) "
+                        f"exceeds the {FLAW_EDGE_THRESHOLD} flaw "
+                        f"threshold."
+                    ),
+                    confirmed=True,
+                    identified_by="red_team",
+                )
+                candidate.fatal_flaws.append(flaw)
+                result.confirmed_flaws.append(flaw.flaw_id)
+                result.rejected = True
+                candidate.transition(CandidateStatus.REJECTED)
+        # The agent's assertion is always recorded as hypothesis (the
+        # audit's point 4: keep the field, demote its authority). A
+        # fatal verdict the gate did not confirm stays visible in the
+        # result — never silently resolved either way.
+        if rt is not None and rt.verdict == _VERDICT_FATAL and not gate_evaluated:
+            self._persist_gate_record(
+                candidate, rt, None, False,
+                note="fatal verdict without profitable-attack hypothesis; "
+                     "gate not evaluated (no economic claim to measure)",
+            )
+
+    def _persist_gate_record(
+        self,
+        candidate: Candidate,
+        rt: RedTeamReport,
+        evidence: dict[str, Any] | None,
+        confirmed: bool,
+        note: str = "",
+    ) -> None:
+        """§21 record for every §20 gate evaluation (r33, audit F1):
+        the verdict, the agent's profitability hypothesis, the measured
+        battery evidence (or its absence), and the gate's decision —
+        the audit trail that makes the gate's economics checkable
+        after the fact."""
+        try:
+            record = ExperimentRecord(
+                candidate_id=candidate.id,
+                parameters={
+                    "gate": "fatal_flaw_v2_measured",
+                    "agent_verdict": rt.verdict,
+                    "agent_strongest_attack": rt.strongest_attack,
+                    "agent_profitability_hypothesis": (
+                        rt.strongest_attack_is_profitable
+                    ),
+                    "note": note,
+                },
+                results={
+                    "measured_evidence": evidence,
+                    "confirmed": confirmed,
+                    "threshold": FLAW_EDGE_THRESHOLD,
+                },
+                dataset="redteam-gate",
+                model="battery:attack_patterns@r33",
+                seed=None,
+            )
+            self.database.save_experiment(record)
+        except Exception:
+            # The gate's decision never depends on its own logging
+            # (§35); a persistence failure is recorded in the run, not
+            # fatal. The gate has already decided on measured evidence.
+            return
 
     def _persist_report(
         self,

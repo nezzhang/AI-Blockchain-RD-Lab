@@ -191,13 +191,18 @@ def _rerun_attack_battery(mm: MathModel, published: list[dict],
     'every reproducible claim' must include them)."""
     bat = AttackPatternBattery(mm)
 
-    # split published bounds: defaults (no tag) vs calibrated variants
+    # split published bounds: defaults (no tag) vs calibrated variants.
+    # r33: census GENERATIONS overlap (r22 + r33 carry the same
+    # calibrations with post-fix values) — newest record wins per
+    # (kind, calibration), the SAME rule §4b renders by. Comparing the
+    # oldest row would flag the fixed value as drift against the
+    # superseded one.
     defaults: dict[str, dict] = {}
-    cals: list[tuple[str, str, dict]] = []
+    cals: dict[tuple[str, str], dict] = {}
     for rec in published:
         for b in rec["bounds"]:
             if b.get("calibration"):
-                cals.append((str(b["kind"]), str(b["calibration"]), b))
+                cals[(str(b["kind"]), str(b["calibration"]))] = b
             else:
                 defaults[str(b["kind"])] = b
 
@@ -222,7 +227,7 @@ def _rerun_attack_battery(mm: MathModel, published: list[dict],
     # exact-match tolerance
     if cals:
         cmatches, ctotal = 0, 0
-        for kind, cal, pub in sorted(cals):
+        for (kind, cal), pub in sorted(cals.items()):
             ctotal += 1
             if _compare_one(bat, kind, cal, pub.get("headline"), rep,
                             f"re-run {kind} @{cal}"):
@@ -313,10 +318,21 @@ def _verify_release_package(bundle: Path, man: dict[str, dict],
             (bundle / "adversarial-bounds.json").read_text(encoding="utf-8"))
         from collections import Counter
         json_c: Counter[str] = Counter()
+        seen_pairs: set[tuple[str, str]] = set()
         for rec in bounds:
             for b in rec["bounds"]:
                 if b.get("calibration"):
-                    json_c[str(b["kind"])] += 1
+                    pair = (str(b["kind"]), str(b["calibration"]))
+                    # r33: census GENERATIONS overlap (r22 and r33
+                    # carry the same 19 calibrations). §4b renders one
+                    # line per DISTINCT kind+calibration (the newest
+                    # record wins) — count pairs, not rows, so two
+                    # generations of one measurement are one expected
+                    # line; a row with NO §4b line still fails.
+                    if pair in seen_pairs:
+                        continue
+                    seen_pairs.add(pair)
+                    json_c[pair[0]] += 1
         md_c: Counter[str] = Counter()
         for k, _t in re.findall(r"\*\*(\w+) @([^\n]*?)\*\*", section):
             md_c[k] += 1

@@ -58,6 +58,93 @@ def queue_all_reports(provider: MockLLMProvider, brief: CandidateBrief, **kwargs
         provider.queue_response(response)
 
 
+def _gate_model_json(healthy: bool = False) -> dict:
+    """Stored-model fixtures for the r33 measured §20 gate.
+
+    The flawed variant is the r20 resonance flaw exemplar's class
+    (AI-Compute Denominated Debt, cand-1acbaa9de0b0): a
+    multiplicative-supply construction whose ratchet compounds every
+    recovery ramp — the battery measures worst edge 3583 at the
+    default 8 patterns, far over the 400 flaw threshold.
+
+    The healthy variant is the r16 successor's class (Reversion-Keyed
+    Demographic Reserve): reverting EMA + additive bounded flows —
+    every measured edge lands far under the threshold.
+    """
+    if healthy:
+        return {
+            "candidate_id": "cand-gate-healthy",
+            "variables": [
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "pool", "symbol": "S_t", "role": "state",
+                 "units": "u", "description": "pool"},
+                {"name": "pool_next", "symbol": "S_t1", "role": "state",
+                 "units": "u", "description": "next pool"},
+            ],
+            "parameters": [],
+            "equations": [
+                {"name": "pool",
+                 "expression": "S_t1 = clip(S_t + 0.10*(X_t - S_t), "
+                               "50.0, 20000.0)",
+                 "description": "reverting EMA pool, floor below crash"},
+            ],
+            "assumptions": [
+                {"statement": "fixture assumption", "critical": True}],
+            "constraints": [],
+            "open_questions": ["fixture open question"],
+            "rationale": "r33 gate fixture (healthy construction)",
+            "version": 1,
+        }
+    return {
+        "candidate_id": "cand-gate-flawed",
+        "variables": [
+            {"name": "level", "symbol": "X_t", "role": "input",
+             "units": "u", "description": "level"},
+            {"name": "delta", "symbol": "dX_t", "role": "input",
+             "units": "u", "description": "delta"},
+            {"name": "growth_raw", "symbol": "g_raw_t", "role": "state",
+             "units": "ratio", "description": "raw growth"},
+            {"name": "growth", "symbol": "g_t", "role": "state",
+             "units": "ratio", "description": "clipped growth"},
+            {"name": "supply", "symbol": "S_t", "role": "state",
+             "units": "u", "description": "supply"},
+            {"name": "supply_next", "symbol": "S_t1", "role": "state",
+             "units": "u", "description": "next supply"},
+        ],
+        "parameters": [
+            {"name": "alpha", "symbol": "alpha", "default": 0.4,
+             "min_value": 0.0, "max_value": 2.0,
+             "description": "growth sensitivity"},
+            {"name": "floor", "symbol": "f", "default": -0.05,
+             "min_value": -0.5, "max_value": 0.0,
+             "description": "growth clip floor"},
+            {"name": "cap", "symbol": "c", "default": 0.05,
+             "min_value": 0.0, "max_value": 0.5,
+             "description": "growth clip cap"},
+        ],
+        "equations": [
+            {"name": "growth_raw",
+             "expression": "g_raw_t = alpha * dX_t / X_t",
+             "description": "raw growth from the delta"},
+            {"name": "growth",
+             "expression": "g_t = clip(g_raw_t, f, c)",
+             "description": "clipped growth"},
+            {"name": "supply",
+             "expression": "S_t1 = S_t * (1 + g_t)",
+             "description": "multiplicative supply — the r20 ratchet class"},
+        ],
+        "assumptions": [
+            {"statement": "fixture assumption", "critical": True}],
+        "constraints": [],
+        "open_questions": ["fixture open question"],
+        "rationale": "r33 gate fixture (flawed construction)",
+        "version": 1,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Schemas
 # ---------------------------------------------------------------------------
@@ -193,16 +280,96 @@ class TestFatalFlawGate:
         assert "oracle_feasibility" in stored.scores
 
     def test_fatal_verdict_requires_profitable_attack_to_confirm(self, memory_db):
-        # fatal verdict BUT fixture's strongest attack IS profitable by
-        # default → confirmed. Use survives to flip the other branch first.
+        # r33 (audit F1): the fatal+profitable fixture carries NO stored
+        # MathModel — the measured gate has nothing to measure, so it
+        # FAILS CLOSED for rejection: the fatal verdict is recorded, the
+        # candidate stays RED_TEAM. The agent's profitability boolean
+        # alone never rejects (it is a hypothesis, not evidence).
         _, stored, result = self._run(memory_db, verdict="fatal")
+        assert stored is not None
+        assert stored.status is CandidateStatus.RED_TEAM
+        assert result.rejected is False
+        assert stored.has_confirmed_fatal_flaw is False
+        # the §21 gate record exists and shows the unmeasured path
+        records = [
+            r for r in memory_db.iter_experiments(stored.id)
+            if r.parameters.get("gate") == "fatal_flaw_v2_measured"
+        ]
+        assert records, "gate evaluation must be persisted (§21 audit trail)"
+        assert records[0].results["confirmed"] is False
+        assert records[0].results["measured_evidence"] is None
+
+    def test_fatal_verdict_confirmed_by_measured_edge(self, memory_db):
+        # The gate's CONFIRMING path (r33): fatal verdict + profitable
+        # hypothesis + a stored model whose MEASURED worst battery edge
+        # exceeds FLAW_EDGE_THRESHOLD → rejected, with the measured
+        # numbers in the §21 record and the flaw description.
+        cand = make_candidate()
+        memory_db.save_candidate(cand)
+        advance_to_simulating(memory_db, cand)
+        brief = CandidateBrief.from_candidate(cand)
+        provider = MockLLMProvider()
+        queue_all_reports(provider, brief, verdict="fatal")
+        memory_db.save_math_model(
+            cand.id,
+            json.dumps(_gate_model_json()),
+            rationale="r33 gate fixture",
+        )
+        service = RedTeamService(provider, memory_db)
+        result = service.redteam_candidate(cand)
+        stored = memory_db.get_candidate(cand.id)
         assert stored is not None
         assert stored.status is CandidateStatus.REJECTED
         assert result.rejected is True
-        assert stored.has_confirmed_fatal_flaw is True
         flaw = stored.fatal_flaws[-1]
         assert flaw.identified_by == "red_team"
         assert flaw.confirmed
+        # the flaw description cites the MEASUREMENT, not the assertion
+        assert "measured worst battery edge" in flaw.description
+        records = [
+            r for r in memory_db.iter_experiments(cand.id)
+            if r.parameters.get("gate") == "fatal_flaw_v2_measured"
+        ]
+        assert records
+        ev = records[0].results["measured_evidence"]
+        assert ev is not None
+        assert ev["exceeds_threshold"] is True
+        assert ev["worst_headline_edge"] > 400.0
+
+    def test_fatal_verdict_high_assertion_low_measurement_not_confirmed(
+        self, memory_db
+    ):
+        # THE AUDIT'S REGRESSION PROBE (r33 F1): the agent asserts fatal
+        # + profitable; the deterministic battery MEASURES every edge
+        # below threshold → NOT rejected. The trust-bit cannot reject;
+        # the measurement acquits.
+        cand = make_candidate()
+        memory_db.save_candidate(cand)
+        advance_to_simulating(memory_db, cand)
+        brief = CandidateBrief.from_candidate(cand)
+        provider = MockLLMProvider()
+        queue_all_reports(provider, brief, verdict="fatal")
+        memory_db.save_math_model(
+            cand.id,
+            json.dumps(_gate_model_json(healthy=True)),
+            rationale="r33 gate fixture (healthy)",
+        )
+        service = RedTeamService(provider, memory_db)
+        result = service.redteam_candidate(cand)
+        stored = memory_db.get_candidate(cand.id)
+        assert stored is not None
+        assert stored.status is CandidateStatus.RED_TEAM
+        assert result.rejected is False
+        assert stored.has_confirmed_fatal_flaw is False
+        records = [
+            r for r in memory_db.iter_experiments(cand.id)
+            if r.parameters.get("gate") == "fatal_flaw_v2_measured"
+        ]
+        assert records
+        assert records[0].results["confirmed"] is False
+        ev = records[0].results["measured_evidence"]
+        assert ev is not None
+        assert ev["exceeds_threshold"] is False
 
     def test_fatal_verdict_nonprofitable_not_confirmed(self, memory_db):
         cand = make_candidate()

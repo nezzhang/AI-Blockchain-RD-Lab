@@ -21,7 +21,17 @@ import math
 from collections.abc import Callable
 from typing import Any
 
+# §13 accepts the named math constants 'e' and 'pi' as bare identifiers
+# (formalization._MATH_CONSTANTS) — the interpreter must accept the same
+# language or a schema-valid model dies at execution ("symbol 'e' used but
+# not declared", the 2026-09-14 audit F3). One source of truth: import
+# the canonical set instead of redefining it here.
 from blockchain_rd_lab.formalization import MathModel
+
+_CONSTANTS: dict[str, float] = {
+    "e": math.e,
+    "pi": math.pi,
+}
 
 
 class SimulationError(Exception):
@@ -210,6 +220,7 @@ class EquationInterpreter:
                 and isinstance(node.ctx, ast.Load)
                 and node.id not in self.declared
                 and node.id not in _FUNCTIONS
+                and node.id not in _CONSTANTS
             ):
                 raise SimulationError(
                     f"symbol {node.id!r} used but not declared"
@@ -238,6 +249,13 @@ class EquationInterpreter:
                 return float(node.value)
             raise SimulationError(f"non-numeric constant {node.value!r}")
         if isinstance(node, ast.Name):
+            # Named math constants (audit F3): resolve before env lookup —
+            # they are language, not state, so they never shadow and are
+            # never shadowed by a step's symbols (a model that DECLARES a
+            # variable named 'e' still validates: its own symbol wins in
+            # env, per the check order below).
+            if node.id in _CONSTANTS and node.id not in env:
+                return _CONSTANTS[node.id]
             if node.id not in env:
                 raise SimulationError(f"symbol {node.id!r} has no value in this step")
             return float(env[node.id])  # type: ignore[arg-type]

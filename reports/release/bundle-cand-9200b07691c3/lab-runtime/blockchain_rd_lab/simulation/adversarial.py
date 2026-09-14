@@ -30,6 +30,8 @@ replacing adjectives.
 
 from __future__ import annotations
 
+import json
+import math
 import re
 from enum import StrEnum
 
@@ -121,6 +123,14 @@ class PatternSpec(BaseModel):
     # resonance: number of strike-cycles in the window (each: strike,
     # recovery ramp back to the anchor, quiet)
     strikes: int = 4
+
+
+# The §20 flaw threshold, made canonical (r33, audit F1): the largest
+# measured attacker edge a construction may carry before the battery
+# itself classifies it a flaw. Script-level sweeps have used 400 since
+# r16; the fatal-flaw gate now cites THE SAME constant — the gate and
+# the censuses can no longer drift apart on what "flaw" means.
+FLAW_EDGE_THRESHOLD = 400.0
 
 
 class AttackBound(BaseModel):
@@ -343,6 +353,136 @@ def _separation_consumed_anchors(model: MathModel) -> set[str]:
         if ok:
             consumed_via_separation.add(sym)
     return consumed_via_separation
+
+
+def _pin_is_load_bearing(
+    model: MathModel,
+    spec: PatternSpec,
+    battery: AttackPatternBattery,
+    sym: str,
+) -> bool:
+    """r33 PIN COUNTERFACTUAL: does the clip bound STOP this state, or
+    did the state merely END at a value its bound coincides with?
+
+    The r18 pin rule reads POSITION ONLY (final == a bound): it
+    cannot separate the two geometries that share it — (a) Cyclic's
+    Z_t: the pool's dynamics would carry it BELOW its 400 floor; the
+    clip is LOAD-BEARING, the state was stopped mid-drain; (b) an
+    EMA converging to a moved level that coincides with its bound
+    (the successor's L_f under crash_park -0.9: X parks at 100 =
+    L_f's floor): the clip never binds — the same value would be
+    reached with the bound removed. Position cannot discriminate;
+    the counterfactual can: remove the bound (re-run the same attack
+    against the same model with that one state's clip relaxed to a
+    range that provably cannot bind at battery scales) and re-run the
+    same choreography. The final value UNCHANGED (within a sliver)
+    -> inert bound: the state ARRIVED (r18 rule does not apply; the
+    state classifies by the layers that follow). The final value
+    MOVES below the original bound -> load-bearing pin: the state
+    was STOPPED, and it stays a disclosed edge exactly as r18 ruled.
+
+    Anti-hiding (the r19 lesson, applied on ship): the counterfactual
+    can only RELAX a bound toward INERTNESS. A state it exonerates
+    still faces every classification layer that follows (arrival,
+    transit, resonance quiet-tail); a state it convicts keeps the
+    pin. It never manufactures a small headline where the dynamics
+    drew a large one — a model whose relaxed-floor run happens to
+    END above the bound keeps its pin.
+    """
+    cache = battery.__dict__.setdefault("_pin_cf_cache", {})
+    key = (spec.kind, spec.steps, getattr(spec, "park_at", 20),
+          getattr(spec, "park_shift", 0.0), sym)
+    if key in cache:
+        return cache[key]
+    rows = battery.craft_series(spec)
+    orig = MechanismSimulation(model).run(rows).history
+    if not orig or sym not in orig[0]:
+        cache[key] = False
+        return False
+    lo, hi = _clip_bounds(model).get(f"{sym}1", (float("nan"),) * 2)
+    if math.isnan(lo) and math.isnan(hi):
+        cache[key] = False
+        return False
+    # Relax ONLY this state's bounds, to a range that cannot bind at
+    # battery scales (extremes reach ~1e6 by construction). A bound
+    # given as a PARAMETER (Cyclic's z_floor) is substituted by its
+    # declared default first — the counterfactual must be buildable
+    # for parameter-bounded models too.
+    lo2 = min(lo, -1e9) if not math.isnan(lo) else lo
+    hi2 = max(hi, 1e9) if not math.isnan(hi) else hi
+    raw = json.loads(model.model_dump_json())
+    touched = False
+    for i, eq in enumerate(raw["equations"]):
+        expr = eq["expression"]
+        lhs = expr.split("=", 1)[0].strip()
+        if lhs != f"{sym}1":
+            continue
+        new_expr = _relax_clip_bounds(
+            expr, (lo2, hi2),
+            {
+                p.symbol: p.default
+                for p in model.parameters
+                if p.default is not None
+            },
+        )
+        if new_expr != expr:
+            raw["equations"][i]["expression"] = new_expr
+            touched = True
+    if not touched:
+        # No relaxable trailing clip for this state: the counterfactual
+        # cannot be built. FAIL CLOSED — keep the r18 pin (an
+        # unmeasurable state is never exonerated; the r33 anti-hiding
+        # rule, the same discipline as the resonance guard).
+        cache[key] = True
+        return True
+    try:
+        relaxed = MathModel.model_validate(raw)
+        relaxed_final = float(
+            MechanismSimulation(relaxed).run(rows).history[-1][sym])
+    except Exception:  # malformed relax: keep the pin (fail closed)
+        cache[key] = True
+        return True
+    moved_out = (
+        relaxed_final < lo - 1e-6 or relaxed_final > hi + 1e-6
+    )
+    verdict = moved_out
+    cache[key] = verdict
+    return verdict
+
+
+def _relax_clip_bounds(
+    expr: str,
+    relaxed: tuple[float, float],
+    params: dict[str, float],
+) -> str:
+    """Rewrite ONE trailing clip(...) in `expr` with the relaxed
+    bounds, keeping every other token identical. Bound tokens may be
+    numeric literals or parameter names — the latter are substituted
+    by their declared defaults (the battery's own _clip_bounds
+    parser resolves them the same way). Anything else returns the
+    expression untouched."""
+    num = r"(?:-?\d+(?:\.\d+)?)"
+    m = re.search(
+        rf"clip\s*\(.*?,\s*({num}|[A-Za-z_][A-Za-z0-9_]*)\s*,"
+        rf"\s*({num}|[A-Za-z_][A-Za-z0-9_]*)\s*\)\s*$",
+        expr,
+    )
+    if not m:
+        return expr
+    lo_s, hi_s = m.group(1), m.group(2)
+
+    def resolve(tok: str) -> float | None:
+        try:
+            return float(tok)
+        except ValueError:
+            return params.get(tok)
+
+    lo_old, hi_old = resolve(lo_s), resolve(hi_s)
+    if lo_old is None or hi_old is None:
+        return expr
+    head = expr[: m.start(1)]
+    tail = expr[m.end(2):]
+    return f"{head}{relaxed[0]:.6g}, {relaxed[1]:.6g}{tail}"
 
 
 def _keyed_protection_states(model: MathModel, hist: list[dict[str, float]]) -> list[str]:
@@ -753,6 +893,14 @@ class AttackPatternBattery:
                         < 1e-6
                     )
                     if pinned_end:
+                        # r33 pin counterfactual under the quiet tail:
+                        # an inert bound at window end is a state that
+                        # arrived (it may be mid-recovery); a load-
+                        # bearing one keeps the r18 pin. Same rule as
+                        # every other guard site.
+                        pinned_end = _pin_is_load_bearing(
+                            self.model, spec, self, sym)
+                    if pinned_end:
                         continue  # pin stays a disclosed edge
                     if d_tail < 0.25 * d_end:
                         in_transit[k] = round(d_tail, 6)
@@ -871,6 +1019,15 @@ class AttackPatternBattery:
                     pinned = (
                         abs(final_v - lo) < 1e-6 or abs(final_v - hi) < 1e-6
                     )
+                    if pinned:
+                        # r33 pin counterfactual: position alone cannot
+                        # tell a stopped drain from a converged EMA whose
+                        # level coincides with the bound. LOAD-BEARING
+                        # (relax-and-rerun moves the state out) keeps
+                        # the r18 pin; INERT (unchanged) means the state
+                        # ARRIVED — classify by the layers that follow.
+                        pinned = _pin_is_load_bearing(
+                            self.model, spec, self, sym)
                     if (
                         abs(final_v - x_final) < 0.10 * max(x_final, 1.0)
                         and not pinned
@@ -896,7 +1053,16 @@ class AttackPatternBattery:
                         abs(ema_final - lo) < 1e-6
                         or abs(ema_final - hi) < 1e-6
                     ):
-                        continue  # pinned at a bound: stays an edge
+                        # r33 pin counterfactual (same rule as the r15b
+                        # arrival check): a position match that survives
+                        # relax-and-rerun is the r18 pin; one that
+                        # doesn't was a converged EMA arriving at its
+                        # fixed point — classify by the layers below.
+                        if not _pin_is_load_bearing(
+                                self.model, spec, self, sym):
+                            regime_tracking[k] = bound_candidates.pop(k)
+                            continue
+                        continue  # load-bearing pin: stays an edge
                 regime_tracking[k] = bound_candidates.pop(k)
             if pat_hist:
                 at = max(1, min(getattr(spec, "park_at", 20),
@@ -970,9 +1136,24 @@ class AttackPatternBattery:
                     AttackPattern.PUMP_UNWIND,
                     AttackPattern.GRIND_HARVEST,
                 ):
-                    long_spec = PatternSpec(
-                        kind=spec.kind, steps=spec.steps * 2,
-                        park_at=min(spec.park_at * 2, spec.steps * 2 - 2),
+                    # Audit F2 (2026-09-14): the long-window re-run must be
+                    # THE SAME ATTACK at a doubled horizon — carry the
+                    # caller's FULL calibration. The original construction
+                    # rebuilt the spec from kind/steps/park_at alone,
+                    # silently resetting amplitude/wash_level/creep_rate/
+                    # ... to dataclass defaults: a calibrated variant's
+                    # transit decision was being made by a DIFFERENT
+                    # attack (the default one). The published calibrated
+                    # variants in §4b are exactly the rows this bug could
+                    # misclassify, so the census is re-swept under the
+                    # fixed constructor (r33).
+                    long_spec = spec.model_copy(
+                        update={
+                            "steps": spec.steps * 2,
+                            "park_at": min(
+                                spec.park_at * 2, spec.steps * 2 - 2
+                            ),
+                        }
                     )
                     long_hist = MechanismSimulation(
                         self.model
@@ -993,6 +1174,14 @@ class AttackPatternBattery:
                                 abs(lv - lo) < 1e-6
                                 or abs(lv - hi) < 1e-6
                             )
+                            if pinned:
+                                # r33 pin counterfactual at the doubled
+                                # window: same rule as the measured
+                                # window — position cannot tell a
+                                # stopped state from one that arrived
+                                # at a value its bound coincides with.
+                                pinned = _pin_is_load_bearing(
+                                    self.model, long_spec, self, sym)
                             arrived = (
                                 abs(lv - lx) < 0.10 * max(lx, 1.0)
                                 and not pinned

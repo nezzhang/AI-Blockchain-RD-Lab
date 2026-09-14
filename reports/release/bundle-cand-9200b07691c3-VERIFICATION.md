@@ -1,6 +1,6 @@
 # External Verification Report
 
-Bundle: `bundle-cand-9200b07691c3` — verified from the published files alone (no database access), 2026-09-12T00:19:45Z
+Bundle: `bundle-cand-9200b07691c3` — verified from the published files alone (no database access), 2026-09-14T18:52:20Z
 
 The verifier re-runs every reproducible claim with the lab's deterministic interpreter. A third party can re-run this script against the bundle and must obtain this report.
 
@@ -23,7 +23,7 @@ The verifier re-runs every reproducible claim with the lab's deterministic inter
 | verify.py | **REPRODUCED** | sha256 verifies against the file |
 | manifest coverage | **REPRODUCED** | every bundle file is hashed; nothing unlisted ships |
 | model integrity | **REPRODUCED** | parses and passes §13 checks (v3, 7 equations) |
-| census records | **CONSISTENT** | 2 §20 census record(s) in the bundle (the §21 store is not part of the bundle; the re-run below recomputes them) |
+| census records | **CONSISTENT** | 3 §20 census record(s) in the bundle (the §21 store is not part of the bundle; the re-run below recomputes them) |
 | re-run crash_park | **REPRODUCED** | headline 0.5175 == published 0.5175 |
 | re-run drift_creep | **REPRODUCED** | headline 0.0300 == published 0.0300 |
 | re-run grind_harvest | **REPRODUCED** | headline 0.4915 == published 0.4915 |
@@ -38,8 +38,8 @@ The verifier re-runs every reproducible claim with the lab's deterministic inter
 | re-run drift_creep @creep_rate=0.002 | **REPRODUCED** | headline 0.0048 == published 0.0048 |
 | re-run drift_creep @creep_rate=0.01 | **REPRODUCED** | headline 0.1196 == published 0.1196 |
 | re-run grind_harvest @harvest_shift=-0.3 | **REPRODUCED** | headline 0.1957 == published 0.1957 |
-| re-run grind_harvest @harvest_shift=-0.9 | **REPRODUCED** | headline 0.8634 == published 0.8634 |
-| re-run pump_unwind @amplitude=0.02 | **REPRODUCED** | headline 0.3374 == published 0.3374 |
+| re-run grind_harvest @harvest_shift=-0.9 | **REPRODUCED** | headline 0.9739 == published 0.9739 |
+| re-run pump_unwind @amplitude=0.02 | **REPRODUCED** | headline 0.0000 == published 0.0000 |
 | re-run pump_unwind @amplitude=0.1 | **REPRODUCED** | headline 0.9999 == published 0.9999 |
 | re-run resonance @strike_shift=-0.3 | **REPRODUCED** | headline 0.0000 == published 0.0000 |
 | re-run resonance @strike_shift=-0.9 | **REPRODUCED** | headline 0.0377 == published 0.0377 |

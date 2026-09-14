@@ -21,6 +21,8 @@ verdict cannot count them as clean.
 
 from __future__ import annotations
 
+import pytest
+
 from blockchain_rd_lab.formalization import MathModel
 from blockchain_rd_lab.simulation import (
     AnchorSeriesGenerator,
@@ -1078,3 +1080,284 @@ class TestRound22ParameterSweep:
             assert r.headline is not None, f"{kind}/{param}={value}"
             assert not r.failures, f"{kind}/{param}={value}"
 
+
+
+class TestRound33AuditFixes:
+    """r33: the external-audit response round. F2 (long-window spec
+    preservation), F3 (e/pi interpreter constants), and the r33 pin
+    counterfactual — position cannot tell a stopped drain from a
+    converged EMA; the relax-and-rerun measurement can."""
+
+    def test_f3_pi_executes_in_equations(self) -> None:
+        # F3: `pi` is §13-valid syntax but the interpreter rejected
+        # the bare symbol ("used but not declared") — a schema-valid
+        # model that could not execute. e/pi now evaluate as math
+        # constants.
+        from blockchain_rd_lab.simulation.interpreter import (
+            EquationInterpreter,
+        )
+        m = MathModel(
+            candidate_id="cand-test-pi",
+            variables=[
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "scale", "symbol": "P_t", "role": "state",
+                 "units": "u", "description": "pi-scaled state"},
+                {"name": "scale_next", "symbol": "P_t1", "role": "state",
+                 "units": "u", "description": "next"},
+            ],
+            parameters=[],
+            equations=[
+                {"name": "scale",
+                 "expression": "P_t1 = clip(pi*X_t, 100.0, 10000.0)",
+                 "description": "pi-scaled"},
+            ],
+            assumptions=[{"statement": "fixture assumption", "critical": True}],
+            constraints=[],
+            open_questions=["fixture open question"],
+            rationale="F3 interpreter probe fixture",
+            version=1,
+        )
+        interp = EquationInterpreter(m)
+        out = interp.evaluate({"X_t": 1000.0, "dX_t": 0.0, "P_t": 1000.0})
+        assert abs(out["P_t1"] - 3141.592653589793) < 1e-9
+
+    def test_f3_declared_symbol_shadows_constant(self) -> None:
+        # A DECLARED variable named `e` wins over the constant (the
+        # schema is the contract; the constant is the fallback).
+        from blockchain_rd_lab.simulation.interpreter import (
+            EquationInterpreter,
+        )
+        m = MathModel(
+            candidate_id="cand-test-shadow",
+            variables=[
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "edge", "symbol": "e", "role": "state",
+                 "units": "u", "description": "declared e"},
+                {"name": "edge_next", "symbol": "e1", "role": "state",
+                 "units": "u", "description": "next e"},
+            ],
+            parameters=[],
+            equations=[
+                {"name": "edge",
+                 "expression": "e1 = clip(e + 1.0, 0.0, 100.0)",
+                 "description": "shadow probe"},
+            ],
+            assumptions=[{"statement": "fixture assumption", "critical": True}],
+            constraints=[],
+            open_questions=["fixture open question"],
+            rationale="F3 declared-shadow probe fixture",
+            version=1,
+        )
+        interp = EquationInterpreter(m)
+        out = interp.evaluate({"X_t": 1000.0, "dX_t": 0.0, "e": 42.0})
+        assert abs(out["e1"] - 43.0) < 1e-12
+
+    def test_f2_long_window_preserves_full_calibration(self) -> None:
+        # F2: the long-window re-run must carry the caller's FULL
+        # calibration (model_copy, never a kind/steps/park_at rebuild).
+        # A park_shift=-0.9 variant confirmed as transit at 120 steps
+        # was previously decided by the DEFAULT -0.6 attack.
+        mm = TestRound20Resonance._transit_model()
+        spec = PatternSpec(kind=AttackPattern.CRASH_PARK, steps=60)
+        spec.park_shift = -0.9
+        bat = AttackPatternBattery(mm)
+        r = bat.run_pattern(spec)
+        # the calibrated attack's own bound is what classifies — no
+        # exception, real measurement, and the long-window path ran
+        # under the SAME park_shift (crash to 100, not 400)
+        assert not r.failures
+        # counter-check: the craft for the doubled window parks at
+        # the SAME fraction of the window (park_at doubled, not reset)
+        craft60 = bat.craft_series(spec)
+        long_spec = spec.model_copy(update={
+            "steps": 120, "park_at": min(spec.park_at * 2, 118)})
+        craft120 = bat.craft_series(long_spec)
+        assert len(craft120) == 120
+        # the parked rows after the doubled park point hold the SAME
+        # crashed level as the 60-step run's parked rows
+        assert abs(
+            craft60[-1]["X_t"] - craft120[-1]["X_t"]) < 1e-9
+
+    def test_r33_pin_counterfactual_inert_bound_exonerates(self) -> None:
+        # The successor's L_f geometry: an EMA whose converged level
+        # COINCIDES with its clip floor. Position says pin; the
+        # counterfactual (relax the floor, rerun the same attack)
+        # says the clip never bound — the state ARRIVED. It must
+        # classify as regime tracking, never a 900 "edge".
+        m = MathModel(
+            candidate_id="cand-test-cf-inert",
+            variables=[
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "fast", "symbol": "L_t", "role": "state",
+                 "units": "u", "description": "fast EMA of level"},
+                {"name": "fast_next", "symbol": "L_t1", "role": "state",
+                 "units": "u", "description": "next fast EMA"},
+            ],
+            parameters=[],
+            equations=[
+                {"name": "fast",
+                 "expression": "L_t1 = clip(L_t + 0.6*(X_t - L_t),"
+                               " 100.0, 10000.0)",
+                 "description": "fast EMA, floor == crash level"},
+            ],
+            assumptions=[{"statement": "fixture assumption", "critical": True}],
+            constraints=[],
+            open_questions=["fixture open question"],
+            rationale="r33 pin-counterfactual probe fixture",
+            version=1,
+        )
+        spec = PatternSpec(kind=AttackPattern.CRASH_PARK, steps=60)
+        spec.park_shift = -0.9
+        r = AttackPatternBattery(m).run_pattern(spec)
+        assert "L_t_drawn" in r.regime_tracking
+        assert r.regime_tracking["L_t_drawn"] == 900.0
+        assert r.headline is None or r.headline < 400.0
+
+    def test_r33_pin_counterfactual_load_bearing_keeps_pin(self) -> None:
+        # The Cyclic geometry (r18): a pool whose dynamics carry it
+        # BELOW its floor — the clip is LOAD-BEARING, the state was
+        # stopped mid-drain. The counterfactual must KEEP the pin a
+        # disclosed edge; regime_tracking must not hide it.
+        from blockchain_rd_lab.simulation.adversarial import (
+            _pin_is_load_bearing,
+        )
+        m = MathModel(
+            candidate_id="cand-test-cf-load",
+            variables=[
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "pool", "symbol": "Z_t", "role": "state",
+                 "units": "u", "description": "pool"},
+                {"name": "pool_next", "symbol": "Z_t1", "role": "state",
+                 "units": "u", "description": "next pool"},
+                {"name": "tracker", "symbol": "K_t", "role": "state",
+                 "units": "u", "description": "tracker keeps run alive"},
+                {"name": "tracker_next", "symbol": "K_t1", "role": "state",
+                 "units": "u", "description": "next tracker"},
+            ],
+            parameters=[],
+            equations=[
+                {"name": "pool",
+                 "expression": "Z_t1 = clip(Z_t + 0.10*(X_t - 1000.0)"
+                               " - 5.0, 400.0, 3000.0)",
+                 "description": "level-keyed drain, floor 400"},
+                {"name": "tracker",
+                 "expression": "K_t1 = clip(K_t + 0.25*(X_t - K_t),"
+                               " 100.0, 3000.0)",
+                 "description": "tracker keeps the run non-degenerate"},
+            ],
+            assumptions=[{"statement": "fixture assumption", "critical": True}],
+            constraints=[],
+            open_questions=["fixture open question"],
+            rationale="r33 pin-counterfactual probe fixture",
+            version=1,
+        )
+        spec = PatternSpec(kind=AttackPattern.CRASH_PARK, steps=60)
+        bat = AttackPatternBattery(m)
+        assert _pin_is_load_bearing(m, spec, bat, "Z_t") is True
+        r = bat.run_pattern(spec)
+        assert "Z_t_drawn" not in r.regime_tracking
+        # the pin is a disclosed edge: pattern drew 600 (stopped AT
+        # the floor), matched base drew ~261 — the measured standing
+        # gap stays in the headline, never reclassified away
+        assert r.edge["Z_t_drawn"] == pytest.approx(339.350401, abs=1e-4)
+        assert r.headline is not None and r.headline_metric == "Z_t_drawn"
+
+    def test_r33_pin_counterfactual_fail_closed(self) -> None:
+        # Two fail-closed facts. (1) A state whose equation has NO
+        # parseable trailing clip has NO declared bounds: no pin
+        # question can even arise (the guard consults the counter-
+        # factual only when position matched a PARSED bound — and the
+        # parser and the relaxer share one regex, so a bound the
+        # guard can see is always relaxable). (2) When the relaxed
+        # counterfactual cannot RUN, the pin is KEPT — unmeasurable
+        # is never exonerated (the anti-hiding rule).
+        from blockchain_rd_lab.simulation.adversarial import (
+            _pin_is_load_bearing,
+        )
+        m = MathModel(
+            candidate_id="cand-test-cf-failclosed",
+            variables=[
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "pool", "symbol": "Q_t", "role": "state",
+                 "units": "u", "description": "pool"},
+                {"name": "pool_next", "symbol": "Q_t1", "role": "state",
+                 "units": "u", "description": "next pool"},
+            ],
+            parameters=[],
+            equations=[
+                {"name": "pool",
+                 "expression": "Q_t1 = clip(Q_t - 60.0, 400.0, 3000.0)"
+                               " + min(10.0, X_t - 1000.0)",
+                 "description": "trailing call is min, not clip"},
+            ],
+            assumptions=[{"statement": "fixture assumption",
+                          "critical": True}],
+            constraints=[],
+            open_questions=["fixture open question"],
+            rationale="r33 fail-closed probe fixture",
+            version=1,
+        )
+        spec = PatternSpec(kind=AttackPattern.CRASH_PARK, steps=60)
+        bat = AttackPatternBattery(m)
+        # (1) no parsed bounds -> no pin question -> not load-bearing
+        assert _pin_is_load_bearing(m, spec, bat, "Q_t") is False
+
+        # (2) a counterfactual that cannot run keeps the pin
+        m2 = MathModel(
+            candidate_id="cand-test-cf-failclosed2",
+            variables=[
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "pool", "symbol": "W_t", "role": "state",
+                 "units": "u", "description": "pool"},
+                {"name": "pool_next", "symbol": "W_t1", "role": "state",
+                 "units": "u", "description": "next pool"},
+                {"name": "tracker", "symbol": "V_t", "role": "state",
+                 "units": "u", "description": "tracker"},
+                {"name": "tracker_next", "symbol": "V_t1", "role": "state",
+                 "units": "u", "description": "next tracker"},
+            ],
+            parameters=[],
+            equations=[
+                {"name": "pool",
+                 "expression": "W_t1 = clip(W_t - 60.0, 400.0, 3000.0)",
+                 "description": "drain pool, floor 400"},
+                {"name": "tracker",
+                 "expression": "V_t1 = clip(V_t + 0.25*(X_t - V_t),"
+                               " 100.0, 3000.0)",
+                 "description": "tracker keeps runs non-degenerate"},
+            ],
+            assumptions=[{"statement": "fixture assumption",
+                          "critical": True}],
+            constraints=[],
+            open_questions=["fixture open question"],
+            rationale="r33 fail-closed probe fixture two",
+            version=1,
+        )
+        bat2 = AttackPatternBattery(m2)
+        # sanity: the real counterfactual convicts this pool
+        assert _pin_is_load_bearing(m2, spec, bat2, "W_t") is True
+        bat3 = AttackPatternBattery(m2)
+        with pytest.MonkeyPatch().context() as mp:
+            def broken_validate(*args, **kwargs):
+                raise RuntimeError("counterfactual unbuildable")
+
+            mp.setattr(MathModel, "model_validate", broken_validate)
+            assert _pin_is_load_bearing(m2, spec, bat3, "W_t") is True

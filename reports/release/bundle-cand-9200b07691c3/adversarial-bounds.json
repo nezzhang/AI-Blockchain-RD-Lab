@@ -1862,5 +1862,1467 @@
     "recorded_at": "2026-09-09T03:04:06.812289",
     "vacuous_count": 0,
     "worst_edge": 32.63753
+  },
+  {
+    "bounds": [
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.994014,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.994014,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "vol_oscillation",
+        "pattern_metrics": {
+          "C_t_drawn": 999.9940623532864,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn",
+          "G_t_drawn",
+          "L_f_drawn"
+        ],
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 7.3e-05,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.006044,
+          "L_f_drawn": 5.173682,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 5.173682,
+        "headline_metric": "L_f_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "wash_flow",
+        "pattern_metrics": {
+          "C_t_drawn": 999.0001213250156,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0060437756669,
+          "L_f_drawn": 5.173682422150705,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7000000087512
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.999886,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.999886,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "pump_unwind",
+        "pattern_metrics": {
+          "C_t_drawn": 999.9999338982964,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.401736,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.401736,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "shock_timing",
+        "pattern_metrics": {
+          "C_t_drawn": 999.4017842397518,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "G_t_drawn"
+        ],
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.914012,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.517496,
+          "L_f_drawn": 600.0,
+          "T_s_drawn": 541.441727,
+          "r_t_drawn": 0.054319
+        },
+        "failures": [],
+        "headline": 0.517496,
+        "headline_metric": "G_t_drawn",
+        "heal_flags": {
+          "E_t": 1.0,
+          "E_t1": 1.0,
+          "L_f1": 1.0,
+          "T_s1": 1.0
+        },
+        "in_transit": {
+          "C_t_drawn": 0.914012
+        },
+        "kind": "crash_park",
+        "pattern_metrics": {
+          "C_t_drawn": 999.9140606221341,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.5174957386364,
+          "L_f_drawn": 599.9999999999602,
+          "T_s_drawn": 541.4417270357794,
+          "r_t_drawn": 999.7543190576116
+        },
+        "regime_tracking": {
+          "L_f_drawn": 600.0,
+          "T_s_drawn": 541.441727,
+          "r_t_drawn": 0.054319
+        },
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "drift_wedges": {
+          "E_t_wedge": 330.265381,
+          "L_f_wedge": 11.723528,
+          "T_s_wedge": 97.968079
+        },
+        "edge": {
+          "C_t_drawn": 0.030032,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.030032,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "drift_creep",
+        "pattern_metrics": {
+          "C_t_drawn": 999.0300801094683,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0204648950983,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "G_t_drawn"
+        ],
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.86473,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.491508,
+          "L_f_drawn": 535.439967,
+          "T_s_drawn": 421.187421,
+          "r_t_drawn": 0.051043
+        },
+        "failures": [],
+        "headline": 0.491508,
+        "headline_metric": "G_t_drawn",
+        "heal_flags": {
+          "E_t": 1.0,
+          "E_t1": 0.999873,
+          "L_f1": 1.0,
+          "T_s1": 1.0
+        },
+        "in_transit": {
+          "C_t_drawn": 0.86473
+        },
+        "kind": "grind_harvest",
+        "pattern_metrics": {
+          "C_t_drawn": 999.8851944271915,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.4915080077201,
+          "L_f_drawn": 535.4399667069222,
+          "T_s_drawn": 421.1874205085263,
+          "r_t_drawn": 999.7510429482512
+        },
+        "regime_tracking": {
+          "L_f_drawn": 535.439967,
+          "T_s_drawn": 421.187421,
+          "r_t_drawn": 0.051043
+        },
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_cycled": 999.8267846595091,
+          "C_t_drawn": 999.5294821683282,
+          "C_t_final": 0.767820322852683,
+          "E_t_cycled": 5394.534279533097,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.465720466903,
+          "G_t_cycled": 1000.903534904578,
+          "G_t_drawn": 1000.433966118543,
+          "G_t_final": 0.03560266749210265,
+          "L_f_cycled": 882.3705216822493,
+          "L_f_drawn": 483.1326923076923,
+          "L_f_final": 916.1051370668647,
+          "T_s_cycled": 178.68280178789314,
+          "T_s_drawn": 165.8937994061606,
+          "T_s_final": 846.8952029755719,
+          "r_t_cycled": 999.7470976563897,
+          "r_t_drawn": 999.7227927718676,
+          "r_t_final": 0.3015121126543719
+        },
+        "bound_metrics": [],
+        "drift_wedges": {},
+        "edge": {
+          "C_t_cycled": 1.385463,
+          "C_t_drawn": 0.0,
+          "C_t_final": 0.103661,
+          "C_t_ratchet": 0.103661,
+          "E_t_cycled": -0.126678,
+          "E_t_drawn": 0.0,
+          "E_t_final": 0.126678,
+          "E_t_ratchet": 0.126678,
+          "G_t_cycled": 3.265948,
+          "G_t_drawn": 0.0,
+          "G_t_final": 0.149224,
+          "G_t_ratchet": 0.149224,
+          "L_f_cycled": 2806.151557,
+          "L_f_drawn": 1.548106,
+          "L_f_final": -0.000527,
+          "L_f_ratchet": 0.000527,
+          "T_s_cycled": 472.977404,
+          "T_s_drawn": 131.321241,
+          "T_s_final": -99.455722,
+          "T_s_ratchet": 99.455722,
+          "r_t_cycled": 0.098482,
+          "r_t_drawn": 0.0,
+          "r_t_final": 0.001894,
+          "r_t_ratchet": 0.001894
+        },
+        "failures": [],
+        "headline": 0.0,
+        "headline_metric": null,
+        "heal_flags": {},
+        "in_transit": {
+          "C_t_ratchet": 0.00561,
+          "E_t_ratchet": 0.004405,
+          "G_t_ratchet": 0.009237,
+          "L_f_drawn": 0.0,
+          "L_f_ratchet": 0.0,
+          "T_s_drawn": 8.370356,
+          "T_s_ratchet": 8.370356,
+          "r_t_ratchet": 2.7e-05
+        },
+        "kind": "resonance",
+        "pattern_metrics": {
+          "C_t_cycled": 1001.2122472638767,
+          "C_t_drawn": 999.5294821683282,
+          "C_t_final": 0.8714808818143507,
+          "E_t_cycled": 5394.407601105256,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.5923988947442,
+          "G_t_cycled": 1004.1694832553105,
+          "G_t_drawn": 1000.433966118543,
+          "G_t_final": 0.18482638541181462,
+          "L_f_cycled": 3688.5220789041896,
+          "L_f_drawn": 484.68079821032245,
+          "L_f_final": 916.1046099270686,
+          "T_s_cycled": 651.660206213336,
+          "T_s_drawn": 297.2150403254026,
+          "T_s_final": 747.4394807704413,
+          "r_t_cycled": 999.8455794655588,
+          "r_t_drawn": 999.7227927718676,
+          "r_t_final": 0.30340561520141823
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "calibration": "amplitude=0.02",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.118719,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.118719,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "vol_oscillation",
+        "pattern_metrics": {
+          "C_t_drawn": 999.1187675993764,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "calibration": "amplitude=0.1",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.999889,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.999889,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "vol_oscillation",
+        "pattern_metrics": {
+          "C_t_drawn": 999.9999371483686,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "G_t_drawn"
+        ],
+        "calibration": "wash_level=0.01",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": -1.4e-05,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.002307,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.002307,
+        "headline_metric": "G_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "wash_flow",
+        "pattern_metrics": {
+          "C_t_drawn": 999.0000340723025,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0023074371845,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7000000007938
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn",
+          "G_t_drawn",
+          "L_f_drawn",
+          "T_s_drawn",
+          "r_t_drawn"
+        ],
+        "calibration": "wash_level=0.04",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.000351,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.017775,
+          "L_f_drawn": 32.63753,
+          "T_s_drawn": 15.014031,
+          "r_t_drawn": 1e-06
+        },
+        "failures": [],
+        "headline": 32.63753,
+        "headline_metric": "L_f_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "wash_flow",
+        "pattern_metrics": {
+          "C_t_drawn": 999.0003996004169,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0177748777767,
+          "L_f_drawn": 32.637529642963614,
+          "T_s_drawn": 15.014030621991196,
+          "r_t_drawn": 999.700000957008
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [],
+        "calibration": "amplitude=0.02",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.337374,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.0,
+        "headline_metric": null,
+        "heal_flags": {},
+        "in_transit": {
+          "C_t_drawn": 0.337374
+        },
+        "kind": "pump_unwind",
+        "pattern_metrics": {
+          "C_t_drawn": 999.3374219008925,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "calibration": "amplitude=0.1",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.999925,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.999925,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "pump_unwind",
+        "pattern_metrics": {
+          "C_t_drawn": 999.9999731663959,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "calibration": "lag_fraction=0.1",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.186214,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.186214,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "shock_timing",
+        "pattern_metrics": {
+          "C_t_drawn": 999.1862621123367,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "calibration": "lag_fraction=0.4",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.401736,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.401736,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "shock_timing",
+        "pattern_metrics": {
+          "C_t_drawn": 999.4017842397518,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "G_t_drawn"
+        ],
+        "calibration": "park_shift=-0.3",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.224208,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.237548,
+          "L_f_drawn": 300.0,
+          "T_s_drawn": 271.425431,
+          "r_t_drawn": 0.006495
+        },
+        "failures": [],
+        "headline": 0.237548,
+        "headline_metric": "G_t_drawn",
+        "heal_flags": {},
+        "in_transit": {
+          "C_t_drawn": 0.224208
+        },
+        "kind": "crash_park",
+        "pattern_metrics": {
+          "C_t_drawn": 999.2242567378796,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.2375475791323,
+          "L_f_drawn": 299.9999999999801,
+          "T_s_drawn": 271.4254308023678,
+          "r_t_drawn": 999.7064950694407
+        },
+        "regime_tracking": {
+          "L_f_drawn": 300.0,
+          "T_s_drawn": 271.425431,
+          "r_t_drawn": 0.006495
+        },
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "G_t_drawn"
+        ],
+        "calibration": "park_shift=-0.9",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.999162,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.869161,
+          "L_f_drawn": 900.0,
+          "T_s_drawn": 791.27993,
+          "r_t_drawn": 0.113837
+        },
+        "failures": [],
+        "headline": 0.869161,
+        "headline_metric": "G_t_drawn",
+        "heal_flags": {
+          "E_t": 1.0,
+          "E_t1": 0.999995,
+          "L_f1": 1.0,
+          "T_s1": 1.0
+        },
+        "in_transit": {
+          "C_t_drawn": 0.999162
+        },
+        "kind": "crash_park",
+        "pattern_metrics": {
+          "C_t_drawn": 999.9992105971576,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.8691607277492,
+          "L_f_drawn": 899.9999999999402,
+          "T_s_drawn": 791.2799298946089,
+          "r_t_drawn": 999.8138373420707
+        },
+        "regime_tracking": {
+          "L_f_drawn": 900.0,
+          "T_s_drawn": 791.27993,
+          "r_t_drawn": 0.113837
+        },
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "calibration": "creep_rate=0.002",
+        "drift_wedges": {
+          "E_t_wedge": 113.242473,
+          "L_f_wedge": 3.708673,
+          "T_s_wedge": 32.180643
+        },
+        "edge": {
+          "C_t_drawn": 0.004775,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.004775,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "drift_creep",
+        "pattern_metrics": {
+          "C_t_drawn": 999.0048229298518,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0000482700422,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn"
+        ],
+        "calibration": "creep_rate=0.01",
+        "drift_wedges": {
+          "E_t_wedge": 786.798038,
+          "L_f_wedge": 31.751996,
+          "T_s_wedge": 249.972508
+        },
+        "edge": {
+          "C_t_drawn": 0.119644,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 0.0
+        },
+        "failures": [],
+        "headline": 0.119644,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {},
+        "in_transit": {},
+        "kind": "drift_creep",
+        "pattern_metrics": {
+          "C_t_drawn": 999.1196924255244,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0204648950983,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "G_t_drawn"
+        ],
+        "calibration": "harvest_shift=-0.3",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.133526,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.19566,
+          "L_f_drawn": 187.019942,
+          "T_s_drawn": 138.258087,
+          "r_t_drawn": 0.003693
+        },
+        "failures": [],
+        "headline": 0.19566,
+        "headline_metric": "G_t_drawn",
+        "heal_flags": {},
+        "in_transit": {
+          "C_t_drawn": 0.133526
+        },
+        "kind": "grind_harvest",
+        "pattern_metrics": {
+          "C_t_drawn": 999.1539907960936,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.1956595333794,
+          "L_f_drawn": 187.01994190624725,
+          "T_s_drawn": 138.2580869311845,
+          "r_t_drawn": 999.7036934339667
+        },
+        "regime_tracking": {
+          "L_f_drawn": 187.019942,
+          "T_s_drawn": 138.258087,
+          "r_t_drawn": 0.003693
+        },
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_drawn": 999.0204648950983,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.0,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 0.0,
+          "r_t_drawn": 999.7
+        },
+        "bound_metrics": [
+          "C_t_drawn",
+          "G_t_drawn"
+        ],
+        "calibration": "harvest_shift=-0.9",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_drawn": 0.973885,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 0.863406,
+          "L_f_drawn": 883.859992,
+          "T_s_drawn": 649.430974,
+          "r_t_drawn": 0.11396
+        },
+        "failures": [],
+        "headline": 0.973885,
+        "headline_metric": "C_t_drawn",
+        "heal_flags": {
+          "E_t": 1.0,
+          "E_t1": 1.0,
+          "L_f1": 1.0,
+          "T_s1": 1.0
+        },
+        "in_transit": {},
+        "kind": "grind_harvest",
+        "pattern_metrics": {
+          "C_t_drawn": 999.9943501846044,
+          "E_t_drawn": 0.0,
+          "G_t_drawn": 1000.8634056619254,
+          "L_f_drawn": 883.8599915075972,
+          "T_s_drawn": 649.4309740714172,
+          "r_t_drawn": 999.8139600165612
+        },
+        "regime_tracking": {
+          "L_f_drawn": 883.859992,
+          "T_s_drawn": 649.430974,
+          "r_t_drawn": 0.11396
+        },
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_cycled": 1000.2994630776825,
+          "C_t_drawn": 999.6835852165665,
+          "C_t_final": 0.8886126494787534,
+          "E_t_cycled": 5394.409370580308,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.590629419692,
+          "G_t_cycled": 1001.1071195910722,
+          "G_t_drawn": 1000.4687264565545,
+          "G_t_final": 0.16966667796323867,
+          "L_f_cycled": 1015.1296754492487,
+          "L_f_drawn": 527.0453571428571,
+          "L_f_final": 961.0389611635344,
+          "T_s_cycled": 324.1600786524576,
+          "T_s_drawn": 255.16500620244324,
+          "T_s_final": 813.8300662475712,
+          "r_t_cycled": 999.7713176318698,
+          "r_t_drawn": 999.7343770990909,
+          "r_t_final": 0.30256343368785255
+        },
+        "bound_metrics": [],
+        "calibration": "strikes=2",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_cycled": 0.910565,
+          "C_t_drawn": 0.0,
+          "C_t_final": -0.073393,
+          "C_t_ratchet": 0.073393,
+          "E_t_cycled": -0.050091,
+          "E_t_drawn": 0.0,
+          "E_t_final": 0.050091,
+          "E_t_ratchet": 0.050091,
+          "G_t_cycled": 1.17,
+          "G_t_drawn": 0.0,
+          "G_t_final": 0.049741,
+          "G_t_ratchet": 0.049741,
+          "L_f_cycled": 1038.95854,
+          "L_f_drawn": 0.323523,
+          "L_f_final": -0.0,
+          "T_s_cycled": 288.139522,
+          "T_s_drawn": 68.805564,
+          "T_s_final": -30.802112,
+          "T_s_ratchet": 30.802112,
+          "r_t_cycled": 0.051226,
+          "r_t_drawn": 0.0,
+          "r_t_final": 0.002853,
+          "r_t_ratchet": 0.002853
+        },
+        "failures": [],
+        "headline": 0.0,
+        "headline_metric": null,
+        "heal_flags": {},
+        "in_transit": {
+          "C_t_ratchet": 0.001765,
+          "E_t_ratchet": 0.001582,
+          "G_t_ratchet": 0.00286,
+          "L_f_drawn": 0.0,
+          "T_s_drawn": 2.592356,
+          "T_s_ratchet": 2.592356,
+          "r_t_ratchet": 8e-06
+        },
+        "kind": "resonance",
+        "pattern_metrics": {
+          "C_t_cycled": 1001.2100282621257,
+          "C_t_drawn": 999.6835852165665,
+          "C_t_final": 0.81521962542296,
+          "E_t_cycled": 5394.359279911545,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.6407200884547,
+          "G_t_cycled": 1002.2771197797183,
+          "G_t_drawn": 1000.4687264565545,
+          "G_t_final": 0.21940784121982354,
+          "L_f_cycled": 2054.088215674665,
+          "L_f_drawn": 527.3688804778617,
+          "L_f_final": 961.0389611619962,
+          "T_s_cycled": 612.2996002983243,
+          "T_s_drawn": 323.970570459373,
+          "T_s_final": 783.0279539019841,
+          "r_t_cycled": 999.8225434156471,
+          "r_t_drawn": 999.7343770990909,
+          "r_t_final": 0.30541614200384676
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_cycled": 999.2824585093421,
+          "C_t_drawn": 999.2824585093421,
+          "C_t_final": 0.7175414906579233,
+          "E_t_cycled": 5394.399842837393,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.6001571626068,
+          "G_t_cycled": 1000.5139999965558,
+          "G_t_drawn": 1000.3769883351007,
+          "G_t_final": -0.23997667364570097,
+          "L_f_cycled": 621.9159375,
+          "L_f_drawn": 412.5,
+          "L_f_final": 796.9159375,
+          "T_s_cycled": 87.16504799999996,
+          "T_s_drawn": 87.16504799999996,
+          "T_s_final": 912.834952,
+          "r_t_cycled": 999.7086048669273,
+          "r_t_drawn": 999.7086048669272,
+          "r_t_final": 0.2913951330727404
+        },
+        "bound_metrics": [
+          "E_t_ratchet"
+        ],
+        "calibration": "strikes=8",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_cycled": 1.397283,
+          "C_t_drawn": 0.038834,
+          "C_t_final": 0.160568,
+          "C_t_ratchet": 0.160568,
+          "E_t_cycled": 0.000217,
+          "E_t_drawn": 0.0,
+          "E_t_final": -0.000217,
+          "E_t_ratchet": 0.000217,
+          "G_t_cycled": 6.294621,
+          "G_t_drawn": 0.010886,
+          "G_t_final": 0.182072,
+          "G_t_ratchet": 0.182072,
+          "L_f_cycled": 5437.954975,
+          "L_f_drawn": 18.201577,
+          "L_f_final": -0.761709,
+          "L_f_ratchet": 0.761709,
+          "T_s_cycled": 615.90376,
+          "T_s_drawn": 178.034813,
+          "T_s_final": -167.901549,
+          "T_s_ratchet": 167.901549,
+          "r_t_cycled": 0.133934,
+          "r_t_drawn": 0.002345,
+          "r_t_final": 0.007424,
+          "r_t_ratchet": 0.007424
+        },
+        "failures": [],
+        "headline": 0.000217,
+        "headline_metric": "E_t_ratchet",
+        "heal_flags": {},
+        "in_transit": {
+          "C_t_drawn": 0.007754,
+          "C_t_ratchet": 0.007754,
+          "G_t_drawn": 0.015505,
+          "G_t_ratchet": 0.015505,
+          "L_f_drawn": 0.0,
+          "L_f_ratchet": 0.0,
+          "T_s_drawn": 14.130868,
+          "T_s_ratchet": 14.130868,
+          "r_t_drawn": 3.4e-05,
+          "r_t_ratchet": 3.4e-05
+        },
+        "kind": "resonance",
+        "pattern_metrics": {
+          "C_t_cycled": 1000.679741871776,
+          "C_t_drawn": 999.3212929335232,
+          "C_t_final": 0.8781091328928031,
+          "E_t_cycled": 5394.400060251285,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.5999397487145,
+          "G_t_cycled": 1006.8086206643989,
+          "G_t_drawn": 1000.3878742832874,
+          "G_t_final": -0.05790488346649695,
+          "L_f_cycled": 6059.870912428692,
+          "L_f_drawn": 430.70157731867334,
+          "L_f_final": 796.1542281244965,
+          "T_s_cycled": 703.0688079316967,
+          "T_s_drawn": 265.1998610454889,
+          "T_s_final": 744.933402780206,
+          "r_t_cycled": 999.8425385433443,
+          "r_t_drawn": 999.7109495757488,
+          "r_t_final": 0.2988190388672286
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_cycled": 999.0,
+          "C_t_drawn": 999.0,
+          "C_t_final": 1.0,
+          "E_t_cycled": 5394.382833917612,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.6171660823882,
+          "G_t_cycled": 1000.0,
+          "G_t_drawn": 1000.0,
+          "G_t_final": 0.0,
+          "L_f_cycled": 330.0,
+          "L_f_drawn": 330.0,
+          "L_f_final": 670.0,
+          "T_s_cycled": 30.0,
+          "T_s_drawn": 30.0,
+          "T_s_final": 970.0,
+          "r_t_cycled": 999.7,
+          "r_t_drawn": 999.7,
+          "r_t_final": 0.3
+        },
+        "bound_metrics": [
+          "E_t_ratchet"
+        ],
+        "calibration": "strikes=16",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_cycled": 0.983771,
+          "C_t_drawn": 0.155924,
+          "C_t_final": -0.026028,
+          "C_t_ratchet": 0.026028,
+          "E_t_cycled": 0.000953,
+          "E_t_drawn": 0.0,
+          "E_t_final": -0.000953,
+          "E_t_ratchet": 0.000953,
+          "G_t_cycled": 9.812692,
+          "G_t_drawn": 0.309677,
+          "G_t_final": 0.148533,
+          "G_t_ratchet": 0.148533,
+          "L_f_cycled": 8754.387515,
+          "L_f_drawn": 33.083738,
+          "L_f_final": -33.083738,
+          "L_f_ratchet": 33.083738,
+          "T_s_cycled": 805.698834,
+          "T_s_drawn": 193.506169,
+          "T_s_final": -187.735275,
+          "T_s_ratchet": 187.735275,
+          "r_t_cycled": 0.099012,
+          "r_t_drawn": 0.005211,
+          "r_t_final": 0.000475,
+          "r_t_ratchet": 0.000475
+        },
+        "failures": [],
+        "headline": 0.000953,
+        "headline_metric": "E_t_ratchet",
+        "heal_flags": {},
+        "in_transit": {
+          "C_t_drawn": 0.006103,
+          "C_t_ratchet": 0.006103,
+          "G_t_drawn": 0.017189,
+          "G_t_ratchet": 0.017189,
+          "L_f_drawn": 0.0,
+          "L_f_ratchet": 0.0,
+          "T_s_drawn": 15.800107,
+          "T_s_ratchet": 15.800107,
+          "r_t_drawn": 2.1e-05,
+          "r_t_ratchet": 2.1e-05
+        },
+        "kind": "resonance",
+        "pattern_metrics": {
+          "C_t_cycled": 999.9837705711665,
+          "C_t_drawn": 999.1559237610061,
+          "C_t_final": 0.9739721665923987,
+          "E_t_cycled": 5394.38378697441,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.6162130255897,
+          "G_t_cycled": 1009.8126922240472,
+          "G_t_drawn": 1000.3096774424241,
+          "G_t_final": 0.14853258814270903,
+          "L_f_cycled": 9084.387515188257,
+          "L_f_drawn": 363.08373820366614,
+          "L_f_final": 636.9162617963339,
+          "T_s_cycled": 835.6988343330972,
+          "T_s_drawn": 223.50616878077926,
+          "T_s_final": 782.2647247926777,
+          "r_t_cycled": 999.7990121310154,
+          "r_t_drawn": 999.7052108925407,
+          "r_t_final": 0.3004750881216131
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_cycled": 999.1872999140674,
+          "C_t_drawn": 999.1187211977166,
+          "C_t_final": 0.949857518634232,
+          "E_t_cycled": 5394.398240691082,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.6017593089177,
+          "G_t_cycled": 1000.4270964562605,
+          "G_t_drawn": 1000.204367310928,
+          "G_t_final": 0.018361834404586518,
+          "L_f_cycled": 441.18526084112455,
+          "L_f_drawn": 241.5663461538461,
+          "L_f_final": 958.0525685334323,
+          "T_s_cycled": 91.86156329591006,
+          "T_s_drawn": 85.10196035041486,
+          "T_s_final": 921.6576425950803,
+          "r_t_cycled": 999.7050783070976,
+          "r_t_drawn": 999.7024549424567,
+          "r_t_final": 0.30016842218405
+        },
+        "bound_metrics": [],
+        "calibration": "strike_shift=-0.3",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_cycled": 0.259722,
+          "C_t_drawn": 0.0,
+          "C_t_final": 0.027315,
+          "C_t_ratchet": 0.027315,
+          "E_t_cycled": -0.01352,
+          "E_t_drawn": 0.0,
+          "E_t_final": 0.01352,
+          "E_t_ratchet": 0.01352,
+          "G_t_cycled": 1.426014,
+          "G_t_drawn": 0.0,
+          "G_t_final": 0.060037,
+          "G_t_ratchet": 0.060037,
+          "L_f_cycled": 1403.075779,
+          "L_f_drawn": 0.774053,
+          "L_f_final": -0.000264,
+          "L_f_ratchet": 0.000264,
+          "T_s_cycled": 236.319796,
+          "T_s_drawn": 63.665821,
+          "T_s_final": -48.048462,
+          "T_s_ratchet": 48.048462,
+          "r_t_cycled": 0.00817,
+          "r_t_drawn": 0.0,
+          "r_t_final": 8.8e-05,
+          "r_t_ratchet": 8.8e-05
+        },
+        "failures": [],
+        "headline": 0.0,
+        "headline_metric": null,
+        "heal_flags": {},
+        "in_transit": {
+          "C_t_ratchet": 0.001266,
+          "E_t_ratchet": 0.000428,
+          "G_t_ratchet": 0.004382,
+          "L_f_drawn": 0.0,
+          "L_f_ratchet": 0.0,
+          "T_s_drawn": 4.043837,
+          "T_s_ratchet": 4.043837,
+          "r_t_ratchet": 3e-06
+        },
+        "kind": "resonance",
+        "pattern_metrics": {
+          "C_t_cycled": 999.4470217610158,
+          "C_t_drawn": 999.1187211977166,
+          "C_t_final": 0.9771725409333373,
+          "E_t_cycled": 5394.384721009885,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.6152789901153,
+          "G_t_cycled": 1001.8531108867219,
+          "G_t_drawn": 1000.204367310928,
+          "G_t_final": 0.07839930876772498,
+          "L_f_cycled": 1844.2610394520948,
+          "L_f_drawn": 242.34039910516128,
+          "L_f_final": 958.0523049635343,
+          "T_s_cycled": 328.1813590573588,
+          "T_s_drawn": 148.76778171598824,
+          "T_s_final": 873.609180782543,
+          "r_t_cycled": 999.7132487361989,
+          "r_t_drawn": 999.7024549424567,
+          "r_t_final": 0.30025623993964334
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      },
+      {
+        "base_metrics": {
+          "C_t_cycled": 1000.0403551435037,
+          "C_t_drawn": 999.7241079962547,
+          "C_t_final": 0.5921391509942532,
+          "E_t_cycled": 5394.743377968627,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.2691242139501,
+          "G_t_cycled": 1001.4177040967905,
+          "G_t_drawn": 1000.6974714708368,
+          "G_t_final": 0.022761155116833513,
+          "L_f_cycled": 1323.555782523374,
+          "L_f_drawn": 724.6990384615385,
+          "L_f_final": 874.157705600297,
+          "T_s_cycled": 232.35831525053118,
+          "T_s_drawn": 218.34181126153862,
+          "T_s_final": 795.6746927274539,
+          "r_t_cycled": 999.7868367987701,
+          "r_t_drawn": 999.7425693093804,
+          "r_t_final": 0.3016981800092018
+        },
+        "bound_metrics": [
+          "C_t_drawn",
+          "C_t_ratchet"
+        ],
+        "calibration": "strike_shift=-0.9",
+        "drift_wedges": {},
+        "edge": {
+          "C_t_cycled": 3.018268,
+          "C_t_drawn": 0.009579,
+          "C_t_final": 0.037677,
+          "C_t_ratchet": 0.037677,
+          "E_t_cycled": -0.095397,
+          "E_t_drawn": 0.0,
+          "E_t_final": 0.207161,
+          "E_t_ratchet": 0.207161,
+          "G_t_cycled": 5.6751,
+          "G_t_drawn": 0.0,
+          "G_t_final": 0.297903,
+          "G_t_ratchet": 0.297903,
+          "L_f_cycled": 4209.227336,
+          "L_f_drawn": 2.322159,
+          "L_f_final": -0.000791,
+          "L_f_ratchet": 0.000791,
+          "T_s_cycled": 681.65098,
+          "T_s_drawn": 216.41943,
+          "T_s_final": -166.884601,
+          "T_s_ratchet": 166.884601,
+          "r_t_cycled": 0.389041,
+          "r_t_drawn": 0.002886,
+          "r_t_final": 0.015142,
+          "r_t_ratchet": 0.015142
+        },
+        "failures": [],
+        "headline": 0.037677,
+        "headline_metric": "C_t_ratchet",
+        "heal_flags": {},
+        "in_transit": {
+          "E_t_ratchet": 0.018528,
+          "G_t_ratchet": 0.015743,
+          "L_f_drawn": 0.0,
+          "L_f_ratchet": 0.0,
+          "T_s_drawn": 14.04528,
+          "T_s_ratchet": 14.04528,
+          "r_t_drawn": 0.0001,
+          "r_t_ratchet": 0.0001
+        },
+        "kind": "resonance",
+        "pattern_metrics": {
+          "C_t_cycled": 1003.0586229449244,
+          "C_t_drawn": 999.7336867942297,
+          "C_t_final": 0.6298161319034785,
+          "E_t_cycled": 5394.647980681632,
+          "E_t_drawn": 0.0,
+          "E_t_final": 1005.476284783046,
+          "G_t_cycled": 1007.0928045042073,
+          "G_t_drawn": 1000.6974714708368,
+          "G_t_final": 0.32066366328619045,
+          "L_f_cycled": 5532.783118356284,
+          "L_f_drawn": 727.0211973154837,
+          "L_f_final": 874.1569148906028,
+          "T_s_cycled": 914.0092957446518,
+          "T_s_drawn": 434.76124085230026,
+          "T_s_final": 628.7900913110041,
+          "r_t_cycled": 1000.1758773715912,
+          "r_t_drawn": 999.7454548703878,
+          "r_t_final": 0.31683996403378295
+        },
+        "regime_tracking": {},
+        "transient_recovered": {},
+        "vacuous": false
+      }
+    ],
+    "experiment_id": "exp-3dc9a3dd8ee6",
+    "parameters": {
+      "audit": "2026-09-14 F2 fix + r33 pin counterfactual",
+      "battery": "attack_patterns_v8_pin_counterfactual",
+      "round": 33,
+      "sweep": true
+    },
+    "recorded_at": "2026-09-14T18:46:01.159591",
+    "vacuous_count": 0,
+    "worst_edge": 32.63753
   }
 ]
