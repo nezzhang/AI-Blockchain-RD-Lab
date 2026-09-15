@@ -13,7 +13,8 @@ from __future__ import annotations
 from blockchain_rd_lab.agents.providers import MockLLMProvider
 from blockchain_rd_lab.database import LabDatabase
 from blockchain_rd_lab.research import PriorArtReport
-from blockchain_rd_lab.research.service import ResearchService
+from blockchain_rd_lab.research.service import ResearchService, SourceVerifier, VerifiedSource
+from blockchain_rd_lab.schemas import utcnow
 
 
 class _Cid:
@@ -86,9 +87,45 @@ def test_sourceless_report_persists_evidence(tmp_path) -> None:
     rows = db.list_prior_art(cand.id)
     assert rows, "sourceless PriorArtReport must still record its evidence"
     assert len(rows) == 1
-    assert rows[0]["similarity_class"] == "adjacent_mechanism"
+    assert rows[0]["similarity_class"] == "insufficient_evidence"
     assert "oracle fee fallback" in rows[0]["query"]
     assert "no substantially similar" in rows[0]["finding"]
+
+
+class _VerifiedFixtureSources(SourceVerifier):
+    """Deterministic test verifier; production uses network retrieval."""
+
+    def verify(self, source):
+        return VerifiedSource(
+            title=source.title,
+            url=source.url,
+            source_type=source.source_type,
+            content_sha256="a" * 64,
+            retrieved_at=utcnow(),
+        )
+
+
+def test_fabricated_source_is_not_persisted(tmp_path) -> None:
+    db = LabDatabase(tmp_path / "lab.db")
+    db.create_all()
+    service = ResearchService(MockLLMProvider(), db)
+    report = PriorArtReport.model_validate({
+        "novelty_class": "adjacent_mechanism",
+        "search_queries": ["fabricated source"],
+        "sources": [{"title": "Fake", "url": "fixture://fake", "source_type": "web"}],
+        "findings": ["unverified claim"],
+        "conclusion": (
+            "No substantially similar implementation was identified in the "
+            "searched sources."
+        ),
+    })
+    effective = service._persist_prior_art("missing-candidate", report)
+    rows = db.list_prior_art("missing-candidate")
+    assert effective.novelty_class.value == "insufficient_evidence"
+    assert len(rows) == 1
+    assert rows[0]["similarity_class"] == "insufficient_evidence"
+    assert rows[0]["source_id"] is None
+    assert db.list_sources() == []
 
 
 def test_report_with_sources_persists_one_row_per_source(tmp_path) -> None:
@@ -133,10 +170,13 @@ def test_report_with_sources_persists_one_row_per_source(tmp_path) -> None:
         }
     )
     provider = MockLLMProvider()
-    service = ResearchService(provider, db)
+    service = ResearchService(provider, db, source_verifier=_VerifiedFixtureSources())
     service._persist_prior_art(cand.id, report)
 
     rows = db.list_prior_art(cand.id)
     assert len(rows) == 2
     assert all(r["query"].startswith("oracle fee fallback") for r in rows)
     assert {r["source_id"] for r in rows} != {None}
+    sources = db.list_sources()
+    assert all(source["verification_status"] == "verified" for source in sources)
+    assert all(source["content_sha256"] == "a" * 64 for source in sources)

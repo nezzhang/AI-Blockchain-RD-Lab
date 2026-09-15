@@ -322,6 +322,29 @@ class TestSimulationService:
         assert outcome["monte_carlo"]["trials"] == 5
         assert len(outcome["sweep"]) == 3
 
+    def test_repeated_same_version_runs_are_append_only(self, memory_db):
+        """§21: changing execution inputs must retain both v1 runs."""
+        cand = self._prepared(memory_db)
+        first_service = SimulationService(memory_db, seed=7, steps=30)
+        first_service.simulate_candidate(cand, mc_trials=3, sweep_points=2)
+        second_service = SimulationService(memory_db, seed=11, steps=35)
+        second_service.simulate_candidate(cand, mc_trials=4, sweep_points=3)
+
+        all_ids = {e.experiment_id for e in memory_db.iter_experiments(cand.id)}
+        assert all_ids == {
+            f"{cand.id}-scenarios",
+            f"{cand.id}-montecarlo",
+            f"{cand.id}-sweep",
+            f"{cand.id}-scenarios-run-2",
+            f"{cand.id}-montecarlo-run-2",
+            f"{cand.id}-sweep-run-2",
+        }
+        second = [
+            e for e in memory_db.iter_experiments(cand.id)
+            if e.experiment_id.endswith("run-2")
+        ]
+        assert {e.seed for e in second} == {11}
+
     def test_resimulation_of_new_version_is_append_only(self, memory_db):
         """§21: re-simulating a patched model v2 must not clobber v1 runs."""
         cand = self._prepared(memory_db)

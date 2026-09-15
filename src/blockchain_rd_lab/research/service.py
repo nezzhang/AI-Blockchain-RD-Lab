@@ -11,9 +11,14 @@ very similar), keep the best N by novelty then coherence (§7: 100→20).
 
 from __future__ import annotations
 
+import hashlib
 import json
+from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 
 from blockchain_rd_lab.agents.base import LLMError, LLMProvider
 from blockchain_rd_lab.database import LabDatabase
@@ -37,7 +42,49 @@ from blockchain_rd_lab.schemas import (
     NoveltyClass,
     ScoreBreakdown,
     novelty_score_for,
+    utcnow,
 )
+
+
+@dataclass(frozen=True)
+class VerifiedSource:
+    """Retrieved source provenance accepted as prior-art evidence."""
+
+    title: str
+    url: str
+    source_type: str
+    content_sha256: str
+    retrieved_at: datetime
+
+
+class SourceVerifier:
+    """Fetch and hash cited sources before they enter the evidence store."""
+
+    max_bytes = 1_000_000
+    timeout_seconds = 5
+
+    def verify(self, source: Any) -> VerifiedSource | None:
+        parsed = urlparse(source.url)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            return None
+        try:
+            request = Request(
+                source.url,
+                headers={"User-Agent": "AI-Blockchain-RD-Lab/1.0"},
+            )
+            with urlopen(request, timeout=self.timeout_seconds) as response:
+                content = response.read(self.max_bytes + 1)
+            if len(content) > self.max_bytes:
+                return None
+        except Exception:
+            return None
+        return VerifiedSource(
+            title=source.title,
+            url=source.url,
+            source_type=source.source_type,
+            content_sha256=hashlib.sha256(content).hexdigest(),
+            retrieved_at=utcnow(),
+        )
 
 
 class ResearchService:
@@ -48,10 +95,12 @@ class ResearchService:
         provider: LLMProvider,
         database: LabDatabase,
         artifacts_dir: Path | None = None,
+        source_verifier: SourceVerifier | None = None,
     ) -> None:
         self.provider = provider
         self.database = database
         self.artifacts_dir = artifacts_dir
+        self.source_verifier = source_verifier or SourceVerifier()
         self.prior_art_agent = PriorArtAgent(provider, database=database)
         self.economist_agent = EconomistAgent(provider, database=database)
         self.market_agent = MarketAgent(provider, database=database)
@@ -72,8 +121,7 @@ class ResearchService:
         try:
             report, _ = self.prior_art_agent.execute(brief)
             assert isinstance(report, PriorArtReport)
-            result.prior_art = report
-            self._persist_prior_art(candidate.id, report)
+            result.prior_art = self._persist_prior_art(candidate.id, report)
         except LLMError as exc:
             result.errors.append(f"prior_art: {exc}")
 
@@ -138,6 +186,10 @@ class ResearchService:
                 rationale=eco.summary,
                 evidence_level=eco.evidence_level.value,
             )
+            # The Economist's fatal bit is an agent hypothesis, not
+            # deterministic confirmation (§2, §20). Preserve the concern as
+            # evidence for later formalization/simulation/red-team stages,
+            # but never reject or mark it confirmed on the LLM assertion alone.
             fatal_concerns = [c for c in eco.concerns if c.fatal]
             for concern in fatal_concerns:
                 candidate.fatal_flaws.append(
@@ -145,12 +197,10 @@ class ResearchService:
                         flaw_id=f"ff-{candidate.id}-{concern.topic[:24]}",
                         category="economic",
                         description=concern.note,
-                        confirmed=True,
+                        confirmed=False,
                         identified_by="economist",
                     )
                 )
-                result.rejected = True
-                result.rejection_reason = f"fatal economic concern: {concern.topic}"
 
         mkt = result.market
         if mkt is not None:
@@ -173,7 +223,7 @@ class ResearchService:
         ):
             candidate.transition(CandidateStatus.REJECTED)
 
-    def _persist_prior_art(self, candidate_id: str, report: PriorArtReport) -> None:
+    def _persist_prior_art(self, candidate_id: str, report: PriorArtReport) -> PriorArtReport:
         """Store queries, sources, findings, similar mechanisms (§12, §22).
 
         One row per cited source; a report with NO sources still records
@@ -181,18 +231,41 @@ class ResearchService:
         evidence trail must not vanish because the search cited nothing
         (the r8 gap: sourceless reports persisted zero rows silently).
         """
+        agent_novelty_class = report.novelty_class.value
+        verified_sources = [
+            verified
+            for source in report.sources
+            if (verified := self.source_verifier.verify(source)) is not None
+        ]
+        if not verified_sources and report.novelty_class is not NoveltyClass.E:
+            # A classification without retrieved evidence is not evidence.
+            report = report.model_copy(update={
+                "novelty_class": NoveltyClass.E,
+                "confidence": 0.0,
+                "conclusion": "Insufficient evidence: no cited source was retrieved and verified.",
+            })
         finding = json.dumps(
             {
                 "conclusion": report.conclusion,
                 "similar_mechanisms": [m.model_dump() for m in report.similar_mechanisms],
                 "findings": report.findings,
                 "novelty_class": report.novelty_class.value,
+                "agent_novelty_class": agent_novelty_class,
+                "verified_sources": [
+                    {
+                        "url": source.url,
+                        "content_sha256": source.content_sha256,
+                        "retrieved_at": source.retrieved_at.isoformat(),
+                    }
+                    for source in verified_sources
+                ],
+                "unverified_source_count": len(report.sources) - len(verified_sources),
             },
             default=str,
         )
         query = "; ".join(report.search_queries) or "(none)"
         source_ids: list[int | None] = [
-            self._save_source_ref(source) for source in report.sources
+            self._save_source_ref(source) for source in verified_sources
         ] or [None]
         for source_id in source_ids:
             self.database.save_prior_art(
@@ -202,14 +275,18 @@ class ResearchService:
                 similarity_class=report.novelty_class.value,
                 source_id=source_id,
             )
+        return report
 
-    def _save_source_ref(self, source: Any) -> int | None:
-        """Idempotently persist one research source; None on failure."""
+    def _save_source_ref(self, source: VerifiedSource) -> int | None:
+        """Persist one verified source with its retrieval provenance."""
         try:
             return self.database.save_source(
                 title=source.title,
-                url=source.url or f"unspecified://{source.title[:64]}",
+                url=source.url,
                 source_type=source.source_type,
+                content_sha256=source.content_sha256,
+                retrieved_at=source.retrieved_at,
+                verification_status="verified",
             )
         except Exception:
             return None

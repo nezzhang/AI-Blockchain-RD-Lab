@@ -64,6 +64,9 @@ class SupplyDriver:
     name: str
     signal_source: str
     supply_fn: SupplyFunction = field(compare=False)
+    # Deterministic states used by scoring to test documented supply paths.
+    burn_probe_states: tuple[dict[str, float], ...] = ()
+    mint_probe_states: tuple[dict[str, float], ...] = ()
     manipulation_vectors: tuple[str, ...] = ()
     compatibility_tags: frozenset[str] = frozenset()
     offline_scoreable: bool = True
@@ -204,6 +207,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="market-volume",
         signal_source="on-chain DEX volume oracle",
         supply_fn=_market_supply,
+        burn_probe_states=({"trading_volume": 0.0, "volume_baseline": 1.0},),
+        mint_probe_states=({"trading_volume": 2.0, "volume_baseline": 1.0},),
         manipulation_vectors=(
             "wash trading inflates volume signal",
             "flash-loan volume spikes trigger false mint",
@@ -215,6 +220,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="usage-growth",
         signal_source="unique sender count per epoch",
         supply_fn=_usage_supply,
+        burn_probe_states=({"active_users": 0.0, "prev_active_users": 100.0},),
+        mint_probe_states=({"active_users": 200.0, "prev_active_users": 100.0},),
         manipulation_vectors=(
             "sybil accounts inflate user count",
             "dust transactions create false activity",
@@ -226,6 +233,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="counter-cyclical-gdp",
         signal_source="GDP growth oracle (World Bank / IMF feed)",
         supply_fn=_economic_supply,
+        burn_probe_states=({"gdp_growth_rate": 0.5},),
+        mint_probe_states=({"gdp_growth_rate": -0.5},),
         manipulation_vectors=(
             "GDP revision lag creates stale signal",
             "government data manipulation",
@@ -238,6 +247,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="corridor-population",
         signal_source="UN population estimates for served corridors",
         supply_fn=_demographic_supply,
+        burn_probe_states=({"corridor_population": 50.0, "prev_corridor_population": 100.0},),
+        mint_probe_states=({"corridor_population": 150.0, "prev_corridor_population": 100.0},),
         manipulation_vectors=(
             "population data revised retroactively",
             "demographic collapse edge case (§25)",
@@ -250,6 +261,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="productivity-deflation",
         signal_source="transactions-per-second efficiency metric",
         supply_fn=_productivity_supply,
+        burn_probe_states=({"productivity_index": 2.0, "prev_productivity_index": 1.0},),
+        mint_probe_states=({"productivity_index": 0.5, "prev_productivity_index": 1.0},),
         manipulation_vectors=(
             "artificial load inflation to suppress burn",
         ),
@@ -260,6 +273,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="renewable-energy-pow",
         signal_source="verified renewable energy production oracle",
         supply_fn=_energy_supply,
+        burn_probe_states=({"renewable_energy_mwh": 0.0, "energy_target_mwh": 1.0},),
+        mint_probe_states=({"renewable_energy_mwh": 2.0, "energy_target_mwh": 1.0},),
         manipulation_vectors=(
             "oracle reports unverifiable off-grid energy",
             "double-counting across chains",
@@ -272,6 +287,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="climate-risk-burn",
         signal_source="climate risk index oracle",
         supply_fn=_climate_supply,
+        burn_probe_states=({"climate_risk_index": 1.0},),
+        mint_probe_states=({"climate_risk_index": -1.0},),
         manipulation_vectors=(
             "index provider capture",
             "geographic cherry-picking",
@@ -284,6 +301,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="commodity-basket-peg",
         signal_source="basket-of-commodities price oracle",
         supply_fn=_commodity_supply,
+        burn_probe_states=({"commodity_basket_price": 50.0, "commodity_target_price": 100.0},),
+        mint_probe_states=({"commodity_basket_price": 150.0, "commodity_target_price": 100.0},),
         manipulation_vectors=(
             "oracle front-running on basket rebalance",
             "single-commodity flash crash cascades",
@@ -296,6 +315,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="claims-ratio-mint",
         signal_source="on-chain insurance claims pool ratio",
         supply_fn=_insurance_supply,
+        burn_probe_states=(),
+        mint_probe_states=({"claims_ratio": 0.8},),
         manipulation_vectors=(
             "false claims inflate ratio",
             "collusion between claimant and assessor",
@@ -307,6 +328,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="uncertainty-mint",
         signal_source="prediction market resolution confidence",
         supply_fn=_prediction_supply,
+        burn_probe_states=({"prediction_confidence": 0.9},),
+        mint_probe_states=({"prediction_confidence": 0.1},),
         manipulation_vectors=(
             "whale manipulation of prediction markets",
             "oracle dispute stalling resolution",
@@ -318,6 +341,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="metcalfe-growth",
         signal_source="unique node count per epoch",
         supply_fn=_network_supply,
+        burn_probe_states=({"network_nodes": 5.0, "prev_network_nodes": 10.0},),
+        mint_probe_states=({"network_nodes": 100.0, "prev_network_nodes": 10.0},),
         manipulation_vectors=(
             "eclipse attacks hide real node count",
             "virtual nodes inflate metcalfe signal",
@@ -329,6 +354,8 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="ai-throughput-deflation",
         signal_source="AI agent operation count per epoch",
         supply_fn=_ai_supply,
+        burn_probe_states=({"ai_throughput_ops": 100.0, "ai_baseline_ops": 1.0},),
+        mint_probe_states=({"ai_throughput_ops": 0.0, "ai_baseline_ops": 1.0},),
         manipulation_vectors=(
             "no-op AI calls inflate throughput",
             "agent collusion to suppress burn rate",
@@ -340,6 +367,14 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="usage-network-hybrid",
         signal_source="composite: unique senders + node count",
         supply_fn=_hybrid_supply,
+        burn_probe_states=({
+            "active_users": 0.0, "prev_active_users": 100.0,
+            "network_nodes": 5.0, "prev_network_nodes": 10.0,
+        },),
+        mint_probe_states=({
+            "active_users": 200.0, "prev_active_users": 100.0,
+            "network_nodes": 100.0, "prev_network_nodes": 10.0,
+        },),
         manipulation_vectors=(
             "inherits sybil risk from usage driver",
             "inherits virtual-node risk from network driver",

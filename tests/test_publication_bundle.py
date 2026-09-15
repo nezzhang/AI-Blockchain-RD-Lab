@@ -161,6 +161,19 @@ class TestRound24PublicationBundle:
         assert "cand-bundle" in txt
         assert "explicit §27 subject" in txt
 
+    def test_explicit_non_finalist_subject_is_rejected(self, tmp_path: Path) -> None:
+        db = LabDatabase(tmp_path / "non-finalist.db")
+        db.create_all()
+        candidate = Candidate(
+            id="cand-not-finalist",
+            name="Not a Finalist",
+            category="market",
+            description="candidate",
+            core_mechanism="rule",
+        )
+        db.save_candidate(candidate)
+        assert ReleasePackageBuilder(db).build(candidate_id=candidate.id) is None
+
     def test_bundle_hashes_are_stable(self, bundle_dir: Path) -> None:
         """Re-reading the same content yields the same hashes — the
         manifest stays verifiable after the fact (what the human's

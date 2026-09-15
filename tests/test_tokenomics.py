@@ -12,6 +12,7 @@ Probes cover:
 from __future__ import annotations
 
 import math
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -26,6 +27,8 @@ from blockchain_rd_lab.tokenomics.combinator import (
 from blockchain_rd_lab.tokenomics.report import build_token_report
 from blockchain_rd_lab.tokenomics.scoring import (
     TokenScore,
+    _supply_fn_has_burn_path,
+    _supply_fn_has_mint_path,
     rank_designs,
     score_design,
 )
@@ -204,6 +207,34 @@ class TestScoring:
         ranked = rank_designs(designs)
         overalls = [s.overall for _, s in ranked]
         assert overalls == sorted(overalls, reverse=True)
+
+    def test_oracle_manipulation_badness_lowers_overall(self):
+        base = get_driver("usage-growth")
+        assert base is not None
+        low_risk = replace(
+            base, name="usage-low-risk", manipulation_vectors=()
+        )
+        high_risk = replace(
+            base,
+            name="usage-high-risk",
+            manipulation_vectors=("a", "b", "c", "d"),
+        )
+        low = score_design(TokenDesign("low", "Low", low_risk, 1, 0.5))
+        high = score_design(TokenDesign("high", "High", high_risk, 1, 0.5))
+        assert low.oracle_manipulability < high.oracle_manipulability
+        assert low.overall > high.overall
+
+    def test_driver_probe_states_match_supply_paths(self):
+        """Every registry driver is scored using its own declared states."""
+        for driver in DRIVER_REGISTRY:
+            assert _supply_fn_has_burn_path(driver) == any(
+                driver.supply_fn(state) < -1e-9
+                for state in driver.burn_probe_states
+            )
+            assert _supply_fn_has_mint_path(driver) == any(
+                driver.supply_fn(state) > 1e-9
+                for state in driver.mint_probe_states
+            )
 
 
 # ---------------------------------------------------------------------------

@@ -42,7 +42,7 @@ class TokenScore:
 _WEIGHTS = {
     "dilution_resistance": 0.30,
     "death_spiral_resistance": 0.25,
-    "oracle_manipulability": 0.25,   # inverted in composite (lower = better)
+    "oracle_manipulability": 0.25,   # badness, subtracted in composite
     "game_theory_stability": 0.20,
 }
 
@@ -76,18 +76,8 @@ def _supply_fn_is_bounded(driver: SupplyDriver) -> bool:
 
 
 def _supply_fn_has_burn_path(driver: SupplyDriver) -> bool:
-    """Can this driver produce negative (burn) pressure? A driver
-    that only mints has no deflationary mechanism → death spiral risk
-    when demand drops."""
-    test_states = [
-        {"trading_volume": 0.0, "volume_baseline": 1.0},
-        {"active_users": 0.0, "prev_active_users": 100.0},
-        {"gdp_growth_rate": 0.5},
-        {"productivity_index": 2.0, "prev_productivity_index": 1.0},
-        {"ai_throughput_ops": 100.0, "ai_baseline_ops": 1.0},
-        {"prediction_confidence": 0.9},
-    ]
-    for state in test_states:
+    """Can this driver produce negative (burn) pressure?"""
+    for state in driver.burn_probe_states:
         try:
             val = driver.supply_fn(state)
             if val < -1e-9:
@@ -99,15 +89,7 @@ def _supply_fn_has_burn_path(driver: SupplyDriver) -> bool:
 
 def _supply_fn_has_mint_path(driver: SupplyDriver) -> bool:
     """Can this driver produce positive (mint) pressure?"""
-    test_states = [
-        {"trading_volume": 100.0, "volume_baseline": 1.0},
-        {"active_users": 200.0, "prev_active_users": 100.0},
-        {"gdp_growth_rate": -0.5},
-        {"network_nodes": 100.0, "prev_network_nodes": 10.0},
-        {"claims_ratio": 0.8},
-        {"prediction_confidence": 0.1},
-    ]
-    for state in test_states:
+    for state in driver.mint_probe_states:
         try:
             val = driver.supply_fn(state)
             if val > 1e-9:
@@ -150,11 +132,11 @@ def score_design(design: TokenDesign) -> TokenScore:
     if has_mint:
         death_spiral += 5.0
 
-    # Oracle manipulability: how many known attack surfaces exist?
-    # 0 vectors = 10 (best), each vector subtracts 2.5, floor at 0
-    oracle_manip = max(0.0, 10.0 - n_vectors * 2.5)
+    # Oracle manipulability is a badness score: more vectors = higher
+    # risk. Live-oracle drivers carry at least moderate inherent risk.
+    oracle_manip = min(10.0, n_vectors * 2.5)
     if not d.offline_scoreable:
-        oracle_manip = min(oracle_manip, 5.0)  # cap: live oracles carry inherent risk
+        oracle_manip = max(oracle_manip, 5.0)
 
     # Game theory stability: does the supply function create Nash-stable incentives?
     gt_stability = 0.0
@@ -165,11 +147,11 @@ def score_design(design: TokenDesign) -> TokenScore:
     if d.offline_scoreable:
         gt_stability += 2.0  # offline = no oracle dependency game
 
-    # Composite: lower oracle_manip is better, so invert it
+    # Composite: oracle_manipulability is badness, so subtract it.
     overall = (
         dilution * _WEIGHTS["dilution_resistance"]
         + death_spiral * _WEIGHTS["death_spiral_resistance"]
-        + oracle_manip * _WEIGHTS["oracle_manipulability"]
+        - oracle_manip * _WEIGHTS["oracle_manipulability"]
         + gt_stability * _WEIGHTS["game_theory_stability"]
     )
 

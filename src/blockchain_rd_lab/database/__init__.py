@@ -24,7 +24,9 @@ from sqlalchemy import (
     String,
     Text,
     create_engine,
+    inspect,
     select,
+    text,
 )
 from sqlalchemy.orm import (
     DeclarativeBase,
@@ -169,6 +171,9 @@ class SourceORM(Base):
     url: Mapped[str] = mapped_column(String(512), unique=True)
     title: Mapped[str] = mapped_column(String(512), default="")
     source_type: Mapped[str] = mapped_column(String(64), default="web")
+    content_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    retrieved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    verification_status: Mapped[str] = mapped_column(String(24), default="unverified")
     added_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
@@ -348,6 +353,24 @@ class LabDatabase:
 
     def create_all(self) -> None:
         Base.metadata.create_all(self.engine)
+        # SQLite create_all does not add columns to an existing database.
+        # Keep source provenance usable for databases created before F2.
+        columns = {
+            column["name"]
+            for column in inspect(self.engine).get_columns("sources")
+        }
+        additions = {
+            "content_sha256": "VARCHAR(64)",
+            "retrieved_at": "DATETIME",
+            "verification_status": "VARCHAR(24) DEFAULT 'unverified'",
+        }
+        missing = additions.keys() - columns
+        if missing:
+            with self.engine.begin() as connection:
+                for name in sorted(missing):
+                    connection.execute(
+                        text(f"ALTER TABLE sources ADD COLUMN {name} {additions[name]}")
+                    )
 
     def drop_all(self) -> None:
         Base.metadata.drop_all(self.engine)
@@ -495,13 +518,29 @@ class LabDatabase:
 
     # -- sources & prior art (§22, Phase 2) ------------------------------------
 
-    def save_source(self, title: str, url: str, source_type: str = "web") -> int:
-        """Insert or reuse a source; returns the source id."""
+    def save_source(
+        self,
+        title: str,
+        url: str,
+        source_type: str = "web",
+        *,
+        content_sha256: str | None = None,
+        retrieved_at: datetime | None = None,
+        verification_status: str = "unverified",
+    ) -> int:
+        """Insert or reuse a source, retaining retrieval provenance."""
         with self._session() as session:
             existing = session.scalar(select(SourceORM).where(SourceORM.url == url))
             if existing is not None:
                 return int(existing.id)
-            obj = SourceORM(url=url, title=title, source_type=source_type)
+            obj = SourceORM(
+                url=url,
+                title=title,
+                source_type=source_type,
+                content_sha256=content_sha256,
+                retrieved_at=retrieved_at,
+                verification_status=verification_status,
+            )
             session.add(obj)
             session.commit()
             session.refresh(obj)
@@ -518,6 +557,9 @@ class LabDatabase:
                     "url": o.url,
                     "title": o.title,
                     "source_type": o.source_type,
+                    "content_sha256": o.content_sha256,
+                    "retrieved_at": o.retrieved_at,
+                    "verification_status": o.verification_status,
                 }
                 for o in session.scalars(stmt)
             ]

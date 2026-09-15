@@ -186,10 +186,11 @@ class TestResearchService:
         pa_rows = memory_db.list_prior_art(cand.id)
         assert len(pa_rows) == 1
         assert pa_rows[0]["similarity_class"] == "insufficient_evidence"
-        sources = memory_db.list_sources()
-        assert len(sources) >= 1
+        # Offline fixture:// citations are hypotheses, not retrieved evidence.
+        assert memory_db.list_sources() == []
 
-    def test_fatal_concern_rejects(self, memory_db):
+    def test_fatal_concern_is_hypothesis_not_rejection(self, memory_db):
+        """§2/§20: an Economist fatal bit needs deterministic confirmation."""
         cand = make_candidate(name="Guaranteed Death Spiral Token")
         memory_db.save_candidate(cand)
         brief = CandidateBrief.from_candidate(cand)
@@ -197,12 +198,14 @@ class TestResearchService:
             self._mock_provider([brief], fatal=True), memory_db
         )
         result = service.research_candidate(cand)
-        assert result.rejected is True
+        assert result.rejected is False
         stored = memory_db.get_candidate(cand.id)
         assert stored is not None
-        assert stored.status is CandidateStatus.REJECTED
-        assert stored.has_confirmed_fatal_flaw
-        assert any(f.identified_by == "economist" for f in stored.fatal_flaws)
+        assert stored.status is CandidateStatus.PRIOR_ART_CHECKED
+        assert stored.has_confirmed_fatal_flaw is False
+        assert len(stored.fatal_flaws) == 1
+        assert stored.fatal_flaws[0].confirmed is False
+        assert stored.fatal_flaws[0].identified_by == "economist"
 
     def test_agent_failure_isolated(self, memory_db):
         cand = make_candidate()

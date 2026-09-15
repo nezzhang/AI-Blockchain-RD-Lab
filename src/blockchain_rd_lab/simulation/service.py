@@ -69,6 +69,15 @@ class SimulationService:
 
     # -- experiment records (§21) ----------------------------------------------
 
+    def _unique_experiment_id(self, base_id: str) -> str:
+        """Return an unused ID so repeated executions remain append-only."""
+        if self.database.get_experiment(base_id) is None:
+            return base_id
+        attempt = 2
+        while self.database.get_experiment(f"{base_id}-run-{attempt}") is not None:
+            attempt += 1
+        return f"{base_id}-run-{attempt}"
+
     def _record(
         self,
         candidate_id: str,
@@ -78,11 +87,10 @@ class SimulationService:
         dataset: str,
         model_version: int = 1,
     ) -> ExperimentRecord:
-        # §21 append-only discipline: a re-simulated model version gets a
-        # distinct experiment id so the v1 evidence is never clobbered.
+        # §21 append-only discipline: every execution gets an unused ID.
         suffix = "" if model_version <= 1 else f"-v{model_version}"
         return ExperimentRecord(
-            experiment_id=f"{experiment_id}{suffix}",
+            experiment_id=self._unique_experiment_id(f"{experiment_id}{suffix}"),
             candidate_id=candidate_id,
             timestamp=utcnow(),
             git_commit=_git_commit(),

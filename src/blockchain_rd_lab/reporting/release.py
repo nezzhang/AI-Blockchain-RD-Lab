@@ -70,7 +70,7 @@ class ReleasePackageBuilder:
         """
         if candidate_id is not None:
             cand = self.database.get_candidate(candidate_id)
-            if cand is None:
+            if cand is None or cand.status is not CandidateStatus.FINALIST:
                 return None
             return cand.id, cand.name
         return self._recommended()
@@ -423,8 +423,8 @@ class ReleasePackageBuilder:
 
     def build(self, candidate_id: str | None = None) -> str | None:
         """Render the §27 release package as markdown; None if no
-        finalist. candidate_id overrides the §7-recommended default
-        (the r23 incumbent path — the human decides, not the rank)."""
+        finalist. An explicit candidate_id must identify a finalist;
+        the human may choose which finalist, not bypass finalist status."""
         top = self._select(candidate_id)
         if top is None:
             return None
