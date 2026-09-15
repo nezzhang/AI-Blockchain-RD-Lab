@@ -834,3 +834,24 @@ class TestRound23PublicationOptions:
         assert "five battery revisions" not in txt
         assert "three §15 battery runs" not in txt
 
+    def test_brief_no_models_does_not_crash(self, tmp_path: Path):
+        """r38 pre-audit catch: the §6 loop-exercise line computed
+        max(version) over an empty generator when a candidate had no
+        stored models — ValueError. The brief must render honestly,
+        never crash."""
+        from blockchain_rd_lab.reporting.decision import (
+            build_decision_brief,
+        )
+        db = LabDatabase(tmp_path / "test-brief-nomodel.db")
+        db.create_all()
+        c1 = _candidate("cand-nm1")
+        c2 = _candidate("cand-nm2")
+        c2.name = "Second No-Model"
+        db.save_candidate(c1)
+        db.save_candidate(c2)
+        # neither gets a stored model — the r37 code would crash
+        txt = build_decision_brief(
+            db, candidate_ids=("cand-nm1", "cand-nm2"))
+        assert "no stored model versions" in txt
+        assert "0 §15 battery runs" in txt
+

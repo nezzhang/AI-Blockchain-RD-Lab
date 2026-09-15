@@ -585,14 +585,25 @@ def build_decision_brief(
         )
     else:
         sweep_cmp = ""
+    # r38: computed with empty-safe guards — a pre-formalization
+    # candidate has no models and no scenario runs; the brief must
+    # render honestly, never crash (the r37 max() on an empty
+    # generator would have raised ValueError)
+    head_versions = [m.get("version") for m in db.list_math_models(head.id)]
+    tail_versions = [m.get("version") for m in db.list_math_models(tail.id)]
+    head_max_v = max((v for v in head_versions if v), default=None)
+    loop_txt = (
+        f"{sim_runs.get(head.id, 0)} §15 battery runs and "
+        f"a full v{head_max_v} improve/retest cycle"
+        if head_max_v
+        else f"{sim_runs.get(head.id, 0)} §15 battery runs"
+    )
     lines.append(
         f"- The incumbent's evidence is DEEPER in CENSUS "
         f"generations: {depth_txt.get(tail.id, 'no census records')} "
         f"— measured under every classifier the lab shipped. The "
         f"successor's evidence is deeper in LOOP EXERCISE: "
-        f"{sim_runs.get(head.id, 0)} §15 battery runs and "
-        f"a full v{max((m.get('version') or 0) for m in db.list_math_models(head.id))}"
-        f" improve/retest cycle, vs the incumbent's "
+        f"{loop_txt}, vs the incumbent's "
         f"{sim_runs.get(tail.id, 0)}. Different kinds of depth; "
         f"neither is dominated. The r22 parameter-calibration sweep "
         f"re-measured the incumbent as control: both constructions "
