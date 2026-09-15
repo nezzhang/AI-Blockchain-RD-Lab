@@ -198,6 +198,15 @@ class RedTeamService:
         The battery is the SAME deterministic code the censuses and the
         published bundle run; the gate cites its canonical
         FLAW_EDGE_THRESHOLD. This method MEASURES; it never rejects.
+
+        SCOPE (disclosed, r34): the gate measures the EIGHT default
+        calibrations. Off-default robustness is the census layer's
+        job (the r22 parameter sweep, published in §4b) — the gate is
+        the rejection instrument, rejection is terminal, so its bar
+        is the default battery, fail-closed when unmeasured. A flaw
+        visible only at an off-default calibration surfaces (and
+        has surfaced: the r22 sweep) in the census and §4 residual
+        disclosure, not here.
         """
         model_json = self.database.get_latest_math_model(candidate.id)
         if not model_json:

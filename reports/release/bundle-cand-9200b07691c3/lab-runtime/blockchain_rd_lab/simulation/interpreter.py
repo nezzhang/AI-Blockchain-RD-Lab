@@ -21,17 +21,31 @@ import math
 from collections.abc import Callable
 from typing import Any
 
+from blockchain_rd_lab.formalization import _MATH_CONSTANTS as _SCHEMA_CONSTANTS
+
 # §13 accepts the named math constants 'e' and 'pi' as bare identifiers
 # (formalization._MATH_CONSTANTS) — the interpreter must accept the same
 # language or a schema-valid model dies at execution ("symbol 'e' used but
 # not declared", the 2026-09-14 audit F3). One source of truth: import
-# the canonical set instead of redefining it here.
+# the canonical set — never redefine it here (r34 pre-audit sweep: the
+# r33 fix's comment SAID "import the canonical set" while the code below
+# redefined it locally; a schema-side addition would have reopened F3's
+# exact drift).
 from blockchain_rd_lab.formalization import MathModel
 
+# Values for the canonical set. A module-load parity check guards the
+# drift: a schema constant without a value here fails at import, never
+# a model at execution. A test pins the parity too.
 _CONSTANTS: dict[str, float] = {
     "e": math.e,
     "pi": math.pi,
 }
+
+if set(_CONSTANTS) != set(_SCHEMA_CONSTANTS):
+    raise ImportError(  # pragma: no cover — guards against silent drift
+        "interpreter constant set drifted from the §13 schema set: "
+        f"{set(_SCHEMA_CONSTANTS) ^ set(_CONSTANTS)}"
+    )
 
 
 class SimulationError(Exception):

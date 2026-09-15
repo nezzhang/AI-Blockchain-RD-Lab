@@ -119,6 +119,51 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 34 pre-audit sweep (the human's "let other llm audit
+  again?" — the r28/r30 discipline: the lab runs its own hostile
+  pass over the PREVIOUS round's new code BEFORE the external
+  auditor, so the next audit finds nothing the lab could have
+  found itself). Target: r33's own additions — the measured gate,
+  the pin counterfactual, the constants fix. THREE defects found,
+  all fixed at the generator, all pinned the day they shipped;
+  +3 → 460. (1) COUNTERFACTUAL CACHE-KEY COLLISION (the serious
+  one): the r33 cache key read (kind, steps, park_at, park_shift,
+  sym) — omitting every OTHER calibration field the battery sweeps
+  (harvest_shift, strikes, amplitude, wash_level, creep_rate,
+  lag_fraction, strike_shift). The r33 sweep used ONE battery for
+  all 27 runs per candidate: every calibrated variant INHERITED
+  its kind's DEFAULT counterfactual verdict without computing its
+  own. Benign this round — the full re-sweep under the fixed key
+  reproduced the exact same 4-drift set, byte-stable — but a
+  classification that ships because two computations COINCIDE is
+  not one that was measured. Fix: the key is spec.model_dump_json()
+  (complete deterministic serialization; differing specs cannot
+  collide). Side catch: serializing specs surfaced a latent
+  pydantic warning (float strikes into an int field) — fixed at
+  both the sweep script (int-aware setattr) and the r22 test
+  literals; 460 pass with zero warnings. (2) F3's CLASS REBORN
+  IN THE F3 FIX: the interpreter comment SAID "one source of
+  truth: import the canonical set" while the code REDEFINED the
+  dict locally — adding a constant to formalization's
+  _MATH_CONSTANTS (schema accepts) without a value in the
+  interpreter (execution rejects) would have reopened the exact
+  drift. Fix: the interpreter imports the canonical set, a
+  module-load parity check raises on drift, and a test pins
+  set(_CONSTANTS) == set(_MATH_CONSTANTS). (3) STORE HYGIENE (the
+  r25 lesson, re-earned): six identical gate re-eval records had
+  accumulated for cand-7f2f07fd4e9a (one per sweep re-run), plus
+  duplicate r33 census records on re-run. The sweep script is now
+  IDEMPOTENT: each re-run purges its own prior gate record and
+  prior same-tag census before storing (re-run proof: exactly one
+  of each). Also disclosed: the gate's measurement SCOPE (the
+  eight DEFAULT calibrations; off-default robustness is the census
+  layer's r22 sweep, published in §4b) is now stated in
+  _measured_flaw_edge's docstring and pinned by test. Bundle
+  regenerated through the builder; isolated verify (/usr/bin/
+  env -i, framework 3.12): exit 0 — 51 REPRODUCED + 2 CONSISTENT
+  + 0 NOT-REPRODUCIBLE, 8/8 + 19/19 headlines from the published
+  files alone. The corpus is now staged for the next external
+  audit at the same standard the last one validated.
 - Round 33 external-audit response (the human delivered
   2026-09-14-auditor-FIXES.md: "they might be correct but might be
   wrong" — §2 applies to audits: every finding VERIFIED against the

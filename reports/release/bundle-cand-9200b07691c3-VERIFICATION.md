@@ -1,6 +1,6 @@
 # External Verification Report
 
-Bundle: `bundle-cand-9200b07691c3` — verified from the published files alone (no database access), 2026-09-14T18:52:20Z
+Bundle: `bundle-cand-9200b07691c3` — verified from the published files alone (no database access), 2026-09-15T01:05:40Z
 
 The verifier re-runs every reproducible claim with the lab's deterministic interpreter. A third party can re-run this script against the bundle and must obtain this report.
 

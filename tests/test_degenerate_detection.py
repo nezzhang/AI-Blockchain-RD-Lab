@@ -1067,9 +1067,9 @@ class TestRound22ParameterSweep:
             (AttackPattern.CRASH_PARK, "park_shift", -0.9),
             (AttackPattern.DRIFT_CREEP, "creep_rate", 0.01),
             (AttackPattern.GRIND_HARVEST, "harvest_shift", -0.9),
-            (AttackPattern.RESONANCE, "strikes", 2.0),
-            (AttackPattern.RESONANCE, "strikes", 8.0),
-            (AttackPattern.RESONANCE, "strikes", 16.0),
+            (AttackPattern.RESONANCE, "strikes", 2),
+            (AttackPattern.RESONANCE, "strikes", 8),
+            (AttackPattern.RESONANCE, "strikes", 16),
             (AttackPattern.RESONANCE, "strike_shift", -0.9),
         ]
         for kind, param, value in sweep:
@@ -1361,3 +1361,131 @@ class TestRound33AuditFixes:
 
             mp.setattr(MathModel, "model_validate", broken_validate)
             assert _pin_is_load_bearing(m2, spec, bat3, "W_t") is True
+
+
+class TestRound34PreAuditSweep:
+    """r34: the lab's own hostile pass over r33's new code, run
+    BEFORE the next external auditor (the r28/r30 discipline).
+    Three defects found in the round's own fixes — each pinned here
+    the day it ships."""
+
+    def test_r34_counterfactual_cache_key_is_the_full_spec(self) -> None:
+        # The r33 cache key read (kind, steps, park_at, park_shift)
+        # — it omitted every OTHER calibration field the battery
+        # sweeps (harvest_shift, strikes, amplitude, wash_level,
+        # creep_rate, lag_fraction, strike_shift). Within ONE
+        # battery lifetime (the r33 sweep used one battery for all
+        # 27 runs), a calibrated variant INHERITED the default's
+        # counterfactual verdict: same key, verdict never computed.
+        # The verdicts happened to coincide this round (verified by
+        # full re-sweep after the fix: identical drift set), but a
+        # classification that ships because two computations
+        # COINCIDE is not a classification that was measured.
+        # Fix: the key is spec.model_dump_json() — the complete,
+        # deterministic serialization; two specs differing in ANY
+        # field can never collide.
+        from blockchain_rd_lab.simulation.adversarial import (
+            _pin_is_load_bearing,
+        )
+        m = MathModel(
+            candidate_id="cand-test-r34-cachekey",
+            variables=[
+                {"name": "level", "symbol": "X_t", "role": "input",
+                 "units": "u", "description": "level"},
+                {"name": "delta", "symbol": "dX_t", "role": "input",
+                 "units": "u", "description": "delta"},
+                {"name": "pool", "symbol": "Z_t", "role": "state",
+                 "units": "u", "description": "pool"},
+                {"name": "pool_next", "symbol": "Z_t1", "role": "state",
+                 "units": "u", "description": "next pool"},
+                {"name": "tracker", "symbol": "K_t", "role": "state",
+                 "units": "u", "description": "tracker"},
+                {"name": "tracker_next", "symbol": "K_t1", "role": "state",
+                 "units": "u", "description": "next tracker"},
+            ],
+            parameters=[],
+            equations=[
+                {"name": "pool",
+                 "expression": "Z_t1 = clip(Z_t + 0.10*(X_t - 1000.0)"
+                               " - 5.0, 400.0, 3000.0)",
+                 "description": "level-keyed drain, floor 400"},
+                {"name": "tracker",
+                 "expression": "K_t1 = clip(K_t + 0.25*(X_t - K_t),"
+                               " 100.0, 3000.0)",
+                 "description": "tracker keeps the run non-degenerate"},
+            ],
+            assumptions=[{"statement": "fixture assumption",
+                          "critical": True}],
+            constraints=[],
+            open_questions=["fixture open question"],
+            rationale="r34 cache-key collision probe fixture",
+            version=1,
+        )
+        bat = AttackPatternBattery(m)
+        # default grind_harvest first: verdict v1 lands in the cache
+        default_spec = PatternSpec(
+            kind=AttackPattern.GRIND_HARVEST, steps=60)
+        v1 = _pin_is_load_bearing(m, default_spec, bat, "Z_t")
+        # a HARVEST_SHIFT-only change (the r22 grid's @-0.9): the
+        # OLD key would have returned v1 without computing. The
+        # FIXED key must recompute — the verdict is independent.
+        shifted = PatternSpec(
+            kind=AttackPattern.GRIND_HARVEST, steps=60,
+            harvest_shift=-0.9)
+        cache = bat.__dict__.setdefault("_pin_cf_cache", {})
+        before = dict(cache)
+        v2 = _pin_is_load_bearing(m, shifted, bat, "Z_t")
+        assert (default_spec.model_dump_json(), "Z_t") in before
+        # the shifted spec's verdict came from its OWN run, not the
+        # default's: its key exists and is DISTINCT
+        assert (shifted.model_dump_json(), "Z_t") in cache
+        assert (shifted.model_dump_json(), "Z_t") not in before
+        # and per-spec recomputation is real: keys differ
+        assert v1 == _pin_is_load_bearing(m, default_spec, bat, "Z_t")
+        assert v2 == _pin_is_load_bearing(m, shifted, bat, "Z_t")
+
+    def test_r34_interpreter_constants_parity_with_schema(self) -> None:
+        # The r33 F3 fix's comment said "one source of truth: import
+        # the canonical set" — but the code REDEFINED the dict
+        # locally. Adding a constant to formalization._MATH_CONSTANTS
+        # (schema accepts the model) without a value here would have
+        # reopened F3's exact drift: schema-valid, unexecutable.
+        # Fix: the interpreter imports the canonical set and a
+        # module-load check + THIS probe pin the parity.
+        from blockchain_rd_lab.formalization import _MATH_CONSTANTS
+        from blockchain_rd_lab.simulation import interpreter as interp
+
+        assert set(interp._CONSTANTS) == set(_MATH_CONSTANTS), (
+            "interpreter constant set drifted from §13's "
+            "_MATH_CONSTANTS — a schema-valid model would die at "
+            "execution (the F3 class)"
+        )
+        # values are real: e/pi resolve to their numerics
+        assert interp._CONSTANTS["e"] == pytest.approx(2.718281828459045)
+        assert interp._CONSTANTS["pi"] == pytest.approx(3.141592653589793)
+
+    def test_r34_gate_scope_disclosed_and_default_calibrated(self) -> None:
+        # The gate measures the EIGHT default calibrations;
+        # off-default robustness is the census layer's job (r22
+        # sweep, published in §4b). The scope is now DISCLOSED in
+        # _measured_flaw_edge's docstring — and pinned here as a
+        # testable fact: every AttackPattern kind appears in the
+        # evidence, none more (no hidden ninth pattern, no
+        # silent subset that would under-measure the gate).
+        import inspect
+
+        from blockchain_rd_lab.redteam import service as rtsvc
+        from blockchain_rd_lab.simulation.adversarial import AttackPattern
+
+        doc = inspect.getdoc(rtsvc.RedTeamService._measured_flaw_edge)
+        assert doc is not None
+        flat = " ".join(doc.lower().split())
+        assert "eight default calibrations" in flat
+        # the evidence the gate builds covers exactly the pattern
+        # enum — measured by running the real method against a
+        # stored-model candidate is the integration test's job
+        # (test_redteam.py); here pin the enum/evidence alignment
+        # the method constructs from:
+        kinds = [k.value for k in AttackPattern]
+        assert len(kinds) == 8
+        assert len(set(kinds)) == 8

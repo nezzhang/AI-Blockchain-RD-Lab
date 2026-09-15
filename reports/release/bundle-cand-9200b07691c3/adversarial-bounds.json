@@ -3314,14 +3314,14 @@
         "vacuous": false
       }
     ],
-    "experiment_id": "exp-3dc9a3dd8ee6",
+    "experiment_id": "exp-2240c2647989",
     "parameters": {
       "audit": "2026-09-14 F2 fix + r33 pin counterfactual",
       "battery": "attack_patterns_v8_pin_counterfactual",
       "round": 33,
       "sweep": true
     },
-    "recorded_at": "2026-09-14T18:46:01.159591",
+    "recorded_at": "2026-09-15T01:04:29.543978",
     "vacuous_count": 0,
     "worst_edge": 32.63753
   }

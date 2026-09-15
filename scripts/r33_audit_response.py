@@ -30,7 +30,7 @@ from __future__ import annotations
 import json
 
 from blockchain_rd_lab.config import REPO_ROOT, load_config
-from blockchain_rd_lab.database import LabDatabase
+from blockchain_rd_lab.database import ExperimentORM, LabDatabase
 from blockchain_rd_lab.formalization import MathModel
 from blockchain_rd_lab.schemas import ExperimentRecord
 from blockchain_rd_lab.simulation.adversarial import (
@@ -109,6 +109,20 @@ def main() -> None:
 
         rows: list[dict] = []
         drifts: list[str] = []
+        # r34: purge THIS round's prior census for this candidate —
+        # the script is re-runnable, and two records with the same
+        # (round, battery) tag are duplicates, not history.
+        with db._session() as s:
+            for row in s.query(ExperimentORM).filter(
+                ExperimentORM.candidate_id == cid
+            ).all():
+                p = json.loads(row.parameters_json)
+                if (p.get("round") == 33
+                        and p.get("battery")
+                        == "attack_patterns_v8_pin_counterfactual"):
+                    print(f"  purging prior r33 census {row.experiment_id}")
+                    s.delete(row)
+            s.commit()
         # defaults (8) + calibrated (19)
         runs: list[tuple[str, str]] = [(k.value, "") for k in AttackPattern]
         for kind, field, val in SWEEP:
@@ -122,7 +136,15 @@ def main() -> None:
             spec = PatternSpec(kind=AttackPattern(kind), steps=60)
             if cal:
                 field, val = cal.split("=")
-                setattr(spec, field, float(val))
+                # int-typed fields (strikes) must receive ints:
+                # pydantic coerces but the serializer then WARNS on
+                # the cached counterfactual key (model_dump_json) —
+                # keep the spec clean at construction.
+                ann = PatternSpec.model_fields[field].annotation
+                if ann is int:
+                    setattr(spec, field, int(float(val)))
+                else:
+                    setattr(spec, field, float(val))
             bound = bat.run_pattern(spec)
             row = bound_row(bound)
             if cal:
@@ -196,6 +218,22 @@ def main() -> None:
         if rep.get("verdict") == "fatal":
             fatal = rep
     if fatal is not None:
+        # r34: this script is RE-RUNNABLE (each audit round re-sweeps
+        # the corpus) — purge THIS script's own prior gate re-eval
+        # records for this candidate first, or every re-run
+        # accumulates another identical record (six accumulated
+        # before the r34 sweep caught it; the r25 store-audit lesson:
+        # accumulate-then-purge is evidence debt).
+        with db._session() as s:
+            q = s.query(ExperimentORM).filter(
+                ExperimentORM.candidate_id == GATE_REJECTED
+            ).all()
+            for row in q:
+                p = json.loads(row.parameters_json)
+                if p.get("gate") == "fatal_flaw_v2_measured":
+                    print(f"purging prior gate record {row.experiment_id}")
+                    s.delete(row)
+            s.commit()
         record = ExperimentRecord(
             candidate_id=GATE_REJECTED,
             parameters={

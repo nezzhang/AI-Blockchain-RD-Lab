@@ -390,8 +390,15 @@ def _pin_is_load_bearing(
     END above the bound keeps its pin.
     """
     cache = battery.__dict__.setdefault("_pin_cf_cache", {})
-    key = (spec.kind, spec.steps, getattr(spec, "park_at", 20),
-          getattr(spec, "park_shift", 0.0), sym)
+    # r34 pre-audit sweep: the key must be the FULL spec, not a
+    # hand-picked subset — the battery sweeps calibration fields
+    # (harvest_shift, strikes, amplitude, ...) that the old
+    # (kind, steps, park_at, park_shift) key omitted, so every
+    # calibrated variant INHERITED the default's counterfactual
+    # verdict within one battery lifetime. model_dump_json is the
+    # complete, deterministic serialization — two specs differing
+    # in ANY field can never collide.
+    key = (spec.model_dump_json(), sym)
     if key in cache:
         return cache[key]
     rows = battery.craft_series(spec)

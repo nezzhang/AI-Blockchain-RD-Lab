@@ -2,7 +2,7 @@
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-14T18:46:34+00:00
+Generated: 2026-09-15T01:05:37+00:00
 Candidate: `cand-9200b07691c3` (§7 recommended, rank 1)
 
 ## 1. Publication Readiness

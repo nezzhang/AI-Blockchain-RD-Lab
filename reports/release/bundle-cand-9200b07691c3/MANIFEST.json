@@ -5,15 +5,15 @@
   "files": {
     "README.md": {
       "bytes": 3147,
-      "sha256": "501cbcc905f67416f9072e788a50d94f5c4466260967a3e4b7c7f0921c9ccc9a"
+      "sha256": "6a4f7bf08ae6b3a836bc8af96e1c8768fbc7ad7b2fb005cdd635a0f1ee3b5f22"
     },
     "adversarial-bounds.json": {
       "bytes": 97486,
-      "sha256": "ff295a91901e9a2d48d4224b791f93c4da08142cabeab1e1458702c0c968fd7f"
+      "sha256": "df27159edf20149507ed278b62a6f11a7acf19bc1e9c4d34cf03c89289289335"
     },
     "dossier.md": {
       "bytes": 9164,
-      "sha256": "369c3b368b4f2ecf500f0a1ce0e5a78095cd13510509766a579aefd4f9c45dc5"
+      "sha256": "d085484c544aefcbce4f4f78ff3b3e8bb93b59d7c8f8c482626bbbd48c04b089"
     },
     "lab-runtime/blockchain_rd_lab/__init__.py": {
       "bytes": 46,
@@ -28,12 +28,12 @@
       "sha256": "74ad083fe99a83d27a632e9979b186a8c4559dc89b9b0b62404146dbc41db08d"
     },
     "lab-runtime/blockchain_rd_lab/simulation/adversarial.py": {
-      "bytes": 66290,
-      "sha256": "b042a7063cef1906c637391105b85be3a5df31bee889a7807ed90c8305223872"
+      "bytes": 66707,
+      "sha256": "a0cd30049deb4f2ba5c85ea982dfd62de1a7a00d09b08e66c20b1f424a39d7aa"
     },
     "lab-runtime/blockchain_rd_lab/simulation/interpreter.py": {
-      "bytes": 11090,
-      "sha256": "ecc311a25c5b528964c6725ec4bcf8e556df06286072cfa9a9f9f48eba241110"
+      "bytes": 11800,
+      "sha256": "12febf3ed9fdccd20a6306b6cc6b6c4cecfbcd186440147e05500be44e258f44"
     },
     "model-v3.json": {
       "bytes": 7982,
@@ -49,7 +49,7 @@
     },
     "release-package.md": {
       "bytes": 9894,
-      "sha256": "4bd372213f164b5aa271425fd521ac6052b6d8f0c6608c6c6caaf02a9868b549"
+      "sha256": "05c4d9408952b03b34555d4074c02395d2ae9fc04988ecb16e570d277bf46bce"
     },
     "scenario-results.json": {
       "bytes": 12400,
@@ -64,6 +64,6 @@
       "sha256": "a64c58c9a947e00652baa7254aae82eb65bbb142c1fda8344877e067b1ac375f"
     }
   },
-  "generated": "2026-09-14T18:52:19.460807+00:00",
+  "generated": "2026-09-15T01:05:38.485288+00:00",
   "model_version": 3
 }
