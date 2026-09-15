@@ -371,7 +371,14 @@ class TestFatalFlawGate:
         assert ev is not None
         assert ev["exceeds_threshold"] is False
 
-    def test_fatal_verdict_nonprofitable_not_confirmed(self, memory_db):
+    def test_fatal_verdict_nonprofitable_is_still_measured(self, memory_db):
+        # r35 (audit 2026-09-15, strongest form): the profitability
+        # boolean is pure metadata — it neither decides NOR triggers.
+        # Fatal + profitable=false + NO stored model: the gate still
+        # MEASURES (finds nothing to measure), fails closed for
+        # rejection, and the §21 record shows the evaluation RAN
+        # (previously the assertion suppressed the measurement
+        # entirely — the trust bit one level up).
         cand = make_candidate()
         memory_db.save_candidate(cand)
         advance_to_simulating(memory_db, cand)
@@ -385,10 +392,59 @@ class TestFatalFlawGate:
         result = service.redteam_candidate(cand)
         stored = memory_db.get_candidate(cand.id)
         assert stored is not None
-        # Fatal verdict alone (unprofitable attack) does NOT reject: the
-        # deterministic gate requires profitability (§20: confirmed flaws).
         assert stored.status is CandidateStatus.RED_TEAM
         assert result.rejected is False
+        # the measurement RAN despite the denial (evidence=None
+        # because no model is stored, not because the gate never ran)
+        records = [
+            r for r in memory_db.iter_experiments(cand.id)
+            if r.parameters.get("gate") == "fatal_flaw_v2_measured"
+        ]
+        assert records, "the gate must measure every fatal verdict"
+        assert records[0].results["confirmed"] is False
+        assert records[0].parameters["agent_profitability_hypothesis"] is False
+
+    def test_fatal_verdict_nonprofitable_but_measured_flaw_rejects(
+        self, memory_db
+    ):
+        # r35 THE SUPPRESSION VECTOR, CLOSED: fatal + profitable=false
+        # (the agent DENIES economics) + a stored model the battery
+        # CONVICTS (worst edge 2266 > 400) → REJECTED. The agent's
+        # denial cannot shield a convicted model — §20's confirmation
+        # instrument is the deterministic battery, not the agent's
+        # opinion. (Pre-r35 this exact input was NOT rejected: the
+        # boolean-as-trigger suppressed the measurement entirely.)
+        cand = make_candidate()
+        memory_db.save_candidate(cand)
+        advance_to_simulating(memory_db, cand)
+        brief = CandidateBrief.from_candidate(cand)
+        provider = MockLLMProvider()
+        reports = build_redteam_fixture(brief, verdict="fatal")
+        reports["red_team"]["strongest_attack_is_profitable"] = False
+        for name in ("game_theory", "security", "oracle", "red_team"):
+            provider.queue_response(json.dumps(reports[name]))
+        memory_db.save_math_model(
+            cand.id,
+            json.dumps(_gate_model_json()),
+            rationale="r35 suppression-vector fixture",
+        )
+        service = RedTeamService(provider, memory_db)
+        result = service.redteam_candidate(cand)
+        stored = memory_db.get_candidate(cand.id)
+        assert stored is not None
+        assert stored.status is CandidateStatus.REJECTED
+        assert result.rejected is True
+        flaw = stored.fatal_flaws[-1]
+        assert flaw.confirmed
+        assert "measured worst battery edge" in flaw.description
+        records = [
+            r for r in memory_db.iter_experiments(cand.id)
+            if r.parameters.get("gate") == "fatal_flaw_v2_measured"
+        ]
+        assert records
+        ev = records[0].results["measured_evidence"]
+        assert ev is not None and ev["exceeds_threshold"] is True
+        assert records[0].parameters["agent_profitability_hypothesis"] is False
 
     def test_agent_failure_leaves_status_unchanged(self, memory_db):
         cand = make_candidate()

@@ -88,8 +88,10 @@ class RetestService:
             outcome.resimulated = True
 
             # 2) SIMULATING → RED_TEAM: fresh adversarial review; the §20
-            #    gate inside _apply_findings may REJECT (fatal + profitable)
-            #    or advance to RED_TEAM for scoring.
+            #    gate inside _apply_findings measures every fatal verdict
+            #    (r35: the agent's profitability boolean is metadata only
+            #    — never the trigger) and may REJECT (fatal + measured
+            #    edge over threshold) or advance to RED_TEAM for scoring.
             result = self.redteam.redteam_candidate(candidate)
             if result.errors and not result.complete:
                 outcome.errors.extend(result.errors[:3])

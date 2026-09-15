@@ -6,17 +6,19 @@ Per candidate (SIMULATING): Game Theory → Security → Oracle → Red Team
   - dimension scores: game_theory, security, oracle_feasibility
   - attack-vector inventory persisted to redteam_results
   - §20 fatal-flaw gate: a flaw is CONFIRMED only when deterministic code
-    agrees — the red-team verdict is "fatal" AND the strongest attack is
-    profitable for the attacker, AND (r33, external-audit F1) a MEASURED
-    §20 battery edge over the canonical FLAW_EDGE_THRESHOLD backs the
-    economic claim. The agent's `strongest_attack_is_profitable` boolean
-    alone never rejects anything: it is recorded as the agent's HYPOTHESIS
-    (the audit finding: an LLM-supplied free field was the gate's
-    decisive economic predicate — the "deterministic gate" trusted an
-    assertion). No stored model / no battery run / all edges under
-    threshold → the fatal verdict is recorded but NOT confirmed
-    (fail-closed for rejection: an unmeasured claim can never reject a
-    candidate; every gate evaluation is persisted as a §21 record).
+    agrees — the red-team verdict is "fatal" AND (r33, external-audit
+    F1) a MEASURED §20 battery edge over the canonical
+    FLAW_EDGE_THRESHOLD backs the economic claim. The agent's
+    `strongest_attack_is_profitable` boolean never decides anything and
+    (r35, audit 2026-09-15) never even triggers the measurement: it is
+    pure recorded metadata — the agent's economics hypothesis. Every
+    fatal verdict is measured (the audit finding: an LLM-supplied free
+    field was the gate's decisive economic predicate — first as the
+    decider, then as the trigger; both residues removed). No stored
+    model / no battery run / all edges under threshold → the fatal
+    verdict is recorded but NOT confirmed (fail-closed for rejection:
+    an unmeasured claim can never reject a candidate; every gate
+    evaluation is persisted as a §21 record).
   - verdict fatal → REJECTED (§11); otherwise SIMULATING → RED_TEAM,
     ready for improvement/Phase 6.
 
@@ -292,17 +294,24 @@ class RedTeamService:
         # an LLM assertion can never reject; it can only point, and
         # the code then measures). Every gate evaluation is persisted
         # as a §21 record — the audit trail the audit asked for.
+        # r35 (audit 2026-09-15, strongest form): the boolean no
+        # longer TRIGGERS the measurement either — an agent asserting
+        # profitable=false used to suppress the battery entirely,
+        # shielding a model it would convict at 2266 (the
+        # suppression-direction hiding vector, the last residue of
+        # the trust bit one level up). Every fatal verdict is now
+        # measured; the boolean is recorded as pure metadata. The
+        # measurement can acquit despite the assertion AND convict
+        # despite the denial — §20's confirmation instrument is the
+        # battery, not the agent's economics opinion.
         rt = result.red_team
-        gate_evaluated = False
         gate_evidence: dict[str, Any] | None = None
         if (
             rt is not None
             and rt.verdict == _VERDICT_FATAL
-            and rt.strongest_attack_is_profitable
             and candidate.status not in _TERMINAL
         ):
             gate_evidence = self._measured_flaw_edge(candidate)
-            gate_evaluated = True
             measured_confirmed = (
                 gate_evidence is not None
                 and gate_evidence["exceeds_threshold"]
@@ -329,16 +338,11 @@ class RedTeamService:
                 result.confirmed_flaws.append(flaw.flaw_id)
                 result.rejected = True
                 candidate.transition(CandidateStatus.REJECTED)
-        # The agent's assertion is always recorded as hypothesis (the
-        # audit's point 4: keep the field, demote its authority). A
-        # fatal verdict the gate did not confirm stays visible in the
-        # result — never silently resolved either way.
-        if rt is not None and rt.verdict == _VERDICT_FATAL and not gate_evaluated:
-            self._persist_gate_record(
-                candidate, rt, None, False,
-                note="fatal verdict without profitable-attack hypothesis; "
-                     "gate not evaluated (no economic claim to measure)",
-            )
+        # r35: the boolean-as-trigger branch is GONE — a fatal
+        # verdict with profitable=false is still measured now, so
+        # there is no un-measured fatal path left to annotate (the
+        # only non-evaluated case is terminal status, where the
+        # state machine already prevents the transition).
 
     def _persist_gate_record(
         self,

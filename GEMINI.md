@@ -32,8 +32,10 @@ AI agents here.** This file is a convenience summary, not a replacement.
   (seed, git commit, parameters, results).
 - Red team: `src/blockchain_rd_lab/redteam/` — Game-Theory/Security/Oracle/
   Red-Team agents ("DESTROY THE IDEA", §9); the §20 fatal-flaw gate is
-  deterministic code — a fatal verdict only rejects when the strongest
-  attack is also profitable; `lab redteam --mock-fixtures` runs offline.
+  deterministic code — a fatal verdict rejects only when the battery
+  MEASURES a worst headline edge over the canonical FLAW_EDGE_THRESHOLD
+  (400); the agent's profitability boolean is recorded metadata, never
+  the trigger (r35); `lab redteam --mock-fixtures` runs offline.
 - Ranking: `src/blockchain_rd_lab/ranking/` — deterministic §19 scoring
   (11 weighted dimensions, missing dims imputed at 5.0), §20 gate
   exclusion, stable ranking (score desc, name asc), §7 finalist cut;
@@ -116,6 +118,58 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 35 external-audit round-3 response (2026-09-15-auditor-FIXES.md,
+  a second-pass hostile audit of the live public main; §2 applies:
+  every finding VERIFIED against the live public raw files and by LIVE
+  EXECUTION before anything was changed). ONE finding filed (F1 HIGH):
+  "the live §20 gate still trusts strongest_attack_is_profitable; the
+  r33 measurement fix is not present in the shipped redteam/service.py."
+  VERIFICATION VERDICT — THE EVIDENCE IS REFUTED, THE FINDING'S
+  STRONGEST FORM IS CONFIRMED. Refutation, by direct fetch of the live
+  public raw file: main's service.py (413 lines) imports
+  FLAW_EDGE_THRESHOLD (line 58), defines _measured_flaw_edge (189),
+  and rejects only on measured_confirmed (the gate block 283-330);
+  byte-identical to local HEAD (whose 461 tests pass). The audit's
+  quoted predicate AND its "docstring describes the boolean as
+  directly participating" sub-claim match the PRE-r33 blob (daf394f)
+  EXACTLY, not the live file — and the audit's own header explains
+  it: "The prior audit's fixed file is retained separately" (it
+  reused its 2026-09-14 copy of service.py while fetching
+  adversarial.py/interpreter.py fresh — internally inconsistent,
+  since it CONFIRMS the r34 model_dump_json() cache fix that shipped
+  in the same commits as the service.py fix it denies; CDN
+  max-age=300 cannot hold a day-old blob). The committed audit file
+  is kept verbatim; audits are evidence too, and this one records a
+  stale-read — the same §2 lesson as the r27 F1 class: verify the
+  audit against the artifact before acting on it. THE FINDING'S
+  STRONGEST FORM (its remediation item 3, "treat the LLM boolean as
+  hypothesis/metadata only") was then tested on the LIVE gate and
+  found REAL, one level up: the boolean no longer DECIDED, but it
+  still TRIGGERED — an agent asserting profitable=false suppressed
+  the measurement entirely, shielding a model the battery would
+  convict at 2266 (the suppression-direction hiding vector, the last
+  residue of the trust bit). FIX (r35): every fatal verdict is now
+  MEASURED; the boolean is pure recorded metadata; the measurement
+  can acquit despite the assertion AND convict despite the denial —
+  §20's confirmation instrument is the battery, not the agent's
+  economics opinion (§20's own spec: "if a fatal flaw is confirmed:
+  REJECTED" — confirmation is measurement's job). The dead
+  not-triggered persist branch removed; the retest-path comment and
+  Quick Reference updated to the measured-gate description.
+  PINNED BY TWO PROBES through the full redteam_candidate ->
+  _apply_findings path (the audit's item 6, which the r33 probes
+  already covered end-to-end — the contradictory-evidence case
+  test_fatal_verdict_high_assertion_low_measurement_not_confirmed):
+  test_fatal_verdict_nonprofitable_is_still_measured (fatal +
+  profitable=false + no model: measurement RUNS, §21 record shows
+  the evaluation, fails closed for rejection) and
+  test_fatal_verdict_nonprofitable_but_measured_flaw_rejects (THE
+  SUPPRESSION VECTOR CLOSED: fatal + profitable=false + flawed
+  model measured at 2266 → REJECTED; the agent's denial cannot
+  shield a convicted model). 461 pass (+2); ruff/mypy clean. The
+  audit's other sections (imputation floor, battery classification,
+  interpreter) were re-checks of known/disclosed items and
+  confirmed-fixed — no action needed beyond this round's work.
 - Round 34 pre-audit sweep (the human's "let other llm audit
   again?" — the r28/r30 discipline: the lab runs its own hostile
   pass over the PREVIOUS round's new code BEFORE the external
