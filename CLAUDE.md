@@ -123,6 +123,42 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 38 external-audit round-4 acceptance (2026-09-15-auditor-
+  round-3-FIXES.md — the third clean-pass hostile re-audit of the
+  public main after the r33/r35 fix lineage; audits are evidence, the
+  file is committed verbatim). THE RESULT: NO NEW FINDINGS in the
+  requested scope (the four load-bearing systems — §19 scorer, §20
+  gate, battery classification, interpreter). §2 applied to the
+  audit itself (the r35 lesson: an audit is VERIFIED, never
+  trusted): every claim re-checked against local HEAD before
+  acceptance — (1) the gate: service.py imports the canonical
+  FLAW_EDGE_THRESHOLD, _measured_flaw_edge runs for every non-
+  terminal fatal verdict, the boolean is recorded metadata that
+  never triggers — CONFIRMED, and its two cited suppression probes
+  (profitable=false still measured; profitable=false cannot shield
+  a measured 2266-edge model) PASS locally; (2) the battery: the
+  long-window confirmation carries the full calibration
+  (spec.model_copy), the pin counterfactual sits at all four guard
+  sites, the counterfactual cache key is the full serialized
+  PatternSpec — CONFIRMED; (3) the interpreter: imports the
+  canonical _MATH_CONSTANTS, values the same names, the
+  module-load parity check guards the drift, e/pi resolve —
+  CONFIRMED; (4) the scorer: imputation at the 5.0 floor is the
+  DISCLOSED methodological limitation, not a bypass — CONFIRMED
+  (the audit itself declined to re-file it). The audit's residual
+  note (§20's rejection scope is the eight DEFAULT calibrations;
+  off-default robustness is delegated to the census layer and
+  disclosed in _measured_flaw_edge's docstring, pinned by test) is
+  the r34 scope disclosure VERBATIM — a declared scope, not a
+  contradiction. Its verification note (it inspected live public
+  raw files; could not run the suite) is honest: local HEAD (1
+  commit ahead of public main at audit time, r37 — brief/bundle
+  surface only, no gate mechanics) is 472-passing. No code change
+  this round: the audit validated, and the acceptance verified the
+  audit. The corpus has now passed three consecutive external
+  audits (r29 round-2 executed, r35 round-3 refuted+fixed, this
+  round-4 clean) — the §2 loop (LLM proposes, code tests, evidence
+  decides) is holding under repeated hostile review.
 - Round 37 decision-brief honesty sweep (the r36 principle's last
   surface + the store-derived-prose class; +6 → 472). TWO findings,
   both verified against the live store before any fix. FINDING 1
