@@ -293,10 +293,20 @@ class ReleasePackageBuilder:
         }
         final_stored_at = versions_meta.get(version)
 
-        # Collect every profitable-vector occurrence first, then dedup by
-        # surface taking the STRONGEST honest status (a surface claimed by
-        # v2 AND re-found by the final-version re-attack is still-profitable
-        # even if an older report shows the same surface as fixed-claimed).
+        # Collect every vector occurrence first, then dedup by surface
+        # taking the STRONGEST honest status (a surface claimed by v2 AND
+        # re-found by the final-version re-attack is still-profitable even
+        # if an older report shows the same surface as fixed-claimed).
+        # r36 (the r35 principle applied to the disclosure surface): the
+        # agent's profitable_for_attacker boolean does NOT filter what is
+        # published — the same class as the r33 gate trust-bit and the
+        # r35 suppression trigger: an agent asserting profitable=false
+        # must not be able to suppress DISCLOSURE either. Every vector
+        # from every report enters; the assertion is carried as
+        # metadata (agent_profitability_hypothesis) rendered on the
+        # line — the reader weighs it, not the code. Corpus census at
+        # r36: 341 of 742 vectors (46%) assert profitable=false; every
+        # one was invisible in §4 before this.
         order = {"still-profitable": 2, "open": 1, "claimed-closed": 0}
         occurrences: dict[str, dict[str, object]] = {}
         for rec in self.database.list_redteam_results(candidate_id=candidate_id):
@@ -306,8 +316,6 @@ class ReleasePackageBuilder:
                 try:
                     av = AttackVector.model_validate(v)
                 except Exception:
-                    continue
-                if not av.profitable_for_attacker:
                     continue
                 key = av.vector.strip().lower()
                 claimed = _matches_any(
@@ -323,17 +331,31 @@ class ReleasePackageBuilder:
                     else ("claimed-closed" if claimed else "open")
                 )
                 prev = occurrences.get(key)
+                # Strongest status wins; on a status TIE the strongest
+                # profitability assertion wins (true outranks false —
+                # the more honest reading stays on the page).
                 if prev is None or order[status] > order[str(prev["status"])]:
+                    better = True
+                elif order[status] == order[str(prev["status"])]:
+                    better = av.profitable_for_attacker and not bool(
+                        prev["agent_profitability_hypothesis"]
+                    )
+                else:
+                    better = False
+                if better:
                     occurrences[key] = {
                         "vector": av.vector,
                         "description": av.description,
                         "attacker": av.attacker,
                         "requires_collusion": av.requires_collusion,
                         "evidence_level": str(av.evidence_level.value)
-                        if hasattr(av.evidence_level, "value")
-                        else str(av.evidence_level),
+                            if hasattr(av.evidence_level, "value")
+                            else str(av.evidence_level),
                         "found_in_report": rec["agent_name"],
                         "status": status,
+                        "agent_profitability_hypothesis": (
+                            bool(av.profitable_for_attacker)
+                        ),
                     }
         residuals = [
             o
@@ -484,27 +506,40 @@ class ReleasePackageBuilder:
             )
             lines.append("")
             lines.append(
-                f"The red team found **{len(residuals)} profitable attack "
-                "surface(s)** the final model version does not fully close "
-                "(independent agents often converge on the same surface "
-                "with different phrasings — convergence is itself evidence "
-                "the surface is real). Publication means shipping the "
-                "mechanism WITH these named residuals — every one is "
-                "recorded here and in the dossier:"
+                f"The red team named **{len(residuals)} attack surface(s)** "
+                "the final model version does not fully close (independent "
+                "agents often converge on the same surface with different "
+                "phrasings — convergence is itself evidence the surface is "
+                "real). Publication means shipping the mechanism WITH "
+                "these named residuals — every one is recorded here and "
+                "in the dossier:"
+            )
+            lines.append("")
+            lines.append(
+                "_profitability flag = the attacking agent's own "
+                "hypothesis about whether the vector pays; it is recorded "
+                "metadata, never a filter — vectors asserted unprofitable "
+                "are disclosed here exactly the same way (r36)._"
             )
             lines.append("")
             for r in residuals:
                 collusion = " (requires collusion)" if r["requires_collusion"] else ""
+                flag = (
+                    "profitable-hypothesis"
+                    if r["agent_profitability_hypothesis"]
+                    else "unprofitable-asserted"
+                )
                 lines.append(
                     f"- **{r['vector']}** [{r['status']}; {r['attacker']}"
-                    f"{collusion}, {r['evidence_level']}] — {r['description']}"
+                    f"{collusion}, {r['evidence_level']}; {flag}] — "
+                    f"{r['description']}"
                 )
         else:
             lines.append(
-                "No profitable attack remains unaddressed by the final "
-                "model version. This is a statement about the searched "
-                "attack space, not an absolute claim of security (§12: no "
-                "absolute claims)."
+                "The red team named no attack surface that remains "
+                "unaddressed by the final model version. This is a "
+                "statement about the searched attack space, not an "
+                "absolute claim of security (§12: no absolute claims)."
             )
         # r27 audit fix #7: the model's own open questions belong IN §4,
         # where a reader looks for caveats — not only in the model JSON

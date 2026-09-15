@@ -243,6 +243,91 @@ class TestResidualDisclosure:
         assert "not an absolute claim" in pkg or "no absolute" in pkg.lower() or \
             "No profitable attack remains" in pkg
 
+    @pytest.fixture
+    def unprofitable_db(self, tmp_path: Path) -> LabDatabase:
+        """The r36 suppression fixture: the final re-attack finds a
+        vector the AGENT asserts unprofitable — the exact input the
+        pre-r36 §4 filter dropped. The vector must still publish."""
+        db = LabDatabase(tmp_path / "test-release-r36.db")
+        db.create_all()
+        _seed(db)
+        # a THIRD report after v2: the re-attack that 'survives' but
+        # still names a surface, asserting it does NOT pay.
+        db.save_redteam_result(
+            "cand-rel", "red_team",
+            _report(
+                "survives",
+                [
+                    {
+                        "vector": "Quiet-window alternation partial ride",
+                        "description": "Long-period saw-tooth rides the "
+                        "counter's handoff window; bounded by band "
+                        "half-width.",
+                        "attacker": "attacker",
+                        "profitable_for_attacker": False,
+                        "requires_collusion": False,
+                        "evidence_level": "INFERENCE",
+                    },
+                ],
+            ),
+        )
+        return db
+
+    def test_unprofitable_asserted_vector_is_disclosed(self, unprofitable_db):
+        """r36 (the r35 principle at the disclosure surface): the
+        agent's profitable_for_attacker boolean is metadata, never a
+        filter — a vector asserted unprofitable still publishes in §4,
+        flagged as unprofitable-asserted. Pre-r36 this exact input was
+        invisible in the published package."""
+        pkg = ReleasePackageBuilder(unprofitable_db).build()
+        section4 = pkg.split("## 4.")[1].split("## 5.")[0]
+        assert "Quiet-window alternation partial ride" in section4, (
+            "an unprofitable-asserted vector must not be suppressed "
+            "from the published §4 disclosure"
+        )
+        assert "unprofitable-asserted" in section4
+
+    def test_profitable_hypothesis_flag_rendered(self, seeded_db):
+        """The flag renders on EVERY line — the reader weighs the
+        assertion, the code does not."""
+        pkg = ReleasePackageBuilder(seeded_db).build()
+        section4 = pkg.split("## 4.")[1].split("## 5.")[0]
+        assert "profitable-hypothesis" in section4
+        assert "profitability flag = the attacking agent's own" in section4
+
+    def test_dedup_tie_keeps_profitable_reading(self, tmp_path: Path):
+        """The r36 dedup tie-break: same surface, same status, one
+        report asserts profitable and one denies — the MORE honest
+        reading (profitable-asserted) stays on the page."""
+        db = LabDatabase(tmp_path / "test-release-tie.db")
+        db.create_all()
+        _seed(db)
+        vec = {
+            "vector": "Anchor-camp premium pumping",
+            "description": "Pump the anchor to inflate the premium.",
+            "attacker": "whale",
+            "requires_collusion": False,
+            "evidence_level": "INFERENCE",
+        }
+        db.save_redteam_result(
+            "cand-rel", "security",
+            _report("vulnerable", [dict(vec, profitable_for_attacker=True)]),
+        )
+        db.save_redteam_result(
+            "cand-rel", "game_theory",
+            _report("vulnerable", [dict(vec, profitable_for_attacker=False)]),
+        )
+        pkg = ReleasePackageBuilder(db).build()
+        section4 = pkg.split("## 4.")[1].split("## 5.")[0]
+        assert "Anchor-camp premium pumping" in section4
+        line = next(
+            ln for ln in section4.splitlines()
+            if "Anchor-camp premium pumping" in ln
+        )
+        assert "profitable-hypothesis" in line, (
+            "on a status tie the profitable-asserted reading must win"
+        )
+
 
 class TestPackageStructure:
     def test_sections_present(self, seeded_db):

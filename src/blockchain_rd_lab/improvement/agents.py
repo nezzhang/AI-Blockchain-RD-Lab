@@ -65,6 +65,10 @@ class ImprovementAgent(BaseAgent):
         if not isinstance(payload, ImprovementInput):
             got = type(payload).__name__
             raise TypeError(f"ImprovementAgent expects ImprovementInput, got {got}")
+        # r36: every attack vector the red team named, profitable-asserted
+        # first (attention order, not a filter — the r35 principle); the
+        # agent's profitability hypothesis is STATED on each line so the
+        # improver weighs it, never trusts it silently.
         user = (
             f"CANDIDATE: {payload.brief.name}\n"
             f"category: {payload.brief.category}\n"
@@ -72,10 +76,12 @@ class ImprovementAgent(BaseAgent):
             f"core mechanism: {payload.brief.core_mechanism}\n\n"
             f"CURRENT MODEL (version {payload.current_model.get('version', 1)}):\n"
             f"{json.dumps(payload.current_model, indent=1)}\n\n"
-            "ADVERSARIAL FINDINGS (profitable attacks / weaknesses):\n"
+            "ADVERSARIAL FINDINGS (every named attack vector; the flag is "
+            "the attacking agent's OWN profitability hypothesis):\n"
         )
         for finding in payload.attack_findings:
-            user += f"- [{finding['agent']}] {finding['vector']}\n"
+            flag = finding.get("profitable", "true")
+            user += f"- [{finding['agent']}; {flag}] {finding['vector']}\n"
         if payload.prior_fixes:
             # §32/§33 reuse: how similar attacks were answered before.
             user += (

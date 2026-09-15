@@ -46,8 +46,10 @@ AI agents here.** This file is a convenience summary, not a replacement.
   §7 recommended candidate; `lab report [id]` writes reports/finalists/ +
   lab-latest.md + reports/release/release-package-latest.md (build-in-public
   staging: publication is the HUMAN decision, §27/§28; its §4 residual
-  disclosure lists every still-profitable/open attack surface the final
-  model version carries, strongest-honest-status per surface).
+  disclosure lists EVERY named attack surface the final model version
+  carries — r36: the agent's profitability assertion is rendered
+  metadata on each line, never a filter; strongest-honest-status per
+  surface).
 - Pipeline: `src/blockchain_rd_lab/pipeline/` — §34 full loop (discover →
   research → filter → formalize → simulate → redteam → improve → retest →
   score → report); resumable by status (§35: the database is the
@@ -118,6 +120,57 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 36 self-sweep (the r28/r34 discipline applied to the r35
+  principle: after demoting the profitability boolean in the GATE, run
+  the hostile pass over everywhere else it still has authority —
+  found by grep, each verified by live execution before fixing; +5 →
+  466). THE FINDING (the r35 class, ONE LEVEL UP, in the surface the
+  world reads): §4 of the release package filtered every attack
+  vector on `profitable_for_attacker` — `if not av.profitable_for_
+  attacker: continue` — so an agent asserting unprofitable could
+  suppress DISCLOSURE, not just evade rejection. Corpus census:
+  341 of 742 vectors (46%) assert unprofitable — ALL were invisible
+  in published §4. The successor's own published §4 said "No
+  profitable attack remains unaddressed" while its final re-attack
+  named surfaces including a FACT-level functionality failure
+  (genuine-lead deadness: retention flat 0.300 through a 3%/step
+  sustained grind, MEASURED) — the pre-r36 filter kept it off the
+  honesty page. Two more authority sites found and fixed:
+  the §34 improve loop (`_fixable_findings` filtered unprofitable-
+  asserted vectors from what the improver ever sees) and the §33
+  graph (metadata only — left as-is). FIXES: §4 now discloses EVERY
+  vector with the assertion rendered as metadata on each line
+  ("profitable-hypothesis" / "unprofitable-asserted") — the reader
+  weighs it, never the code; the dedup tie-break keeps the MORE
+  honest reading on a status tie (profitable-asserted wins);
+  the §4 headline no longer says "no profitable attack remains"
+  (it was only ever true of the filtered set) — it says the red
+  team named N surfaces; the improver now sees EVERY vector
+  (profitable-asserted ordered FIRST — attention allocation, not
+  filtering) with the flag stated in the prompt. REGRESSION the
+  sweep's own probes caught (fixed at the true root): the offline
+  pipeline fixture provider parsed the improver prompt's findings
+  lines with a regex that didn't know the new `- [agent; flag]`
+  shape — zero findings parsed, the fixture fell back to a single
+  generic claim, and the race-regression convergence test broke;
+  the parser now reads both fields and carries the flag through
+  (legacy pre-r36 prompt shape still parseable). PUBLISHED BUNDLE
+  REGENERATED through the builder: the successor's §4 now ships 14
+  named surfaces (was 0), every one previously filtered, each with
+  its assertion flag; isolated third-party verify (/usr/bin/env
+  -i, framework 3.12): exit 0 — 51 REPRODUCED + 2 CONSISTENT + 0
+  NOT-REPRODUCIBLE. ALSO THIS ROUND (the r35 store follow-up,
+  scripts/r35_audit_response.py): the suppression-vector store
+  audit — 577 adversarial reports scanned, exactly ONE fatal
+  verdict ever (the r33 case, profitable=true), ZERO candidates
+  exposed to the pre-r35 fatal+profitable=false trigger — the
+  gate vector never fired on real data (preventive, not
+  corrective; no §11 question). §21 record stored (AUDIT-CORPUS,
+  round 35, idempotent). Pinned by 5 probes: unprofitable-asserted
+  vector publishes in §4 with the flag; the flag renders on every
+  line; dedup tie keeps the profitable reading; unprofitable-
+  asserted vector reaches the improver; profitable-asserted order
+  first.
 - Round 35 external-audit round-3 response (2026-09-15-auditor-FIXES.md,
   a second-pass hostile audit of the live public main; §2 applies:
   every finding VERIFIED against the live public raw files and by LIVE

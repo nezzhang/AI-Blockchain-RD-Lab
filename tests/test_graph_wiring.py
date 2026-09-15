@@ -285,3 +285,67 @@ class TestConvergence:
         assert "cand-convB" in ids
         assert all(p.fix_summary for p in priors)
         assert len(priors) <= 5  # bounded context
+
+    @staticmethod
+    def _store_attack_only(db, cid: str, description: str, profitable: bool):
+        """A RED_TEAM candidate with one stored model + one attack report
+        (no improvement history — the improver's input state)."""
+        cand = _mk_candidate(cid)
+        db.save_candidate(cand)
+        db.save_math_model(cid, _mk_model(cid).model_dump_json(), "v1", version=1)
+        db.save_redteam_result(
+            candidate_id=cid,
+            agent_name="red_team",
+            report_json=json.dumps(
+                _mk_attack_report(description, profitable=profitable)
+            ),
+            verdict="vulnerable",
+        )
+
+    def test_unprofitable_asserted_vector_reaches_the_improver(
+        self, memory_db
+    ):
+        """r36 (the r35 principle at the §34 fix loop): an attack the
+        agent asserts unprofitable still reaches the improver — the
+        boolean orders attention, never filters the fix loop. The row
+        carries the agent's profitability hypothesis ('false') so the
+        prompt states it; it does not silently drop the surface."""
+        from blockchain_rd_lab.improvement.service import _fixable_findings
+
+        self._store_attack_only(
+            memory_db,
+            "cand-r36",
+            "patient grinding farms the capped flow over long windows",
+            profitable=False,
+        )
+        reports = memory_db.list_redteam_results(candidate_id="cand-r36")
+        findings = _fixable_findings(reports)
+        assert findings, "an unprofitable-asserted vector must NOT be filtered"
+        assert findings[0]["vector"].startswith("patient grinding")
+        assert findings[0]["profitable"] == "false"
+
+    def test_profitable_asserted_vectors_order_first(self, memory_db):
+        """Attention allocation: profitable-asserted findings sort
+        before unprofitable-asserted ones (ordering, not filtering)."""
+        from blockchain_rd_lab.improvement.service import _fixable_findings
+
+        self._store_attack_only(
+            memory_db,
+            "cand-r36b",
+            "whale spikes the anchor to inflate supply",
+            profitable=True,
+        )
+        # a second report on the same candidate, unprofitable-asserted
+        db_report = _mk_attack_report(
+            "slow alternation rides the counter handoff window",
+            profitable=False,
+        )
+        memory_db.save_redteam_result(
+            "cand-r36b", "security", json.dumps(db_report), "vulnerable"
+        )
+        reports = memory_db.list_redteam_results(candidate_id="cand-r36b")
+        findings = _fixable_findings(reports)
+        flags = [f["profitable"] for f in findings]
+        assert flags == sorted(flags, reverse=True), (
+            "profitable-asserted findings must order first"
+        )

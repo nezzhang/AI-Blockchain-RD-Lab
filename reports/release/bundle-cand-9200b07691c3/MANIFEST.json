@@ -5,7 +5,7 @@
   "files": {
     "README.md": {
       "bytes": 3147,
-      "sha256": "6a4f7bf08ae6b3a836bc8af96e1c8768fbc7ad7b2fb005cdd635a0f1ee3b5f22"
+      "sha256": "4016b6c2379f862e4442b71a61bc27f55b8278735dfe956077e8358a43bc97f7"
     },
     "adversarial-bounds.json": {
       "bytes": 97486,
@@ -48,8 +48,8 @@
       "sha256": "b90cd3ccd36fcf991981dfa6c87e58ba89a9d76c235f8a696cda522ac0f1c01d"
     },
     "release-package.md": {
-      "bytes": 9894,
-      "sha256": "05c4d9408952b03b34555d4074c02395d2ae9fc04988ecb16e570d277bf46bce"
+      "bytes": 15244,
+      "sha256": "aee6115d557f888e391c487be97eca0c9544b400c5b01ba030f94a17821396d2"
     },
     "scenario-results.json": {
       "bytes": 12400,
@@ -64,6 +64,6 @@
       "sha256": "a64c58c9a947e00652baa7254aae82eb65bbb142c1fda8344877e067b1ac375f"
     }
   },
-  "generated": "2026-09-15T01:05:38.485288+00:00",
+  "generated": "2026-09-15T03:49:51.969056+00:00",
   "model_version": 3
 }

@@ -2,7 +2,7 @@
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-15T01:05:38+00:00
+Generated: 2026-09-15T03:49:51+00:00
 Candidate: `cand-9200b07691c3` (finalist (explicit §27 subject — the human's selection, not the ranking's))
 
 ## 1. Publication Readiness
@@ -26,7 +26,26 @@ Candidate: `cand-9200b07691c3` (finalist (explicit §27 subject — the human's 
 
 ## 4. Residual Attacks Disclosure (§12 honesty)
 
-No profitable attack remains unaddressed by the final model version. This is a statement about the searched attack space, not an absolute claim of security (§12: no absolute claims).
+This list is the searched attack space, not an absolute claim about all attacks (§12).
+
+The red team named **14 attack surface(s)** the final model version does not fully close (independent agents often converge on the same surface with different phrasings — convergence is itself evidence the surface is real). Publication means shipping the mechanism WITH these named residuals — every one is recorded here and in the dossier:
+
+_profitability flag = the attacking agent's own hypothesis about whether the vector pays; it is recorded metadata, never a filter — vectors asserted unprofitable are disclosed here exactly the same way (r36)._
+
+- **long-period alternation partial ride** [open; attacker, INFERENCE; unprofitable-asserted] — Period >> 1/lam_c saw-tooth: partial discount on each leg's first fraction; bounded by the band half-width, second-order
+- **counter handoff window after a genuine lead** [open; attacker, INFERENCE; unprofitable-asserted] — ~1/lam_c-step window after a real lead ends where alternation rides at full key strength before the counter catches up; requires paying the lead's cost first
+- **counter handoff window** [open; attacker, INFERENCE; unprofitable-asserted] — After a genuine lead (C_t ~0) ends, an immediate saw-tooth rides the separation key at full strength for ~1/lam_c steps before the counter catches up — a first-cycle transient the discount misses; bounded by the symmetric band half-width 0.25 and requires paying the genuine lead's move cost first
+- **genuine-lead deadness** [open; unspecified, FACT; unprofitable-asserted] — Magnitude keying discounts genuine pressure with crafted: retention flat 0.300 through a 3%/step sustained grind (measured) — the buffer never builds under real stress
+- **genuine-stress buffer failure** [open; unspecified, FACT; unprofitable-asserted] — Under real sustained stress (the scenario a fee escrow exists for) the counter discounts the retention response: the buffer target stays at base through the stress window — a solvency risk for the escrow's smoothing promise, disclosed as a functionality failure rather than an extraction
+- **genuine-lead deadness (functionality failure)** [open; unspecified, FACT; unprofitable-asserted] — The counter pins at 1.0 under any sustained move with fast-EMA movement above 8 (a 3%/step grind measures C_t=1.0 throughout): retention never rises above base on REAL pressure — the escrow never builds its buffer when genuine stress arrives. Not directly attacker P&L, but the mechanism fails its core function under the conditions it exists for
+- **saw-tooth retention bias** [open; attacker, INFERENCE; unprofitable-asserted] — Craft dX with slow negative legs (separation deeply negative, retention pinned at the 0.1 floor) and fast positive legs (separation positive, retention rises to the 0.9 ceiling): the clip band 0.1..0.9 is not symmetric around delta_r=0.3, so the time-average of retention exceeds the base 0.3 — the escrow target inflates on a ZERO-MEAN path
+- **reversion-spread timing** [open; arbitrageur, HYPOTHESIS; unprofitable-asserted] — The escrow's lam_e=0.15 convergence makes the target path predictable ~7 steps out; timing fee inflow windows against the convergence spread extracts the spread — bounded by the cap 18
+- **stale-anchor overcharge window** [open; liquidity_provider, INFERENCE; unprofitable-asserted] — After genuine breaks the slow anchor trails ~17 steps; retention over-charges through the recovery leg — a disclosed responsiveness gap, no profitable attacker path identified
+- **observable-path front-running** [open; arbitrageur, HYPOTHESIS; unprofitable-asserted] — All keying states are public EMAs of the level: the escrow's target path is predictable ~7 steps ahead; fee-payers can time around high-retention windows, leaving the escrow holding adverse fees (a adverse-selection vector on fee inflow, not on the escrow stock itself)
+- **anchor-drift stale-band hold** [open; liquidity_provider, INFERENCE; unprofitable-asserted] — After a genuine one-sided regime break, the slow anchor trails for ~1/kappa_s steps; retention keys the stale separation and over-retains through the break's recovery leg — a transient overcharge window proportional to the anchor lag
+- **sustained-lead retention farming** [open; whale, INFERENCE; unprofitable-asserted] — A whale grinds the level up at a steady +0.5%/step (sub-spike): the fast EMA leads the slow anchor by a stable ~+4%, retention pins near 0.36-0.9, and the buffer target 1000 + 18*r_t inflates ~6 units above anchor — the escrow holds fees the attacker's own grind priced in. The move cost is real but the buffer delta persists as long as the grind does
+- **buffer-reversion front-running** [open; arbitrageur, HYPOTHESIS; unprofitable-asserted] — The escrow converges to its target at lam_e=0.15: a predictable ~7-step half-life. An attacker who knows the target path can time fee INFLow windows (when target > current escrow, retained inflow is locked at high retention) and fee USE windows (after the target falls) — extracting the convergence spread itself
+- **separation-key oscillation wash** [open; attacker, HYPOTHESIS; unprofitable-asserted] — Zero-mean cycling averages the separation key to ~0 — the design's stated immunity. But the clip floor 0.1 makes retention ASYMMETRIC around zero mean: down-legs release to 0.1 while up-legs retain to 0.9, so a 50/50 saw-tooth (slow down, fast up) could bias the time-average of r_t above delta_r
 
 The model's own recorded open questions (§13, verbatim):
 - OPEN QUESTION: can sustained genuine pressure (not crafted) hold the separation key high enough to farm retention?

@@ -149,15 +149,39 @@ class PipelineFixtureProvider(MockLLMProvider):
             # Parse the ACTUAL adversarial findings from the prompt (the
             # improver's claims must match the attacks it was shown — a
             # blanket claim would let §33/§35 honesty gates see fixes that
-            # were never claimed).
-            findings: list[dict[str, str]] = _re.findall(
-                r"^- \[([a-z_]+)\] (.+)$",
+            # were never claimed). r36: each line now carries the agent's
+            # profitability hypothesis inside the brackets —
+            # "- [red_team; false] description" — parse BOTH fields and
+            # carry the hypothesis through to the fixture's claims
+            # (findings the improver was shown, flags and all).
+            findings: list[tuple[str, str, str]] = _re.findall(
+                r"^- \[([a-z_]+); (true|false)\] (.+)$",
                 user_text,
                 flags=_re.MULTILINE,
             )
-            parsed = [{"agent": agent, "vector": vector} for agent, vector in findings]
+            parsed: list[dict[str, str]] = [
+                {"agent": agent, "vector": vector, "profitable": flag}
+                for agent, flag, vector in findings
+            ]
             if not parsed:
-                parsed = [{"agent": "red_team", "vector": "anchor spike manipulation"}]
+                # Older prompt shape (pre-r36, no flag) — still parseable.
+                legacy: list[tuple[str, str]] = _re.findall(
+                    r"^- \[([a-z_]+)\] (.+)$",
+                    user_text,
+                    flags=_re.MULTILINE,
+                )
+                parsed = [
+                    {"agent": agent, "vector": vector, "profitable": "true"}
+                    for agent, vector in legacy
+                ]
+            if not parsed:
+                parsed = [
+                    {
+                        "agent": "red_team",
+                        "vector": "anchor spike manipulation",
+                        "profitable": "true",
+                    }
+                ]
             return dict(build_improvement_fixture(brief, current, parsed))
 
         # Unknown schema: no fixture available — fail closed (§30) rather

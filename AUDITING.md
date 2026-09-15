@@ -31,13 +31,13 @@ no package install.
 | Attack battery (8 choreographies) | `src/blockchain_rd_lab/simulation/adversarial.py` | Do the classification layers (regime-tracking, transit, ratchet, wedges) hide edges they claim to disclose? Read the tests named `test_*hidden*` / `test_*never*` first — they are the anti-hiding probes; try to defeat them. |
 | Deterministic interpreter | `src/blockchain_rd_lab/simulation/interpreter.py` | Everything rests on this. Does the arithmetic faithfully express the model JSON? Are clips/steps/feedback (§14) correct? |
 | Anti-reward-hacking guard | `src/blockchain_rd_lab/discovery/curriculum.py` | The r7 vacuum happened before this existed. Would it catch the next one? |
-| Report assembly (no report-writer LLM) | `src/blockchain_rd_lab/reporting/` | Every published number should trace to stored evidence. Dossiers/release packages are code-assembled — can prose drift from data? |
+| Report assembly (no report-writer LLM) | `src/blockchain_rd_lab/reporting/` | Every published number should trace to stored evidence. Dossiers/release packages are code-assembled — can prose drift from data? §4 residual disclosure (r36): every named attack vector must publish, the agent's `profitable_for_attacker` assertion is rendered metadata, never a filter — can a vector still be silently dropped? |
 
 The full method is `MASTER BUILD PROMPT.md` (§2 evidence rules, §15
 battery, §19 scoring, §20 gate, §27 ladder). `CLAUDE.md`/`GEMINI.md`
 carry the round-by-round history — including every failure the lab
-caught in itself. Read rounds 27-33 to see what four external audits
-and two self-sweeps already fixed; do not re-report those.
+caught in itself. Read rounds 27-36 to see what four external audits
+and three self-sweeps already fixed; do not re-report those.
 
 ## Known honest weaknesses (start here, they are real)
 

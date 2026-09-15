@@ -72,9 +72,17 @@ def _matches_any(finding: dict[str, str], attacks: list[dict[str, str]]) -> bool
 
 
 def _fixable_findings(reports: list[dict[str, Any]]) -> list[dict[str, str]]:
-    """Profitable attacks worth fixing, strongest agent first.
+    """Every attack vector worth fixing, strongest attention first.
 
     Rows carry `report_json` (canonical report dump), not a parsed dict.
+
+    r36 (the r35 principle applied to the §34 fix loop): the agent's
+    profitable_for_attacker boolean no longer FILTERS which vectors the
+    improver sees — an agent asserting unprofitable must not be able to
+    steer the fix loop away from a surface either. Every vector enters;
+    profitable-asserted ones are ordered FIRST (attention allocation,
+    not suppression) and each row carries the agent's profitability
+    hypothesis so the improver prompt can state it honestly.
     """
     import json as _json
 
@@ -87,13 +95,17 @@ def _fixable_findings(reports: list[dict[str, Any]]) -> list[dict[str, str]]:
             report = _json.loads(raw) if isinstance(raw, str) else (raw or {})
             vectors = report.get("attack_vectors") or report.get("manipulation_vectors")
             for v in vectors or []:
-                if v.get("profitable_for_attacker"):
-                    findings.append(
-                        {
-                            "agent": agent,
-                            "vector": v.get("description", "unspecified attack"),
-                        }
-                    )
+                profitable = bool(v.get("profitable_for_attacker"))
+                findings.append(
+                    {
+                        "agent": agent,
+                        "vector": v.get("description", "unspecified attack"),
+                        # r36: honest ordering metadata — profitable-asserted
+                        # first (attention), never a filter.
+                        "profitable": "true" if profitable else "false",
+                    }
+                )
+    findings.sort(key=lambda f: f["profitable"], reverse=True)
     return findings
 
 
@@ -227,7 +239,7 @@ class ImprovementService:
             reports = self.database.list_redteam_results(candidate_id=candidate.id)
             findings = _fixable_findings(reports)
             if not findings:
-                outcome.rejected_reason = "no profitable attacks to fix"
+                outcome.rejected_reason = "no attack vectors to fix"
                 return outcome
 
             # §33→§34: graph-derived prior fixes for similar attacks (§32
@@ -244,7 +256,7 @@ class ImprovementService:
             ]
             if not fresh:
                 outcome.rejected_reason = (
-                    f"all profitable findings already addressed by model "
+                    f"all findings already addressed by model "
                     f"v{current_version} (§33 convergence rule)"
                 )
                 return outcome
