@@ -590,7 +590,6 @@ def build_decision_brief(
     # render honestly, never crash (the r37 max() on an empty
     # generator would have raised ValueError)
     head_versions = [m.get("version") for m in db.list_math_models(head.id)]
-    tail_versions = [m.get("version") for m in db.list_math_models(tail.id)]
     head_max_v = max((v for v in head_versions if v), default=None)
     loop_txt = (
         f"{sim_runs.get(head.id, 0)} §15 battery runs and "

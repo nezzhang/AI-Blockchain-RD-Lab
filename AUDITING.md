@@ -13,7 +13,7 @@ reviewer starts at the frontier, not the walls.
 git clone https://github.com/nezzhang/AI-Blockchain-RD-Lab.git
 cd AI-Blockchain-RD-Lab
 python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
-.venv/bin/pytest            # 457 tests, all green = nothing hidden by a broken suite
+.venv/bin/pytest            # 501 tests, all green = nothing hidden by a broken suite
 .venv/bin/python scripts/r25_verify_bundle.py
 ```
 
@@ -32,6 +32,7 @@ no package install.
 | Deterministic interpreter | `src/blockchain_rd_lab/simulation/interpreter.py` | Everything rests on this. Does the arithmetic faithfully express the model JSON? Are clips/steps/feedback (§14) correct? |
 | Anti-reward-hacking guard | `src/blockchain_rd_lab/discovery/curriculum.py` | The r7 vacuum happened before this existed. Would it catch the next one? |
 | Report assembly (no report-writer LLM) | `src/blockchain_rd_lab/reporting/` | Every published number should trace to stored evidence. Dossiers/release packages are code-assembled — can prose drift from data? §4 residual disclosure (r36): every named attack vector must publish, the agent's `profitable_for_attacker` assertion is rendered metadata, never a filter — can a vector still be silently dropped? |
+| §17 Token Supply Mechanism Laboratory (r39) | `src/blockchain_rd_lab/tokenomics/` | 13 supply drivers with pure supply functions, a tag-based combinator (§18), deterministic scoring across 4 dimensions (dilution/death-spiral/oracle-manipulation/game-theory), and a §25 question report renderer. Attack surfaces below. |
 
 The full method is `MASTER BUILD PROMPT.md` (§2 evidence rules, §15
 battery, §19 scoring, §20 gate, §27 ladder). `CLAUDE.md`/`GEMINI.md`
