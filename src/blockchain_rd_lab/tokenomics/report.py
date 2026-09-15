@@ -198,11 +198,18 @@ def build_token_report(
         return "\n".join(lines)
 
     # Ranked designs table
+    # r40 (the lab's own audit, F5): the column previously rendered
+    # raw oracle_manipulability (a BADNESS score) beside three
+    # higher-better columns with no direction marker — a reader
+    # naturally parsed "Oracle Manip. 10.0" as good in this table.
+    # Every column now reads higher = better; the raw vector count
+    # stays in the §25 prose section where it is disclosed honestly.
     lines.append("## Ranked Token Designs")
     lines.append("")
     lines.append(
         "| Rank | Design ID | Driver Category | Compatibility | "
-        "Dilution | Death Spiral | Oracle Manip. | GT Stability | Overall |"
+        "Dilution | Death Spiral | Oracle Resistance | "
+        "GT Stability | Overall |"
     )
     lines.append(
         "|---|---|---|---|---|---|---|---|---|"
@@ -213,7 +220,7 @@ def build_token_report(
             f"{design.compatibility_score:.2f} | "
             f"{score.dilution_resistance:.1f} | "
             f"{score.death_spiral_resistance:.1f} | "
-            f"{score.oracle_manipulability:.1f} | "
+            f"{10.0 - score.oracle_manipulability:.1f} | "
             f"{score.game_theory_stability:.1f} | "
             f"{score.overall_display:.4f} |"
         )

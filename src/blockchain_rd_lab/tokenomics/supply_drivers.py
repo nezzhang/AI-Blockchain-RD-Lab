@@ -287,8 +287,17 @@ DRIVER_REGISTRY: tuple[SupplyDriver, ...] = (
         name="climate-risk-burn",
         signal_source="climate risk index oracle",
         supply_fn=_climate_supply,
+        # r40 (the lab's own audit, F1): the mint probe used
+        # climate_risk_index=-1.0 — NEGATIVE risk, physically
+        # impossible for a 0-1 index. The scorer credited this
+        # burn-only driver a mint path (+5 death-spiral, +5 game
+        # theory) that no real input can trigger: at the physical
+        # maximum risk=1.0 the function returns -1.0; at risk=0.0
+        # it returns 0.0. The probe set now spans the physical
+        # domain only — mint_probe_states is EMPTY, matching the
+        # burn-only reality.
         burn_probe_states=({"climate_risk_index": 1.0},),
-        mint_probe_states=({"climate_risk_index": -1.0},),
+        mint_probe_states=(),
         manipulation_vectors=(
             "index provider capture",
             "geographic cherry-picking",

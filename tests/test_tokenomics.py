@@ -35,6 +35,7 @@ from blockchain_rd_lab.tokenomics.scoring import (
 from blockchain_rd_lab.tokenomics.supply_drivers import (
     DRIVER_REGISTRY,
     DriverCategory,
+    SupplyDriver,
     drivers_for_tags,
     get_driver,
 )
@@ -235,6 +236,88 @@ class TestScoring:
                 driver.supply_fn(state) > 1e-9
                 for state in driver.mint_probe_states
             )
+
+    # -- r40: the lab's own hostile audit of the r39 tokenomics code --
+
+    def test_climate_driver_is_honestly_burn_only(self):
+        """r40 F1: the climate driver's mint probe previously asserted
+        climate_risk_index=-1.0 — NEGATIVE risk, physically impossible
+        for a 0-1 index — buying a bidirectional credit (mint path)
+        no real input can exercise. The honest score is burn-only:
+        no mint path, no bidirectional game-theory bonus."""
+        d = get_driver("climate-risk-burn")
+        assert d is not None
+        # physical domain: risk in [0, 1]
+        for risk in (0.0, 0.25, 0.5, 0.75, 1.0):
+            val = d.supply_fn({"climate_risk_index": risk})
+            assert val <= 1e-9, (
+                f"climate fn must never mint on physical input; "
+                f"risk={risk} -> {val}"
+            )
+        score = score_design(_make_design("climate-risk-burn"))
+        # burn-only reality: no mint path credit
+        assert not _supply_fn_has_mint_path(d)
+        assert score.death_spiral_resistance == 5.0  # bounded only
+        assert score.game_theory_stability == 3.0  # bounded, not bidirectional
+
+    def test_jaccard_ordering(self):
+        """r40 F2 executed: Jaccard intersection / union — unmatched tags on
+        either side reduce the score. A 4-tag driver matching 3 of a
+        6-tag mechanism must outrank an 8-tag driver matching 3."""
+        from blockchain_rd_lab.tokenomics.supply_drivers import DriverCategory
+
+        focused = SupplyDriver(
+            category=DriverCategory.USAGE,
+            name="focused-driver",
+            signal_source="test",
+            supply_fn=lambda s: 0.0,
+            compatibility_tags=frozenset({"a", "b", "c", "d"}),
+        )
+        broad = SupplyDriver(
+            category=DriverCategory.NETWORK,
+            name="broad-driver",
+            signal_source="test",
+            supply_fn=lambda s: 0.0,
+            compatibility_tags=frozenset(
+                {"a", "b", "c", "e", "f", "g", "h", "i"}),
+        )
+        mech_tags = {"a", "b", "c", "x", "y", "z"}
+        j_focused = len(mech_tags & focused.compatibility_tags) / len(
+            mech_tags | focused.compatibility_tags)
+        j_broad = len(mech_tags & broad.compatibility_tags) / len(
+            mech_tags | broad.compatibility_tags)
+        assert j_focused > j_broad, (
+            "Jaccard must rank the focused driver above the broad one "
+            "at equal overlap"
+        )
+
+    def test_report_renders_oracle_resistance_not_manip(self, tmp_path):
+        """r40 F5: the table previously rendered raw badness
+        (oracle_manipulability) beside three higher-better columns —
+        a reader naturally parsed 'Oracle Manip. 10.0' as good in a
+        table where Dilution 10.0 IS good. The table must render
+        Oracle Resistance so every column reads higher = better."""
+        db = LabDatabase(tmp_path / "test-r40-report.db")
+        db.create_all()
+        from blockchain_rd_lab.schemas import Candidate
+        c = Candidate(
+            id="cand-r40",
+            name="Fee Smoothing Escrow",
+            category="fx payments",
+            description=(
+                "A fee-smoothing escrow whose retention keys the SIGNED "
+                "separation between fast pressure and a slow regime anchor. "
+                "Cross-border FX remittance payment network."
+            ),
+            core_mechanism="retention = f(signed_separation(fast, slow))",
+            overall_score=6.45,
+        )
+        db.save_candidate(c)
+        txt = build_token_report(db, "cand-r40")
+        assert "Oracle Resistance" in txt
+        assert "Oracle Manip." not in txt
+        # the §25 prose still discloses the raw vector count honestly
+        assert "manipulation vector(s)" in txt
 
 
 # ---------------------------------------------------------------------------

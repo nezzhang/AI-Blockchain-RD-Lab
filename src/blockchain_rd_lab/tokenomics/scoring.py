@@ -107,10 +107,16 @@ def score_design(design: TokenDesign) -> TokenScore:
       An unbounded mint-only driver scores 0.
     - Death spiral resistance: bounded supply fn (+5) + has mint path (+5).
       A burn-only driver with no mint scores 0.
-    - Oracle manipulability: based on vector count and offline_scoreable.
-      More vectors = higher score = worse. Inverted in composite.
+    - Oracle manipulability (BADNESS, 0 = best): min(10, 2.5 per known
+      vector); live-oracle drivers floor at 5.0. SUBTRACTED in the
+      composite (weights sum to 1.0; composite bounds [0, 10]).
     - Game theory stability: bidirectional (has both mint AND burn) +5,
       bounded +3, offline_scoreable +2.
+
+    r40: probe states are the driver's OWN declared probes — the
+    climate driver's mint probe previously asserted a physically
+    impossible input (negative risk index), buying a bidirectional
+    credit no real state can exercise.
     """
     d = design.driver
     bounded = _supply_fn_is_bounded(d)

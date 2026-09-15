@@ -120,6 +120,194 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 40 self-audit + store recovery (the "audit this" round: the
+  r28/r34 discipline applied to r39's own §17 tokenomics code — and
+  the round the gates caught an ENVIRONMENT event). PART 1, the §17
+  hostile sweep (every finding verified by LIVE EXECUTION against the
+  SHIPPED tree, which had already drifted through the mid-session
+  Codebuff commits 813d940/54c73ca/ec2297a — their v3 doc's F2 had
+  independently found the §17 composite semantics and fixed
+  oracle_manipulability to badness-subtracted; r40's fixes sit on top):
+  F1 (HIGH, the r33/r34 class): climate-risk-burn's mint probe
+  declared climate_risk_index=-1.0 — NEGATIVE risk, impossible for a
+  0-1 index — buying the burn-only driver a bidirectional credit
+  (+5 death-spiral, +5 game-theory) no real input can trigger
+  (physical max risk=1.0 returns -1.0, risk=0.0 returns 0.0); the
+  probe set now spans the physical domain only, mint_probe_states=(),
+  honest scores 5.0/3.0. F2 (MEDIUM): compatibility score was
+  overlap/max(|A|,|B|) — asymmetric, constant-denominator for every
+  driver smaller than the mechanism tag set, letting a broad 8-tag
+  driver TIE a focused 4-tag driver at equal overlap (measured live on
+  the rank-1 candidate's real description); now Jaccard
+  intersection/union. F5 (MEDIUM, presentation layer): the §25 report
+  table rendered raw oracle_manipulability BADNESS beside three
+  higher-better columns — a reader parses "Oracle Manip. 10.0" as good
+  in a table where Dilution 10.0 IS good; the column now renders
+  Oracle Resistance (10 - badness), every column higher-better, raw
+  vector count stays in §25 prose. Verified clean: weights sum 1.00,
+  composite bounds [0,10], _clamp catches NaN/±inf at every exit
+  (live nan/inf/1e309 probes). 3 new probes pin all findings. PART 2,
+  the store event: the full-gate run surfaced two failures UNRELATED
+  to the fixes (stash-tested pre-existing at HEAD) — the venv had been
+  rebuilt under Python 3.14 (Homebrew; fresh site-packages; project +
+  optuna reinstalled) AND database/lab.db was emptied (0 bytes,
+  19:24) — the live corpus store, never git-tracked by design
+  (operator session state), with .bridge/ likewise empty. Time Machine
+  restore BLOCKED (TCC Full Disk Access; manual tmutil restore remains
+  the operator's option). REBUILT from committed artifacts
+  (scripts/r40_rebuild_store.py): lab-latest.md (funnel + 26-row
+  ranking), graph-latest.json (96 lineage nodes), mint/batch scripts
+  (AST-extracted candidate content — AnnAssign SPECS, _mint kwargs,
+  r8/r9 IDEAS batches, discovery-run JSONs), finalist dossiers (the 11
+  dimension sub-scores; verified they reproduce 6.45/6.40
+  bit-exactly under config/scoring.yaml), the publication bundle
+  (model-v3, adversarial-bounds). Original candidate IDs PINNED
+  everywhere; the graph's stale finalist/scored rows (it predates the
+  r16-r20 supersede waves — cand-cd39d95ea572, cand-1acbaa9de0b0)
+  reconciled to SUPERSEDED per the report funnel. VERIFICATION, all
+  exact: funnel 100 (4 failed/10 finalist/16 rejected/16 scored/54
+  superseded — to the digit); ranking 26/26 rows reproduce the
+  published table; curriculum guard ok/10 families/dominant 0.23
+  (matches the r20 census); battery 27/27 vs the NEWEST published
+  records — 25 exact vs the r20/r22 baseline plus the 2 differences
+  ARE the r33-documented corrections (pump_unwind@0.02 0.3374->0.0,
+  grind_harvest@-0.9 0.8634->0.9739, byte-exact vs the r33 record):
+  the rebuild lands on the post-r33 corrected evidence state. §21
+  record r40-store-recovery stores the event, sources, verification,
+  and the honest not-recoverable list (pre-r7 discovery descriptions,
+  historical per-experiment rows, r1-r9 bridge pairs). 509 pass
+  (+5 r40 probes +2 net Codebuff-era); ruff/mypy clean. AUDITING.md
+  now carries the promised §17 attack-surface section (probe states
+  driver-declared; vector counts self-reported; keyword tag matching;
+  Jaccard; structural-not-behavioral) and weakness #5 corrected (14
+  named unprofitable-asserted surfaces, not "zero open residuals").
+  Lessons: verify against the shipped file, not memory of writing it
+  (2 of 5 suspected defects were already fixed in-tree); environment
+  events are audit findings too; a rebuild is only honest because it
+  VERIFIES against pre-existing published evidence (the r33 pattern).
+- Round 39 §17 Token Supply Mechanism Laboratory (option A from the
+  r38 "what next" menu — token-economics scoring as a NEW measurement
+  class beside §19/§20): 13 supply drivers across 13 categories
+  (market/usage/economic/demographic/productivity/energy/climate/
+  commodity/insurance/prediction/network/ai/hybrid), each a frozen
+  SupplyDriver with a PURE supply function (dict state -> [-1,1],
+  clamped, NaN-safe), declared burn/mint probe states, manipulation
+  vectors, compatibility tags, offline flag; DRIVER_REGISTRY +
+  drivers_for_tags. Combinator (§18 non-random): extract_mechanism_
+  tags keyword-matches a mechanism description to tag sets (escrow/
+  fee/fx/payment/stability/network/insurance/ai); combine() ranks
+  TokenDesigns by tag compatibility, empty extraction -> empty list
+  (honest absence). Scoring: TokenScore across dilution resistance /
+  death-spiral resistance / oracle manipulability (badness) / game
+  theory stability, weighted composite (weights sum 1.0), structural
+  probes (bounded, burn path, mint path). Report: build_token_report
+  renders the ranked table + §25's seven questions per design
+  (representation, value backing, dilution, death spiral, gaming,
+  demographic collapse, data revision) — code-only, byte-deterministic,
+  §28 research-only disclaimer. 28 tests; ran against the real store's
+  rank-1 (its 5 compatible drivers). The lab now measures token
+  supply mechanics deterministically; §17 evidence is structural (no
+  adversarial simulation of supply dynamics yet — disclosed).
+- Round 38 external-audit round-4 acceptance (2026-09-15-auditor-
+  round-3-FIXES.md — the third clean-pass hostile re-audit of the
+  public main after the r33/r35 fix lineage; audits are evidence, the
+  file is committed verbatim). THE RESULT: NO NEW FINDINGS in the
+  requested scope (the four load-bearing systems — §19 scorer, §20
+  gate, battery classification, interpreter). §2 applied to the
+  audit itself (the r35 lesson: an audit is VERIFIED, never
+  trusted): every claim re-checked against local HEAD before
+  acceptance — (1) the gate: service.py imports the canonical
+  FLAW_EDGE_THRESHOLD, _measured_flaw_edge runs for every non-
+  terminal fatal verdict, the boolean is recorded metadata that
+  never triggers — CONFIRMED, and its two cited suppression probes
+  (profitable=false still measured; profitable=false cannot shield
+  a measured 2266-edge model) PASS locally; (2) the battery: the
+  long-window confirmation carries the full calibration
+  (spec.model_copy), the pin counterfactual sits at all four guard
+  sites, the counterfactual cache key is the full serialized
+  PatternSpec — CONFIRMED; (3) the interpreter: imports the
+  canonical _MATH_CONSTANTS, values the same names, the
+  module-load parity check guards the drift, e/pi resolve —
+  CONFIRMED; (4) the scorer: imputation at the 5.0 floor is the
+  DISCLOSED methodological limitation, not a bypass — CONFIRMED
+  (the audit itself declined to re-file it). The audit's residual
+  note (§20's rejection scope is the eight DEFAULT calibrations;
+  off-default robustness is delegated to the census layer and
+  disclosed in _measured_flaw_edge's docstring, pinned by test) is
+  the r34 scope disclosure VERBATIM — a declared scope, not a
+  contradiction. Its verification note (it inspected live public
+  raw files; could not run the suite) is honest: local HEAD (1
+  commit ahead of public main at audit time, r37 — brief/bundle
+  surface only, no gate mechanics) is 472-passing. No code change
+  this round: the audit validated, and the acceptance verified the
+  audit. The corpus has now passed three consecutive external
+  audits (r29 round-2 executed, r35 round-3 refuted+fixed, this
+  round-4 clean) — the §2 loop (LLM proposes, code tests, evidence
+  decides) is holding under repeated hostile review.
+- Round 37 decision-brief honesty sweep (the r36 principle's last
+  surface + the store-derived-prose class; +6 → 472). TWO findings,
+  both verified against the live store before any fix. FINDING 1
+  (r36's principle, the §27 DECISION surface): the decision brief's
+  §4 header still framed the residual list as "Profitable vectors"
+  and §6 compared the candidates with the successor's count under
+  the pre-r36 filter — the brief's §4 now publishes every NAMED
+  surface with the assertion rendered on each line
+  (profitable-hypothesis / unprofitable-asserted), and §6's residual
+  comparison is COMPUTED from the store (the real store: successor
+  14 named surfaces, all unprofitable-asserted; incumbent 3, one
+  profitable-asserted). FINDING 2 (the store-derived-prose class,
+  found by rendering the brief against the REAL store): r21-era
+  constants survived every later store change — 'zero open
+  residuals' (a pre-r36 filter artifact, §6 now renders the
+  artifact's history honestly), 'five battery revisions of flat
+  worst-edge 0.318' (the store holds 8 records: 6 default + 2
+  sweep), 'incumbent 63.9' (the pre-r25-purge stale row), '27 runs
+  per candidate' / '54-run sweep' (r33's v8 re-sweep added a second
+  27-run record), 'both classify healthy' asserted unconditionally,
+  'accrue-stability discharged' asserted unconditionally, the §1
+  r20-era rank narrative, and the §6 oracle 'original era' claim
+  (false: the incumbent's stored 7.5 also came after its final
+  model). FIX: EVERY store-derived number in the brief is now
+  computed — rank position from TODAY'S RankingService.rank(), gap
+  carrier from the §19 decomposition (the 'ENTIRE gap' claim only
+  where one dimension carries it), census depth split by record
+  KIND classified by CONTENT (calibration-tagged bounds — the r33
+  v8 record is NAMED like a default battery but carries the 19
+  tagged variants; a name-based rule misclassifies it, and the
+  first draft of the content rule had an order-mismatch bug: a
+  helper re-enumerated iter_experiments in raw DB order against a
+  round-sorted index — fixed by computing the flag in the SAME
+  census_history pass, tuple grew to (round, battery, worst,
+  calibrated)), sweep counts TAGGED-runs-only (a sweep record
+  carries its 8 default baselines beside the 19 variants;
+  counting whole records double-counted: 54→38 per candidate),
+  oracle provenance from store timestamps (oracle_after_final),
+  healthy/discharged claims gated on the computed sweep, options
+  named from the candidates. ALSO THIS ROUND (transient caught
+  live, fixed at root): the byte-determinism contract ('same DB
+  state → byte-identical package', pinned by test_deterministic)
+  was violated by the wall-clock 'Generated:' stamp in BOTH the
+  release package and the brief — two builds crossing a second
+  boundary rendered different bytes (a one-in-N flake the suite
+  finally hit); the stamp is now the STORE's latest-evidence
+  timestamp (release.py no longer imports datetime at all),
+  pinned by a probe that sleeps past a second boundary and asserts
+  identical bytes + a store-derived stamp. ALSO (test hygiene,
+  found by git status after a full suite): the tmp_lab_dir fixture
+  isolated the DB but NOT cli.REPO_ROOT — lab rank/redteam CLI
+  tests wrote ranking-latest.json / redteam-latest.json into the
+  REAL repo tree on every full-suite run (one test patched it
+  ad-hoc; the fixture now patches cli.REPO_ROOT for the whole
+  class). Artifacts regenerated through the builders: brief,
+  successor/incumbent/comparative packages, AND the §27 published
+  bundle (its release-package.md is built by the same
+  ReleasePackageBuilder; stamp + manifest + README regenerated
+  through the r24 builder — byte changes are stamp/manifest only).
+  Isolated third-party verify (/usr/bin/env -i, framework 3.12,
+  no lab paths): exit 0 — 51 REPRODUCED + 2 CONSISTENT + 0
+  NOT-REPRODUCIBLE, 8/8 defaults + 19/19 calibrated headlines
+  from the published files alone. Public GitHub copy (r31) carries
+  the pre-r37 stamp until the human pushes, per §41.
 - Round 36 self-sweep (the r28/r34 discipline applied to the r35
   principle: after demoting the profitability boolean in the GATE, run
   the hostile pass over everywhere else it still has authority —

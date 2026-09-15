@@ -107,8 +107,17 @@ def combine(
     designs: list[TokenDesign] = []
     for driver in matched:
         overlap = len(tags & driver.compatibility_tags)
-        max_possible = max(len(tags), len(driver.compatibility_tags), 1)
-        score = overlap / max_possible
+        # r40 (the lab's own audit, F2): the score was
+        # overlap / max(|mechanism|, |driver|) — an asymmetric,
+        # non-standard measure whose denominator is constant for
+        # every driver smaller than the mechanism tag set, and
+        # penalizes by breadth alone for larger ones (a broad
+        # 8-tag driver matching 4 TIED a focused 4-tag driver
+        # matching 3). Jaccard — intersection / union — is the symmetric
+        # standard: unmatched tags on EITHER side reduce the
+        # score, so focus and coverage both count.
+        union = len(tags | driver.compatibility_tags)
+        score = overlap / union if union else 0.0
         designs.append(TokenDesign(
             mechanism_id=mechanism_id,
             mechanism_name=mechanism_name,

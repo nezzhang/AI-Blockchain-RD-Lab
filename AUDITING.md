@@ -13,7 +13,7 @@ reviewer starts at the frontier, not the walls.
 git clone https://github.com/nezzhang/AI-Blockchain-RD-Lab.git
 cd AI-Blockchain-RD-Lab
 python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
-.venv/bin/pytest            # 501 tests, all green = nothing hidden by a broken suite
+.venv/bin/pytest            # 509 tests, all green = nothing hidden by a broken suite
 .venv/bin/python scripts/r25_verify_bundle.py
 ```
 
@@ -32,13 +32,44 @@ no package install.
 | Deterministic interpreter | `src/blockchain_rd_lab/simulation/interpreter.py` | Everything rests on this. Does the arithmetic faithfully express the model JSON? Are clips/steps/feedback (§14) correct? |
 | Anti-reward-hacking guard | `src/blockchain_rd_lab/discovery/curriculum.py` | The r7 vacuum happened before this existed. Would it catch the next one? |
 | Report assembly (no report-writer LLM) | `src/blockchain_rd_lab/reporting/` | Every published number should trace to stored evidence. Dossiers/release packages are code-assembled — can prose drift from data? §4 residual disclosure (r36): every named attack vector must publish, the agent's `profitable_for_attacker` assertion is rendered metadata, never a filter — can a vector still be silently dropped? |
-| §17 Token Supply Mechanism Laboratory (r39) | `src/blockchain_rd_lab/tokenomics/` | 13 supply drivers with pure supply functions, a tag-based combinator (§18), deterministic scoring across 4 dimensions (dilution/death-spiral/oracle-manipulation/game-theory), and a §25 question report renderer. Attack surfaces below. |
+| §17 Token Supply Mechanism Laboratory (r39/r40) | `src/blockchain_rd_lab/tokenomics/` | 13 supply drivers with pure supply functions, a tag-based combinator (§18), deterministic scoring across 4 dimensions (dilution/death-spiral/oracle-resistance/game-theory), and a §25 question report renderer. Attack surfaces in the dedicated section below. |
+
+### §17 tokenomics attack surface (audited r40 — findings F1/F2/F5 fixed, see `2026-09-15-r40-self-audit-FIXES.md`)
+
+- **Supply-function boundedness**: every `supply_fn` must clamp to
+  [-1, 1] on ANY input (NaN → 0.0, ±inf → ±1.0 — verified at `_clamp`).
+  Try to construct a state dict that leaks an unclamped or NaN value.
+- **Probe states are driver-declared** (`burn_probe_states` /
+  `mint_probe_states`): the mint/burn path credits are computed from
+  the driver's OWN declared probes. F1's class: the climate driver once
+  declared a physically impossible probe (`climate_risk_index=-1.0`)
+  and was credited a bidirectional defense no real input can trigger.
+  Check every probe state against the driver's documented input domain.
+- **Manipulation-vector counts are self-reported**: oracle resistance
+  is `10 - 2.5 × len(manipulation_vectors)` (floored at 5.0 for
+  live-oracle drivers) — a driver "scores safe" partly by DOCUMENTING
+  fewer vectors. The number measures disclosed surface, not true
+  surface. Also: the report table renders RESISTANCE (higher = better,
+  r40); the raw count appears in the §25 prose.
+- **Tag extraction is keyword matching** (`_MECHANISM_KEYWORDS`,
+  word-boundary regex): no synonyms or stems — "remittance" matches fx
+  but "money transfer" matches payment. Keyword-stuffing a description
+  can force driver matches; empty extraction honestly yields no
+  designs (absence is a result, §18).
+- **Compatibility score is Jaccard** (r40; was
+  overlap/max(|A|,|B|) which let breadth tie focus): unmatched tags on
+  either side now reduce the score.
+- **Composite weights** (0.30/0.25/0.25/0.20) sum to 1.0; composite
+  bounds [0, 10]; oracle badness is SUBTRACTED. Structural scores
+  only — no §15/§20-style adversarial simulation of supply dynamics
+  exists yet (the honest boundary of §17 evidence).
 
 The full method is `MASTER BUILD PROMPT.md` (§2 evidence rules, §15
 battery, §19 scoring, §20 gate, §27 ladder). `CLAUDE.md`/`GEMINI.md`
 carry the round-by-round history — including every failure the lab
-caught in itself. Read rounds 27-36 to see what four external audits
-and three self-sweeps already fixed; do not re-report those.
+caught in itself. Read rounds 27-40 to see what four external audits,
+the Codebuff full-audit pass, and four self-sweeps already fixed; do
+not re-report those.
 
 ## Known honest weaknesses (start here, they are real)
 
@@ -57,10 +88,16 @@ and three self-sweeps already fixed; do not re-report those.
    Novelty claims are corpus-relative to the searched sources,
    scoped verbatim in `prior-art.json` and every dossier.
 5. **Open research vectors** (disclosed in §4 of the release package):
-   the successor's final model carries zero open residuals, but
-   earlier-era finalists carry honest open surfaces; the wage-pool
-   successor's `P_a` tenure-denial griefing vector is measured,
-   disclosed, and unfixed by design (small honest cost).
+   the successor's final v3 model carries 14 NAMED open surfaces, every
+   one unprofitable-asserted (the pre-r36 filter hid them; r36 publishes
+   all of them with the assertion rendered as metadata per line); the
+   wage-pool successor's `P_a` tenure-denial griefing vector is
+   measured, disclosed, and unfixed by design (small honest cost).
+6. **§17 token scores are structural, not behavioral** (r40
+   disclosure): boundedness/bidirectionality/vector-count properties of
+   registry drivers — no adversarial simulation of supply dynamics yet,
+   and vector counts are self-reported (see the §17 attack-surface
+   section above).
 
 ## How to file findings
 

@@ -123,6 +123,94 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 40 self-audit + store recovery (the "audit this" round: the
+  r28/r34 discipline applied to r39's own §17 tokenomics code — and
+  the round the gates caught an ENVIRONMENT event). PART 1, the §17
+  hostile sweep (every finding verified by LIVE EXECUTION against the
+  SHIPPED tree, which had already drifted through the mid-session
+  Codebuff commits 813d940/54c73ca/ec2297a — their v3 doc's F2 had
+  independently found the §17 composite semantics and fixed
+  oracle_manipulability to badness-subtracted; r40's fixes sit on top):
+  F1 (HIGH, the r33/r34 class): climate-risk-burn's mint probe
+  declared climate_risk_index=-1.0 — NEGATIVE risk, impossible for a
+  0-1 index — buying the burn-only driver a bidirectional credit
+  (+5 death-spiral, +5 game-theory) no real input can trigger
+  (physical max risk=1.0 returns -1.0, risk=0.0 returns 0.0); the
+  probe set now spans the physical domain only, mint_probe_states=(),
+  honest scores 5.0/3.0. F2 (MEDIUM): compatibility score was
+  overlap/max(|A|,|B|) — asymmetric, constant-denominator for every
+  driver smaller than the mechanism tag set, letting a broad 8-tag
+  driver TIE a focused 4-tag driver at equal overlap (measured live on
+  the rank-1 candidate's real description); now Jaccard
+  intersection/union. F5 (MEDIUM, presentation layer): the §25 report
+  table rendered raw oracle_manipulability BADNESS beside three
+  higher-better columns — a reader parses "Oracle Manip. 10.0" as good
+  in a table where Dilution 10.0 IS good; the column now renders
+  Oracle Resistance (10 - badness), every column higher-better, raw
+  vector count stays in §25 prose. Verified clean: weights sum 1.00,
+  composite bounds [0,10], _clamp catches NaN/±inf at every exit
+  (live nan/inf/1e309 probes). 3 new probes pin all findings. PART 2,
+  the store event: the full-gate run surfaced two failures UNRELATED
+  to the fixes (stash-tested pre-existing at HEAD) — the venv had been
+  rebuilt under Python 3.14 (Homebrew; fresh site-packages; project +
+  optuna reinstalled) AND database/lab.db was emptied (0 bytes,
+  19:24) — the live corpus store, never git-tracked by design
+  (operator session state), with .bridge/ likewise empty. Time Machine
+  restore BLOCKED (TCC Full Disk Access; manual tmutil restore remains
+  the operator's option). REBUILT from committed artifacts
+  (scripts/r40_rebuild_store.py): lab-latest.md (funnel + 26-row
+  ranking), graph-latest.json (96 lineage nodes), mint/batch scripts
+  (AST-extracted candidate content — AnnAssign SPECS, _mint kwargs,
+  r8/r9 IDEAS batches, discovery-run JSONs), finalist dossiers (the 11
+  dimension sub-scores; verified they reproduce 6.45/6.40
+  bit-exactly under config/scoring.yaml), the publication bundle
+  (model-v3, adversarial-bounds). Original candidate IDs PINNED
+  everywhere; the graph's stale finalist/scored rows (it predates the
+  r16-r20 supersede waves — cand-cd39d95ea572, cand-1acbaa9de0b0)
+  reconciled to SUPERSEDED per the report funnel. VERIFICATION, all
+  exact: funnel 100 (4 failed/10 finalist/16 rejected/16 scored/54
+  superseded — to the digit); ranking 26/26 rows reproduce the
+  published table; curriculum guard ok/10 families/dominant 0.23
+  (matches the r20 census); battery 27/27 vs the NEWEST published
+  records — 25 exact vs the r20/r22 baseline plus the 2 differences
+  ARE the r33-documented corrections (pump_unwind@0.02 0.3374->0.0,
+  grind_harvest@-0.9 0.8634->0.9739, byte-exact vs the r33 record):
+  the rebuild lands on the post-r33 corrected evidence state. §21
+  record r40-store-recovery stores the event, sources, verification,
+  and the honest not-recoverable list (pre-r7 discovery descriptions,
+  historical per-experiment rows, r1-r9 bridge pairs). 509 pass
+  (+5 r40 probes +2 net Codebuff-era); ruff/mypy clean. AUDITING.md
+  now carries the promised §17 attack-surface section (probe states
+  driver-declared; vector counts self-reported; keyword tag matching;
+  Jaccard; structural-not-behavioral) and weakness #5 corrected (14
+  named unprofitable-asserted surfaces, not "zero open residuals").
+  Lessons: verify against the shipped file, not memory of writing it
+  (2 of 5 suspected defects were already fixed in-tree); environment
+  events are audit findings too; a rebuild is only honest because it
+  VERIFIES against pre-existing published evidence (the r33 pattern).
+- Round 39 §17 Token Supply Mechanism Laboratory (option A from the
+  r38 "what next" menu — token-economics scoring as a NEW measurement
+  class beside §19/§20): 13 supply drivers across 13 categories
+  (market/usage/economic/demographic/productivity/energy/climate/
+  commodity/insurance/prediction/network/ai/hybrid), each a frozen
+  SupplyDriver with a PURE supply function (dict state -> [-1,1],
+  clamped, NaN-safe), declared burn/mint probe states, manipulation
+  vectors, compatibility tags, offline flag; DRIVER_REGISTRY +
+  drivers_for_tags. Combinator (§18 non-random): extract_mechanism_
+  tags keyword-matches a mechanism description to tag sets (escrow/
+  fee/fx/payment/stability/network/insurance/ai); combine() ranks
+  TokenDesigns by tag compatibility, empty extraction -> empty list
+  (honest absence). Scoring: TokenScore across dilution resistance /
+  death-spiral resistance / oracle manipulability (badness) / game
+  theory stability, weighted composite (weights sum 1.0), structural
+  probes (bounded, burn path, mint path). Report: build_token_report
+  renders the ranked table + §25's seven questions per design
+  (representation, value backing, dilution, death spiral, gaming,
+  demographic collapse, data revision) — code-only, byte-deterministic,
+  §28 research-only disclaimer. 28 tests; ran against the real store's
+  rank-1 (its 5 compatible drivers). The lab now measures token
+  supply mechanics deterministically; §17 evidence is structural (no
+  adversarial simulation of supply dynamics yet — disclosed).
 - Round 38 external-audit round-4 acceptance (2026-09-15-auditor-
   round-3-FIXES.md — the third clean-pass hostile re-audit of the
   public main after the r33/r35 fix lineage; audits are evidence, the
