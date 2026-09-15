@@ -11,9 +11,11 @@ Structure (deterministic, same DB state → byte-identical output):
   1. Publication readiness: score, versions, simulation battery verdict
   2. The mechanism: description + core causal chain (from the record)
   3. Evidence trail: research/simulation/red-team/improvement lineage
-  4. RESIDUAL ATTACKS DISCLOSURE: every profitable attack the final
-     model version still carries — the §12 honesty core. A mechanism
-     ships WITH its residuals named, never without.
+  4. RESIDUAL ATTACKS DISCLOSURE: every attack surface the red team
+     NAMED against the final model version, profitable-asserted or
+     not — the §12 honesty core (r36: the agent's profitability
+     assertion is rendered metadata on each line, never a filter).
+     A mechanism ships WITH its residuals named, never without.
   5. Build-in-public progression: the §27 ladder with the lab's honest
      position marked (research complete; publication is the next
      HUMAN decision; no token, no deployment — §28).
@@ -22,11 +24,10 @@ Structure (deterministic, same DB state → byte-identical output):
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
 from pathlib import Path
 
 from blockchain_rd_lab.database import LabDatabase
-from blockchain_rd_lab.schemas import CandidateStatus
+from blockchain_rd_lab.schemas import Candidate, CandidateStatus
 
 # §27 progression, verbatim in spirit from the master prompt.
 _PROGRESSION = (
@@ -259,11 +260,12 @@ class ReleasePackageBuilder:
         return header + "\n" + "\n".join(out)
 
     def _residual_attacks(self, candidate_id: str) -> list[dict[str, object]]:
-        """Profitable attacks against the LATEST model version, honestly.
+        """Attack surfaces NAMED against the LATEST model version, honestly.
 
         Two-layer honesty (§12, §33):
-        - An attack vector from ANY red-team report marked profitable is a
-          candidate residual.
+        - An attack vector from ANY red-team report is a candidate
+          residual — r36: the profitable_for_attacker assertion is
+          rendered metadata on each line, never a filter.
         - The §33 graph's ADDRESSES edges record what each fix CLAIMS to
           address — a claim, not a proof. So each candidate residual is
           matched against the FINAL version's claims:
@@ -396,6 +398,29 @@ class ReleasePackageBuilder:
 
     # -- main ----------------------------------------------------------------
 
+    def _latest_evidence_at(self, cid: str, cand: Candidate) -> str:
+        """Latest stored-evidence timestamp for a candidate (r37).
+
+        The package's 'Generated:' stamp — the store, not the wall
+        clock, so the byte-determinism contract (same DB state →
+        byte-identical package) holds. Falls back to the candidate's
+        own creation time when no experiment/red-team/model evidence
+        exists yet.
+        """
+        stamps: list[str] = []
+        for exp in self.database.iter_experiments(cid):
+            stamps.append(exp.timestamp.isoformat(timespec="seconds"))
+        for r in self.database.list_redteam_results(candidate_id=cid):
+            stamps.append(str(r["created_at"] or ""))
+        for m in self.database.list_math_models(cid):
+            stamps.append(str(m.get("created_at") or ""))
+        if stamps:
+            return max(s for s in stamps if s)
+        return (
+            cand.created_at.isoformat(timespec="seconds")
+            if cand.created_at else "unknown"
+        )
+
     def build(self, candidate_id: str | None = None) -> str | None:
         """Render the §27 release package as markdown; None if no
         finalist. candidate_id overrides the §7-recommended default
@@ -416,7 +441,17 @@ class ReleasePackageBuilder:
             "(§27); this package stages the evidence, it does not publish."
         )
         lines.append("")
-        lines.append(f"Generated: {datetime.now(UTC).isoformat(timespec='seconds')}")
+        # r37: the byte-determinism contract ('same DB state →
+        # byte-identical package', pinned by test_deterministic)
+        # forbids a wall-clock stamp — two builds crossing a second
+        # boundary differed. The stamp is the LATEST STORED
+        # EVIDENCE timestamp for this candidate: same store → same
+        # bytes, and honest provenance (when the evidence landed,
+        # not when the file rendered). An empty trail renders the
+        # candidate's own creation time.
+        lines.append(
+            f"Generated: {self._latest_evidence_at(cid, cand)}"
+        )
         subject_note = (
             "§7 recommended, rank 1"
             if candidate_id is None else

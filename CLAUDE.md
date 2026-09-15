@@ -123,6 +123,70 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 37 decision-brief honesty sweep (the r36 principle's last
+  surface + the store-derived-prose class; +6 → 472). TWO findings,
+  both verified against the live store before any fix. FINDING 1
+  (r36's principle, the §27 DECISION surface): the decision brief's
+  §4 header still framed the residual list as "Profitable vectors"
+  and §6 compared the candidates with the successor's count under
+  the pre-r36 filter — the brief's §4 now publishes every NAMED
+  surface with the assertion rendered on each line
+  (profitable-hypothesis / unprofitable-asserted), and §6's residual
+  comparison is COMPUTED from the store (the real store: successor
+  14 named surfaces, all unprofitable-asserted; incumbent 3, one
+  profitable-asserted). FINDING 2 (the store-derived-prose class,
+  found by rendering the brief against the REAL store): r21-era
+  constants survived every later store change — 'zero open
+  residuals' (a pre-r36 filter artifact, §6 now renders the
+  artifact's history honestly), 'five battery revisions of flat
+  worst-edge 0.318' (the store holds 8 records: 6 default + 2
+  sweep), 'incumbent 63.9' (the pre-r25-purge stale row), '27 runs
+  per candidate' / '54-run sweep' (r33's v8 re-sweep added a second
+  27-run record), 'both classify healthy' asserted unconditionally,
+  'accrue-stability discharged' asserted unconditionally, the §1
+  r20-era rank narrative, and the §6 oracle 'original era' claim
+  (false: the incumbent's stored 7.5 also came after its final
+  model). FIX: EVERY store-derived number in the brief is now
+  computed — rank position from TODAY'S RankingService.rank(), gap
+  carrier from the §19 decomposition (the 'ENTIRE gap' claim only
+  where one dimension carries it), census depth split by record
+  KIND classified by CONTENT (calibration-tagged bounds — the r33
+  v8 record is NAMED like a default battery but carries the 19
+  tagged variants; a name-based rule misclassifies it, and the
+  first draft of the content rule had an order-mismatch bug: a
+  helper re-enumerated iter_experiments in raw DB order against a
+  round-sorted index — fixed by computing the flag in the SAME
+  census_history pass, tuple grew to (round, battery, worst,
+  calibrated)), sweep counts TAGGED-runs-only (a sweep record
+  carries its 8 default baselines beside the 19 variants;
+  counting whole records double-counted: 54→38 per candidate),
+  oracle provenance from store timestamps (oracle_after_final),
+  healthy/discharged claims gated on the computed sweep, options
+  named from the candidates. ALSO THIS ROUND (transient caught
+  live, fixed at root): the byte-determinism contract ('same DB
+  state → byte-identical package', pinned by test_deterministic)
+  was violated by the wall-clock 'Generated:' stamp in BOTH the
+  release package and the brief — two builds crossing a second
+  boundary rendered different bytes (a one-in-N flake the suite
+  finally hit); the stamp is now the STORE's latest-evidence
+  timestamp (release.py no longer imports datetime at all),
+  pinned by a probe that sleeps past a second boundary and asserts
+  identical bytes + a store-derived stamp. ALSO (test hygiene,
+  found by git status after a full suite): the tmp_lab_dir fixture
+  isolated the DB but NOT cli.REPO_ROOT — lab rank/redteam CLI
+  tests wrote ranking-latest.json / redteam-latest.json into the
+  REAL repo tree on every full-suite run (one test patched it
+  ad-hoc; the fixture now patches cli.REPO_ROOT for the whole
+  class). Artifacts regenerated through the builders: brief,
+  successor/incumbent/comparative packages, AND the §27 published
+  bundle (its release-package.md is built by the same
+  ReleasePackageBuilder; stamp + manifest + README regenerated
+  through the r24 builder — byte changes are stamp/manifest only).
+  Isolated third-party verify (/usr/bin/env -i, framework 3.12,
+  no lab paths): exit 0 — 51 REPRODUCED + 2 CONSISTENT + 0
+  NOT-REPRODUCIBLE, 8/8 defaults + 19/19 calibrated headlines
+  from the published files alone. Public GitHub copy (r31) carries
+  the pre-r37 stamp until the human pushes, per §41.
 - Round 36 self-sweep (the r28/r34 discipline applied to the r35
   principle: after demoting the profitability boolean in the GATE, run
   the hostile pass over everywhere else it still has authority —

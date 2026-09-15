@@ -21,6 +21,7 @@ assert every layer.
 from __future__ import annotations
 
 import json
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -29,7 +30,11 @@ import pytest
 from blockchain_rd_lab.database import LabDatabase
 from blockchain_rd_lab.formalization import MathModel
 from blockchain_rd_lab.reporting.release import ReleasePackageBuilder
-from blockchain_rd_lab.schemas import Candidate, CandidateStatus
+from blockchain_rd_lab.schemas import (
+    Candidate,
+    CandidateStatus,
+    ExperimentRecord,
+)
 
 NOW = datetime.now(UTC)
 
@@ -370,6 +375,40 @@ class TestPackageStructure:
         b = ReleasePackageBuilder(seeded_db).build()
         assert a == b
 
+    def test_deterministic_across_second_boundary(
+        self, seeded_db, tmp_path: Path,
+    ):
+        """r37: the transient the suite caught live — two builds
+        crossing a wall-clock second boundary rendered different
+        'Generated:' stamps for the SAME store, violating the
+        byte-determinism contract this class pins. The stamp is
+        now the store's latest-evidence timestamp (release.py no
+        longer imports the wall clock at all — the module is
+        clock-free), so the boundary is structurally impossible.
+        Assert both: the bytes are identical, and the stamp names
+        a STORED timestamp (the latest red-team report the fixture
+        seeds), not now().
+        """
+        import blockchain_rd_lab.reporting.release as rel
+        a = ReleasePackageBuilder(seeded_db).build()
+        time.sleep(1.1)  # cross the second boundary, structurally
+        b = ReleasePackageBuilder(seeded_db).build()
+        assert a is not None and b is not None
+        assert a == b
+        # clock-free module: no datetime import remains to drift
+        assert not hasattr(rel, "datetime")
+        # the stamp is store-derived: the fixture's latest stored
+        # red-team created_at, second-resolution
+        stamps = sorted(
+            r["created_at"]
+            for r in seeded_db.list_redteam_results(
+                candidate_id="cand-rel")
+            if r["created_at"]
+        )
+        expected = stamps[-1]
+        assert expected is not None
+        assert f"Generated: {expected}" in a
+
 
 def _bounds_record(
     *, regime_tracking: dict | None = None, heal_flags: dict | None = None,
@@ -565,4 +604,233 @@ class TestRound23PublicationOptions:
             build_decision_brief(
                 seeded_db,
                 candidate_ids=("cand-rel", "cand-missing"))
+
+    # -- r37: the §27 decision brief under the r36/r37 honesty rules --
+
+    @pytest.fixture
+    def brief_pair_db(self, tmp_path: Path) -> LabDatabase:
+        """Two finalists with asymmetric residual profiles: head's only
+        named surface is asserted UNPROFITABLE (the pre-r36 invisible
+        class), tail carries one profitable-asserted surface. The
+        pre-r37 brief would have said the head carries nothing and
+        flattered it in §6."""
+        db = LabDatabase(tmp_path / "test-brief-r37.db")
+        db.create_all()
+        _seed(db)
+        cand2 = _candidate("cand-rel2")
+        cand2.name = "Second Test Mechanism"
+        db.save_candidate(cand2)
+        # tail needs a stored model: a named vector with NO model would
+        # suppress the surface entirely (the pre-r36 invisible class,
+        # re-created by fixture sloppiness) — the brief must render the
+        # vector, and only the §33 claim-match can sort it
+        db.save_math_model("cand-rel2", _model("cand-rel2", 1), "v1", version=1)
+        # head: re-attack names a surface, asserts it does not pay
+        db.save_redteam_result(
+            "cand-rel", "red_team",
+            _report(
+                "survives",
+                [
+                    {
+                        "vector": "Quiet-window alternation partial ride",
+                        "description": "Long-period saw-tooth rides the "
+                        "counter's handoff window.",
+                        "attacker": "attacker",
+                        "profitable_for_attacker": False,
+                        "requires_collusion": False,
+                        "evidence_level": "INFERENCE",
+                    },
+                ],
+            ),
+        )
+        # tail: a profitable-asserted vector of its own
+        db.save_redteam_result(
+            "cand-rel2", "red_team",
+            _report(
+                "survives",
+                [
+                    {
+                        "vector": "Fee-cap exhaustion grind",
+                        "description": "Sustained pressure drains the "
+                        "fee pool.",
+                        "attacker": "attacker",
+                        "profitable_for_attacker": True,
+                        "requires_collusion": False,
+                        "evidence_level": "FACT",
+                    },
+                ],
+            ),
+        )
+        return db
+
+    def test_brief_publishes_unprofitable_asserted_surface(
+        self, brief_pair_db,
+    ):
+        """r37 (the r36 principle at the DECISION surface): the §27
+        brief's §4 lists every NAMED surface with the assertion flag —
+        pre-r37 its header still framed the list as 'Profitable
+        vectors' and the head's unprofitable-asserted surface was
+        exactly the kind of input that flattered a candidate."""
+        from blockchain_rd_lab.reporting.decision import (
+            build_decision_brief,
+        )
+        txt = build_decision_brief(
+            brief_pair_db, candidate_ids=("cand-rel", "cand-rel2"))
+        assert "never a filter" in txt
+        assert "Quiet-window alternation partial ride" in txt
+        assert "unprofitable-asserted" in txt
+        assert "Fee-cap exhaustion grind" in txt
+        assert "profitable-hypothesis" in txt
+
+    def test_brief_residual_counts_computed_not_hardcoded(
+        self, brief_pair_db,
+    ):
+        """r37: §6's residual comparison is COMPUTED from the store.
+        The pre-r37 prose hardcoded 'zero open residuals' for the
+        successor — true only under the pre-r36 filter; the store
+        then held 14 named surfaces. A store change must move the
+        brief's prose, never silently contradict it."""
+        from blockchain_rd_lab.reporting.decision import (
+            build_decision_brief,
+        )
+        from blockchain_rd_lab.reporting.release import ReleasePackageBuilder
+        # the COMPUTED expectation, from the same store the brief
+        # reads — never a magic string that can drift from the
+        # fixture (the head's seed already carries two named
+        # surfaces before the r37 report adds a third)
+        rb = ReleasePackageBuilder(brief_pair_db)
+        expected_head = len(rb._residual_attacks("cand-rel"))
+        expected_tail = len(rb._residual_attacks("cand-rel2"))
+        txt = build_decision_brief(
+            brief_pair_db, candidate_ids=("cand-rel", "cand-rel2"))
+        assert expected_head == 3 and expected_tail == 1
+        assert f"carries {expected_head} open named surface(s)" in txt
+        assert f"carries {expected_tail} open named surface(s)" in txt
+        # the falsified r21-era claim must not survive in any form
+        assert "zero open residuals" not in txt
+
+    def test_brief_sweep_maxes_trace_to_census(
+        self, brief_pair_db,
+    ):
+        """r37: §6's r22 sweep maxes are COMPUTED from the census
+        history, never hardcoded. The pre-r37 prose carried
+        'incumbent 63.9' — the pre-r25-purge stale row; the store's
+        sweep max is 33.25."""
+        from blockchain_rd_lab.reporting.decision import (
+            build_decision_brief,
+            census_history,
+        )
+        txt = build_decision_brief(
+            brief_pair_db, candidate_ids=("cand-rel", "cand-rel2"))
+        # no sweep records in the fixture -> the brief must render the
+        # honest absence, never a stale number
+        assert "63.9" not in txt
+        assert "no sweep record" in txt
+        # the discharge claim computes too: with NO sweep for either
+        # candidate, the 'accrue stability evidence' option must
+        # render OPEN — the pre-r37 prose asserted it discharged
+        # unconditionally
+        assert "remains OPEN" in txt
+        # with a sweep record stored, the prose must carry the stored
+        # number, computed — the bounds rows carry calibration tags
+        # so the record classifies as a sweep BY CONTENT (the r33
+        # v8 class: named like a battery, carries tagged variants)
+        exp = ExperimentRecord(
+            candidate_id="cand-rel2",
+            parameters={"round": "22",
+                        "battery": "attack_parameter_sweep"},
+            results={
+                "bounds": [
+                    {"kind": "wash_flow", "calibration": "wash_level=0.04",
+                     "headline": 41.7},
+                ],
+                "worst_edge": 41.7,
+            },
+        )
+        brief_pair_db.save_experiment(exp)
+        txt2 = build_decision_brief(
+            brief_pair_db, candidate_ids=("cand-rel", "cand-rel2"))
+        assert "41.7" in txt2
+        assert census_history(
+            brief_pair_db, "cand-rel2")[0][2] == 41.7
+        # sweep stored for the TAIL only: discharge still OPEN (the
+        # claim requires BOTH candidates swept) and the §6 census
+        # depth names the record kind honestly (all-sweep branch —
+        # no default-calibration record exists to claim flatness)
+        assert "remains OPEN" in txt2
+        assert "1 census record(s), all calibration-sweep" in txt2
+
+    def test_brief_gap_carrier_computed_not_hardcoded(
+        self, brief_pair_db,
+    ):
+        """r37: the §6 'ENTIRE gap is one dimension' claim is made
+        only where the §19 decomposition actually shows it. The
+        fixture's two candidates carry EQUAL dimensions (both
+        seeded from the same _candidate shape) — the brief must say
+        the scores are equal on every dimension, never the
+        r21-era 'oracle_feasibility' line."""
+        from blockchain_rd_lab.reporting.decision import (
+            build_decision_brief,
+        )
+        txt = build_decision_brief(
+            brief_pair_db, candidate_ids=("cand-rel", "cand-rel2"))
+        assert "no dimension carries a difference" in txt
+        assert "oracle_feasibility" not in txt.split("## 6.")[-1]
+        assert "ENTIRE" not in txt.split("## 6.")[-1]
+
+    def test_brief_census_depth_and_runs_computed(
+        self, brief_pair_db,
+    ):
+        """r37: §6's census-generation depth ('N battery
+        generation(s)') and §15 run counts are COMPUTED from the
+        store. The pre-r37 prose hardcoded 'five battery
+        revisions of flat worst-edge (0.318)' and 'three §15
+        battery runs' — r21-era constants the store later
+        falsified (r33's v8 is a later generation; the fixture's
+        store carries different counts)."""
+        from blockchain_rd_lab.reporting.decision import (
+            build_decision_brief,
+        )
+
+        # add census records with NON-flat worsts to the tail: the
+        # flat-worst phrasing must not render where records differ.
+        # The sweep record carries TAGGED bounds (content-classified
+        # as a sweep); the default record carries none.
+        from blockchain_rd_lab.schemas import ExperimentRecord
+        brief_pair_db.save_experiment(ExperimentRecord(
+            candidate_id="cand-rel2",
+            parameters={"round": "14",
+                        "battery": "attack_patterns_v2_crash_park"},
+            results={"bounds": [{"kind": "crash_park", "headline": 0.318}],
+                     "worst_edge": 0.318},
+        ))
+        brief_pair_db.save_experiment(ExperimentRecord(
+            candidate_id="cand-rel2",
+            parameters={"round": "22",
+                        "battery": "attack_parameter_sweep"},
+            results={"bounds": [
+                        {"kind": "wash_flow",
+                         "calibration": "wash_level=0.04",
+                         "headline": 33.25}],
+                     "worst_edge": 33.25},
+        ))
+        txt = build_decision_brief(
+            brief_pair_db, candidate_ids=("cand-rel", "cand-rel2"))
+        # computed counts render; the hardcoded r21-era constants
+        # must not. The tail holds one default-calibration record
+        # (0.318, untagged bounds) and one sweep record (33.25,
+        # tagged bounds) — the depth line must SPLIT them by CONTENT
+        # kind, never flatten the sweep into the default-generation
+        # flatness claim (the r21 prose mixed them: 'flat 0.318'
+        # alongside a 33.25 sweep the same store held)
+        assert "battery generation" in txt
+        assert "1 default-calibration battery generation(s) at flat worst-edge (0.318)" in txt
+        assert "1 calibration-sweep record(s)" in txt
+        assert "flat worst-edge (0.318)" in txt
+        # §15 run counts: neither fixture candidate carries a
+        # scenarios experiment — the honest zero renders
+        assert "0 §15 battery runs" in txt
+        # the r21-era constants are gone in ALL forms
+        assert "five battery revisions" not in txt
+        assert "three §15 battery runs" not in txt
 

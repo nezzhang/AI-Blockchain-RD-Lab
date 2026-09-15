@@ -27,6 +27,15 @@ def tmp_lab_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     silently reads and writes the real lab database. This fixture writes a
     lab.yaml pointing storage at a private tmp database so CLI tests can
     never pollute (or depend on) the real lab state.
+
+    r37: cli.REPO_ROOT is patched too. The CLI module imports REPO_ROOT
+    from config at module level; a config-dir patch does not move it, so
+    CLI invocations wrote their run artifacts (ranking-latest.json,
+    redteam-latest.json, ...) into the REAL repo tree — the full suite
+    dirtied the working tree on every run. Test-level monkeypatches
+    (test_batch_writes_artifacts) patched this one site; the rank/redteam
+    CLI tests missed it. Patching HERE closes the class: every CLI test
+    using this fixture writes artifacts under tmp_path.
     """
     import yaml
 
@@ -38,6 +47,7 @@ def tmp_lab_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
         encoding="utf-8",
     )
     monkeypatch.setattr("blockchain_rd_lab.config.CONFIG_DIR", config_dir)
+    monkeypatch.setattr("blockchain_rd_lab.cli.REPO_ROOT", tmp_path)
     return tmp_path
 
 

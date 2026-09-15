@@ -2,7 +2,7 @@
 
 §27 build-in-public staging document — assembled by code from stored evidence only (§2). Publication is a HUMAN decision (§27); this package stages the evidence, it does not publish.
 
-Generated: 2026-09-09T03:04:32+00:00
+Generated: 2026-09-15T01:04:29
 Candidate: `cand-e74d830a9479` (finalist (explicit §27 subject — the human's selection, not the ranking's))
 
 ## 1. Publication Readiness
@@ -20,7 +20,7 @@ Candidate: `cand-e74d830a9479` (finalist (explicit §27 subject — the human's 
 
 ## 3. Evidence Trail
 
-- Prior-art searches recorded: 4 (queries + sources stored, §12)
+- Prior-art searches recorded: 1 (4 source rows; identical findings merged, §12)
 - Adversarial reports: 8 across ['game_theory', 'oracle', 'red_team', 'security']
 - Improvement cycle: 1 patched version(s) stored; the final version v2 was re-attacked with the patched model in the adversarial prompt (§34 retest)
 
@@ -28,9 +28,16 @@ Candidate: `cand-e74d830a9479` (finalist (explicit §27 subject — the human's 
 
 This list is the searched attack space, not an absolute claim about all attacks (§12).
 
-The red team found **1 profitable attack surface(s)** the final model version does not fully close (independent agents often converge on the same surface with different phrasings — convergence is itself evidence the surface is real). Publication means shipping the mechanism WITH these named residuals — every one is recorded here and in the dossier:
+The red team named **3 attack surface(s)** the final model version does not fully close (independent agents often converge on the same surface with different phrasings — convergence is itself evidence the surface is real). Publication means shipping the mechanism WITH these named residuals — every one is recorded here and in the dossier:
 
-- **refund-cap exhaustion** [open; arbitrageur (requires collusion), HYPOTHESIS] — Repeated coordinated stuffing across epochs grinds the reserve toward its floor, degrading counter-cyclical function even if each cycle's profit is capped.
+_profitability flag = the attacking agent's own hypothesis about whether the vector pays; it is recorded metadata, never a filter — vectors asserted unprofitable are disclosed here exactly the same way (r36)._
+
+- **capped-cycle grinding** [open; arbitrageur (requires collusion), INFERENCE; unprofitable-asserted] — Escalation-proportional capped refunds make stuffing a pure deadweight loss.
+- **reserve-floor pressure** [open; arbitrageur (requires collusion), HYPOTHESIS; unprofitable-asserted] — Repeated cycles push the reserve toward its floor but cannot breach it; counter-cyclical function degrades gracefully, not catastrophically.
+- **refund-cap exhaustion** [open; arbitrageur (requires collusion), HYPOTHESIS; profitable-hypothesis] — Repeated coordinated stuffing across epochs grinds the reserve toward its floor, degrading counter-cyclical function even if each cycle's profit is capped.
+
+The model's own recorded open questions (§13, verbatim):
+- OPEN QUESTION: should the ladder rungs be exponential rather than linear in Q?
 
 ### 4b. Measured Attack-Pattern Bounds (§20)
 
@@ -49,6 +56,8 @@ Deterministic bounds from the §20 attack-pattern battery (60-step window, match
 - **vol_oscillation @amplitude=0.1**: measured, no positive attacker edge (the state(s) drained no further under attack than base)
 - **wash_flow @wash_level=0.01**: measured, no positive attacker edge (the state(s) drained no further under attack than base)
 - **wash_flow @wash_level=0.04**: measured, no positive attacker edge (the state(s) drained no further under attack than base)
+- **pump_unwind @amplitude=0.02**: measured, no positive attacker edge (the state(s) drained no further under attack than base) — 1 state excursion(s) were reclassified as REGIME TRACKING (EMA states following the moved level: the design working, not extraction): `F_t` +0.3
+- **pump_unwind @amplitude=0.1**: measured, no positive attacker edge (the state(s) drained no further under attack than base) — 1 state excursion(s) were reclassified as REGIME TRACKING (EMA states following the moved level: the design working, not extraction): `F_t` +0.3
 - **shock_timing @lag_fraction=0.1**: attacker edge **+0.3182** on `F_t_drawn` vs a matched base run
 - **shock_timing @lag_fraction=0.4**: attacker edge **+0.3182** on `F_t_drawn` vs a matched base run
 - **crash_park @park_shift=-0.3**: measured, no positive attacker edge (the state(s) drained no further under attack than base) — 1 state excursion(s) were reclassified as REGIME TRACKING (EMA states following the moved level: the design working, not extraction): `F_t` +0.3
