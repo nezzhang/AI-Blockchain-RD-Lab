@@ -120,6 +120,71 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 41 supply-dynamics attack battery (the recommended follow-up:
+  close the r40 audit's biggest §17 disclosure — "structural, not
+  behavioral — no adversarial simulation of supply dynamics yet" — by
+  building the §20 pattern against supply functions). NEW:
+  tokenomics/battery.py — 5 named choreographies (wash_mint: sustained
+  forged mint signal; round_trip: one excursion then release, the
+  clawback test; resonance: N strike-release cycles, the ratchet test;
+  creep: sub-threshold grind from neutral toward the probe magnitude;
+  burn_park: sustained forged burn signal, drain depth) x 13 drivers
+  = 65 runs. Crafts ride the driver's OWN declared probe states (the
+  r40-F1 mechanism reused); a driver with no probe for a direction is
+  honestly VACUOUS (headline=None, never 0.0 — the §20 convention).
+  The matched base is the NEUTRAL state: an exhaustively searched
+  zero-pressure assignment (candidates per axis: 0.0, 0.5, the
+  probe's own value, every other key's probe value) with PER-AXIS
+  guard-smoothness rejection (a state sitting on a `<= 0` cliff is
+  not a neutral) and L1-closest-to-probe selection (the interpolation
+  path stays near the probe's own denominators, so the crafted
+  displacement means what the probe declared). Edges are RATE-UNITS
+  (steps x clamped rate) — deliberately NOT comparable to §20's
+  FLAW_EDGE_THRESHOLD (400, $-denominated stock edges); no supply-flaw
+  threshold is imported or invented (measurement-only, §2). THE
+  BATTERY'S OWN DRAFTS KEPT BUGGING (the r34 discipline applied to
+  new code, every bug caught by live runs and the probe tests, every
+  one a fake-measurement class): (1) the zero-axis degenerate — the
+  AI driver's throughput=0 mint probe "crept" at constant full
+  strength because 0 * anything = 0; fixed as honest vacuity.
+  (2) The fake-base class — _base_series zeroed a heuristically
+  chosen "dominant axis", but for level-pair signals the neutral is
+  current == prev/baseline, not 0.0: corridor-population's burn_park
+  read 0.0 because its BASE burned as hard as the attack. (3) The
+  symmetric-degenerate guard pass — (vol=0, baseline=0) passed the
+  all-axis perturbation smoothness test because (1e-6, 1e-6) is
+  still zero-rate; per-axis perturbation catches the cliff
+  ((0, 1e-6) -> rate -1.0). (4) The greedy false neutral — the
+  hybrid's true neutral needs two coordinated moves; greedy
+  single-axis descent trapped at |fn|=0.14. (5) The inflated
+  interpolation path — the equally-valid neutral (0.5, 0.5) doubled
+  market-volume's mid-path rates by shrinking the baseline en route;
+  L1-closest selection keeps the path honest. MEASURED RESULTS (§21
+  census r41-supply-battery-census, 65 runs, 5 vacuous — climate's 4
+  mint-side + claims-ratio's burn-side, matching the registry's
+  declarations): NO RATCHET ANYWHERE — resonance == round_trip x
+  cycles on every driver, exactly linear (a measured negative
+  result: the registry's supply functions are STATELESS per-step
+  rates, so no compounding is representable at the driver level;
+  death-spiral dynamics live in the combinator's stock-integration
+  layer, disclosed as future work); corridor-population's burn_park
+  6.0 vs wash_mint 30.0 — the §25 demographic asymmetry (mint clamps
+  at hi=0.5, burn at lo=-0.1), MEASURED not asserted; metcalfe-
+  growth's creep 52.51 EXCEEDS every linear driver's wash bound (the
+  log-growth region grinds harder than saturation: log(1+9f)
+  accumulates without clamping until f~1) — the registry's only
+  supra-saturation grinder; wash saturation bounds verified exactly
+  (60 steps x clamped rate; every extra step extracts nothing more).
+  15 new probes pin the battery (determinism; neutral-is-zero-pressure
+  for every driver/pattern — the bug classes above are each pinned;
+  vacuous-never-silent-zero; creep exact arithmetic 18.3; asymmetric
+  clamp saturation 27.75; resonance-linearity via same-held-steps
+  contiguous-vs-cycled; forge-scale saturation invariance; the
+  unit-error guard: battery module defines NO FLAW_EDGE_THRESHOLD).
+  524 pass (+15); ruff/mypy clean. AUDITING.md: the §17 section now
+  carries the battery's attack surface (neutral finder, vacuity
+  discipline, rate-units scope) and weakness #6 narrowed to the real
+  open item (the composite does not yet CONSUME the measured edges).
 - Round 40 self-audit + store recovery (the "audit this" round: the
   r28/r34 discipline applied to r39's own §17 tokenomics code — and
   the round the gates caught an ENVIRONMENT event). PART 1, the §17

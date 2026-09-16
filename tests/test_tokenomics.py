@@ -18,6 +18,11 @@ from pathlib import Path
 import pytest
 
 from blockchain_rd_lab.database import LabDatabase
+from blockchain_rd_lab.tokenomics.battery import (
+    SupplyAttackBattery,
+    SupplyAttackPattern,
+    SupplySpec,
+)
 from blockchain_rd_lab.tokenomics.combinator import (
     TokenDesign,
     combine,
@@ -395,3 +400,213 @@ class TestReport:
         assert "| Rank |" in txt
         assert "Dilution" in txt
         assert "Death Spiral" in txt
+
+
+# ---------------------------------------------------------------------------
+# Supply-dynamics attack battery (r41)
+# ---------------------------------------------------------------------------
+
+
+class TestSupplyBattery:
+    """The §20 pattern applied to supply functions: dynamics measured,
+    not asserted (closes the r40 audit's structural-only disclosure)."""
+
+    def test_battery_runs_every_pattern_every_driver(self):
+        for d in DRIVER_REGISTRY:
+            bat = SupplyAttackBattery(d)
+            bounds = bat.run_all(steps=60)
+            assert len(bounds) == 5
+            for b in bounds:
+                assert b.kind in {p for p in SupplyAttackPattern}
+                assert b.driver == d.name
+                # headline absent only under honest vacuity, never a
+                # silent 0.0 with vacuous=False
+                if not b.vacuous:
+                    assert b.headline is not None
+                    assert b.headline_metric in b.bound_metrics
+                    assert b.headline >= 0.0
+
+    def test_deterministic(self):
+        for d in DRIVER_REGISTRY:
+            b1 = SupplyAttackBattery(d).run_pattern(
+                SupplySpec(kind=SupplyAttackPattern.WASH_MINT)
+            )
+            b2 = SupplyAttackBattery(d).run_pattern(
+                SupplySpec(kind=SupplyAttackPattern.WASH_MINT)
+            )
+            assert b1 == b2
+
+    def test_neutral_is_zero_pressure_every_driver(self):
+        """The matched base must actually be neutral: |fn(neutral)|==0
+        for every probe (the r41 second-draft greedy bug is pinned
+        here — a false neutral corrupts every edge it touches)."""
+        for d in DRIVER_REGISTRY:
+            bat = SupplyAttackBattery(d)
+            for kind in (
+                SupplyAttackPattern.WASH_MINT,
+                SupplyAttackPattern.BURN_PARK,
+            ):
+                probe = bat._probe(kind)
+                if probe is None:
+                    continue
+                neutral = bat._neutral_state(probe)
+                assert abs(d.supply_fn(neutral)) < 1e-9, (
+                    d.name,
+                    kind,
+                    neutral,
+                )
+
+    def test_climate_driver_mint_patterns_vacuous(self):
+        """The r40-F1 lineage: the burn-only driver has no mint probe,
+        so every mint-side pattern is honestly VACUOUS (headline=None,
+        never 0.0)."""
+        bat = SupplyAttackBattery(get_driver("climate-risk-burn"))
+        for kind in (
+            SupplyAttackPattern.WASH_MINT,
+            SupplyAttackPattern.ROUND_TRIP,
+            SupplyAttackPattern.RESONANCE,
+            SupplyAttackPattern.CREEP,
+        ):
+            b = bat.run_pattern(SupplySpec(kind=kind))
+            assert b.vacuous
+            assert b.headline is None
+
+    def test_wash_saturation_bound_is_measured(self):
+        """wash_mint = steps x clamped rate at saturation: the
+        market-volume driver clamps at 1.0, so 60 steps mint exactly
+        60.0 — the saturation bound, verified numerically (an
+        unbounded rate would exceed it)."""
+        b = SupplyAttackBattery(
+            get_driver("market-volume")
+        ).run_pattern(SupplySpec(kind=SupplyAttackPattern.WASH_MINT, steps=60))
+        assert not b.vacuous
+        assert b.headline_metric == "total_minted"
+        assert b.headline == pytest.approx(60.0)
+
+    def test_creep_accumulates_sub_threshold(self):
+        """creep's per-step factor grows 0.01*(t+1); the honest
+        neutral is (vol=1, baseline=1) with the probe at (2,1), so
+        rate = factor and the total is sum(0.01*(t+1)) = 18.3 —
+        sub-threshold accumulation measured exactly, clamp never
+        binding (the craft never reaches probe magnitude)."""
+        b = SupplyAttackBattery(
+            get_driver("market-volume")
+        ).run_pattern(SupplySpec(kind=SupplyAttackPattern.CREEP, steps=60))
+        assert not b.vacuous
+        assert b.headline == pytest.approx(18.3, abs=1e-6)
+
+    def test_creep_asymmetric_clamp_measured(self):
+        """corridor-population's mint saturates at 0.5/step (the
+        demographic §25 asymmetry: mint hi=0.5 vs burn lo=-0.1),
+        MEASURED with a saturating grind (creep_rate=0.1): ramp
+        t=0..8 (rates 0.05..0.45, sum 2.25) then 51 steps at the
+        0.5 clamp = 27.75."""
+        b = SupplyAttackBattery(
+            get_driver("corridor-population")
+        ).run_pattern(
+            SupplySpec(
+                kind=SupplyAttackPattern.CREEP, steps=60, creep_rate=0.1
+            )
+        )
+        assert not b.vacuous
+        assert b.headline == pytest.approx(27.75, abs=1e-6)
+
+    def test_resonance_linear_no_ratchet(self):
+        """The honest no-ratchet comparison: contiguous hold vs cycled
+        hold for the SAME total held-steps (30 contiguous vs
+        2 x 15 cycled in a 60-step window). Equal totals = pressure
+        reverts fully between cycles (no ratchet); cycled higher =
+        compounding. A state-CARRYING driver would leave the cycled
+        total strictly above the contiguous one."""
+        bat = SupplyAttackBattery(get_driver("market-volume"))
+        contiguous = bat.run_pattern(
+            SupplySpec(kind=SupplyAttackPattern.ROUND_TRIP, hold=30)
+        )
+        cycled = bat.run_pattern(
+            SupplySpec(
+                kind=SupplyAttackPattern.RESONANCE, hold=15, cycles=2
+            )
+        )
+        assert contiguous.headline is not None
+        assert cycled.headline is not None
+        assert cycled.headline == pytest.approx(
+            contiguous.headline, abs=1e-9
+        )
+
+    def test_round_trip_release_legs_pay_nothing_back(self):
+        """A one-directional mint axis: the release legs return to the
+        neutral (zero pressure) — the minted total is exactly the
+        held-legs total, proven on the release legs' fn values."""
+        bat = SupplyAttackBattery(get_driver("market-volume"))
+        b = bat.run_pattern(
+            SupplySpec(kind=SupplyAttackPattern.ROUND_TRIP, hold=5)
+        )
+        assert not b.vacuous
+        # 5 held + 55 padded release legs: only held legs mint
+        assert b.headline == pytest.approx(5.0)
+
+    def test_burn_park_measures_drain_depth(self):
+        """burn_park on the climate driver: 60 steps x 1.0 clamped
+        burn = 60.0 — the drain depth under sustained fake crisis."""
+        b = SupplyAttackBattery(
+            get_driver("climate-risk-burn")
+        ).run_pattern(SupplySpec(kind=SupplyAttackPattern.BURN_PARK, steps=60))
+        assert not b.vacuous
+        assert b.headline == pytest.approx(60.0)
+
+    def test_vacuous_never_silent_zero(self):
+        """A vacuous bound has NO headline — never 0.0 (the §20
+        convention, pinned at the type level)."""
+        bat = SupplyAttackBattery(get_driver("climate-risk-burn"))
+        b = bat.run_pattern(SupplySpec(kind=SupplyAttackPattern.WASH_MINT))
+        assert b.vacuous
+        assert b.headline is None
+        assert b.pattern_metrics == {}
+
+    def test_forge_scale_multiplies_edge(self):
+        """forge_scale=2.0 doubles the held-leg displacement; on the
+        market driver (saturating) the headline stays at the clamp —
+        saturation is scale-invariant (the attacker gains nothing
+        beyond it)."""
+        bat = SupplyAttackBattery(get_driver("market-volume"))
+        b1 = bat.run_pattern(
+            SupplySpec(kind=SupplyAttackPattern.WASH_MINT, steps=30)
+        )
+        b2 = bat.run_pattern(
+            SupplySpec(
+                kind=SupplyAttackPattern.WASH_MINT,
+                steps=30,
+                forge_scale=2.0,
+            )
+        )
+        assert b1.headline == pytest.approx(30.0)
+        assert b2.headline == pytest.approx(30.0)  # saturated
+
+    def test_creep_capped_at_probe_magnitude(self):
+        """The creep craft never exceeds the probe's declared signal:
+        factor = min(1.0, rate*(t+1)) — at rate 0.1 x 60 steps the
+        interpolation saturates at the probe (never beyond)."""
+        bat = SupplyAttackBattery(get_driver("market-volume"))
+        b = bat.run_pattern(
+            SupplySpec(
+                kind=SupplyAttackPattern.CREEP, steps=60, creep_rate=0.1
+            )
+        )
+        # factor hits 1.0 at t=9 and stays: 51 saturated steps at 1.0
+        # + ramp before (sum 0.1..0.9 = 4.5)
+        assert b.headline == pytest.approx(4.5 + 51.0, abs=1e-6)
+
+    def test_battery_bound_not_comparable_to_flaw_threshold(self):
+        """§20's FLAW_EDGE_THRESHOLD (400) is $-denominated stock
+        edges; §17 edges are rate-units — importing that number here
+        would be a unit error. The battery deliberately defines none."""
+        import blockchain_rd_lab.tokenomics.battery as battery_mod
+
+        assert not hasattr(battery_mod, "FLAW_EDGE_THRESHOLD")
+
+    def test_run_supply_battery_convenience(self):
+        from blockchain_rd_lab.tokenomics.battery import run_supply_battery
+
+        bounds = run_supply_battery(get_driver("market-volume"), steps=30)
+        assert len(bounds) == 5
+        assert all(b.kind in {p for p in SupplyAttackPattern} for b in bounds)
