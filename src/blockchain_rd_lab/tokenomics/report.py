@@ -22,6 +22,10 @@ from blockchain_rd_lab.tokenomics.scoring import (
     rank_designs,
     rank_designs_with_dynamics,
 )
+from blockchain_rd_lab.tokenomics.stock import (
+    SCENARIOS,
+    run_stock_scenario,
+)
 from blockchain_rd_lab.tokenomics.supply_drivers import SupplyDriver
 
 
@@ -310,6 +314,54 @@ def build_token_report(
             + " > ".join(f"`{d}`" for d in dyn_order)
             + "."
         )
+    lines.append("")
+
+    # Stock scenarios (r43): the composed death-spiral dynamics —
+    # §25's death-spiral question now cites measured verdicts.
+    lines.append("## §17 Stock Scenarios (r43)")
+    lines.append("")
+    lines.append(
+        "The composed supply stock: a demand process drives each "
+        "design's own signal axis, rates integrate multiplicatively "
+        "into supply, value = demand/supply feeds back into demand "
+        "elastically (eta=0.5), and the verdict reads the quiet tail "
+        "after each scenario's shock (the r20 discipline). The "
+        "death-spiral question below is answered from THIS table."
+    )
+    lines.append("")
+    lines.append(
+        "| Design ID | Collapse | Crash | Mis-Mint | Organic S_T/S_0 |"
+    )
+    lines.append("|---|---|---|---|---|")
+    for design, _score in ranked:
+        d = design.driver
+        cell = {}
+        for sc_name in (
+            "demand_collapse", "crash", "supply_shock",
+            "organic_growth",
+        ):
+            r = run_stock_scenario(d, SCENARIOS[sc_name])
+            if sc_name == "organic_growth":
+                cell[sc_name] = (
+                    "vacuous" if r.verdict.value == "vacuous"
+                    else f"{r.supply_ratio:.3f}"
+                )
+            else:
+                cell[sc_name] = r.verdict.value
+        lines.append(
+            f"| `{design.design_id}` | {cell['demand_collapse']} | "
+            f"{cell['crash']} | {cell['supply_shock']} | "
+            f"{cell['organic_growth']} |"
+        )
+    lines.append("")
+    lines.append(
+        "Verdicts: stable (value recovered, supply tracked) | "
+        "rebased_down/up (value settled at a new level) | "
+        "spiral_down/up (still diverging or bleeding under quiet) | "
+        "vacuous (one-sided bounded signal index — the composition "
+        "declines to map a crisis onto an undeclared domain, the "
+        "r40-F1 discipline)."
+    )
     lines.append("")
 
     # §25 questions per design

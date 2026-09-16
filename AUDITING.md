@@ -13,7 +13,7 @@ reviewer starts at the frontier, not the walls.
 git clone https://github.com/nezzhang/AI-Blockchain-RD-Lab.git
 cd AI-Blockchain-RD-Lab
 python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
-.venv/bin/pytest            # 537 tests, all green = nothing hidden by a broken suite
+.venv/bin/pytest            # 562 tests, all green = nothing hidden by a broken suite
 .venv/bin/python scripts/r25_verify_bundle.py
 ```
 
@@ -32,7 +32,7 @@ no package install.
 | Deterministic interpreter | `src/blockchain_rd_lab/simulation/interpreter.py` | Everything rests on this. Does the arithmetic faithfully express the model JSON? Are clips/steps/feedback (§14) correct? |
 | Anti-reward-hacking guard | `src/blockchain_rd_lab/discovery/curriculum.py` | The r7 vacuum happened before this existed. Would it catch the next one? |
 | Report assembly (no report-writer LLM) | `src/blockchain_rd_lab/reporting/` | Every published number should trace to stored evidence. Dossiers/release packages are code-assembled — can prose drift from data? §4 residual disclosure (r36): every named attack vector must publish, the agent's `profitable_for_attacker` assertion is rendered metadata, never a filter — can a vector still be silently dropped? |
-| §17 Token Supply Mechanism Laboratory (r39-r42) | `src/blockchain_rd_lab/tokenomics/` | 13 supply drivers with pure supply functions, a tag-based combinator (§18), deterministic scoring across 4 dimensions (dilution/death-spiral/oracle-resistance/game-theory), a §25 question report renderer, (r41) a supply-dynamics attack battery, and (r42) dynamics-informed scoring that CONSUMES the measured edges — structural and dynamics published side-by-side, rank flips disclosed. Attack surfaces in the dedicated section below. |
+| §17 Token Supply Mechanism Laboratory (r39-r43) | `src/blockchain_rd_lab/tokenomics/` | 13 supply drivers with pure supply functions, a tag-based combinator (§18), deterministic scoring across 4 dimensions (dilution/death-spiral/oracle-resistance/game-theory), a §25 question report renderer, (r41) a supply-dynamics attack battery, (r42) dynamics-informed scoring consuming the measured edges, and (r43) a supply-stock composition layer measuring death-spiral dynamics under 7 demand scenarios. Attack surfaces in the dedicated section below. |
 
 ### §17 tokenomics attack surface (audited r40 — findings F1/F2/F5 fixed, see `2026-09-15-r40-self-audit-FIXES.md`)
 
@@ -65,7 +65,7 @@ no package install.
   measured (r41), closing the structural-only boundary for the
   registry.
 
-### §17 supply-dynamics battery (r41; CONSUMED by the composite r42)
+### §17 supply-dynamics battery (r41; consumed r42) + stock layer (r43)
 
 `tokenomics/battery.py` runs the §20 pattern against supply
 functions directly: 5 named choreographies (wash_mint, round_trip,
@@ -123,17 +123,20 @@ not re-report those.
    all of them with the assertion rendered as metadata per line); the
    wage-pool successor's `P_a` tenure-denial griefing vector is
    measured, disclosed, and unfixed by design (small honest cost).
-6. **§17 oracle dimension is self-reported** (narrowed r42): the
-   composite now CONSUMES the r41 battery's measured edges for
-   dilution (mint-extraction surface), death-spiral (drain depth),
-   and game-theory (ratchet ratio) — published side-by-side with the
-   structural scores, rank flips disclosed, never silent. The
-   remaining structural input is oracle manipulability: it counts
-   SELF-REPORTED manipulation vectors, and the battery has no
-   oracle-analogue choreography. The measured view also INVERTS the
-   rank-1's design order (structural market>usage>gdp>claims vs
-   dynamics claims>gdp>market>usage) — both are published; which to
-   trust is the reader's §25 question, not the code's.
+6. **§17 oracle dimension is self-reported; the stock layer is a
+   single-elasticity model** (narrowed r43): the composite CONSUMES
+   the r41 measured edges (r42) and the r43 stock layer measures
+   composed death-spiral dynamics (7 scenarios x 13 drivers, §21
+   census — ratio drivers stable, corridor's clamp fails the crash,
+   gdp spirals both directions, the mis-mint melt). Remaining
+   honest limits: oracle manipulability still counts SELF-REPORTED
+   vectors (no battery oracle analogue); the stock layer composes
+   ONE demand axis per driver (the hybrid's node axis rides at
+   neutral — disclosed), at ONE elasticity (eta=0.5; the eta=0
+   control is pinned, the full curve is not swept); one-sided
+   bounded indices (climate/claims/prediction) are honestly
+   VACUOUS — their crisis-mapping is a modeling assumption the
+   registry does not declare.
 
 ## How to file findings
 

@@ -438,3 +438,34 @@ def run_supply_battery(
 ) -> list[SupplyAttackBound]:
     """Convenience entry: every pattern against one driver."""
     return SupplyAttackBattery(driver).run_all(steps)
+
+
+def resolve_signal(
+    driver: SupplyDriver,
+) -> tuple[str, dict[str, float], dict[str, float]] | None:
+    """(axis, neutral, probe) for the driver's dominant signal.
+
+    The axis is the probe key with the LARGEST displacement from its
+    neutral value (deterministic tie-break by key name) — the signal
+    the probe was written to exercise. Returns None when the driver
+    declares no probe or the probe exerts zero displacement (the
+    vacuity conventions above).
+
+    Shared resolution point: the r43 stock layer composes demand
+    paths onto this same axis, so the battery and the stock layer can
+    never disagree about what a driver's signal IS.
+    """
+    bat = SupplyAttackBattery(driver)
+    probe = bat._probe(SupplyAttackPattern.WASH_MINT)
+    if probe is None:
+        probe = bat._probe(SupplyAttackPattern.BURN_PARK)
+    if probe is None:
+        return None
+    neutral = bat._neutral_state(probe)
+    diffs = {
+        k: abs(probe[k] - neutral.get(k, probe[k])) for k in probe
+    }
+    if not diffs or max(diffs.values()) == 0.0:
+        return None
+    axis = max(diffs, key=lambda k: (diffs[k], k))
+    return axis, neutral, probe

@@ -120,6 +120,83 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 43 supply-stock composition layer (the r43 half of the r41
+  recommendation: the death-spiral dynamics that stateless rate
+  functions cannot represent — the r41 census's own disclosed
+  boundary "death-spiral dynamics live in the combinator's
+  stock-integration layer, future work" — BUILT and MEASURED).
+  tokenomics/stock.py: a demand process D_t drives the driver's OWN
+  signal axis (resolved by battery.resolve_signal — the same source
+  the r41 crafts ride, so battery and stock layer can never disagree
+  about what a driver's signal IS); rates integrate multiplicatively
+  into supply S_{t+1} = S_t(1+rate_t); value V_t = D_t/S_t feeds back
+  into demand elastically (gamma_t = g_t + eta(V_t/V_0 - 1), the
+  reflexive channel); 7 scenarios (steady, organic_growth,
+  demand_collapse -2%/step x30, crash -20%/step x5, supply_shock
+  +10% mis-mint, oscillation +/-5%, hyper_growth +5%); the verdict
+  reads the QUIET TAIL (last quarter, the r20 discipline). Honest
+  composition scope (the r40-F1 lineage): level-type drivers compose
+  through their probe-declared reference pairs; the signed rate-type
+  (gdp: both probe directions declared, axis values span zero)
+  composes directly; one-sided bounded indices (climate risk, claims
+  ratio, prediction confidence) are VACUOUS — their crisis-mapping
+  is a modeling assumption the registry does not declare. THE
+  LAYER'S OWN DRAFTS BUGGED TWICE (each caught by reading the census
+  numbers critically, both pinned): (1) the ratio-only verdict logic
+  missed the MELT THAT HIDES IN LEVELS — a +10% mis-mint on
+  market-volume settles value 17% below anchor while BOTH demand and
+  supply bleed 8.3%/step forever; drift watched V only, so it read
+  "settled" — fixed with the endogenous-growth criterion
+  (rate - g sustained beyond tolerance = spiral, signed by where
+  value ended); (2) the mis-signed runaway — gdp under organic
+  growth (supply collapsing, value exploding to 1e40) read
+  spiral_DOWN because the bleed rule signed by SUPPLY — fixed by
+  signing every sustained/growing spiral by VALUE direction. Also
+  discarded: the arbitrary RUNAWAY verdict class (100x threshold)
+  — magnitudes live in the disclosed metrics, verdicts classify
+  dynamics. MEASURED RESULTS (§21 census r43-stock-composition-
+  census, 13 drivers x 7 scenarios = 91 runs, 21 vacuous, 40
+  spirals): RATIO DRIVERS' CONSTANT VELOCITY — market/usage/
+  commodity/energy STABLE under collapse AND crash (V recovers to
+  exactly 1.0; supply tracks demand through the shock): the
+  measured negative result. THE DIFFERENTIATED PAIR — corridor-
+  population SPIRAL_DOWN under crash (its burn clamps at -0.1/step,
+  cannot track -20%/step: the r41-measured §25 asymmetry now has
+  its second-order consequence measured) while market-volume rides
+  the same crash STABLE. GDP BOTH DIRECTIONS — counter-cyclical-
+  gdp SPIRAL_DOWN under collapse (mints +|gamma| while demand dies:
+  S 1e15x, V ~ 0 — the inflationary collapse) AND SPIRAL_UP under
+  organic growth (burns while demand grows: S ~ 0, V 1e40 — the
+  deflationary runaway): counter-cyclicality that stabilizes an
+  economy destroys the composed token in BOTH directions — the
+  round's showcase finding. THE MIS-MINT MELT (market-volume:
+  spiral_down, endogenous -8.33%/step, demand evaporates to 0.2% of
+  start while value only shows -17%): with eta=0 the same shock is
+  a permanent REBASE (no melt) — the feedback channel is
+  load-bearing, measured both ways. THE FEEDBACK AMPLIFICATION:
+  the one-step lag + level feedback drives gamma toward
+  g/(1-eta) — every shock transiently amplified 2x at eta=0.5
+  (demand fell 4%/step under the -2% collapse drive; pinned with
+  the eta=0 control at exactly 0.98^30). METCALFE'S SLOW
+  DIVERGENCE (log under-tracking ln(1+g) != g makes every positive
+  feedback loop diverge — even the collapse scenario ends with
+  value ABOVE anchor and still moving). THE HYBRID'S DISCLOSURE:
+  single-axis composition (dominant signal; the node axis rides at
+  neutral) gives tracking gain 0.6 < 1 — the hybrid under-tracks
+  and spirals; its r39 equilibrium claim does not survive stock
+  composition, disclosed. REPORT: the §25 token report gains the
+  "§17 Stock Scenarios (r43)" table (collapse/crash/mis-mint
+  verdicts + the organic dilution multiple per design) — §25's
+  death-spiral question now cites measured verdicts. 25 new probes
+  pin the layer (determinism; registry-wide finiteness; composition
+  types incl. the vacuous three; the constant-velocity quartet; the
+  crash pair corridor-vs-market; gdp both directions; the melt and
+  its eta=0 control; the amplification transient pinned to the
+  measured 0.2941843; metcalfe divergence; hybrid under-tracking;
+  steady flatness for all composable; the shock-window-before-tail
+  invariant; the growth-path shapes; the report table's verdict
+  cells all real StockVerdict values). 562 pass (+25); ruff/mypy
+  clean.
 - Round 42 dynamics-informed scoring (the r42 half of the r41
   recommendation: the composite CONSUMES the measured edges —
   AUDITING.md weakness #6's open item, closed). score_design is
