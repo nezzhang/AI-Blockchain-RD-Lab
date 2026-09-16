@@ -120,6 +120,38 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 45 elasticity sweep (the r43 follow-up: eta=0.5 was pinned
+  but the curve was unknown — now mapped). scripts/r45_elasticity_
+  sweep.py: 10 composable drivers x 7 scenarios x 5 eta values
+  (0, 0.25, 0.5, 0.75, 1.0) = 350 composed runs + 105 vacuous rows
+  = 455 total; section-21 census r45-elasticity-sweep. Uses
+  dataclasses.replace to vary ONLY elasticity (the r22 pattern).
+  MEASURED RESULTS (the feedback-amplification curve): RATIO DRIVERS
+  HOLD THROUGH 0.75 — market-volume, usage-growth, commodity-basket-
+  peg, renewable-energy-pow are STABLE under demand_collapse AND
+  crash at eta=0, 0.25, 0.5, 0.75, flipping to spiral_down only at
+  eta=1.0 (the constant-velocity property from r43 survives up to
+  full reflexive coupling); SUPPLY_SHOCK FLIPS AT 0.25 FOR EVERY
+  COMPOSABLE DRIVER — the one-shot mis-mint creates a value dip that
+  even mild feedback amplifies into sustained bleeding (the r43 melt
+  generalizes: it is NOT specific to eta=0.5); GDP SPIRALS
+  EVERYWHERE ABOVE ZERO — counter-cyclical-gdp flips by eta=0.25
+  under every non-steady scenario (the inflationary collapser /
+  deflationary runaway is structural to signed-rate counter-
+  cyclicality, not an artifact of one elasticity); METCALFE DIVERGES
+  BY 0.5 — log-composition under positive growth flips to spiral_up
+  at eta=0.5 (at eta=0 it rebases/stays stable; the log under-
+  tracking needs feedback > 0.25 to compound); MONOTONICITY HOLDS —
+  once a (driver, scenario) flips to spiral at some eta, it stays
+  spiral at every higher eta (more feedback cannot stabilize an
+  already-diverging system — verified across all 70 trajectories);
+  ZERO-ETA BASELINE — at eta=0 no quiet-scenario spirals (no
+  reflexive channel means no endogenous motion; shocks rebase or
+  stay stable, never spiral). 7 new probes pin the curve: zero-
+  elasticity quiet baseline; flip monotonicity; supply-shock <= 0.25
+  universal; ratio drivers stable through 0.75; gdp <= 0.25;
+  metcalfe threshold; determinism. 572 pass (+7); ruff/mypy clean.
+  AUDITING.md: weakness #6 carries the elasticity disclosure.
 - Round 44 pre-audit sweep for external-audit round-5 (the r28/r30/
   r34 discipline: the lab runs its own hostile pass over everything
   that shipped since r38's clean pass BEFORE the external auditor —

@@ -371,3 +371,175 @@ class TestStockReportSection:
             cells = [c.strip() for c in row.split("|")[2:6]]
             for c in cells[:3]:
                 assert c in valid, (row, c)
+
+
+# ---------------------------------------------------------------------------
+# Elasticity sweep (r45)
+# ---------------------------------------------------------------------------
+
+
+class TestElasticitySweep:
+    """The feedback-amplification curve: where does each driver flip
+    from stable/rebased to spiral as elasticity increases?"""
+
+    @pytest.fixture()
+    def sweep_rows(self):
+        from dataclasses import replace
+
+        from blockchain_rd_lab.tokenomics.battery import resolve_signal
+        from blockchain_rd_lab.tokenomics.stock import (
+            SCENARIOS,
+            StockVerdict,
+            run_stock_scenario,
+        )
+        from blockchain_rd_lab.tokenomics.supply_drivers import DRIVER_REGISTRY
+
+        spirals = {StockVerdict.SPIRAL_DOWN.value, StockVerdict.SPIRAL_UP.value}
+        etas = (0.0, 0.25, 0.5, 0.75, 1.0)
+        rows = []
+        for d in DRIVER_REGISTRY:
+            if resolve_signal(d) is None:
+                continue
+            for sc_name, sc in SCENARIOS.items():
+                verdicts = {}
+                for eta in etas:
+                    r = run_stock_scenario(d, replace(sc, elasticity=eta))
+                    verdicts[eta] = r.verdict.value
+                first_spiral = next(
+                    (e for e in etas if verdicts[e] in spirals), None
+                )
+                rows.append({
+                    "driver": d.name,
+                    "scenario": sc_name,
+                    "verdicts": verdicts,
+                    "flip_eta": first_spiral,
+                })
+        return rows
+
+    def test_zero_elasticity_no_feedback_spirals(self, sweep_rows):
+        """At eta=0 there is NO reflexive channel — value changes
+        cannot feed back into demand. Steady-state scenarios must be
+        stable; shock scenarios may rebase but never spiral (the
+        endogenous-growth criterion requires feedback to sustain)."""
+        spirals = {"spiral_down", "spiral_up"}
+        quiet_scenarios = {"steady", "oscillation"}
+        violations = [
+            r for r in sweep_rows
+            if r["scenario"] in quiet_scenarios
+            and r["verdicts"][0.0] in spirals
+        ]
+        assert not violations, (
+            f"eta=0 spiraled under quiet: {violations}"
+        )
+
+    def test_flip_monotonicity(self, sweep_rows):
+        """Once a (driver, scenario) flips to spiral at some eta, it
+        stays spiral at every higher eta (more feedback cannot
+        stabilize an already-diverging system)."""
+        spirals = {"spiral_down", "spiral_up"}
+        etas = (0.0, 0.25, 0.5, 0.75, 1.0)
+        violations = []
+        for r in sweep_rows:
+            flipped = False
+            for e in etas:
+                if r["verdicts"][e] in spirals:
+                    flipped = True
+                elif flipped:
+                    violations.append(
+                        f"{r['driver']}/{r['scenario']}: spiral at "
+                        f"lower eta but {r['verdicts'][e]} at eta={e}"
+                    )
+                    break
+        assert not violations, "\n".join(violations[:5])
+
+    def test_supply_shock_flips_at_quarter(self, sweep_rows):
+        """The mis-mint supply_shock: every composable level-type
+        driver flips to spiral_down by eta=0.25 (the one-shot mint
+        creates a value dip that even mild feedback amplifies into
+        sustained bleeding)."""
+        relevant = [
+            r for r in sweep_rows
+            if r["scenario"] == "supply_shock"
+            and r["verdicts"][0.0] != "vacuous"
+        ]
+        assert relevant
+        for r in relevant:
+            assert r["flip_eta"] is not None and r["flip_eta"] <= 0.25, (
+                f"{r['driver']}: supply_shock flip at {r['flip_eta']}, "
+                f"expected <= 0.25"
+            )
+
+    def test_ratio_drivers_stable_until_high_eta(self, sweep_rows):
+        """market-volume, usage-growth, commodity-basket-peg,
+        renewable-energy-pow: the constant-velocity ratio drivers
+        (stable under collapse AND crash at eta=0.5 per r43) remain
+        stable through eta=0.75 for shock scenarios, flipping only
+        at eta=1.0."""
+        ratio_drivers = {
+            "market-volume", "usage-growth",
+            "commodity-basket-peg", "renewable-energy-pow",
+        }
+        shock_scenarios = {"demand_collapse", "crash"}
+        for r in sweep_rows:
+            if r["driver"] not in ratio_drivers:
+                continue
+            if r["scenario"] not in shock_scenarios:
+                continue
+            # stable through 0.75
+            for eta in (0.0, 0.25, 0.5, 0.75):
+                assert r["verdicts"][eta] in ("stable", "rebased_down", "rebased_up"), (
+                    f"{r['driver']}/{r['scenario']} at eta={eta}: "
+                    f"{r['verdicts'][eta]}"
+                )
+
+    def test_gdp_spirals_everywhere_above_zero(self, sweep_rows):
+        """counter-cyclical-gdp: the inflationary collapser /
+        deflationary runaway spirals under EVERY non-steady scenario
+        at any eta > 0 (its signed-rate composition means the
+        counter-cyclical response always fights the demand direction)."""
+        gdp_rows = [
+            r for r in sweep_rows
+            if r["driver"] == "counter-cyclical-gdp"
+            and r["scenario"] != "steady"
+        ]
+        assert gdp_rows
+        for r in gdp_rows:
+            assert r["flip_eta"] is not None and r["flip_eta"] <= 0.25, (
+                f"gdp/{r['scenario']}: flip at {r['flip_eta']}, expected <= 0.25"
+            )
+
+    def test_metcalfe_divergence_threshold(self, sweep_rows):
+        """metcalfe-growth's log-composition diverges under positive
+        growth scenarios. At eta=0 it rebases/stays stable; at
+        eta>=0.5 it spirals up (the log under-tracking ln(1+g)!=g
+        combined with feedback pushes it over)."""
+        meta_growth = [
+            r for r in sweep_rows
+            if r["driver"] == "metcalfe-growth"
+            and r["scenario"] in ("organic_growth", "hyper_growth")
+        ]
+        for r in meta_growth:
+            assert r["verdicts"][0.0] in ("stable", "rebased_up"), (
+                f"metcalfe/{r['scenario']} at eta=0: {r['verdicts'][0.0]}"
+            )
+            assert r["flip_eta"] is not None and r["flip_eta"] <= 0.5, (
+                f"metcalfe/{r['scenario']}: flip at {r['flip_eta']}"
+            )
+
+    def test_sweep_determinism(self):
+        """Two independent runs produce identical results."""
+        from dataclasses import replace
+
+        from blockchain_rd_lab.tokenomics.stock import (
+            SCENARIOS,
+            run_stock_scenario,
+        )
+        from blockchain_rd_lab.tokenomics.supply_drivers import get_driver
+
+        d = get_driver("market-volume")
+        sc = replace(SCENARIOS["demand_collapse"], elasticity=0.75)
+        r1 = run_stock_scenario(d, sc)
+        r2 = run_stock_scenario(d, sc)
+        assert r1.verdict == r2.verdict
+        assert r1.value_ratio == r2.value_ratio
+        assert r1.supply_ratio == r2.supply_ratio
