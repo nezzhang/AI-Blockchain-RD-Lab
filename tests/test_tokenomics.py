@@ -823,3 +823,65 @@ class TestDynamicsReport:
             txt,
         )
         assert rows, "no dynamics table rows rendered"
+
+
+class TestSignalAxisResolution:
+    """r44 pre-audit sweep F1: the neutral finder's L1 tie-break was
+    alphabetical luck — productivity-deflation's equidistant neutral
+    moved the REFERENCE (prev_productivity_index) instead of the
+    signal, inverting the stock layer's composition (it minted into
+    growth where the design burns). Pinned: every driver's axis is a
+    SIGNAL key, never a reference key, and the neutral is zero
+    pressure for both probe directions."""
+
+    def test_axis_is_never_a_reference_key(self):
+        from blockchain_rd_lab.tokenomics.battery import (
+            _is_reference_key,
+            resolve_signal,
+        )
+
+        for d in DRIVER_REGISTRY:
+            r = resolve_signal(d)
+            if r is None:
+                continue  # honestly vacuous (no probe declared)
+            axis, _neutral, _probe = r
+            assert not _is_reference_key(axis), (
+                f"{d.name}: axis {axis} is a REFERENCE key — the "
+                "composition would invert the driver's response "
+                "(the r44 F1 class)"
+            )
+
+    def test_productivity_axis_is_the_signal(self):
+        """The exact F1 case: productivity-deflation must resolve to
+        productivity_index (the signal), never prev_productivity_index
+        (the reference)."""
+        from blockchain_rd_lab.tokenomics.battery import resolve_signal
+
+        r = resolve_signal(get_driver("productivity-deflation"))
+        assert r is not None
+        axis, neutral, _probe = r
+        assert axis == "productivity_index"
+        # the correct neutral moves the signal back to its reference
+        # value and leaves the reference at its probe value
+        assert neutral["productivity_index"] == pytest.approx(
+            1.0
+        )
+        assert neutral["prev_productivity_index"] == pytest.approx(
+            1.0
+        )
+
+    def test_stock_composition_preserves_design_direction(self):
+        """The F1 consequence, pinned at the behavior level: the
+        composed productivity driver BURNS on demand growth (its
+        designed deflationary response), never mints."""
+        from blockchain_rd_lab.tokenomics.battery import resolve_signal
+        from blockchain_rd_lab.tokenomics.stock import _reference_key
+
+        d = get_driver("productivity-deflation")
+        axis, neutral, _probe = resolve_signal(d)
+        assert axis == "productivity_index"
+        ref = _reference_key(axis, neutral)
+        assert ref == "prev_productivity_index"
+        # the composed state on +1% growth: signal=D_t, ref=D_prev
+        composed = {axis: 1.01, ref: 1.0}
+        assert d.supply_fn(composed) < 0.0  # BURN, as designed

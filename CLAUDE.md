@@ -123,6 +123,62 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 44 pre-audit sweep for external-audit round-5 (the r28/r30/
+  r34 discipline: the lab runs its own hostile pass over everything
+  that shipped since r38's clean pass BEFORE the external auditor —
+  the entire §17 subsystem, r39-r43, ~2,600 lines + 114 tests — so
+  the round-5 audit finds only what the lab could not). Sweep
+  method: every check by LIVE EXECUTION (§2), hostile read of every
+  claim an auditor would test. VERIFIED CLEAN: report byte-
+  determinism ACROSS PROCESSES (two-process render, byte-identical,
+  zero wall-clock in tokenomics — the r37 class absent); all three
+  §21 censuses (r41/r42/r43) reproduce byte-exact from today's code
+  (the r33 verification pattern); axis resolution stable and
+  zero-pressure for all 13 drivers; no non-finite value_ratios
+  stored; the bundle verifier exit 0 (51 checks); start-here
+  commands verbatim. THREE FINDINGS, all fixed at the root, all
+  pinned: F1 (HIGH, the fake-composition class — the sweep's real
+  catch): the neutral finder's L1 tie-break was ALPHABETICAL LUCK.
+  productivity-deflation's mint probe (prod=0.5, prev=1.0) has two
+  equidistant zero-pressure neutrals — (prod=1, prev=1) moves the
+  SIGNAL, (prod=0.5, prev=0.5) moves the REFERENCE — and because
+  "prev_" sorts before "prod", the reference-mover won. Market-
+  volume got the same tie and got LUCKY ("trading_volume" sorts
+  first). Consequence, verified live: resolve_signal returned
+  prev_productivity_index as the axis, so the r43 stock layer
+  composed the demand path onto the REFERENCE key — inverting the
+  driver's designed response (composed rate +0.0099 MINT on +1%
+  growth where the design burns -0.0100). The stored r43 census's
+  productivity rows were measured under the inverted composition.
+  FIX: the tie-break now prefers the neutral that moves fewer
+  REFERENCE-named keys (prev_*, *_baseline, *_target) — the
+  principled rule (the neutral moves the signal, never the
+  denominator), not luck. Blast radius measured: exactly one
+  driver. r41 creep 13.19 -> 9.15 (the old neutral's path inflated
+  the grind); r43's productivity verdicts measured under the
+  DESIGNED composition: demand_collapse spiral_up -> spiral_down,
+  crash spiral_up -> spiral_down, supply_shock stable ->
+  spiral_down — correctly composed, productivity-deflation MINTS
+  into demand collapse (S explodes, value annihilated): the same
+  INFLATIONARY-COLLAPSER class as counter-cyclical-gdp, a finding
+  the inverted census had hidden. r42 UNCHANGED (wash dominates
+  creep: extraction stays 0.5 — verified, not assumed). All 562
+  existing pins held (none touched productivity's numbers);
+  censuses re-stored with the correction disclosed in the record
+  (r44-corrected); 3 new probes pin the class: every driver's axis
+  is NEVER a reference key; the exact productivity case (axis ==
+  productivity_index, neutral (1,1)); the design direction at the
+  behavior level (composed +1% growth BURNS, never mints). F2
+  (LOW, the fake-number pattern): the r42 report's structural
+  column used struct_overall.get(id, 0.0) — unreachable (both
+  tables rank the same designs list) but a silent 0.0 fallback is
+  the dishonesty pattern; now fails loud (KeyError on a missing id
+  — a generator bug, not a data condition). F3 (LOW, the r28/r30
+  claim-vs-reality class): AUDITING.md still said "rounds 27-40"
+  and "four self-sweeps" — three rounds stale (r41-r43 shipped);
+  now 27-44 and six self-sweeps (r28/r30/r34/r36/r40/r44). 565
+  pass (+3); ruff/mypy clean; bundle verifier 51 checks exit 0.
+  The §17 subsystem is staged for the round-5 external audit.
 - Round 43 supply-stock composition layer (the r43 half of the r41
   recommendation: the death-spiral dynamics that stateless rate
   functions cannot represent — the r41 census's own disclosed

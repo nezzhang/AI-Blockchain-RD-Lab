@@ -267,7 +267,10 @@ def build_token_report(
     lines.append("|---|---|---|---|---|---|---|---|")
     struct_overall = {s.design_id: s.overall for _, s in ranked}
     for i, (_design, dscore, ev) in enumerate(dyn_ranked, 1):
-        s_overall = struct_overall.get(dscore.design_id, 0.0)
+        # fail loud, never a silent 0.0 (the fake-number class):
+        # both tables rank the SAME designs list, so a missing id is
+        # a generator bug, not a data condition
+        s_overall = struct_overall[dscore.design_id]
         delta = dscore.overall - s_overall
         mint_txt = (
             f"{ev.mint_extraction:.2f}"

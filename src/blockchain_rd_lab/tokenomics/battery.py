@@ -52,6 +52,17 @@ _SMOOTH_MAX = 1e-3  # |fn| allowed under perturbation at a true neutral
 _ZERO_PRESSURE = 1e-9  # |fn| below this counts as zero pressure
 
 
+def _is_reference_key(key: str) -> bool:
+    """Reference (denominator) keys by the registry's naming
+    conventions: prev_<signal>, <signal>_baseline, <signal>_target.
+    The neutral search moves SIGNALS, never references (r44 F1)."""
+    return (
+        key.startswith("prev_")
+        or key.endswith("_baseline")
+        or key.endswith("_target")
+    )
+
+
 class SupplyAttackPattern(enum.StrEnum):
     """Named attacker choreographies against supply functions.
 
@@ -200,7 +211,7 @@ class SupplyAttackBattery:
             )
             for k in keys
         ]
-        best_zero: tuple[float, int, dict[str, float]] | None = None
+        best_zero: tuple[float, int, int, dict[str, float]] | None = None
         best_any: tuple[float, float, int, dict[str, float]] | None = None
         for order, assignment in enumerate(
             itertools.product(*cand_lists)
@@ -208,6 +219,23 @@ class SupplyAttackBattery:
             state = dict(zip(keys, assignment, strict=True))
             f = self._fn_abs(state)
             dist = sum(abs(state[k] - probe[k]) for k in keys)
+            # r44 (the pre-audit sweep's F1): among equidistant
+            # zero-pressure candidates, prefer the one that moves
+            # the SIGNAL, not the REFERENCE. The r41 tie-break was
+            # alphabetical luck: productivity-deflation's probe
+            # (prod=0.5, prev=1.0) has two dist-0.5 neutrals —
+            # (prod=1, prev=1) moves the signal, (prod=0.5,
+            # prev=0.5) moves the reference — and "prev_" sorted
+            # first, so the wrong one won, INVERTING the stock
+            # layer's composition for that driver (it minted into
+            # growth where the design burns). market-volume got
+            # lucky ("trading_volume" sorts first); the luck is
+            # now replaced by the rule.
+            ref_moved = sum(
+                1
+                for k in keys
+                if state[k] != probe[k] and _is_reference_key(k)
+            )
             if best_any is None or (f, dist, order) < best_any[:3]:
                 best_any = (f, dist, order, state)
             if (
@@ -215,12 +243,12 @@ class SupplyAttackBattery:
                 and self._guard_smooth(state)
                 and (
                     best_zero is None
-                    or (dist, order) < best_zero[:2]
+                    or (dist, ref_moved, order) < best_zero[:3]
                 )
             ):
-                best_zero = (dist, order, state)
+                best_zero = (dist, ref_moved, order, state)
         if best_zero is not None:
-            return best_zero[2]
+            return best_zero[3]
         assert best_any is not None  # product is never empty
         return best_any[3]
 

@@ -13,7 +13,7 @@ reviewer starts at the frontier, not the walls.
 git clone https://github.com/nezzhang/AI-Blockchain-RD-Lab.git
 cd AI-Blockchain-RD-Lab
 python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
-.venv/bin/pytest            # 562 tests, all green = nothing hidden by a broken suite
+.venv/bin/pytest            # 565 tests, all green = nothing hidden by a broken suite
 .venv/bin/python scripts/r25_verify_bundle.py
 ```
 
@@ -97,9 +97,9 @@ resonance, creep, burn_park) × 13 drivers = 65 runs, §21 census
 The full method is `MASTER BUILD PROMPT.md` (§2 evidence rules, §15
 battery, §19 scoring, §20 gate, §27 ladder). `CLAUDE.md`/`GEMINI.md`
 carry the round-by-round history — including every failure the lab
-caught in itself. Read rounds 27-40 to see what four external audits,
-the Codebuff full-audit pass, and four self-sweeps already fixed; do
-not re-report those.
+caught in itself. Read rounds 27-44 to see what four external
+audits, the Codebuff full-audit pass, and six self-sweeps already
+fixed; do not re-report those.
 
 ## Known honest weaknesses (start here, they are real)
 
