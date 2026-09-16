@@ -17,7 +17,11 @@ from blockchain_rd_lab.tokenomics.combinator import (
     TokenDesign,
     combine_all_registered,
 )
-from blockchain_rd_lab.tokenomics.scoring import TokenScore, rank_designs
+from blockchain_rd_lab.tokenomics.scoring import (
+    TokenScore,
+    rank_designs,
+    rank_designs_with_dynamics,
+)
 from blockchain_rd_lab.tokenomics.supply_drivers import SupplyDriver
 
 
@@ -223,6 +227,88 @@ def build_token_report(
             f"{10.0 - score.oracle_manipulability:.1f} | "
             f"{score.game_theory_stability:.1f} | "
             f"{score.overall_display:.4f} |"
+        )
+    lines.append("")
+
+    # Dynamics-informed scores (r42): the SAME dimensions and weights,
+    # with the r41 battery's MEASURED edges as dimension inputs —
+    # published BESIDE the structural ranking, never instead of it.
+    # A rank flip between the two tables is disclosed explicitly
+    # (the r42 contract: visible, never silent).
+    dyn_ranked = rank_designs_with_dynamics(designs)
+    lines.append("## Dynamics-Informed Scores (r42)")
+    lines.append("")
+    lines.append(
+        "The table above scores STRUCTURAL properties (boundedness, "
+        "path existence). This table scores the same four dimensions "
+        "under the same weights (0.30/0.25/0.25/0.20) with the r41 "
+        "supply-dynamics battery's MEASURED edges as inputs: dilution "
+        "resistance consumes the mint-extraction surface "
+        "(max(wash_mint, creep)/steps), death-spiral resistance "
+        "consumes the measured drain depth (burn_park/steps), "
+        "game-theory stability consumes the measured ratchet ratio "
+        "(resonance / (cycles x round_trip); 1.0 = linear, the "
+        "measured no-ratchet result). Oracle manipulability stays "
+        "structural in both tables (self-reported vector counts — "
+        "the battery has no oracle-analogue choreography, disclosed). "
+        "A driver with no attack surface for a direction scores that "
+        "direction 10.0 (nothing can be forged where no path "
+        "exists); vacuous patterns are listed per design."
+    )
+    lines.append("")
+    lines.append(
+        "| Rank | Design ID | Structural | Dynamics | Delta | "
+        "Mint Extraction | Drain Depth | Ratchet |"
+    )
+    lines.append("|---|---|---|---|---|---|---|---|")
+    struct_overall = {s.design_id: s.overall for _, s in ranked}
+    for i, (_design, dscore, ev) in enumerate(dyn_ranked, 1):
+        s_overall = struct_overall.get(dscore.design_id, 0.0)
+        delta = dscore.overall - s_overall
+        mint_txt = (
+            f"{ev.mint_extraction:.2f}"
+            if ev.mint_extraction is not None
+            else "none (vacuous)"
+        )
+        drain_txt = (
+            f"{ev.drain_fraction:.2f}"
+            if ev.drain_fraction is not None
+            else "none (vacuous)"
+        )
+        ratchet_txt = (
+            f"{ev.ratchet_ratio:.2f}"
+            if ev.ratchet_ratio is not None
+            else "unmeasured"
+        )
+        lines.append(
+            f"| {i} | `{dscore.design_id}` | {s_overall:.4f} | "
+            f"{dscore.overall:.4f} | {delta:+.4f} | "
+            f"{mint_txt} | {drain_txt} | {ratchet_txt} |"
+        )
+    lines.append("")
+
+    # Rank-flip disclosure: the two orderings, compared by design_id
+    struct_order = [s.design_id for _, s in ranked]
+    dyn_order = [ds.design_id for _, ds, _ in dyn_ranked]
+    if struct_order == dyn_order:
+        lines.append(
+            "Rank order is IDENTICAL under structural and dynamics-"
+            "informed scoring."
+        )
+    else:
+        flips = [
+            (a, b)
+            for a, b in zip(struct_order, dyn_order, strict=True)
+            if a != b
+        ]
+        lines.append(
+            f"RANK ORDER DIFFERS between the tables ({len(flips)} "
+            "position(s) changed) — disclosed, never silent. "
+            "Structural order: "
+            + " > ".join(f"`{d}`" for d in struct_order)
+            + ". Dynamics order: "
+            + " > ".join(f"`{d}`" for d in dyn_order)
+            + "."
         )
     lines.append("")
 

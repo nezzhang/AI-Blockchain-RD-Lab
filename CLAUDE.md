@@ -123,6 +123,56 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 42 dynamics-informed scoring (the r42 half of the r41
+  recommendation: the composite CONSUMES the measured edges —
+  AUDITING.md weakness #6's open item, closed). score_design is
+  UNTOUCHED (structural, all existing pins hold — the no-silent-
+  rescoring contract); NEW score_design_with_dynamics(design, steps)
+  runs the r41 battery and scores the SAME four dimensions under the
+  SAME weights with MEASURED inputs: dilution <- the mint-extraction
+  surface max(wash_mint, creep)/steps (a driver forgeable to full
+  clamp every step scores 0.0; the asymmetric-clamp corridor driver
+  scores 5.0; vacuous mint surface = 10.0 — nothing forgeable where
+  no path exists); death-spiral <- the measured drain depth
+  burn_park/steps; game-theory <- the measured ratchet ratio
+  resonance/(cycles x round_trip) (exactly 1.0 = the measured
+  no-ratchet result, 10.0; compounding scores toward 0); oracle
+  manipulability stays STRUCTURAL in both paths (self-reported
+  vectors; the battery has no oracle analogue — disclosed). The
+  composite formula is ONE shared code path (_composite) so the two
+  scorings can never disagree on how dimensions combine;
+  _oracle_badness likewise shared. DynamicsEvidence carries every
+  input (mint_extraction, drain_fraction, ratchet_ratio, vacuous
+  patterns) — every number attributable (§2). REPORT: the §25 report
+  gains a "Dynamics-Informed Scores (r42)" section — the structural
+  table stays primary, the dynamics table renders BESIDE it with
+  per-design deltas and an explicit rank-flip disclosure (both
+  orderings spelled out when they differ; "IDENTICAL" named when they
+  match — visible, never silent). MEASURED RESULT (§21 census
+  r42-dynamics-scoring-census, all 13 drivers): the rank-1's four
+  compatible designs INVERT — structural market>usage>gdp>claims
+  (6.25/6.25/5.85/3.75) vs dynamics claims>gdp>market>usage
+  (3.85/3.50/0.75/0.75): the structural probes scored market and
+  usage 10.0 dilution (bounded + has_burn), but the MEASUREMENT
+  shows both extractable at the FULL clamp under sustained forgery
+  (extraction 1.0) while claims-ratio's mint clamps at 0.8 and its
+  burn surface is vacuous — the structural view rewarded boundedness
+  the dynamics view prices at the measured extraction rate. Biggest
+  drop market-volume 6.25 -> 0.75; biggest gain climate-risk-burn
+  3.60 -> 3.75 (its vacuous mint surface is now credited 10.0
+  dilution honestly — the r40-F1 burn-only lineage carrying
+  through). gt_stability 10.0 uniformly (ratchet ratio exactly 1.0
+  everywhere — the r41 measured negative result consumed by the
+  composite). Both views are PUBLISHED; which to trust is the
+  reader's §25 question, not the code's (§2). 13 new probes pin the
+  contract: structural-unchanged (market still 10/10/5/10 -> 6.25);
+  market full extraction 0.75 exactly; corridor asymmetric 5.0/9.0;
+  climate vacuous surfaces credited 10.0 with the pattern list;
+  oracle identical across paths for every driver; the composite
+  recomputation for both; metcalfe log-drain 0.6931; determinism
+  (score + evidence); ordering/tiebreaks; registry-wide finiteness;
+  report section + one-of-two flip disclosure + signed deltas.
+  537 pass (+13); ruff/mypy clean.
 - Round 41 supply-dynamics attack battery (the recommended follow-up:
   close the r40 audit's biggest §17 disclosure — "structural, not
   behavioral — no adversarial simulation of supply dynamics yet" — by

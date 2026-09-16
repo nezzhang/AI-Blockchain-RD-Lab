@@ -35,7 +35,9 @@ from blockchain_rd_lab.tokenomics.scoring import (
     _supply_fn_has_burn_path,
     _supply_fn_has_mint_path,
     rank_designs,
+    rank_designs_with_dynamics,
     score_design,
+    score_design_with_dynamics,
 )
 from blockchain_rd_lab.tokenomics.supply_drivers import (
     DRIVER_REGISTRY,
@@ -330,27 +332,29 @@ class TestScoring:
 # ---------------------------------------------------------------------------
 
 
+@pytest.fixture()
+def brief_pair_db(tmp_path: Path) -> LabDatabase:
+    """Minimal DB with one candidate that has a description."""
+    db = LabDatabase(tmp_path / "token-report.db")
+    db.create_all()
+    from blockchain_rd_lab.schemas import Candidate
+    c = Candidate(
+        id="cand-tok1",
+        name="Fee Smoothing Escrow",
+        category="fx payments",
+        description=(
+            "A fee-smoothing escrow whose retention keys the SIGNED "
+            "separation between fast pressure and a slow regime anchor. "
+            "Cross-border FX remittance payment network."
+        ),
+        core_mechanism="retention = f(signed_separation(fast, slow))",
+        overall_score=6.45,
+    )
+    db.save_candidate(c)
+    return db
+
+
 class TestReport:
-    @pytest.fixture()
-    def brief_pair_db(self, tmp_path: Path) -> LabDatabase:
-        """Minimal DB with one candidate that has a description."""
-        db = LabDatabase(tmp_path / "token-report.db")
-        db.create_all()
-        from blockchain_rd_lab.schemas import Candidate
-        c = Candidate(
-            id="cand-tok1",
-            name="Fee Smoothing Escrow",
-            category="fx payments",
-            description=(
-                "A fee-smoothing escrow whose retention keys the SIGNED "
-                "separation between fast pressure and a slow regime anchor. "
-                "Cross-border FX remittance payment network."
-            ),
-            core_mechanism="retention = f(signed_separation(fast, slow))",
-            overall_score=6.45,
-        )
-        db.save_candidate(c)
-        return db
 
     def test_build_report_renders(self, brief_pair_db: LabDatabase):
         txt = build_token_report(brief_pair_db, "cand-tok1")
@@ -610,3 +614,212 @@ class TestSupplyBattery:
         bounds = run_supply_battery(get_driver("market-volume"), steps=30)
         assert len(bounds) == 5
         assert all(b.kind in {p for p in SupplyAttackPattern} for b in bounds)
+
+
+# ---------------------------------------------------------------------------
+# Dynamics-informed scoring (r42)
+# ---------------------------------------------------------------------------
+
+
+def _design_for(driver_name: str) -> TokenDesign:
+    return TokenDesign(
+        mechanism_id="cand-x",
+        mechanism_name="x",
+        driver=get_driver(driver_name),
+        tag_overlap=1,
+        compatibility_score=0.5,
+    )
+
+
+class TestDynamicsScoring:
+    """The r42 contract: same dimensions, same weights, MEASURED inputs —
+    structural scores unchanged, dynamics published beside them."""
+
+    def test_structural_score_unchanged_no_silent_rescoring(self):
+        """score_design must return the r39/r40 structural values
+        verbatim — r42 adds a path, it never re-scores the old one."""
+        s = score_design(_design_for("market-volume"))
+        assert s.dilution_resistance == 10.0
+        assert s.death_spiral_resistance == 10.0
+        assert s.oracle_manipulability == 5.0
+        assert s.game_theory_stability == 10.0
+        assert s.overall == pytest.approx(6.25)
+
+    def test_dynamics_market_full_extraction(self):
+        """market-volume: sustained forgery mints at the full clamp
+        every step (extraction 1.0) and the drain depth is maximal —
+        dilution 0.0, death-spiral 0.0. Structural scored both 10.0;
+        the measurement discriminates what the structure could not."""
+        ds, ev = score_design_with_dynamics(_design_for("market-volume"))
+        assert ev.mint_extraction == pytest.approx(1.0)
+        assert ev.drain_fraction == pytest.approx(1.0)
+        assert ev.ratchet_ratio == pytest.approx(1.0)
+        assert ds.dilution_resistance == pytest.approx(0.0)
+        assert ds.death_spiral_resistance == pytest.approx(0.0)
+        assert ds.game_theory_stability == pytest.approx(10.0)
+        # 0*0.30 + 0*0.25 - 5*0.25 + 10*0.20 = 0.75
+        assert ds.overall == pytest.approx(0.75)
+
+    def test_dynamics_corridor_asymmetric_clamp(self):
+        """corridor-population: mint clamps at hi=0.5 (extraction 0.5)
+        and burn at lo=-0.1 (drain 0.1) — the §25 demographic
+        asymmetry consumed by the composite: dilution 5.0,
+        death-spiral 9.0."""
+        ds, ev = score_design_with_dynamics(
+            _design_for("corridor-population")
+        )
+        assert ev.mint_extraction == pytest.approx(0.5)
+        assert ev.drain_fraction == pytest.approx(0.1)
+        assert ds.dilution_resistance == pytest.approx(5.0)
+        assert ds.death_spiral_resistance == pytest.approx(9.0)
+
+    def test_dynamics_climate_vacuous_mint_surface(self):
+        """climate-risk-burn (the r40-F1 lineage): no forgeable mint
+        surface -> dilution 10.0 with mint_extraction=None; no
+        manipulable cycle surface -> gt 10.0 with ratchet None; the
+        drain is maximal (burn-only by design) -> death-spiral 0.0."""
+        ds, ev = score_design_with_dynamics(_design_for("climate-risk-burn"))
+        assert ev.mint_extraction is None
+        assert ev.drain_fraction == pytest.approx(1.0)
+        assert ev.ratchet_ratio is None
+        assert "wash_mint" in ev.vacuous_patterns
+        assert "creep" in ev.vacuous_patterns
+        assert "resonance" in ev.vacuous_patterns
+        assert "round_trip" in ev.vacuous_patterns
+        assert ds.dilution_resistance == pytest.approx(10.0)
+        assert ds.death_spiral_resistance == pytest.approx(0.0)
+        assert ds.game_theory_stability == pytest.approx(10.0)
+
+    def test_dynamics_oracle_stays_structural(self):
+        """Oracle manipulability is structural in BOTH paths (self-
+        reported vectors; the battery has no oracle analogue)."""
+        for d in DRIVER_REGISTRY:
+            design = TokenDesign(
+                mechanism_id="cand-x",
+                mechanism_name="x",
+                driver=d,
+                tag_overlap=1,
+                compatibility_score=0.5,
+            )
+            s = score_design(design)
+            ds, _ = score_design_with_dynamics(design)
+            assert ds.oracle_manipulability == s.oracle_manipulability, (
+                d.name
+            )
+
+    def test_dynamics_composite_same_weights(self):
+        """The composite formula is ONE shared code path: overall ==
+        0.30*dil + 0.25*ds - 0.25*oracle + 0.20*gt for the dynamics
+        score too (structural and dynamics can never disagree on how
+        dimensions combine)."""
+        for name in (
+            "market-volume",
+            "corridor-population",
+            "climate-risk-burn",
+            "metcalfe-growth",
+        ):
+            ds, _ = score_design_with_dynamics(_design_for(name))
+            expected = (
+                ds.dilution_resistance * 0.30
+                + ds.death_spiral_resistance * 0.25
+                - ds.oracle_manipulability * 0.25
+                + ds.game_theory_stability * 0.20
+            )
+            assert ds.overall == pytest.approx(expected), name
+
+    def test_dynamics_metcalfe_log_drain(self):
+        """metcalfe-growth: the log-decay drain measures 0.6931
+        (burn_park 41.589/60 — log(2) sub-saturation), death-spiral
+        resistance 3.07 — the only driver whose drain is NOT
+        maximal."""
+        ds, ev = score_design_with_dynamics(_design_for("metcalfe-growth"))
+        assert ev.drain_fraction == pytest.approx(0.6931, abs=1e-4)
+        assert ds.death_spiral_resistance == pytest.approx(
+            10.0 * (1.0 - 0.6931), abs=1e-3
+        )
+
+    def test_dynamics_deterministic(self):
+        for d in DRIVER_REGISTRY:
+            design = TokenDesign(
+                mechanism_id="cand-x",
+                mechanism_name="x",
+                driver=d,
+                tag_overlap=1,
+                compatibility_score=0.5,
+            )
+            r1 = score_design_with_dynamics(design)
+            r2 = score_design_with_dynamics(design)
+            assert r1[0] == r2[0]
+            assert r1[1] == r2[1]
+
+    def test_rank_designs_with_dynamics_orders_and_ties(self):
+        """Deterministic ordering: overall desc, design_id asc."""
+        designs = [
+            _design_for(n)
+            for n in ("market-volume", "claims-ratio-mint", "climate-risk-burn")
+        ]
+        ranked = rank_designs_with_dynamics(designs)
+        assert len(ranked) == 3
+        overalls = [s.overall for _, s, _ in ranked]
+        assert overalls == sorted(overalls, reverse=True)
+        ids = [s.design_id for _, s, _ in ranked]
+        assert len(set(ids)) == 3
+
+    def test_all_drivers_score_with_dynamics(self):
+        """Registry-wide census: every driver produces a finite
+        dynamics score with attributable evidence."""
+        for d in DRIVER_REGISTRY:
+            design = TokenDesign(
+                mechanism_id="cand-x",
+                mechanism_name="x",
+                driver=d,
+                tag_overlap=1,
+                compatibility_score=0.5,
+            )
+            ds, ev = score_design_with_dynamics(design)
+            for v in (
+                ds.dilution_resistance,
+                ds.death_spiral_resistance,
+                ds.oracle_manipulability,
+                ds.game_theory_stability,
+                ds.overall,
+            ):
+                assert math.isfinite(v), (d.name, v)
+            assert ev.driver == d.name
+
+
+class TestDynamicsReport:
+    """The side-by-side disclosure: structural AND dynamics tables,
+    deltas rendered, rank flips named — never silent."""
+
+    def test_report_renders_dynamics_section(self, brief_pair_db):
+        txt = build_token_report(brief_pair_db, "cand-tok1")
+        assert "## Dynamics-Informed Scores (r42)" in txt
+        assert "| Rank | Design ID | Structural | Dynamics | Delta |" in txt
+        assert "Mint Extraction" in txt
+        assert "Drain Depth" in txt
+        assert "Ratchet" in txt
+
+    def test_report_discloses_rank_flip_or_identity(self, brief_pair_db):
+        """Exactly one of the two disclosure lines renders — the
+        orders either match (named) or differ (named, with both
+        orderings spelled out)."""
+        txt = build_token_report(brief_pair_db, "cand-tok1")
+        identical = "Rank order is IDENTICAL" in txt
+        differs = "RANK ORDER DIFFERS" in txt
+        assert identical ^ differs  # exactly one
+        if differs:
+            assert "Structural order:" in txt
+            assert "Dynamics order:" in txt
+
+    def test_report_delta_column_signed(self, brief_pair_db):
+        """Every dynamics row carries a signed delta against its
+        structural overall (visible change, never silent)."""
+        txt = build_token_report(brief_pair_db, "cand-tok1")
+        import re as _re
+
+        rows = _re.findall(
+            r"\| \d+ \| `[^`]+` \| [\d.]+ \| [\d.]+ \| [+-][\d.]+ \|",
+            txt,
+        )
+        assert rows, "no dynamics table rows rendered"
