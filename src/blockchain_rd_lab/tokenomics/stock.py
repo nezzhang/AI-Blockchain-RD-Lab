@@ -371,7 +371,16 @@ def run_stock_scenario(
     e2 = math.fsum(tail_ex[-half:]) / min(half, len(tail_ex))
     growing = e2 > e1 + _GROWING_MARGIN
 
-    if growing or abs(endogenous_growth) > _SUSTAINED_TOLERANCE:
+    # r46 (the self-audit's boundary finding): the sustained-motion
+    # comparison is >=, not > — a value still compounding AT the
+    # tolerance (2%/step) has not "settled", so rebased would
+    # mislabel it; and the anti-tracking drivers at eta=0/organic
+    # land exactly ON the tolerance in real arithmetic, where one
+    # float ULP was deciding spiral-vs-rebased (ai read
+    # -0.020000000000000007 -> spiral, gdp read exactly -0.02 ->
+    # rebased, identical economics). At-boundary is sustained
+    # motion; noise must not decide the boundary.
+    if growing or abs(endogenous_growth) >= _SUSTAINED_TOLERANCE:
         # diverging (excess still rising) or sustained endogenous
         # motion beyond the drive — a spiral either way, signed by
         # where VALUE went (out of band), else by the endogenous

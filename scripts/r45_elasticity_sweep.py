@@ -11,8 +11,12 @@ Design contracts:
 - Deterministic: same (driver, scenario, eta) -> same floats.
 - Uses dataclasses.replace to vary ONLY elasticity; every other
   scenario parameter is held constant (the r22 pattern).
-- Vacuous drivers are skipped (they return VACUOUS at every η —
-  the composition scope doesn't change with elasticity).
+- ALL drivers with a resolvable signal axis are swept (13 of 13 in
+  the registry); the 3 that compose as VACUOUS are swept too and
+  their vacuity RECORDED at every η — the census MEASURES that
+  vacuity is η-invariant instead of assuming it (r46: the original
+  docstring claimed they were 'skipped'; the helper checked axis
+  resolvability, not composability — nothing was ever skipped).
 - §21 census stored idempotently.
 """
 
@@ -42,8 +46,14 @@ ETA_VALUES = (0.0, 0.25, 0.5, 0.75, 1.0)
 CENSUS_ID = "r45-elasticity-sweep"
 
 
-def _is_composable(driver_name: str) -> bool:
-    """True if the driver composes at η=0.5 (not vacuous)."""
+def _has_resolvable_axis(driver_name: str) -> bool:
+    """True if the driver's signal axis resolves (a probe exists).
+
+    NOT the same as composability: the stock layer may still return
+    VACUOUS (no reference key, unspanned one-sided axis). The sweep
+    includes every resolvable driver; vacuous composition is
+    recorded, never skipped (r46 F1: this helper was named
+    _is_composable and claimed to filter vacuity it did not check)."""
     from blockchain_rd_lab.tokenomics.battery import resolve_signal
 
     d = next(x for x in DRIVER_REGISTRY if x.name == driver_name)
@@ -54,7 +64,7 @@ def run_sweep() -> list[dict]:
     """All composable drivers x all scenarios x all eta values."""
     rows: list[dict] = []
     for d in DRIVER_REGISTRY:
-        if not _is_composable(d.name):
+        if not _has_resolvable_axis(d.name):
             continue
         for sc_name, sc in SCENARIOS.items():
             for eta in ETA_VALUES:
@@ -153,8 +163,8 @@ def _summarize(flips: list[dict]) -> dict:
         if f["flip_eta"] is None
         and "stable" in f["trajectory"].lower()
     ]
-    spiral_at_all = [
-        f for f in flips if f["flip_eta"] is not None and f["flip_eta"] == 0.0
+    spiral_at_zero = [
+        f for f in flips if f["flip_eta"] == 0.0
     ]
     flip_at_quarter = [
         f for f in flips if f["flip_eta"] == 0.25
@@ -172,7 +182,7 @@ def _summarize(flips: list[dict]) -> dict:
 
     return {
         "never_spiral_count": len(never_spiral),
-        "spiral_at_eta_0_count": len(spiral_at_all),
+        "spiral_at_eta_0_count": len(spiral_at_zero),
         "flip_at_eta_0.25_count": len(flip_at_quarter),
         "flip_at_eta_0.5_count": len(flip_at_half),
         "flip_at_eta_0.75_count": len(flip_at_three_quarter),
@@ -181,7 +191,7 @@ def _summarize(flips: list[dict]) -> dict:
             f"{f['driver']}/{f['scenario']}" for f in stable_at_all[:5]
         ],
         "spiral_everywhere_examples": [
-            f"{f['driver']}/{f['scenario']}" for f in spiral_at_all[:5]
+            f"{f['driver']}/{f['scenario']}" for f in spiral_at_zero[:5]
         ],
     }
 

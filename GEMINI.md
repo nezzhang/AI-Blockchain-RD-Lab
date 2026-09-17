@@ -120,6 +120,62 @@ AI agents here.** This file is a convenience summary, not a replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 46 self-audit of r45 (the "audit this" discipline: the
+  r28/r34/r40/r44 hostile pass applied to the elasticity sweep —
+  every finding verified by LIVE EXECUTION before any fix). THE
+  CENSUS ITSELF REPRODUCES: 455/455 rows, 0 mismatches (the r33/r44
+  verification pattern). FIVE FINDINGS, three fixed at the root, all
+  pinned: F1 (MEDIUM, the r28/r30 claim-vs-reality class): the
+  sweep script's docstring said "Vacuous drivers are skipped" —
+  FALSE. _is_composable checked axis RESOLVABILITY, not
+  composability: all 13 drivers were swept (455 rows = 13x7x5,
+  not the round block's implied 350), 105 vacuous rows honestly
+  recorded. The census data was accurate all along (drivers
+  parameter lists 13); the narrative was wrong, and the round
+  block's "70 trajectories" for the monotonicity verification was
+  also wrong (the test verified 91). FIXED: helper renamed
+  _has_resolvable_axis, both docstrings now say what happens
+  (vacuity is MEASURED as eta-invariant across the sweep, not
+  assumed-by-skipping), and a probe enforces the invariance.
+  F2 (MEDIUM, unpinned disclosed claims — the r19 anti-hiding
+  rule): the round block's "shocks rebase or stay stable, never
+  spiral" at eta=0 was TRUE but pinned nowhere; and "no
+  quiet-scenario spirals" under-disclosed that anti-tracking
+  drivers (ai/productivity/gdp — burn-on-growth designs) diverge
+  under sustained growth at eta=0: the DEFLATIONARY RUNAWAY NEEDS
+  NO FEEDBACK (composed rate anti-tracks demand, supply shrinks
+  while demand grows, value compounds forever — V=5.9 at
+  organic, V=7017 at hyper). Both now pinned. F5 (THE BOUNDARY
+  FINDING, the audit's deepest catch): the sustained-motion
+  comparison was > — and the eta=0/organic anti-tracking set
+  lands EXACTLY ON the 0.02 tolerance in real arithmetic, where
+  ONE FLOAT ULP decided the verdict: ai read
+  -0.020000000000000007 -> spiral_up, gdp read exactly -0.02 ->
+  rebased_up, IDENTICAL ECONOMICS, different labels (the r22
+  lesson verbatim: a classification decided by representation
+  noise is not a measurement — caught when the audit's own probe
+  over-claimed gdp/organic as spiraling and FAILED, the discipline
+  working on itself). The physics is unambiguous: a value still
+  compounding 2%/step at window end has not settled, so rebased
+  mislabeled it. FIX: >= (at-boundary is sustained motion);
+  blast radius measured: exactly ONE census row
+  (gdp/organic/eta=0 rebased_up -> spiral_up, now consistent);
+  census re-stored with the correction disclosed (r46-corrected);
+  probe pins the now-consistent set. F3 (the headline MEASUREMENT
+  the monotonicity framing concealed): metcalfe's supply_shock
+  REVERSES spiral direction as eta rises — RBDN at 0, SPDN at
+  0.25/0.5 (the mis-mint melt), SPUP at 0.75/1.0 (V: 0.96 ->
+  7.19 -> 126.0: the initial value dip drags demand, the
+  log-burn shrinks supply past recovery, value overshoots anchor,
+  and strong positive feedback explodes demand — the melt becomes
+  a boom, a measured bifurcation). Pinned with the full
+  trajectory; disclosed in AUDITING.md. F4 (LOW): the summary's
+  spiral_at_all local variable misread (it collects
+  spiral-at-eta-0); census key was already right — renamed.
+  576 pass (+4 audit probes: vacuity-eta-invariance; eta=0
+  shocks-never-spiral; eta=0 anti-tracking growth spirals;
+  metcalfe direction reversal); ruff/mypy clean. Census
+  re-verified after the >= fix: the one changed row matches.
 - Round 45 elasticity sweep (the r43 follow-up: eta=0.5 was pinned
   but the curve was unknown — now mapped). scripts/r45_elasticity_
   sweep.py: 10 composable drivers x 7 scenarios x 5 eta values

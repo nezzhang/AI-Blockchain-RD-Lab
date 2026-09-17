@@ -543,3 +543,110 @@ class TestElasticitySweep:
         assert r1.verdict == r2.verdict
         assert r1.value_ratio == r2.value_ratio
         assert r1.supply_ratio == r2.supply_ratio
+
+
+class TestElasticityAudit:
+    """r46 self-audit probes: the r45 round block's disclosed claims
+    were true-but-unpinned (the r19 anti-hiding rule), and its
+    monotonicity framing concealed a measured bifurcation. Every
+    claim now has a probe."""
+
+    def test_vacuity_is_eta_invariant(self):
+        """The 3 one-sided bounded-index drivers (climate, claims,
+        prediction) compose as VACUOUS at EVERY eta — the census
+        MEASURES this invariance (105 vacuous rows), this probe
+        enforces it (r46 F1: the sweep script's docstring once
+        claimed these drivers were 'skipped'; they never were —
+        the helper checked axis resolvability, not composability)."""
+        from dataclasses import replace
+
+        vacuous_drivers = {
+            "climate-risk-burn", "claims-ratio-mint", "uncertainty-mint"
+        }
+        for name in vacuous_drivers:
+            d = get_driver(name)
+            for sc in SCENARIOS.values():
+                for eta in (0.0, 0.25, 0.5, 0.75, 1.0):
+                    r = run_stock_scenario(
+                        d, replace(sc, elasticity=eta)
+                    )
+                    assert r.verdict is StockVerdict.VACUOUS, (
+                        name,
+                        sc.name,
+                        eta,
+                        r.verdict,
+                    )
+
+    def test_zero_eta_shocks_never_spiral(self):
+        """The r45 round-block claim 'shocks rebase or stay stable,
+        never spiral' at eta=0 — TRUE per the census, now pinned.
+        Without the reflexive channel a shock leaves a permanent
+        rebase or is fully tracked; no endogenous divergence."""
+        from dataclasses import replace
+
+        spirals = {
+            StockVerdict.SPIRAL_DOWN,
+            StockVerdict.SPIRAL_UP,
+        }
+        shock_scenarios = ("demand_collapse", "crash", "supply_shock")
+        for d in DRIVER_REGISTRY:
+            for sc_name in shock_scenarios:
+                r = run_stock_scenario(
+                    d,
+                    replace(SCENARIOS[sc_name], elasticity=0.0),
+                )
+                assert r.verdict not in spirals, (
+                    d.name,
+                    sc_name,
+                    r.verdict,
+                )
+
+    def test_zero_eta_anti_tracking_growth_spirals(self):
+        """The under-disclosed r45 finding: anti-tracking drivers
+        (burn-on-growth designs) diverge under sustained growth at
+        eta=0 — the DEFLATIONARY RUNAWAY needs NO feedback. The
+        composed rate anti-tracks demand growth, supply shrinks
+        while demand grows, and value compounds forever. Pinned for
+        ai-throughput and productivity-deflation under organic
+        growth (gdp too — same class, signed-rate composition)."""
+        from dataclasses import replace
+
+        for name in (
+            "ai-throughput-deflation",
+            "productivity-deflation",
+            "counter-cyclical-gdp",
+        ):
+            r = run_stock_scenario(
+                get_driver(name),
+                replace(SCENARIOS["organic_growth"], elasticity=0.0),
+            )
+            assert r.verdict is StockVerdict.SPIRAL_UP, (
+                name,
+                r.verdict,
+            )
+            assert r.value_ratio > 1.0 + 0.05  # left the band upward
+
+    def test_metcalfe_supply_shock_direction_reversal(self):
+        """r46 F3, the audit's headline catch: metcalfe's supply
+        shock REVERSES spiral direction as eta rises — SPDN at
+        0.25/0.5 (the mis-mint melt) inverts to SPUP at 0.75/1.0
+        (the melt becomes a boom: the initial value dip drags demand,
+        the log-burn shrinks supply past recovery, value overshoots
+        anchor, and strong positive feedback explodes demand). The
+        r45 monotonicity claim ('once spiral, stays spiral') was
+        true but CONCEALED this bifurcation — pinned here with the
+        full trajectory."""
+        from dataclasses import replace
+
+        verdicts = {}
+        for eta in (0.0, 0.25, 0.5, 0.75, 1.0):
+            r = run_stock_scenario(
+                get_driver("metcalfe-growth"),
+                replace(SCENARIOS["supply_shock"], elasticity=eta),
+            )
+            verdicts[eta] = r.verdict
+        assert verdicts[0.0] is StockVerdict.REBASED_DOWN
+        assert verdicts[0.25] is StockVerdict.SPIRAL_DOWN
+        assert verdicts[0.5] is StockVerdict.SPIRAL_DOWN
+        assert verdicts[0.75] is StockVerdict.SPIRAL_UP  # the flip
+        assert verdicts[1.0] is StockVerdict.SPIRAL_UP

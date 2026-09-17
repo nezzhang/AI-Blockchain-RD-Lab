@@ -13,7 +13,7 @@ reviewer starts at the frontier, not the walls.
 git clone https://github.com/nezzhang/AI-Blockchain-RD-Lab.git
 cd AI-Blockchain-RD-Lab
 python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
-.venv/bin/pytest            # 572 tests, all green = nothing hidden by a broken suite
+.venv/bin/pytest            # 576 tests, all green = nothing hidden by a broken suite
 .venv/bin/python scripts/r25_verify_bundle.py
 ```
 
@@ -131,8 +131,16 @@ fixed; do not re-report those.
    1.0]: ratio drivers hold stable through eta=0.75 on shock
    scenarios (flip at 1.0 only); supply_shock flips at 0.25 for every
    composable driver; gdp spirals everywhere above 0; flip
-   monotonicity holds (once spiral, stays spiral). Remaining honest
-   limits: oracle manipulability still counts SELF-REPORTED vectors
+   monotonicity holds (once spiral, stays spiral — though metcalfe's
+   supply_shock REVERSES spiral direction at eta=0.75: the mis-mint
+   melt inverts into a demand boom when feedback dominates, a
+   measured bifurcation). r46 self-audit: the sustained-motion
+   comparison is >= (a value still compounding AT the 2%/step
+   tolerance has not settled; one float ULP had been deciding
+   identical-economics drivers differently), and the anti-tracking
+   drivers diverge even at eta=0 under growth (the deflationary
+   runaway needs NO feedback). Remaining honest limits: oracle
+   manipulability still counts SELF-REPORTED vectors
    (no battery oracle analogue); the stock layer composes ONE demand
    axis per driver (the hybrid's node axis rides at neutral —
    disclosed); one-sided bounded indices (climate/claims/prediction)
