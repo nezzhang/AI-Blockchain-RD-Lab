@@ -40,6 +40,7 @@ from blockchain_rd_lab.config import REPO_ROOT, load_config
 from blockchain_rd_lab.database import LabDatabase
 from blockchain_rd_lab.reporting.decision import DECISION_CANDIDATES
 from blockchain_rd_lab.reporting.release import ReleasePackageBuilder
+from blockchain_rd_lab.schemas import CandidateStatus
 from blockchain_rd_lab.scoring import ScoringEngine
 
 RANK1 = DECISION_CANDIDATES[0]  # cand-9200b07691c3, §7 rank 1
@@ -225,6 +226,28 @@ def main() -> None:
 
     # 9. README: what this is, how to verify, how to cite
     score = cand.overall_score
+    # r48 (audit 2026-09-20, F3): the rank label is COMPUTED from the
+    # store's current finalist standings, never asserted — the drift fix
+    # re-scored the corpus and this candidate's standing moved (it was
+    # published as rank 1 at 6.45; its scores recompute to 5.95, rank 5).
+    # A bundle that claims a rank the store contradicts is the same
+    # prose-drifts-from-data failure this repo exists to prevent.
+    _finalists = [
+        c for c in db.list_candidates(limit=None)
+        if c.status is CandidateStatus.FINALIST and c.overall_score is not None
+    ]
+    _finalists.sort(key=lambda c: (-(c.overall_score or 0.0), c.name))
+    _rank = _finalists.index(cand) + 1 if cand in _finalists else None
+    _n_fin = len(_finalists)
+    if _rank == 1:
+        _status_line = f"finalist, rank 1 of {_n_fin} (recommended)"
+    elif _rank is not None:
+        _status_line = (
+            f"finalist, rank {_rank} of {_n_fin} (the §7 recommended "
+            f"candidate is {_finalists[0].name})"
+        )
+    else:
+        _status_line = "finalist (rank not computable from the store)"
     # the shipped file list — computed ONCE, used by both the README's
     # sha256sum command (generated from the manifest keys, so it can
     # never drift from what ships) and the manifest itself
@@ -250,14 +273,14 @@ def main() -> None:
     readme = f"""# Publication Bundle: {cand.name}
 
 Assembled by code from stored evidence only (§2 — no report-writer
-LLM). The bundle is the complete public evidence set for the §7
-rank-1 research candidate as of {generated}.
+LLM). The bundle is the complete public evidence set for this
+research candidate as of {generated}.
 
 - **Candidate ID:** `{cand.id}`
 - **Deterministic §19 score:** {score}
 - **Model lineage:** v1 → v2 → v3 (every break/fix measured; the
   history is in `redteam-history.json`, unfiltered)
-- **Status:** finalist, rank 1 (recommended)
+- **Status:** {_status_line}
 
 ## Files
 

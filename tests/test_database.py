@@ -79,6 +79,96 @@ class TestCandidatePersistence:
         assert memory_db.get_candidate(sample_candidate.id) is None
 
 
+class TestOverallScoreIntegrity:
+    """r48 (audit 2026-09-20, F3): overall_score is a denormalized cache of
+    the §19 composite over `scores`. For candidates in the SCORED lifecycle
+    (SCORED / FINALIST — the only statuses that carry dimension evidence),
+    save_candidate must DERIVE it from the dimension rows being persisted,
+    in the same transaction — it can never diverge from them. The published
+    rank-1 bundle carried 6.45 while its stored scores recomputed to 5.95
+    (oracle/security rows dropped without a re-score), reordering the
+    ranking. These pins make that impossible."""
+
+    @staticmethod
+    def _scored(sample_candidate: Candidate) -> Candidate:
+        for st in (
+            CandidateStatus.RESEARCHING,
+            CandidateStatus.PRIOR_ART_CHECKED,
+            CandidateStatus.FORMALIZED,
+            CandidateStatus.SIMULATING,
+            CandidateStatus.RED_TEAM,
+            CandidateStatus.SCORED,
+        ):
+            sample_candidate.transition(st)
+        return sample_candidate
+
+    def test_overall_score_derived_from_dimension_rows(self, memory_db, sample_candidate):
+        cand = self._scored(sample_candidate)
+        # set a composite that disagrees with the dimension rows
+        cand.scores["novelty"] = ScoreBreakdown(dimension="novelty", score=6.0)
+        cand.overall_score = 9.99  # stale / wrong on purpose
+        memory_db.save_candidate(cand)
+        loaded = memory_db.get_candidate(cand.id)
+        # the stored composite is the engine's value over the actual rows,
+        # NOT the 9.99 that was set on the object
+        assert loaded is not None
+        assert loaded.overall_score != 9.99
+        from blockchain_rd_lab.scoring import ScoringEngine, load_scoring_config
+
+        expected = ScoringEngine(load_scoring_config()).score(loaded).overall_score
+        assert loaded.overall_score == expected
+
+    def test_scores_cleared_drops_composite(self, memory_db, sample_candidate):
+        cand = self._scored(sample_candidate)
+        cand.scores["novelty"] = ScoreBreakdown(dimension="novelty", score=6.0)
+        memory_db.save_candidate(cand)
+        assert memory_db.get_candidate(cand.id).overall_score is not None
+        # now clear the dimension evidence and re-save: no evidence -> no score
+        cand.scores.clear()
+        memory_db.save_candidate(cand)
+        loaded = memory_db.get_candidate(cand.id)
+        assert loaded.scores == {}
+        assert loaded.overall_score is None
+
+    def test_dimension_update_rescores_atomically(self, memory_db, sample_candidate):
+        # add a dimension, save, then change it and save again — the stored
+        # composite must track the rows each time (no stale cache).
+        from blockchain_rd_lab.scoring import ScoringEngine, load_scoring_config
+
+        cand = self._scored(sample_candidate)
+        eng = ScoringEngine(load_scoring_config())
+        cand.scores["security"] = ScoreBreakdown(dimension="security", score=4.0)
+        memory_db.save_candidate(cand)
+        first = memory_db.get_candidate(cand.id)
+        assert first.overall_score == eng.score(first).overall_score
+
+        cand.scores["security"] = ScoreBreakdown(dimension="security", score=9.0)
+        cand.scores["game_theory"] = ScoreBreakdown(dimension="game_theory", score=8.0)
+        memory_db.save_candidate(cand)
+        second = memory_db.get_candidate(cand.id)
+        assert second.overall_score == eng.score(second).overall_score
+        assert second.overall_score != first.overall_score
+
+    def test_unscored_status_never_gains_a_composite(self, memory_db, sample_candidate):
+        """A candidate below the SCORED lifecycle (here: RED_TEAM) that
+        carries stage sub-scores must NOT gain an overall composite on
+        save — scoring happens once, at the score stage (§19/§35)."""
+        for st in (
+            CandidateStatus.RESEARCHING,
+            CandidateStatus.PRIOR_ART_CHECKED,
+            CandidateStatus.FORMALIZED,
+            CandidateStatus.SIMULATING,
+            CandidateStatus.RED_TEAM,
+        ):
+            sample_candidate.transition(st)
+        sample_candidate.scores["novelty"] = ScoreBreakdown(dimension="novelty", score=6.0)
+        memory_db.save_candidate(sample_candidate)
+        loaded = memory_db.get_candidate(sample_candidate.id)
+        assert loaded.status is CandidateStatus.RED_TEAM
+        assert loaded.overall_score is None
+
+
+
 class TestExperimentPersistence:
     def test_save_and_load(self, memory_db, sample_candidate):
         memory_db.save_candidate(sample_candidate)

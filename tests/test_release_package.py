@@ -34,6 +34,7 @@ from blockchain_rd_lab.schemas import (
     Candidate,
     CandidateStatus,
     ExperimentRecord,
+    ScoreBreakdown,
 )
 
 NOW = datetime.now(UTC)
@@ -59,7 +60,15 @@ def _candidate(cid: str = "cand-rel") -> Candidate:
     # finalize via score path (RED_TEAM -> SCORED -> FINALIST)
     cand.transition(CandidateStatus.SCORED)
     cand.transition(CandidateStatus.FINALIST)
-    cand.overall_score = 6.0
+    # r48: overall_score is derived from dimension scores by save_candidate —
+    # it cannot be set independently. Provide real dimension evidence so the
+    # candidate carries a composite (11 dims at 6.0 -> overall 6.0).
+    for dim in (
+        "novelty", "economic_coherence", "game_theory", "technical_feasibility",
+        "oracle_feasibility", "security", "market_demand", "capital_efficiency",
+        "network_effects", "communication", "viral_potential",
+    ):
+        cand.scores[dim] = ScoreBreakdown(dimension=dim, score=6.0)
     return cand
 
 

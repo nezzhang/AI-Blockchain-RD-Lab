@@ -378,6 +378,32 @@ class LabDatabase:
     # -- candidates ---------------------------------------------------------
 
     def save_candidate(self, candidate: Candidate) -> Candidate:
+        # r48 (audit 2026-09-20, F3): overall_score is a DENORMALIZED cache
+        # of the deterministic §19 composite over `scores`. It must never
+        # drift from the dimension rows being written. A prior write path
+        # (r24 bundle assembly / r40 store rebuild) persisted a composite
+        # computed over a transient in-memory dimension set, then a later
+        # save rewrote the dimension rows WITHOUT recomputing the composite
+        # — leaving the published rank-1 headline (6.45) inconsistent with
+        # the stored scores (which recompute to 5.95) and reordering the
+        # ranking.
+        #
+        # Scope the invariant to the SCORED lifecycle (SCORED / FINALIST),
+        # the only statuses that carry dimension evidence in practice: for
+        # those, derive overall_score from the very dimension rows being
+        # persisted, in this same transaction, so divergence is impossible.
+        # Pre-scoring statuses (GENERATED..RED_TEAM) accumulate dimension
+        # sub-scores across stages; they are unscored by design, so their
+        # overall_score stays None (a composite there would be noise).
+        if candidate.status in (CandidateStatus.SCORED, CandidateStatus.FINALIST):
+            if candidate.scores:
+                from blockchain_rd_lab.scoring import ScoringEngine
+
+                candidate.overall_score = ScoringEngine().score(candidate).overall_score
+            elif candidate.overall_score is not None:
+                # Scored-status candidate with NO dimension evidence but a
+                # retained composite — the drift vector. No evidence, no score.
+                candidate.overall_score = None
         with self._session() as session:
             # Upsert by primary key.
             obj = session.get(CandidateORM, candidate.id)
