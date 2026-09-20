@@ -2,6 +2,562 @@
   {
     "bounds": [
       {
+        "driver": "market-volume",
+        "headline": 60.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "market-volume",
+        "headline": 5.0,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "market-volume",
+        "headline": 20.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "market-volume",
+        "headline": 18.3,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "market-volume",
+        "headline": 60.0,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "usage-growth",
+        "headline": 60.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "usage-growth",
+        "headline": 5.0,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "usage-growth",
+        "headline": 20.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "usage-growth",
+        "headline": 18.3,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "usage-growth",
+        "headline": 60.0,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "counter-cyclical-gdp",
+        "headline": 30.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "counter-cyclical-gdp",
+        "headline": 2.5,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "counter-cyclical-gdp",
+        "headline": 10.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "counter-cyclical-gdp",
+        "headline": 9.15,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "counter-cyclical-gdp",
+        "headline": 30.0,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "corridor-population",
+        "headline": 30.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "corridor-population",
+        "headline": 2.5,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "corridor-population",
+        "headline": 10.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "corridor-population",
+        "headline": 9.15,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "corridor-population",
+        "headline": 6.0,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "productivity-deflation",
+        "headline": 30.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "productivity-deflation",
+        "headline": 2.5,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "productivity-deflation",
+        "headline": 10.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "productivity-deflation",
+        "headline": 9.15,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "productivity-deflation",
+        "headline": 60.0,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "renewable-energy-pow",
+        "headline": 60.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "renewable-energy-pow",
+        "headline": 5.0,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "renewable-energy-pow",
+        "headline": 20.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "renewable-energy-pow",
+        "headline": 18.3,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "renewable-energy-pow",
+        "headline": 60.0,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "climate-risk-burn",
+        "headline": null,
+        "headline_metric": null,
+        "kind": "wash_mint",
+        "note": "driver declares no mint probe state; no declared signal to forge",
+        "vacuous": true
+      },
+      {
+        "driver": "climate-risk-burn",
+        "headline": null,
+        "headline_metric": null,
+        "kind": "round_trip",
+        "note": "driver declares no mint probe state; no declared signal to forge",
+        "vacuous": true
+      },
+      {
+        "driver": "climate-risk-burn",
+        "headline": null,
+        "headline_metric": null,
+        "kind": "resonance",
+        "note": "driver declares no mint probe state; no declared signal to forge",
+        "vacuous": true
+      },
+      {
+        "driver": "climate-risk-burn",
+        "headline": null,
+        "headline_metric": null,
+        "kind": "creep",
+        "note": "driver declares no mint probe state; no declared signal to forge",
+        "vacuous": true
+      },
+      {
+        "driver": "climate-risk-burn",
+        "headline": 60.0,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "commodity-basket-peg",
+        "headline": 30.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "commodity-basket-peg",
+        "headline": 2.5,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "commodity-basket-peg",
+        "headline": 10.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "commodity-basket-peg",
+        "headline": 9.15,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "commodity-basket-peg",
+        "headline": 30.0,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "claims-ratio-mint",
+        "headline": 48.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "claims-ratio-mint",
+        "headline": 4.0,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "claims-ratio-mint",
+        "headline": 16.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "claims-ratio-mint",
+        "headline": 14.64,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "claims-ratio-mint",
+        "headline": null,
+        "headline_metric": null,
+        "kind": "burn_park",
+        "note": "driver declares no burn probe state; no declared signal to forge",
+        "vacuous": true
+      },
+      {
+        "driver": "uncertainty-mint",
+        "headline": 24.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "uncertainty-mint",
+        "headline": 2.0,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "uncertainty-mint",
+        "headline": 8.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "uncertainty-mint",
+        "headline": 7.32,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "uncertainty-mint",
+        "headline": 24.0,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "metcalfe-growth",
+        "headline": 60.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "metcalfe-growth",
+        "headline": 5.0,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "metcalfe-growth",
+        "headline": 20.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "metcalfe-growth",
+        "headline": 52.51297488104068,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "metcalfe-growth",
+        "headline": 41.58883083359674,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "ai-throughput-deflation",
+        "headline": 60.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "ai-throughput-deflation",
+        "headline": 5.0,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "ai-throughput-deflation",
+        "headline": 20.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "ai-throughput-deflation",
+        "headline": 26.37325853997568,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "ai-throughput-deflation",
+        "headline": 60.0,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      },
+      {
+        "driver": "usage-network-hybrid",
+        "headline": 60.0,
+        "headline_metric": "total_minted",
+        "kind": "wash_mint",
+        "note": "sustained forged mint signal vs neutral base",
+        "vacuous": false
+      },
+      {
+        "driver": "usage-network-hybrid",
+        "headline": 5.0,
+        "headline_metric": "total_minted",
+        "kind": "round_trip",
+        "note": "up-leg mint not clawed back on release legs (final-rate residue 0.000)",
+        "vacuous": false
+      },
+      {
+        "driver": "usage-network-hybrid",
+        "headline": 20.0,
+        "headline_metric": "total_minted",
+        "kind": "resonance",
+        "note": "4 strike-release cycles; per-cycle ratcheting check",
+        "vacuous": false
+      },
+      {
+        "driver": "usage-network-hybrid",
+        "headline": 31.98518995241627,
+        "headline_metric": "total_minted",
+        "kind": "creep",
+        "note": "sub-threshold signal accumulation over the grind",
+        "vacuous": false
+      },
+      {
+        "driver": "usage-network-hybrid",
+        "headline": 52.6355323334387,
+        "headline_metric": "total_burned",
+        "kind": "burn_park",
+        "note": "sustained forged burn signal; drain depth",
+        "vacuous": false
+      }
+    ],
+    "experiment_id": "r41-supply-battery-census",
+    "parameters": {
+      "battery": "supply_attack_patterns_v1",
+      "drivers": [
+        "market-volume",
+        "usage-growth",
+        "counter-cyclical-gdp",
+        "corridor-population",
+        "productivity-deflation",
+        "renewable-energy-pow",
+        "climate-risk-burn",
+        "commodity-basket-peg",
+        "claims-ratio-mint",
+        "uncertainty-mint",
+        "metcalfe-growth",
+        "ai-throughput-deflation",
+        "usage-network-hybrid"
+      ],
+      "patterns": [
+        "wash_mint",
+        "round_trip",
+        "resonance",
+        "creep",
+        "burn_park"
+      ],
+      "r44_correction": "neutral-finder tie-break fixed (reference-key preference, the r44 pre-audit F1); productivity-deflation's creep 13.19 -> 9.15 (the old neutral moved the reference key, inflating the grind path)",
+      "round": 41,
+      "steps": 60
+    },
+    "recorded_at": "2026-09-16T15:13:07.897169",
+    "vacuous_count": null,
+    "worst_edge": null
+  },
+  {
+    "bounds": [
+      {
         "base_metrics": {
           "C_t_drawn": 999.0000482700422,
           "E_t_drawn": 0.0,
@@ -396,7 +952,7 @@
       "battery": "attack_patterns_v7_resonance",
       "round": 20
     },
-    "recorded_at": "2026-09-08T11:06:39.436039",
+    "recorded_at": "2026-09-20T15:02:24.711323",
     "vacuous_count": 0,
     "worst_edge": 5.173682
   },
@@ -1859,7 +2415,7 @@
       "sweep": true,
       "variants_per_pattern": 2
     },
-    "recorded_at": "2026-09-09T03:04:06.812289",
+    "recorded_at": "2026-09-20T15:02:24.715988",
     "vacuous_count": 0,
     "worst_edge": 32.63753
   },
@@ -3321,7 +3877,7 @@
       "round": 33,
       "sweep": true
     },
-    "recorded_at": "2026-09-15T01:04:29.543978",
+    "recorded_at": "2026-09-20T15:02:24.718597",
     "vacuous_count": 0,
     "worst_edge": 32.63753
   }

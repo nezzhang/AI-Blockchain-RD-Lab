@@ -4,12 +4,12 @@
   "deterministic_score": 6.45,
   "files": {
     "README.md": {
-      "bytes": 3147,
-      "sha256": "d17d76c98f6f3ab13a05912f6202a9e20a0c1efddce14aac0bfee5578d9122a1"
+      "bytes": 3143,
+      "sha256": "3db5913caeedaa8b6428232b9c5211464c15567044b1fec74bd9d32a6e382e07"
     },
     "adversarial-bounds.json": {
-      "bytes": 97486,
-      "sha256": "df27159edf20149507ed278b62a6f11a7acf19bc1e9c4d34cf03c89289289335"
+      "bytes": 114869,
+      "sha256": "ef6d5096d02b3e18e0b361cc4aabbb54778214de3d2da61ac9d37659900c0223"
     },
     "dossier.md": {
       "bytes": 9164,
@@ -24,16 +24,16 @@
       "sha256": "a74cb245e1473678b072ac9a093a7773bc55eee7a07f85467ac3eb5af7049fa9"
     },
     "lab-runtime/blockchain_rd_lab/simulation/__init__.py": {
-      "bytes": 25996,
-      "sha256": "74ad083fe99a83d27a632e9979b186a8c4559dc89b9b0b62404146dbc41db08d"
+      "bytes": 26284,
+      "sha256": "150e22e3d76916109d31bdcb0323016eb04c9a008fdd52ecdd502d8908142fbc"
     },
     "lab-runtime/blockchain_rd_lab/simulation/adversarial.py": {
       "bytes": 66707,
       "sha256": "a0cd30049deb4f2ba5c85ea982dfd62de1a7a00d09b08e66c20b1f424a39d7aa"
     },
     "lab-runtime/blockchain_rd_lab/simulation/interpreter.py": {
-      "bytes": 11800,
-      "sha256": "12febf3ed9fdccd20a6306b6cc6b6c4cecfbcd186440147e05500be44e258f44"
+      "bytes": 12440,
+      "sha256": "d8ab679fd58d1861c003a0971cef895c111569d978c50f9c7caec588b5f8b683"
     },
     "model-v3.json": {
       "bytes": 7982,
@@ -44,16 +44,16 @@
       "sha256": "c1d7348baba06931188c4a0508604d41fbb13f4a47b74bf30ae208d54248f02f"
     },
     "redteam-history.json": {
-      "bytes": 22717,
-      "sha256": "b90cd3ccd36fcf991981dfa6c87e58ba89a9d76c235f8a696cda522ac0f1c01d"
+      "bytes": 22696,
+      "sha256": "b3d3bdf9f758b825b4e0f0b2eb8a2293a94570024084f0dd7532d37d2e493c00"
     },
     "release-package.md": {
-      "bytes": 15238,
-      "sha256": "6d95ecd9b1f1e8bc17a62296c684729c299d2a9c896d89177c7a9cf9cccf7b72"
+      "bytes": 16116,
+      "sha256": "90d7b6981c87c89c9ca132b40b7d1ecc2731163df837521f0fc143f45431bb58"
     },
     "scenario-results.json": {
       "bytes": 12400,
-      "sha256": "b32247a99963d0160995de5b6f73452b3c9cfe59e0f9fe2cfcc78c6be703e035"
+      "sha256": "ac623b181e4d849c9d000eca120726a235198a6e5f494955ea1c41e681ba440e"
     },
     "score-decomposition.json": {
       "bytes": 2040,
@@ -64,6 +64,6 @@
       "sha256": "a64c58c9a947e00652baa7254aae82eb65bbb142c1fda8344877e067b1ac375f"
     }
   },
-  "generated": "2026-09-15T07:25:47.486574+00:00",
+  "generated": "2026-09-20T15:32:41.920419+00:00",
   "model_version": 3
 }

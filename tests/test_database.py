@@ -220,6 +220,38 @@ class TestAgentRunPersistence:
         assert runs[0].output == {"ideas": 1}
 
 
+class TestRedTeamResultTimestamp:
+    """r48 follow-up: save_redteam_result's created_at override exists for
+    §21 evidence recovery — a restored report keeps its ORIGINAL timestamp,
+    which the release package's saw-the-final-version judgment is ordered on."""
+
+    def test_created_at_override_roundtrips(self, memory_db, sample_candidate):
+        from datetime import datetime
+
+        memory_db.save_candidate(sample_candidate)
+        original = datetime(2026, 9, 8, 11, 4, 14)
+        memory_db.save_redteam_result(
+            candidate_id=sample_candidate.id,
+            agent_name="red_team",
+            report_json='{"verdict": "survives"}',
+            verdict="survives",
+            created_at=original,
+        )
+        rows = memory_db.list_redteam_results(candidate_id=sample_candidate.id)
+        assert len(rows) == 1
+        assert str(rows[0]["created_at"]).startswith("2026-09-08T11:04:14")
+
+    def test_created_at_defaults_to_now(self, memory_db, sample_candidate):
+        memory_db.save_candidate(sample_candidate)
+        memory_db.save_redteam_result(
+            candidate_id=sample_candidate.id,
+            agent_name="oracle",
+            report_json='{"v": 1}',
+        )
+        rows = memory_db.list_redteam_results(candidate_id=sample_candidate.id)
+        assert rows[0]["created_at"]  # non-null, set by the DB default
+
+
 class TestFileBackedDatabase:
     def test_persists_across_connections(self, tmp_path, sample_candidate):
         path = tmp_path / "lab.db"

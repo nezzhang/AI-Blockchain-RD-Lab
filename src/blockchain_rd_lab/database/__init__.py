@@ -695,8 +695,16 @@ class LabDatabase:
         agent_name: str,
         report_json: str,
         verdict: str = "",
+        created_at: datetime | None = None,
     ) -> int:
-        """Append one validated agent report (§22 redteam_results)."""
+        """Append one validated agent report (§22 redteam_results).
+
+        `created_at` defaults to now. The override exists for §21 evidence
+        recovery only: restoring a report from a committed artifact must
+        restore the report's ORIGINAL timestamp, not the recovery time —
+        the timestamp is part of the evidence (e.g. the release package's
+        "saw the final model version" judgment is ordered on it).
+        """
         with self._session() as session:
             orm = RedTeamORM(
                 candidate_id=candidate_id,
@@ -704,6 +712,8 @@ class LabDatabase:
                 report_json=report_json,
                 verdict=verdict,
             )
+            if created_at is not None:
+                orm.created_at = created_at
             session.add(orm)
             session.commit()
             return int(orm.id)

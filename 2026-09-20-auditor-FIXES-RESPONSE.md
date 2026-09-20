@@ -152,16 +152,27 @@ absent tag stays eligible (legacy r13/r14-era §20 records carry
 `parameters={}`). Regenerated §4b then renders all 19 calibration lines and
 the verifier reports it fully clean.
 
-### The committed bundle was NOT regenerated
+### The regenerated bundle: now faithful, and shipped
 
-The recovery proved the local store is a **partial** rebuild: the DB layer
-does not round-trip the prior-art merge provenance (`merged_source_ids`) or
-red-team `created_at` values the committed bundle carries (they came from the
-pre-r40 store's duplicate rows / full timestamps), and the other 9 finalists
-have no recoverable evidence in the repo at all. Regenerating the bundle from
-the recovered store produced a strictly *worse* artifact, so it was reverted
-to the committed version. The committed bundle remains the authoritative
-artifact and passes `verify.py` exit 0.
+The first regeneration attempt was reverted because the store could not carry
+two provenance fields the committed bundle relies on. That gap is now closed:
+
+- **`save_redteam_result` gained a `created_at` override** (§21 evidence
+  recovery): the 12 red-team reports were re-restored with their ORIGINAL
+  timestamps (`2026-09-08T10:34:19…` through `2026-09-08T11:04:14…`), since the
+  timestamp is part of the evidence — the release package's
+  saw-the-final-version judgment is ordered on it.
+- **The duplicate prior-art row (`source_id=85`) was restored.** The bundle's
+  `merged_source_ids: [85]` is a BUILD-TIME derivation (the r24 dedupe of two
+  rows with identical findings), not stored state — so the store now holds the
+  raw duplicate rows and the builder derives the merge, exactly as designed.
+
+With the store carrying full provenance, the bundle was regenerated from the
+store and is **faithful**: all 19 §4b calibration lines render, prior-art
+shows `merged_source_ids: [85]`, red-team history carries original timestamps,
+the README status line is computed from the store ("finalist, rank 1 of 10
+(recommended)"), and the bundle's own `verify.py` passes exit 0. The committed
+bundle now reproduces from the store instead of contradicting it.
 
 ### Remaining honest limit (documented, not hidden)
 
@@ -172,8 +183,5 @@ Their dossiers remain thin and their composites recompute from their (sparse)
 dimension rows. This is a data-recovery limitation of the local corpus, not a
 scoring defect: there is no committed evidence source to restore them from.
 Reconstructing their full trails would require re-running the pipeline for
-them (§41 — human call, and live-provider budget for the non-mock dims). A
-store that can round-trip `merged_source_ids` / `created_at` (and re-run
-evidence for the other finalists) is the correct follow-up before a byte-
-identical bundle regeneration from the store is possible.
+them (§41 — human call, and live-provider budget for the non-mock dims).
 
