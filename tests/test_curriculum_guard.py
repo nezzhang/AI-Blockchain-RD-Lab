@@ -14,6 +14,8 @@ concentration as WARN, and report healthy diversity as OK.
 
 from __future__ import annotations
 
+import pytest
+
 from blockchain_rd_lab.discovery.curriculum import CurriculumGuard
 from blockchain_rd_lab.schemas import Candidate, CandidateStatus
 
@@ -158,7 +160,13 @@ class TestCurriculumGuard:
         from blockchain_rd_lab.config import REPO_ROOT, load_config
         from blockchain_rd_lab.database import LabDatabase
 
-        db = LabDatabase(REPO_ROOT / load_config().storage.database)
+        db_path = REPO_ROOT / load_config().storage.database
+        if not db_path.exists():
+            pytest.skip(
+                "live corpus database not present (CI / fresh checkout) — "
+                "this sentinel only runs against a populated local corpus"
+            )
+        db = LabDatabase(db_path)
         verdict = CurriculumGuard(db).assess()
         assert verdict.verdict in ("ok", "warn")
         assert verdict.families_present >= 5
