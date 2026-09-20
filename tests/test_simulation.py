@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import math
+from typing import ClassVar
 
 import pytest
 
@@ -129,6 +131,67 @@ class TestInterpreter:
 # ---------------------------------------------------------------------------
 # Framework + scenario battery (§14, §15)
 # ---------------------------------------------------------------------------
+
+    # -- r47: inf/NaN creep blocked at the interpreter source ----------
+
+    def _single_eq_model(self, expr: str) -> MathModel:
+        """Rebuild the fixture with ONE equation whose LHS is the output S_t1."""
+        data = make_model().model_dump(mode="json")
+        data["equations"] = [
+            {"name": "eq0", "expression": expr, "description": "overflow probe"}
+        ]
+        return MathModel.model_validate(data)
+
+    _SYMS: ClassVar[dict[str, float]] = {
+        "X_t": 1.0, "dX_t": 0.0, "S_t": 1.0, "alpha": 0.5, "f": -1.0, "c": 1.0,
+    }
+
+    def test_mul_overflow_raises_not_silent_inf(self):
+        # Python float `*` overflows to inf with NO exception (unlike `**`).
+        interp = EquationInterpreter(
+            self._single_eq_model("S_t1 = exp(700) * exp(700)")
+        )
+        with pytest.raises(SimulationError):
+            interp.evaluate(dict(self._SYMS))
+
+    def test_inf_minus_inf_never_returns_nan(self):
+        interp = EquationInterpreter(
+            self._single_eq_model(
+                "S_t1 = (exp(700) * exp(700)) - (exp(700) * exp(700))"
+            )
+        )
+        with pytest.raises(SimulationError):
+            interp.evaluate(dict(self._SYMS))
+
+    def test_zero_times_inf_never_returns_nan(self):
+        interp = EquationInterpreter(
+            self._single_eq_model("S_t1 = 0 * (exp(700) * exp(700))")
+        )
+        with pytest.raises(SimulationError):
+            interp.evaluate(dict(self._SYMS))
+
+    def test_finite_result_does_not_raise(self):
+        # Guard fires only on non-finite; ordinary finite math is untouched.
+        interp = EquationInterpreter(
+            self._single_eq_model("S_t1 = exp(700) + exp(700)")
+        )
+        out = interp.evaluate(dict(self._SYMS))
+        assert math.isfinite(out["S_t1"])
+
+    def test_initial_state_inf_override_rejected(self):
+        sim = MechanismSimulation(make_model())
+        with pytest.raises(SimulationError):
+            sim.initial_state({"S_t": float("inf")})
+
+    def test_initial_state_nan_override_rejected(self):
+        sim = MechanismSimulation(make_model())
+        with pytest.raises(SimulationError):
+            sim.initial_state({"S_t": float("nan")})
+
+    def test_initial_state_finite_override_accepted(self):
+        sim = MechanismSimulation(make_model())
+        state = sim.initial_state({"S_t": 500.0})
+        assert state["S_t"] == 500.0
 
 
 class TestFramework:

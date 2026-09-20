@@ -137,6 +137,12 @@ class SupplyAttackBound:
     headline_metric: str | None
     vacuous: bool
     note: str
+    # Metrics whose edge is NON-FINITE (the supply function ran away to
+    # +/-inf under the pattern). r47: a non-finite edge is the WORST
+    # possible measurement for that axis — a diverging burn/mint — and
+    # must never be coerced to 0.0 ("no edge") nor parsed as vacuous.
+    # Scoring maps any diverged bound-metric to the dimension FLOOR.
+    diverged_metrics: tuple[str, ...] = ()
 
 
 def _interp(neutral: float, probe: float, factor: float) -> float:
@@ -394,19 +400,28 @@ class SupplyAttackBattery:
             k: pattern_metrics[k] - base_metrics[k]
             for k in pattern_metrics
         }
-        # drop non-finite edges conservatively
-        edge = {
-            k: v if math.isfinite(v) else 0.0 for k, v in edge.items()
-        }
+        # r47: NEVER coerce a non-finite edge to 0.0 — that turns a
+        # diverging runaway (the worst possible signal) into "no edge",
+        # the §20 anti-hiding failure class one level down. Record the
+        # divergence and remove the metric from headline arithmetic;
+        # the bound reports the divergence explicitly instead.
+        diverged_metrics = tuple(
+            sorted(k for k, v in edge.items() if not math.isfinite(v))
+        )
+        edge = {k: v for k, v in edge.items() if math.isfinite(v)}
 
         if kind is SupplyAttackPattern.WASH_MINT:
             bound_metrics = ["total_minted"]
             note = "sustained forged mint signal vs neutral base"
         elif kind is SupplyAttackPattern.ROUND_TRIP:
             bound_metrics = ["total_minted", "final_rate"]
+            _fr = edge.get("final_rate")
             note = (
                 "up-leg mint not clawed back on release legs "
-                f"(final-rate residue {abs(edge['final_rate']):.3f})"
+                f"(final-rate residue {abs(_fr):.3f})"
+                if _fr is not None
+                else "up-leg mint not clawed back on release legs "
+                "(final-rate residue diverged)"
             )
         elif kind is SupplyAttackPattern.RESONANCE:
             bound_metrics = ["total_minted", "final_rate"]
@@ -421,16 +436,33 @@ class SupplyAttackBattery:
             bound_metrics = ["total_burned"]
             note = "sustained forged burn signal; drain depth"
 
-        candidates = [abs(edge[m]) for m in bound_metrics]
-        headline = max(candidates) if candidates else None
-        # deterministic worst-metric selection (tie -> first in list)
-        headline_metric = None
-        if candidates:
-            worst = max(candidates)
-            for m in bound_metrics:
-                if abs(edge[m]) == worst:
-                    headline_metric = m
-                    break
+        # Divergence dominates the headline: a diverged bound-metric is
+        # the worst possible measurement (infinite edge), so it wins the
+        # headline slot over every finite candidate.
+        diverged_bound = [m for m in bound_metrics if m in diverged_metrics]
+        candidates = [
+            abs(edge[m]) for m in bound_metrics if m in edge
+        ]
+        headline: float | None
+        headline_metric: str | None
+        if diverged_bound:
+            headline = math.inf
+            headline_metric = diverged_bound[0]
+            note = (
+                f"{note} | DIVERGED: supply function ran away to a "
+                f"non-finite rate on {', '.join(diverged_bound)} — "
+                "unbounded extraction, scored at the floor"
+            )
+        else:
+            headline = max(candidates) if candidates else None
+            # deterministic worst-metric selection (tie -> first in list)
+            headline_metric = None
+            if candidates:
+                worst = max(candidates)
+                for m in bound_metrics:
+                    if m in edge and abs(edge[m]) == worst:
+                        headline_metric = m
+                        break
 
         return SupplyAttackBound(
             kind=kind,
@@ -443,6 +475,7 @@ class SupplyAttackBattery:
             headline_metric=headline_metric,
             vacuous=False,
             note=note,
+            diverged_metrics=diverged_metrics,
         )
 
     def _base_series(

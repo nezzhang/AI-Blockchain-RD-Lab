@@ -12,6 +12,12 @@ deliberately restricted:
   interpreter double-checks before every run.
 - Division by zero and domain errors raise SimulationError — deterministic
   failure, never NaN creep (§15: never only show favorable scenarios).
+- r47: the finiteness guarantee is enforced at the SOURCE, not only at
+  the simulation loop. Python float `*`/`+`/`-`/`/` overflow to +/-inf
+  SILENTLY (no OverflowError, unlike `**`), and `inf - inf`, `0 * inf`,
+  `inf / inf` yield NaN. Every computed LHS is checked with
+  `math.isfinite` and a non-finite result raises SimulationError, so a
+  standalone `evaluate()` call can never return inf/NaN unchecked.
 """
 
 from __future__ import annotations
@@ -253,6 +259,11 @@ class EquationInterpreter:
             tree = self._compiled[name]
             value = self._eval_node(tree.body, env)
             lhs = self.lhs_symbols[name]
+            if not math.isfinite(value):
+                raise SimulationError(
+                    f"non-finite result computing {lhs!r} (inf/NaN creep "
+                    "blocked at the interpreter, r47)"
+                )
             env[lhs] = value
             results[lhs] = value
         return results

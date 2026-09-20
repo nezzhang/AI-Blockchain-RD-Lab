@@ -68,6 +68,12 @@ class DynamicsEvidence:
     ratchet_ratio: float | None
     # pattern names that were honestly vacuous for this driver
     vacuous_patterns: tuple[str, ...]
+    # r47: "<pattern>:<metric>" entries whose measured edge DIVERGED
+    # (non-finite — the supply function ran away under the pattern).
+    # Divergence maps the corresponding dimension to the FLOOR and is
+    # disclosed here so a floor score is attributable to evidence,
+    # never to a silent coercion.
+    diverged_surfaces: tuple[str, ...] = ()
 
 
 # Weights per §19 extension for token economics
@@ -278,23 +284,40 @@ def score_design_with_dynamics(
         sorted(name for name, b in bounds.items() if b.vacuous)
     )
 
-    # Dilution: the measured mint-extraction surface
+    # Dilution: the measured mint-extraction surface.
+    # r47: a diverged mint surface (non-finite edge) is the worst
+    # possible measurement — score the FLOOR, never "no extraction".
+    mint_diverged = any(
+        m in b.diverged_metrics
+        for b in (wash, creep)
+        for m in b.bound_metrics
+    )
     measured_mint = [
         b.headline
         for b in (wash, creep)
         if not b.vacuous and b.headline is not None
+        and math.isfinite(b.headline)
     ]
-    if not measured_mint:
+    if mint_diverged:
+        mint_extraction = math.inf
+        dilution = 0.0
+    elif not measured_mint:
         mint_extraction = None
         dilution = 10.0
     else:
         mint_extraction = max(measured_mint) / steps
         dilution = 10.0 * (1.0 - mint_extraction)
 
-    # Death spiral: the measured drain depth
+    # Death spiral: the measured drain depth.
+    # r47: a diverged drain (runaway burn) is the death-spiral signature
+    # this dimension exists to catch — score the FLOOR, never 10.0.
+    burn_diverged = any(m in burn_park.diverged_metrics for m in burn_park.bound_metrics)
     if burn_park.vacuous or burn_park.headline is None:
         drain_fraction = None
         death_spiral = 10.0
+    elif burn_diverged or not math.isfinite(burn_park.headline):
+        drain_fraction = math.inf
+        death_spiral = 0.0
     else:
         drain_fraction = burn_park.headline / steps
         death_spiral = 10.0 * (1.0 - drain_fraction)
@@ -302,7 +325,14 @@ def score_design_with_dynamics(
     # Oracle manipulability: structural in both paths (see helper)
     oracle_manip = _oracle_badness(design.driver)
 
-    # Game theory: the measured ratchet ratio
+    # Game theory: the measured ratchet ratio.
+    # r47: a diverged resonance/round_trip headline is the compounding
+    # runaway class — score the floor, never the vacuous 10.0.
+    gt_diverged = any(
+        m in b.diverged_metrics
+        for b in (resonance, round_trip)
+        for m in b.bound_metrics
+    )
     if (
         resonance.vacuous
         or round_trip.vacuous
@@ -311,6 +341,9 @@ def score_design_with_dynamics(
     ):
         ratchet_ratio = None
         gt_stability = 10.0
+    elif gt_diverged or not math.isfinite(resonance.headline):
+        ratchet_ratio = math.inf
+        gt_stability = 0.0
     elif resonance.headline <= 1e-9:
         # nothing extracted across N cycles: nothing to ratchet
         ratchet_ratio = 1.0
@@ -321,6 +354,7 @@ def score_design_with_dynamics(
         ratchet_ratio = None
         gt_stability = 0.0
     else:
+        # round_trip is finite here: any divergence was floored above.
         ratchet_ratio = resonance.headline / (
             _RESONANCE_CYCLES * round_trip.headline
         )
@@ -330,6 +364,13 @@ def score_design_with_dynamics(
 
     overall = _composite(dilution, death_spiral, oracle_manip, gt_stability)
 
+    diverged_surfaces = tuple(
+        sorted(
+            f"{b.kind.value}:{m}"
+            for b in bounds.values()
+            for m in b.diverged_metrics
+        )
+    )
     evidence = DynamicsEvidence(
         driver=design.driver.name,
         steps=steps,
@@ -337,6 +378,7 @@ def score_design_with_dynamics(
         drain_fraction=drain_fraction,
         ratchet_ratio=ratchet_ratio,
         vacuous_patterns=vacuous,
+        diverged_surfaces=diverged_surfaces,
     )
     score = TokenScore(
         design_id=design.design_id,

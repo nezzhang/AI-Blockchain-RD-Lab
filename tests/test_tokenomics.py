@@ -631,6 +631,80 @@ def _design_for(driver_name: str) -> TokenDesign:
     )
 
 
+def _diverging_burn_driver() -> SupplyDriver:
+    """r47 audit probe: a driver whose burn path runs away to -inf/step.
+
+    Not in the registry — the registry's 13 drivers all clamp to [-1,1].
+    This proves the battery reports a diverging runaway honestly instead
+    of coercing it to 'no edge'."""
+    def runaway(state: dict[str, float]) -> float:
+        crisis = state.get("crisis_index", 0.0)
+        if crisis <= 0:
+            return 0.0
+        return -(crisis * 1e308)  # overflows to -inf per step
+
+    return SupplyDriver(
+        category=DriverCategory.MARKET,
+        name="runaway-burn-probe",
+        signal_source="forgeable crisis index",
+        supply_fn=runaway,
+        burn_probe_states=({"crisis_index": 5.0},),
+        manipulation_vectors=("forgeable crisis index",),
+        compatibility_tags=frozenset({"market-driven"}),
+    )
+
+
+class TestDivergenceDisclosure:
+    """r47: a non-finite edge is the WORST measurement, never 'no edge'.
+
+    Pins the audit finding that `isfinite(v) else 0.0` turned a diverging
+    death-spiral burn into headline 0.0 -> dynamics scored it 10.0
+    (perfect resistance). Divergence must surface and score the FLOOR."""
+
+    def test_diverging_burn_is_never_a_zero_headline(self):
+        b = SupplyAttackBattery(_diverging_burn_driver()).run_pattern(
+            SupplySpec(kind=SupplyAttackPattern.BURN_PARK, steps=60)
+        )
+        assert not b.vacuous
+        assert b.diverged_metrics, "divergence must be recorded"
+        assert b.headline == math.inf
+        assert b.headline != 0.0, "a runaway must never read as 'no edge'"
+        assert b.headline_metric == "total_burned"
+        # the non-finite values are not silently present in edge
+        assert all(math.isfinite(v) for v in b.edge.values())
+
+    def test_divergence_note_discloses(self):
+        b = SupplyAttackBattery(_diverging_burn_driver()).run_pattern(
+            SupplySpec(kind=SupplyAttackPattern.BURN_PARK, steps=60)
+        )
+        assert "DIVERGED" in b.note
+
+    def test_registered_drivers_never_diverge(self):
+        """Census pin: the committed registry is fully bounded — the r47
+        fix changes NO published number (diverged_metrics empty)."""
+        for d in DRIVER_REGISTRY:
+            for b in SupplyAttackBattery(d).run_all(steps=60):
+                assert b.diverged_metrics == ()
+                assert b.headline is None or math.isfinite(b.headline)
+
+    def test_diverging_burn_scores_death_spiral_floor(self):
+        design = TokenDesign(
+            mechanism_id="cand-x",
+            mechanism_name="x",
+            driver=_diverging_burn_driver(),
+            tag_overlap=1,
+            compatibility_score=0.5,
+        )
+        score, ev = score_design_with_dynamics(design)
+        assert ev.drain_fraction == math.inf
+        assert score.death_spiral_resistance == 0.0
+        assert score.death_spiral_resistance != 10.0, (
+            "a diverging death spiral must never score perfect resistance"
+        )
+        assert any("burn_park" in s for s in ev.diverged_surfaces)
+
+
+
 class TestDynamicsScoring:
     """The r42 contract: same dimensions, same weights, MEASURED inputs —
     structural scores unchanged, dynamics published beside them."""

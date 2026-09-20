@@ -232,6 +232,12 @@ class MechanismSimulation:
         """
         state: dict[str, float] = {v.symbol: 1000.0 for v in self._state_vars}
         if overrides:
+            for sym, val in overrides.items():
+                if not math.isfinite(val):
+                    raise SimulationError(
+                        f"initial state override {sym!r}={val} is not finite "
+                        "(inf/NaN seed blocked, r47)"
+                    )
             state.update(overrides)
         return state
 
