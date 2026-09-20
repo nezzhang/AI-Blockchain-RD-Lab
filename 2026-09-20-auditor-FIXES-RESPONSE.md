@@ -111,3 +111,69 @@ less complete than the committed bundle. A full store rebuild that recovers
 *every* evidence category from the committed artifacts is the correct follow-up
 before any future `lab report` / bundle regeneration should be trusted to
 reproduce the committed bundle byte-for-byte.
+
+---
+
+## r48 follow-up — full evidence recovery for the publication subject
+
+The residual above is now closed **for the publication subject**
+(`cand-9200b07691c3`, the only candidate the committed bundle carries evidence
+for). Recovered from the committed bundle into the store (additive-only; no
+candidate re-save, so no composite was touched):
+
+- **5 experiments** — the 3 adversarial-pattern census records
+  (`exp-779ad60c78f9`, `exp-15a351751f2c`, `exp-2240c2647989`; the 8-bound
+  default + two 27-bound sweeps) and the 2 §15/Monte-Carlo records
+  (`cand-9200b07691c3-scenarios-v3`, `…-montecarlo-v3`). Restored with their
+  original `experiment_id`s (§21: a record is a lookup, not a regeneration).
+- **12 red-team reports** — the full v1→v3 red_team / oracle / security /
+  game_theory history.
+- **1 prior-art record** — the BIS margin-buffer prior-art finding.
+
+Round-trip fidelity verified: the recovered scenario and adversarial-bounds
+experiments reproduce the bundle's stored `results` exactly. The subject's
+evidence trail is complete again (`models=1, rt=12, exp=9, priorart=1`), and
+its composite is unchanged at 6.45.
+
+### Latent bug the recovery exposed (fixed): §4b rendered the wrong battery
+
+Regenerating the bundle against the recovered store surfaced a real disclosure
+defect the thin r40 store had been *masking*: `ReleasePackageBuilder._adversarial_bounds`
+picked the candidate's census record with the most `"bounds"` entries, and the
+recovered §17 supply-attack census (`r41-supply-battery-census`, 65 tokenomics
+rows) outranked the genuine §20 mechanism sweeps (27 rows) — so §4b silently
+rendered tokenomics supply bounds (wash_mint / total_minted) instead of the
+mechanism attack bounds (crash_park / vol_oscillation). The verifier's
+`§4b calibration completeness` check caught it (`[!]`, exit 0). **Fix**
+(`reporting/release.py`): the §4b picker now excludes any record explicitly
+tagged as a non-mechanism battery (`parameters.battery` not starting
+`attack_patterns`), so the census can never shadow the §20 disclosure; an
+absent tag stays eligible (legacy r13/r14-era §20 records carry
+`parameters={}`). Regenerated §4b then renders all 19 calibration lines and
+the verifier reports it fully clean.
+
+### The committed bundle was NOT regenerated
+
+The recovery proved the local store is a **partial** rebuild: the DB layer
+does not round-trip the prior-art merge provenance (`merged_source_ids`) or
+red-team `created_at` values the committed bundle carries (they came from the
+pre-r40 store's duplicate rows / full timestamps), and the other 9 finalists
+have no recoverable evidence in the repo at all. Regenerating the bundle from
+the recovered store produced a strictly *worse* artifact, so it was reverted
+to the committed version. The committed bundle remains the authoritative
+artifact and passes `verify.py` exit 0.
+
+### Remaining honest limit (documented, not hidden)
+
+The **other 9 finalists** have near-zero stored evidence (the local store was
+rebuilt thin at r40, and the repo carries recoverable detail only for the
+published subject — the bundle ships the rank-1's trail, not every finalist's).
+Their dossiers remain thin and their composites recompute from their (sparse)
+dimension rows. This is a data-recovery limitation of the local corpus, not a
+scoring defect: there is no committed evidence source to restore them from.
+Reconstructing their full trails would require re-running the pipeline for
+them (§41 — human call, and live-provider budget for the non-mock dims). A
+store that can round-trip `merged_source_ids` / `created_at` (and re-run
+evidence for the other finalists) is the correct follow-up before a byte-
+identical bundle regeneration from the store is possible.
+

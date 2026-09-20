@@ -99,6 +99,17 @@ class ReleasePackageBuilder:
             results = rec.results
             if not (isinstance(results, dict) and "bounds" in results):
                 continue
+            # r48 (2026-09-20 follow-up): §4b is the §20 MECHANISM battery's
+            # disclosure; it must never render the §17 supply-attack census.
+            # Both carry a "bounds" list, and the census (65 rows) outranks the
+            # §20 sweeps (27) under "fullest wins". The census is tagged
+            # parameters.battery="supply_attack_patterns*". Legacy §20 records
+            # may be untagged, so exclude only an EXPLICITLY non-mechanism
+            # battery tag — an absent tag stays eligible (the r13/r14-era
+            # records the r29 fixtures model carry parameters={}).
+            batt = str((rec.parameters or {}).get("battery", ""))
+            if batt and not batt.startswith("attack_patterns"):
+                continue
             n = len(results["bounds"])
             if n >= latest_n:
                 latest = results
