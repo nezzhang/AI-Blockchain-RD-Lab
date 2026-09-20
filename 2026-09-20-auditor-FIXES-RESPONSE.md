@@ -145,12 +145,13 @@ rows) outranked the genuine §20 mechanism sweeps (27 rows) — so §4b silently
 rendered tokenomics supply bounds (wash_mint / total_minted) instead of the
 mechanism attack bounds (crash_park / vol_oscillation). The verifier's
 `§4b calibration completeness` check caught it (`[!]`, exit 0). **Fix**
-(`reporting/release.py`): the §4b picker now excludes any record explicitly
-tagged as a non-mechanism battery (`parameters.battery` not starting
-`attack_patterns`), so the census can never shadow the §20 disclosure; an
-absent tag stays eligible (legacy r13/r14-era §20 records carry
-`parameters={}`). Regenerated §4b then renders all 19 calibration lines and
-the verifier reports it fully clean.
+(`reporting/release.py` + `scripts/r24_publication_bundle.py`): both the §4b
+picker and the bundle's `adversarial-bounds.json` collection now exclude
+exactly the §17 supply-attack census tag (`parameters.battery` starting
+`supply_attack_patterns`) — never a prefix whitelist, which would have dropped
+the genuine §20 `attack_parameter_sweep` record (27 bounds). Untagged legacy
+§20 records stay eligible. Regenerated §4b then renders all 19 calibration
+lines and the bundle verifies exit 0 with zero `[!]` warnings.
 
 ### The regenerated bundle: now faithful, and shipped
 

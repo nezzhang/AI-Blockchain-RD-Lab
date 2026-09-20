@@ -103,12 +103,12 @@ class ReleasePackageBuilder:
             # disclosure; it must never render the §17 supply-attack census.
             # Both carry a "bounds" list, and the census (65 rows) outranks the
             # §20 sweeps (27) under "fullest wins". The census is tagged
-            # parameters.battery="supply_attack_patterns*". Legacy §20 records
-            # may be untagged, so exclude only an EXPLICITLY non-mechanism
-            # battery tag — an absent tag stays eligible (the r13/r14-era
-            # records the r29 fixtures model carry parameters={}).
+            # parameters.battery="supply_attack_patterns*". Genuine §20 records
+            # carry attack_patterns* / attack_parameter_sweep / no tag, so
+            # exclude exactly the supply-census tag — never a prefix whitelist
+            # (that dropped the attack_parameter_sweep record's 27 bounds).
             batt = str((rec.parameters or {}).get("battery", ""))
-            if batt and not batt.startswith("attack_patterns"):
+            if batt.startswith("supply_attack_patterns"):
                 continue
             n = len(results["bounds"])
             if n >= latest_n:

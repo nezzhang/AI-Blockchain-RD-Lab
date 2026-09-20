@@ -90,10 +90,21 @@ def main() -> None:
                    default=_json_default) + "\n", encoding="utf-8")
 
     # 4. every adversarial-pattern census record for the candidate
+    # r48: scope to the §20 MECHANISM battery. The store also holds the §17
+    # supply-attack census (parameters.battery="supply_attack_patterns*"),
+    # whose pattern kinds (wash_mint, creep, round_trip, burn_park) are NOT
+    # §20 AttackPattern values — the shipped verify.py re-runs every record
+    # here as a §20 PatternSpec, so a supply census row makes the bundle
+    # fail its own verifier. Exclude exactly that census tag; genuine §20
+    # records carry attack_patterns* / attack_parameter_sweep / no tag and
+    # must all ship.
     bounds = []
     for exp in db.iter_experiments(candidate_id=RANK1):
         res = exp.results or {}
         if "bounds" not in res:
+            continue
+        batt = str((exp.parameters or {}).get("battery", ""))
+        if batt.startswith("supply_attack_patterns"):
             continue
         bounds.append({
             "experiment_id": exp.experiment_id,

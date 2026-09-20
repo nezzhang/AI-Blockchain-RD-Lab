@@ -5,11 +5,11 @@
   "files": {
     "README.md": {
       "bytes": 3143,
-      "sha256": "3db5913caeedaa8b6428232b9c5211464c15567044b1fec74bd9d32a6e382e07"
+      "sha256": "b7c9bdf56b78e323921b74d9fbbd63b54a71927da786c3079a1013d387a7d35e"
     },
     "adversarial-bounds.json": {
-      "bytes": 114869,
-      "sha256": "ef6d5096d02b3e18e0b361cc4aabbb54778214de3d2da61ac9d37659900c0223"
+      "bytes": 97486,
+      "sha256": "ffdf07f0d36196d1368ee2ce39de5e92aba571362d79cb4e45d1a9496c04997c"
     },
     "dossier.md": {
       "bytes": 9164,
@@ -64,6 +64,6 @@
       "sha256": "a64c58c9a947e00652baa7254aae82eb65bbb142c1fda8344877e067b1ac375f"
     }
   },
-  "generated": "2026-09-20T15:32:41.920419+00:00",
+  "generated": "2026-09-20T15:44:14.588771+00:00",
   "model_version": 3
 }
