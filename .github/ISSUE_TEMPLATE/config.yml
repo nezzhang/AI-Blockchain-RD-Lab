@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Auditing this lab
+    url: https://github.com/nezzhang/AI-Blockchain-RD-Lab/blob/main/AUDITING.md
+    about: Where the load-bearing claims live, what prior audits fixed, and the open weaknesses — read before filing a finding.
+  - name: Contributing guide
+    url: https://github.com/nezzhang/AI-Blockchain-RD-Lab/blob/main/CONTRIBUTING.md
+    about: How to contribute a fix, an audit, or a reproducibility improvement.
