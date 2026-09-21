@@ -2,10 +2,10 @@
 
 Assembled by code from stored evidence only (§2 — no report-writer
 LLM). The bundle is the complete public evidence set for this
-research candidate as of 2026-09-20T15:44:14.588771+00:00.
+research candidate as of 2026-09-21T23:36:00.549577+00:00.
 
 - **Candidate ID:** `cand-9200b07691c3`
-- **Deterministic §19 score:** 6.45
+- **Deterministic §19 score:** 6.725
 - **Model lineage:** v1 → v2 → v3 (every break/fix measured; the
   history is in `redteam-history.json`, unfiltered)
 - **Status:** finalist, rank 1 of 10 (recommended)
@@ -62,8 +62,7 @@ claims (§2).
 This is SIMULATION-STAGE evidence: every adversarial bound was
 measured against a deterministic equation interpreter under named
 attack choreographies, not against deployed software or live
-attackers. 5 of the 11 score dimensions are imputed at the 5.0
-floor (offline mode, disclosed in the dossier's scoring section).
+attackers. All 11 score dimensions carry stored evidence — no imputation (per-dimension provenance in `score-decomposition.json`).
 The residual-attack disclosure in `release-package.md` §4 lists
 every attack surface the final model still carries. No token,
 no deployment, no live contract — §27/§28.

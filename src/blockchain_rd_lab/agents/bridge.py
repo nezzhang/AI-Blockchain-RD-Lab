@@ -159,6 +159,7 @@ class AgentBridgeProvider(LLMProvider):
             "blockchain_rd_lab.redteam",
             "bucket.answer",
             "blockchain_rd_lab.improvement",
+            "blockchain_rd_lab.scoring.assessment",
         ):
             if "answer" in module_name:
                 continue

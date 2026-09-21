@@ -2,13 +2,13 @@
 
 - **Candidate ID:** cand-5d41cd41f68d
 - **Category:** settlement guarantees
-- **Overall score:** 5.6000
-- **Rank:** 9
+- **Overall score:** 5.2750
+- **Rank:** 10
 - **Status:** finalist
 
 ## Executive Summary
 
-**Tranche-Segmented Settlement Guarantee Stack** (settlement guarantees) currently holds status **finalist** with an overall deterministic score of **5.6000**. All evidence below is drawn from validated, stored agent and simulation records; nothing in this report is free-form LLM narrative (§2).
+**Tranche-Segmented Settlement Guarantee Stack** (settlement guarantees) currently holds status **finalist** with an overall deterministic score of **5.2750**. All evidence below is drawn from validated, stored agent and simulation records; nothing in this report is free-form LLM narrative (§2).
 
 ## Problem
 
@@ -20,62 +20,31 @@ Guarantee capital is segmented into tranches with risk-weighted collateral; a so
 
 ## Mathematical Model
 
-- `X_t` (input, unit): anchor price level (~1000)
-- `dX_t` (input, unit): anchor change that step
-- `Q_t` (state, unit): queued settlement exposure
-- `Q_t1` (state, unit): next queued exposure
-- `F_t` (state, unit): per-batch guarantee fee
-- `F_t1` (state, unit): next guarantee fee
-
-- `Q_t1 = clip(Q_t * (1 + phi) + 12.0 * dX_t / X_t, 100.0, cap)` — queued exposure drifts up and responds to anchor moves, floored and capped
-- `F_t1 = clip(f0 + psi * (Q_t1 - 100.0), 5.0, 80.0)` — guarantee fee scales with exposure LEVEL above the floor — senior free-riding and queue spam both pay proportionally
-
-**Parameters:** phi ∈ [0.001, 0.05] (default 0.006), psi ∈ [0.001, 0.2] (default 0.03), cap ∈ [100.0, 20000.0] (default 2500.0), f0 ∈ [1.0, 60.0] (default 10.0)
-
-**Open questions (§13):** should tranche seniority multiply the level-based fee explicitly?
-
-**Critical assumptions:** queued exposure is measurable each batch; fee pressure is linear in relative exposure growth
+No formal model stored yet (run `lab formalize`).
 
 ## Economic Analysis
 
 - **novelty**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 - **economic_coherence**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
-- **capital_efficiency**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **capital_efficiency**: 6.50 (INFERENCE; confidence 0.60)
 
 ## Game Theory
 
-- **Red Team verdict:** survives (strongest attack: Pre-rise senior exit: withdraw senior capital one batch before a queued-exposure rise crystallizes in the level-priced fee — a bounded one-batch friction arbitrage worth at most a single batch's drift…)
 - **game_theory**: 7.00 (HYPOTHESIS; confidence 0.80)
-- **game_theory:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
-- FACT: v2 prices the fee on exposure LEVEL above floor: F_t1 = f0 + psi*(Q_t1 - 100). INFERENCE: senior free-riding now pays — seniors holding risk through elevated exposure are charged proportionally, and queue spam charges the spammer's own queued exposure at the same level-priced rate, making spam
 
 ## Oracle Design
 
-- **oracle_feasibility**: 7.50 (HYPOTHESIS; confidence 0.70)
+- **oracle_feasibility**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
 No external data dependency declared. See Security and adversarial sections for manipulation analysis.
 
 ## Security
 
-- **security**: 6.50 (HYPOTHESIS; confidence 0.80)
-- **security:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
-- FACT: v2's fee is a pure function of measured exposure level. INFERENCE: queue spam no longer extracts — the spammer pays level-priced fees on their own queued exposure; the cap-ceiling freeze now costs the attacker maximum fees continuously.
+- **security**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+No adversarial review recorded yet (run `lab redteam`).
 
 ## Simulation
 
-- **cand-5d41cd41f68d-scenarios** (seed 7, sim-0.1.0): results recorded
-- **cand-5d41cd41f68d-montecarlo** (seed 7, sim-0.1.0): mean_final=1429.3802870523518, p5_final=1428.8629563770494, p95_final=1429.7301953157053, failures=0
-- **cand-5d41cd41f68d-sweep** (seed 7, sim-0.1.0): results recorded
-- **cand-5d41cd41f68d-scenarios-v2** (seed 7, sim-0.1.0): results recorded
-- **cand-5d41cd41f68d-montecarlo-v2** (seed 7, sim-0.1.0): mean_final=1429.4464606993258, p5_final=1428.9814117072945, p95_final=1429.8674090917502, failures=0
-- **cand-5d41cd41f68d-sweep-v2** (seed 7, sim-0.1.0): results recorded
-- **exp-56ae43576291** (seed None, sim-0.1.0): results recorded
-- **exp-cbf422a35f31** (seed None, sim-0.1.0): results recorded
-- **exp-e7b3e9ae8e1c** (seed None, sim-0.1.0): results recorded
-- **exp-33e4326b35a4** (seed None, none): results recorded
-- **exp-6050c36fa4e4** (seed None, none): results recorded
-- **exp-ecbfd1a2f83e** (seed None, none): results recorded
-
-All runs are reproducible from the stored seed, parameters, and git commit (§21).
+No simulation runs recorded yet (run `lab simulate`).
 
 ## Historical Analysis
 
@@ -92,13 +61,13 @@ See Prior Art; competitor synthesis pending real research.
 ## Market
 
 - **market_demand**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
-- **network_effects**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
-- **communication**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
-- **viral_potential**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **network_effects**: 5.50 (INFERENCE; confidence 0.60)
+- **communication**: 4.50 (INFERENCE; confidence 0.50)
+- **viral_potential**: 4.00 (INFERENCE; confidence 0.50)
 
 ## Technical Architecture
 
-- **technical_feasibility**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **technical_feasibility**: 5.50 (INFERENCE; confidence 0.60)
 Blockchain required: yes; token required: no. Detailed architecture arrives with the Blockchain Architect review (future phase).
 
 ## Regulatory Risks

@@ -2,89 +2,206 @@
   "finalists": [
     {
       "rank": 1,
-      "candidate_id": "cand-b7dbe10575e0",
-      "name": "Beta Rule",
-      "overall_score": 5.3,
+      "candidate_id": "cand-9200b07691c3",
+      "name": "Separation-Keyed Fee Smoothing Escrow",
+      "overall_score": 6.725,
       "fatal_flaw_applied": false,
       "fatal_flaw_count": 0,
-      "imputed_dimensions": [
-        "capital_efficiency",
-        "communication",
-        "economic_coherence",
-        "game_theory",
-        "market_demand",
-        "network_effects",
-        "oracle_feasibility",
-        "security",
-        "technical_feasibility",
-        "viral_potential"
-      ],
-      "status": "scored"
+      "imputed_dimensions": [],
+      "status": "finalist"
     },
     {
       "rank": 2,
-      "candidate_id": "cand-36a7a654c045",
-      "name": "Alpha Rule",
-      "overall_score": 5.1,
+      "candidate_id": "cand-e74d830a9479",
+      "name": "Demand-Index Escalation Ladder for FX Batches",
+      "overall_score": 6.35,
       "fatal_flaw_applied": false,
       "fatal_flaw_count": 0,
       "imputed_dimensions": [
-        "capital_efficiency",
-        "communication",
-        "economic_coherence",
-        "game_theory",
-        "market_demand",
-        "network_effects",
         "oracle_feasibility",
-        "security",
-        "technical_feasibility",
-        "viral_potential"
+        "security"
       ],
-      "status": "scored"
+      "status": "finalist"
+    },
+    {
+      "rank": 3,
+      "candidate_id": "cand-0d8552635f8c",
+      "name": "Disagreement-Weighted Oracle Quorum",
+      "overall_score": 6.325,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
+    },
+    {
+      "rank": 4,
+      "candidate_id": "cand-e0c80c26b7f3",
+      "name": "Quote-Deviation Slashed FX Reference Feed",
+      "overall_score": 6.3,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
+    },
+    {
+      "rank": 5,
+      "candidate_id": "cand-ce333ff19e9e",
+      "name": "Forecast-Indexed Fee Smoothing Pool",
+      "overall_score": 6.2,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
     }
   ],
   "ranking": [
     {
       "rank": 1,
-      "candidate_id": "cand-b7dbe10575e0",
-      "name": "Beta Rule",
-      "overall_score": 5.3,
+      "candidate_id": "cand-9200b07691c3",
+      "name": "Separation-Keyed Fee Smoothing Escrow",
+      "overall_score": 6.725,
       "fatal_flaw_applied": false,
       "fatal_flaw_count": 0,
-      "imputed_dimensions": [
-        "capital_efficiency",
-        "communication",
-        "economic_coherence",
-        "game_theory",
-        "market_demand",
-        "network_effects",
-        "oracle_feasibility",
-        "security",
-        "technical_feasibility",
-        "viral_potential"
-      ],
-      "status": "scored"
+      "imputed_dimensions": [],
+      "status": "finalist"
     },
     {
       "rank": 2,
-      "candidate_id": "cand-36a7a654c045",
-      "name": "Alpha Rule",
-      "overall_score": 5.1,
+      "candidate_id": "cand-e74d830a9479",
+      "name": "Demand-Index Escalation Ladder for FX Batches",
+      "overall_score": 6.35,
       "fatal_flaw_applied": false,
       "fatal_flaw_count": 0,
       "imputed_dimensions": [
-        "capital_efficiency",
-        "communication",
-        "economic_coherence",
-        "game_theory",
-        "market_demand",
-        "network_effects",
         "oracle_feasibility",
-        "security",
-        "technical_feasibility",
-        "viral_potential"
+        "security"
       ],
-      "status": "scored"
+      "status": "finalist"
+    },
+    {
+      "rank": 3,
+      "candidate_id": "cand-0d8552635f8c",
+      "name": "Disagreement-Weighted Oracle Quorum",
+      "overall_score": 6.325,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
+    },
+    {
+      "rank": 4,
+      "candidate_id": "cand-e0c80c26b7f3",
+      "name": "Quote-Deviation Slashed FX Reference Feed",
+      "overall_score": 6.3,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
+    },
+    {
+      "rank": 5,
+      "candidate_id": "cand-ce333ff19e9e",
+      "name": "Forecast-Indexed Fee Smoothing Pool",
+      "overall_score": 6.2,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
+    },
+    {
+      "rank": 6,
+      "candidate_id": "cand-f9682eb6fc72",
+      "name": "Prediction-Settled Hashprice Hedge Board",
+      "overall_score": 6.175,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
+    },
+    {
+      "rank": 7,
+      "candidate_id": "cand-e8e15b483070",
+      "name": "Escrowed Batch-Clearing Insurance Pool",
+      "overall_score": 5.625,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "economic_coherence",
+        "market_demand",
+        "novelty",
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
+    },
+    {
+      "rank": 8,
+      "candidate_id": "cand-a98b49da7189",
+      "name": "Corridor-Native FX Batch Matching",
+      "overall_score": 5.55,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "economic_coherence",
+        "market_demand",
+        "novelty",
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
+    },
+    {
+      "rank": 9,
+      "candidate_id": "cand-3132499bb565",
+      "name": "Dual-Sided Bond Auction Rebalancer",
+      "overall_score": 5.4,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "economic_coherence",
+        "market_demand",
+        "novelty",
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
+    },
+    {
+      "rank": 10,
+      "candidate_id": "cand-5d41cd41f68d",
+      "name": "Tranche-Segmented Settlement Guarantee Stack",
+      "overall_score": 5.275,
+      "fatal_flaw_applied": false,
+      "fatal_flaw_count": 0,
+      "imputed_dimensions": [
+        "economic_coherence",
+        "market_demand",
+        "novelty",
+        "oracle_feasibility",
+        "security"
+      ],
+      "status": "finalist"
     }
   ],
   "rejected_by_gate": 0

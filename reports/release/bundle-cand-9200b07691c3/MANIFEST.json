@@ -1,19 +1,19 @@
 {
   "candidate_id": "cand-9200b07691c3",
   "candidate_name": "Separation-Keyed Fee Smoothing Escrow",
-  "deterministic_score": 6.45,
+  "deterministic_score": 6.725,
   "files": {
     "README.md": {
-      "bytes": 3143,
-      "sha256": "b7c9bdf56b78e323921b74d9fbbd63b54a71927da786c3079a1013d387a7d35e"
+      "bytes": 3148,
+      "sha256": "b36a1d957d7afa360fc03fd5d0b6b53561145c79ed15871b2d7fe3f67265aa6d"
     },
     "adversarial-bounds.json": {
       "bytes": 97486,
       "sha256": "ffdf07f0d36196d1368ee2ce39de5e92aba571362d79cb4e45d1a9496c04997c"
     },
     "dossier.md": {
-      "bytes": 9164,
-      "sha256": "d085484c544aefcbce4f4f78ff3b3e8bb93b59d7c8f8c482626bbbd48c04b089"
+      "bytes": 8597,
+      "sha256": "02d88747ad6ea60f39146071a074da1acaf4e68adfbd9f78e5daed96ce3ffb18"
     },
     "lab-runtime/blockchain_rd_lab/__init__.py": {
       "bytes": 46,
@@ -48,22 +48,22 @@
       "sha256": "b3d3bdf9f758b825b4e0f0b2eb8a2293a94570024084f0dd7532d37d2e493c00"
     },
     "release-package.md": {
-      "bytes": 16116,
-      "sha256": "90d7b6981c87c89c9ca132b40b7d1ecc2731163df837521f0fc143f45431bb58"
+      "bytes": 16117,
+      "sha256": "ad557b94e27a76ac91fcfd102965d0e720709aff4f899c0922f58a632ff670ff"
     },
     "scenario-results.json": {
       "bytes": 12400,
       "sha256": "ac623b181e4d849c9d000eca120726a235198a6e5f494955ea1c41e681ba440e"
     },
     "score-decomposition.json": {
-      "bytes": 2040,
-      "sha256": "05440067f67112f7472718c1d4ff26f99e24778fd388534464154b3b1f67069e"
+      "bytes": 1915,
+      "sha256": "99fd34418c0c44df1d0cd2ce3763c90c110c452efe0f358e7754883cd71db05c"
     },
     "verify.py": {
       "bytes": 17737,
       "sha256": "a64c58c9a947e00652baa7254aae82eb65bbb142c1fda8344877e067b1ac375f"
     }
   },
-  "generated": "2026-09-20T15:44:14.588771+00:00",
+  "generated": "2026-09-21T23:36:00.549577+00:00",
   "model_version": 3
 }

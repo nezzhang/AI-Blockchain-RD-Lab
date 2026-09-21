@@ -1346,6 +1346,88 @@ def rank(
         )
 
 
+@app.command()
+def assess(
+    candidate_id: Annotated[
+        str | None,
+        typer.Option("--candidate", "-c", help="Assess one candidate only"),
+    ] = None,
+    limit: Annotated[int, typer.Option("--limit", "-l", min=1)] = 50,
+) -> None:
+    """Fill imputed §19 score dimensions with real assessments (§30 bridge).
+
+    The scorer imputes any dimension with no stored evidence at the 5.0
+    floor (AUDITING.md weakness #1). This command emits one structured
+    bridge request per missing dimension per candidate — the operator
+    answers each with `lab bridge answer <id> --file ...`, then re-runs
+    this command; answered requests replay free (§31/§32). ADDITIVE ONLY:
+    existing dimension scores are never overwritten (never a silent
+    re-score); save_candidate recomputes the composite on write (r48).
+    """
+    from blockchain_rd_lab.agents.base import LLMError
+    from blockchain_rd_lab.schemas import CandidateStatus
+    from blockchain_rd_lab.scoring.assessment import (
+        assess_candidate,
+        missing_dimensions,
+        no_agent_dimensions,
+    )
+
+    db = _db()
+    provider = _provider_from_config()
+    assessable = set(no_agent_dimensions())
+
+    def _targets(c) -> list[str]:
+        return [d for d in missing_dimensions(c) if d in assessable]
+
+    if candidate_id is not None:
+        cand = db.get_candidate(candidate_id)
+        if cand is None:
+            console.print(f"[red]Unknown candidate {candidate_id}.[/red]")
+            raise typer.Exit(code=1)
+        targets = [cand]
+    else:
+        targets = [
+            c
+            for st in (CandidateStatus.FINALIST, CandidateStatus.SCORED)
+            for c in db.list_candidates(status=st, limit=limit)
+        ]
+        targets = [c for c in targets if _targets(c)]
+    if not targets:
+        console.print("[green]Nothing to assess — no missing dimensions.[/green]")
+        return
+
+    total_missing = sum(len(_targets(c)) for c in targets)
+    console.print(
+        f"Assessing {total_missing} missing dimension(s) across "
+        f"{len(targets)} candidate(s) via provider '{provider.name}'."
+    )
+    done = 0
+    try:
+        for cand in targets:
+            dossier = REPO_ROOT / "reports" / "finalists" / f"{cand.id}.md"
+            excerpt = (
+                dossier.read_text(encoding="utf-8")[:3000]
+                if dossier.exists()
+                else ""
+            )
+            filled = assess_candidate(cand, provider, db, dossier_excerpt=excerpt)
+            if filled:
+                done += len(filled)
+                console.print(
+                    f"  {cand.id} {cand.name[:40]}: +{len(filled)} dims "
+                    f"({', '.join(filled)}) -> score {cand.overall_score}"
+                )
+    except LLMError as exc:
+        console.print(f"[yellow]{exc}[/yellow]")
+        console.print(
+            f"[dim]{done}/{total_missing} dimensions installed before the "
+            "halt; answer the pending request(s) with `lab bridge list` / "
+            "`lab bridge answer`, then re-run `lab assess` (§35).[/dim]"
+        )
+        raise typer.Exit(code=2) from exc
+    console.print(f"[green]Done — {done} dimension score(s) installed.[/green]")
+
+
 # ---------------------------------------------------------------------------
 # Phase 7: reporting (implemented)
 # ---------------------------------------------------------------------------

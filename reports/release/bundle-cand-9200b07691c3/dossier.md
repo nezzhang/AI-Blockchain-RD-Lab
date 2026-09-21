@@ -2,13 +2,13 @@
 
 - **Candidate ID:** cand-9200b07691c3
 - **Category:** market
-- **Overall score:** 6.4500
+- **Overall score:** 6.7250
 - **Rank:** 1 (recommended)
 - **Status:** finalist
 
 ## Executive Summary
 
-**Separation-Keyed Fee Smoothing Escrow** (market) currently holds status **finalist** with an overall deterministic score of **6.4500**. All evidence below is drawn from validated, stored agent and simulation records; nothing in this report is free-form LLM narrative (§2).
+**Separation-Keyed Fee Smoothing Escrow** (market) currently holds status **finalist** with an overall deterministic score of **6.7250**. All evidence below is drawn from validated, stored agent and simulation records; nothing in this report is free-form LLM narrative (§2).
 
 ## Problem
 
@@ -54,7 +54,7 @@ Fast pressure EMA vs slow regime EMA; retention = clip(delta + eta * separation 
 
 - **novelty**: 6.00 (INFERENCE; confidence 0.80)
 - **economic_coherence**: 7.50 (INFERENCE; confidence 0.80)
-- **capital_efficiency**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **capital_efficiency**: 5.50 (INFERENCE; confidence 0.60)
 
 ## Game Theory
 
@@ -65,7 +65,7 @@ Fast pressure EMA vs slow regime EMA; retention = clip(delta + eta * separation 
 
 ## Oracle Design
 
-- **oracle_feasibility**: 8.00 (FACT; confidence 0.70)
+- **oracle_feasibility**: 8.00 (INFERENCE; confidence 0.70)
 No external data dependency declared. See Security and adversarial sections for manipulation analysis.
 
 ## Security
@@ -76,18 +76,15 @@ No external data dependency declared. See Security and adversarial sections for 
 
 ## Simulation
 
-- **cand-9200b07691c3-scenarios** (seed 7, sim-0.1.0): results recorded
-- **cand-9200b07691c3-montecarlo** (seed 7, sim-0.1.0): mean_final=1005.6810566121621, p5_final=1005.6632140940259, p95_final=1005.6989768920844, failures=0
-- **cand-9200b07691c3-sweep** (seed 7, sim-0.1.0): results recorded
-- **cand-9200b07691c3-scenarios-v2** (seed 7, sim-0.1.0): results recorded
-- **cand-9200b07691c3-montecarlo-v2** (seed 7, sim-0.1.0): mean_final=1005.6207631967238, p5_final=1005.6174266396479, p95_final=1005.6251810227966, failures=0
-- **cand-9200b07691c3-sweep-v2** (seed 7, sim-0.1.0): results recorded
-- **cand-9200b07691c3-scenarios-v3** (seed 7, sim-0.1.0): results recorded
-- **cand-9200b07691c3-montecarlo-v3** (seed 7, sim-0.1.0): mean_final=1005.6340499998557, p5_final=1005.6293537946926, p95_final=1005.6386936934243, failures=0
-- **cand-9200b07691c3-sweep-v3** (seed 7, sim-0.1.0): results recorded
+- **r41-supply-battery-census** (seed None, none): results recorded
+- **r42-dynamics-scoring-census** (seed None, none): results recorded
+- **r43-stock-composition-census** (seed None, none): results recorded
+- **r45-elasticity-sweep** (seed None, none): results recorded
 - **exp-779ad60c78f9** (seed None, none): results recorded
 - **exp-15a351751f2c** (seed None, none): results recorded
 - **exp-2240c2647989** (seed None, none): results recorded
+- **cand-9200b07691c3-scenarios-v3** (seed 7, none): results recorded
+- **cand-9200b07691c3-montecarlo-v3** (seed 7, none): mean_final=1005.6340499998557, p5_final=1005.6293537946926, p95_final=1005.6386936934243, failures=0
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 
@@ -109,13 +106,13 @@ See Prior Art; competitor synthesis pending real research.
 ## Market
 
 - **market_demand**: 6.50 (INFERENCE; confidence 0.70)
-- **network_effects**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
-- **communication**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
-- **viral_potential**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **network_effects**: 6.00 (INFERENCE; confidence 0.60)
+- **communication**: 5.50 (INFERENCE; confidence 0.60)
+- **viral_potential**: 4.50 (INFERENCE; confidence 0.50)
 
 ## Technical Architecture
 
-- **technical_feasibility**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **technical_feasibility**: 7.00 (INFERENCE; confidence 0.70)
 Blockchain required: yes; token required: no. Detailed architecture arrives with the Blockchain Architect review (future phase).
 
 ## Regulatory Risks

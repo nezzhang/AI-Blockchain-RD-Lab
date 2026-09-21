@@ -2,13 +2,13 @@
 
 - **Candidate ID:** cand-f9682eb6fc72
 - **Category:** derivatives
-- **Overall score:** 6.3500
-- **Rank:** 3
+- **Overall score:** 6.1750
+- **Rank:** 6
 - **Status:** finalist
 
 ## Executive Summary
 
-**Prediction-Settled Hashprice Hedge Board** (derivatives) currently holds status **finalist** with an overall deterministic score of **6.3500**. All evidence below is drawn from validated, stored agent and simulation records; nothing in this report is free-form LLM narrative (§2).
+**Prediction-Settled Hashprice Hedge Board** (derivatives) currently holds status **finalist** with an overall deterministic score of **6.1750**. All evidence below is drawn from validated, stored agent and simulation records; nothing in this report is free-form LLM narrative (§2).
 
 ## Problem
 
@@ -20,64 +20,31 @@ A market-priced hedge whose settlement reference is itself a market statistic: s
 
 ## Mathematical Model
 
-- `X_t` (input, unit): anchor price level (~1000)
-- `dX_t` (input, unit): anchor change that step
-- `H_t` (state, unit): net hedge exposure
-- `H_t1` (state, unit): next hedge exposure
-- `G_t` (state, unit): aggregate margin level
-- `G_t1` (state, unit): next margin level
-- `v_t` (auxiliary, unit): realized reference volatility
-
-- `v_t = sqrt(abs(dX_t)/X_t)` — concave realized reference volatility
-- `H_t1 = clip(H_t*(1-0.1) + 0.1*(1000.0 + hedge_drift*100.0*v_t), 300.0, 2200.0)` — exposure scales with concave reference volatility (EWMA)
-- `G_t1 = clip(floor + xi*v_t + abs(H_t1-H_t) + report_bond*max(0.0, v_t-0.1)/10.0, floor, 2600.0)` — margin adds a reporter-bond surcharge when reference volatility exceeds tolerance
-
-**Parameters:** xi ∈ [50.0, 4000.0] (default 900.0), hedge_drift ∈ [0.2, 20.0] (default 4.0), floor ∈ [100.0, 1200.0] (default 400.0), report_bond ∈ [50.0, 5000.0] (default 500.0)
-
-**Open questions (§13):** does supplier-median settlement inherit oracle slashing discipline?
-
-**Critical assumptions:** settlement reference is a median of supplier prices (proxied by anchor); margin marking is linear in realized vol
+No formal model stored yet (run `lab formalize`).
 
 ## Economic Analysis
 
 - **novelty**: 6.00 (INFERENCE; confidence 0.55)
 - **economic_coherence**: 7.00 (INFERENCE; confidence 0.80)
-- **capital_efficiency**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **capital_efficiency**: 5.50 (INFERENCE; confidence 0.60)
 
 ## Game Theory
 
-- **Red Team verdict:** survives (strongest attack: supplier-median inflation double dip (v2 re-test): majority-cartel requirement remains self-defeating and the bond surcharge now taxes minority tilting — both reporter paths cost more than they yield…)
 - **game_theory**: 7.50 (HYPOTHESIS; confidence 0.80)
-- **game_theory:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
-- v2 adds a reporter-bond surcharge (report_bond=500) to margin when reference vol exceeds tolerance: unbonded reporter tilting now carries bond cost scaled with deviation. The minority-tilt vector closes; the majority-cartel double-dip was already self-defeating.
 
 ## Oracle Design
 
-- **oracle_feasibility**: 7.00 (HYPOTHESIS; confidence 0.70)
-This mechanism requires external data (oracle). See Security and adversarial sections for manipulation analysis.
+- **oracle_feasibility**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+No external data dependency declared. See Security and adversarial sections for manipulation analysis.
 
 ## Security
 
-- **security**: 7.00 (HYPOTHESIS; confidence 0.80)
-- **security:** 1 attack vector(s) recorded; evidence level HYPOTHESIS
-- Margin-squeeze vol manufacture now meets the bond surcharge funding reporter discipline — manufactured vol raises the manipulator's own bond cost through their reporter positions.
+- **security**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+No adversarial review recorded yet (run `lab redteam`).
 
 ## Simulation
 
-- **cand-f9682eb6fc72-scenarios** (seed 7, sim-0.1.0): results recorded
-- **cand-f9682eb6fc72-montecarlo** (seed 7, sim-0.1.0): mean_final=1033.9039095720932, p5_final=1032.076266512252, p95_final=1035.2068391637388, failures=0
-- **cand-f9682eb6fc72-sweep** (seed 7, sim-0.1.0): results recorded
-- **cand-f9682eb6fc72-scenarios-v2** (seed 7, sim-0.1.0): results recorded
-- **cand-f9682eb6fc72-montecarlo-v2** (seed 7, sim-0.1.0): mean_final=1033.887872273653, p5_final=1032.0174878860237, p95_final=1036.090321999077, failures=0
-- **cand-f9682eb6fc72-sweep-v2** (seed 7, sim-0.1.0): results recorded
-- **exp-9eae131b9baf** (seed None, sim-0.1.0): results recorded
-- **exp-756d73d9aa27** (seed None, sim-0.1.0): results recorded
-- **exp-64a8384a998c** (seed None, sim-0.1.0): results recorded
-- **exp-732cc14c8497** (seed None, none): results recorded
-- **exp-b48b57fae110** (seed None, none): results recorded
-- **exp-237adf2ced7b** (seed None, none): results recorded
-
-All runs are reproducible from the stored seed, parameters, and git commit (§21).
+No simulation runs recorded yet (run `lab simulate`).
 
 ## Historical Analysis
 
@@ -85,8 +52,7 @@ Historical replay ran on synthetic anchor series (Phase 4); real-dataset histori
 
 ## Prior Art
 
-- Queries: AI compute revenue hedge supplier; median settlement reference compute price board
-  Class: adjacent_mechanism
+No prior-art research recorded yet (run `lab research`).
 
 ## Competitors
 
@@ -95,13 +61,13 @@ See Prior Art; competitor synthesis pending real research.
 ## Market
 
 - **market_demand**: 7.00 (INFERENCE; confidence 0.70)
-- **network_effects**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
-- **communication**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
-- **viral_potential**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **network_effects**: 6.50 (INFERENCE; confidence 0.60)
+- **communication**: 5.50 (INFERENCE; confidence 0.60)
+- **viral_potential**: 6.00 (INFERENCE; confidence 0.60)
 
 ## Technical Architecture
 
-- **technical_feasibility**: 5.00 (IMPUTED at the 5.0 floor; no authored agent evidence, §19)
+- **technical_feasibility**: 5.50 (INFERENCE; confidence 0.60)
 Blockchain required: yes; token required: no. Detailed architecture arrives with the Blockchain Architect review (future phase).
 
 ## Regulatory Risks

@@ -7,7 +7,7 @@ Candidate: `cand-9200b07691c3` (finalist (explicit §27 subject — the human's 
 
 ## 1. Publication Readiness
 
-- Deterministic overall score: **6.45** (§19, 11 dimensions)
+- Deterministic overall score: **6.725** (§19, 11 dimensions)
 - Model versions stored: [3] (append-only, §21)
 - §15 battery: ✅ 13/13 scenarios clean
 - Monte Carlo: 0 failures / 20 trials

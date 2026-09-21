@@ -24,10 +24,10 @@
     },
     {
       "dimension": "technical_feasibility",
-      "imputed": true,
-      "score": 5.0,
+      "imputed": false,
+      "score": 7.0,
       "weight": 0.1,
-      "weighted": 0.5
+      "weighted": 0.7000000000000001
     },
     {
       "dimension": "oracle_feasibility",
@@ -52,42 +52,36 @@
     },
     {
       "dimension": "capital_efficiency",
-      "imputed": true,
-      "score": 5.0,
+      "imputed": false,
+      "score": 5.5,
       "weight": 0.05,
-      "weighted": 0.25
+      "weighted": 0.275
     },
     {
       "dimension": "network_effects",
-      "imputed": true,
-      "score": 5.0,
+      "imputed": false,
+      "score": 6.0,
       "weight": 0.05,
-      "weighted": 0.25
+      "weighted": 0.30000000000000004
     },
     {
       "dimension": "communication",
-      "imputed": true,
-      "score": 5.0,
+      "imputed": false,
+      "score": 5.5,
       "weight": 0.05,
-      "weighted": 0.25
+      "weighted": 0.275
     },
     {
       "dimension": "viral_potential",
-      "imputed": true,
-      "score": 5.0,
+      "imputed": false,
+      "score": 4.5,
       "weight": 0.05,
-      "weighted": 0.25
+      "weighted": 0.225
     }
   ],
   "fatal_flaw_applied": false,
   "fatal_flaw_count": 0,
-  "notes": [
-    "imputed:technical_feasibility",
-    "imputed:capital_efficiency",
-    "imputed:network_effects",
-    "imputed:communication",
-    "imputed:viral_potential"
-  ],
-  "overall_score": 6.45,
+  "notes": [],
+  "overall_score": 6.725,
   "recomputation": "overall = sum(dimension.score * dimension.weight) over the dimensions below; missing agent-authored evidence imputes at the 5.0 floor (flagged)"
 }

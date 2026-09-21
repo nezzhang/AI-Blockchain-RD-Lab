@@ -237,6 +237,18 @@ def main() -> None:
 
     # 9. README: what this is, how to verify, how to cite
     score = cand.overall_score
+    # r49: the imputation disclosure is COMPUTED from the §19 decomposition,
+    # never hardcoded — after the dimension hardening the rank-1 carries zero
+    # imputed dims, so the honest line must reflect the actual count.
+    _n_imputed = sum(1 for d in res.dimensions if d.imputed)
+    _n_dims = len(res.dimensions)
+    _imputation_line = (
+        f"{_n_imputed} of the {_n_dims} score dimensions are imputed at the "
+        "5.0 floor (disclosed per dimension in `score-decomposition.json`)."
+        if _n_imputed
+        else f"All {_n_dims} score dimensions carry stored evidence — no "
+        "imputation (per-dimension provenance in `score-decomposition.json`)."
+    )
     # r48 (audit 2026-09-20, F3): the rank label is COMPUTED from the
     # store's current finalist standings, never asserted — the drift fix
     # re-scored the corpus and this candidate's standing moved (it was
@@ -338,8 +350,7 @@ claims (§2).
 This is SIMULATION-STAGE evidence: every adversarial bound was
 measured against a deterministic equation interpreter under named
 attack choreographies, not against deployed software or live
-attackers. 5 of the 11 score dimensions are imputed at the 5.0
-floor (offline mode, disclosed in the dossier's scoring section).
+attackers. {_imputation_line}
 The residual-attack disclosure in `release-package.md` §4 lists
 every attack surface the final model still carries. No token,
 no deployment, no live contract — §27/§28.
