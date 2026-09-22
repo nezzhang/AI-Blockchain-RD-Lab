@@ -1620,7 +1620,78 @@ def pipeline(
         )
 
 
+
+# ---------------------------------------------------------------------------
+# Calibration: known-answer validation of the deterministic instruments
+# ---------------------------------------------------------------------------
+
+
+@app.command("calibrate")
+def calibrate(
+    steps: Annotated[
+        int, typer.Option("--steps", min=10, help="§15 scenario steps per run")
+    ] = 120,
+    attack_steps: Annotated[
+        int, typer.Option("--attack-steps", min=10, help="§20 steps per pattern")
+    ] = 60,
+    seed: Annotated[int, typer.Option("--seed", help="§21 deterministic seed")] = 7,
+) -> None:
+    """Run known-answer mechanisms through the lab's own batteries.
+
+    The lab's scores mean something only if its instruments behave
+    correctly on mechanisms whose properties are already known. This
+    command runs the calibration fixtures (known-good controls and
+    known-flawed controls) through the SAME §15/§20 batteries real
+    candidates face and checks the output against the known ground
+    truth. Exit code 1 if any consensus-grounded expectation fails —
+    a failing calibration is a finding about the instrument (§29).
+    """
+    from blockchain_rd_lab.calibration.runner import CalibrationRunner
+
+    report = CalibrationRunner(steps=steps, attack_steps=attack_steps, seed=seed).run_suite()
+
+    table = Table(title="Calibration — known-answer validation of the instruments")
+    table.add_column("Fixture", style="cyan")
+    table.add_column("Consensus")
+    table.add_column("§15 clean", justify="right")
+    table.add_column("Strongest §20 edge", justify="right")
+    table.add_column("Checks", justify="right")
+    for o in report.outcomes:
+        passed = sum(1 for c in o.checks if c.passed)
+        table.add_row(
+            o.title,
+            o.consensus.value,
+            f"{o.scenarios_clean}/{o.scenarios_total}",
+            o.strongest_attack,
+            f"[{'green' if o.passed else 'red'}]{passed}/{len(o.checks)}[/]",
+        )
+    console.print(table)
+    for o in report.outcomes:
+        for c in o.checks:
+            if not c.passed:
+                console.print(f"  [red]FAIL[/red] {o.fixture_id}: {c.label} — {c.measured}")
+
+    out_dir = REPO_ROOT / "reports"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "calibration-latest.json").write_text(
+        report.model_dump_json(indent=2), encoding="utf-8"
+    )
+    (out_dir / "calibration-latest.md").write_text(report.to_markdown(), encoding="utf-8")
+    console.print(f"[dim]Artifacts: {out_dir}/calibration-latest.{{json,md}}[/dim]")
+
+    if report.ok:
+        console.print(
+            f"[bold green]CALIBRATION-PASS[/bold green] — {report.passed}/"
+            f"{len(report.outcomes)} fixtures meet every consensus-grounded expectation."
+        )
+    else:
+        console.print(
+            "[bold red]CALIBRATION-FAIL[/bold red] — at least one known answer was "
+            "misjudged by the instruments; see reports/calibration-latest.md (§29)."
+        )
+    raise typer.Exit(code=0 if report.ok else 1)
+
+
 if __name__ == "__main__":
     app()
-if __name__ == "__main__":
-    app()
+

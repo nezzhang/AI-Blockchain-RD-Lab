@@ -1,0 +1,142 @@
+{
+  "generated_at": "2026-09-22T12:26:35+00:00",
+  "steps": 120,
+  "attack_steps": 60,
+  "seed": 7,
+  "outcomes": [
+    {
+      "fixture_id": "fixture-pid-anchor-controller",
+      "title": "PID anchor controller",
+      "referent": "Classical PID feedback control (textbook control theory)",
+      "consensus": "known_good",
+      "ground_truth": "FACT: a PID loop with anti-windup clipping is BIBO-stable — the standard feedback stabilizer of control theory. INFERENCE: no §20 input choreography extracts a standing edge from a bounded controller output, so the strongest measured attack edge must stay under the canonical flaw threshold.",
+      "scenarios_clean": 13,
+      "scenarios_total": 13,
+      "degenerate_scenarios": [],
+      "strongest_attack": "vol_oscillation = 8.3202 (I_t_drawn)",
+      "strongest_headline": 8.320196,
+      "checks": [
+        {
+          "label": "§15 battery: no hard failures",
+          "passed": true,
+          "measured": "13/13 clean",
+          "rationale": "FACT: no divisions or unclipped powers — no §15 scenario can produce a numerical failure"
+        },
+        {
+          "label": "§15 battery: no degenerate runs",
+          "passed": true,
+          "measured": "0/13 degenerate",
+          "rationale": "INFERENCE: both states respond to the anchor through the whole window — a live controller, not a saturated one"
+        },
+        {
+          "label": "§20 strongest attack edge ≤ 400",
+          "passed": true,
+          "measured": "strongest: vol_oscillation = 8.3202 (I_t_drawn)",
+          "rationale": "INFERENCE: a fatal-scale attacker edge (≥ the canonical 400) on a bounded stabilizer would be a battery FALSE POSITIVE — the finding this control exists to catch"
+        }
+      ]
+    },
+    {
+      "fixture_id": "fixture-utilization-kink-rate",
+      "title": "Utilization-kink rate curve",
+      "referent": "Compound/Aave-style kinked utilization-rate rule",
+      "consensus": "known_good",
+      "ground_truth": "FACT: kinked utilization-rate curves are the most deployed DeFi rate mechanism (Compound 2019; Aave), with no consensus fatal flaw in the rate rule itself — the documented risks are oracle and liquidity externalities outside this encoding. INFERENCE: the rate state tracks utilization regime shifts, which the battery's arrival/regime checks must read as following, not extraction.",
+      "scenarios_clean": 13,
+      "scenarios_total": 13,
+      "degenerate_scenarios": [],
+      "strongest_attack": "grind_harvest = 0.043385 (R_t_drawn)",
+      "strongest_headline": 0.043385,
+      "checks": [
+        {
+          "label": "§15 battery: no hard failures",
+          "passed": true,
+          "measured": "13/13 clean",
+          "rationale": "FACT: guarded division and full clipping — no numerical failure mode"
+        },
+        {
+          "label": "§15 battery: no degenerate runs",
+          "passed": true,
+          "measured": "0/13 degenerate",
+          "rationale": "INFERENCE: the rate keeps tracking utilization in every regime"
+        },
+        {
+          "label": "§20 strongest attack edge ≤ 400",
+          "passed": true,
+          "measured": "strongest: grind_harvest = 0.043385 (R_t_drawn)",
+          "rationale": "INFERENCE: a fatal-scale edge on the deployed rate-rule shape would be a battery FALSE POSITIVE"
+        }
+      ]
+    },
+    {
+      "fixture_id": "fixture-vol-keyed-retention-ratchet",
+      "title": "Vol-keyed retention ratchet",
+      "referent": "Procyclical VaR-style margin/buffer class (BIS/CCP procyclicality literature; the lab's own rejected r16 predecessor)",
+      "consensus": "known_flawed",
+      "ground_truth": "FACT: margin/buffer rules keyed to absolute realized volatility are the documented procyclicality class — protection demand rises with stress and amplifies it (BIS/CCP margin literature); the lab's r16 predecessor of this exact shape was rejected after a measured resonance ratchet (285 -> 6479, linear-unbounded in N). INFERENCE: the §20 resonance choreography must surface the standing accumulation above the canonical flaw threshold.",
+      "scenarios_clean": 13,
+      "scenarios_total": 13,
+      "degenerate_scenarios": [],
+      "strongest_attack": "resonance = 2362.47 (E_t_ratchet)",
+      "strongest_headline": 2362.469408,
+      "checks": [
+        {
+          "label": "§15 battery: no hard failures",
+          "passed": true,
+          "measured": "13/13 clean",
+          "rationale": "FACT: the flaw is ECONOMIC, not numerical — the model runs clean while the ratchet accumulates"
+        },
+        {
+          "label": "§15 battery: no degenerate runs",
+          "passed": true,
+          "measured": "0/13 degenerate",
+          "rationale": "INFERENCE: all three states exercise dynamics in every scenario"
+        },
+        {
+          "label": "§20 resonance edge ≥ 400",
+          "passed": true,
+          "measured": "resonance = 2362.47 (E_t_ratchet)",
+          "rationale": "FACT: the lab already rejected this class for a measured resonance ratchet — a battery that cannot re-detect it under a known answer has a blind spot"
+        }
+      ]
+    },
+    {
+      "fixture_id": "fixture-reflexive-mint-burn",
+      "title": "Reflexive mint-burn seigniorage",
+      "referent": "Terra/Luna-style algorithmic stablecoin (May 2022 collapse)",
+      "consensus": "known_flawed",
+      "ground_truth": "FACT: Terra/Luna redemptions minted LUNA inversely to its price; a confidence shock through the peg started a self-fueling spiral — supply ~350M to ~6.5T in days, price ~$80 to ~$0.0001 (May 2022), after ~18 months of holding the peg in calm markets. INFERENCE: in this encoding the §15 bank-run shock knocks the price through the arbitrage band and the same feedback runs away (supply >= 5x, price <= 0.5x) while the base scenario stays quiescent.",
+      "scenarios_clean": 13,
+      "scenarios_total": 13,
+      "degenerate_scenarios": [],
+      "strongest_attack": "wash_flow = 1000 (L_t_drawn)",
+      "strongest_headline": 1000.0,
+      "checks": [
+        {
+          "label": "§15 battery: no hard failures",
+          "passed": true,
+          "measured": "13/13 clean",
+          "rationale": "INFERENCE: the flaw is ECONOMIC, not numerical — the interpreter runs clean while the economy dies (a clean run is not a healthy mechanism)"
+        },
+        {
+          "label": "§15 base: S_t final/initial ≤ 2",
+          "passed": true,
+          "measured": "1000 / 1000 = 1",
+          "rationale": "FACT: the referent held its peg ~18 months in calm markets — the flaw is regime-dependent, so calm scenarios must NOT spiral (supply < 2x)"
+        },
+        {
+          "label": "§15 bank_run: S_t final/initial ≥ 5",
+          "passed": true,
+          "measured": "1.49841e+09 / 1000 = 1.49841e+06",
+          "rationale": "FACT: runaway supply expansion is the documented collapse signature — the §15 battery must show it under a bank-run shock (>= 5x; the referent expanded ~4 orders of magnitude)"
+        },
+        {
+          "label": "§15 bank_run: P_t final/initial ≤ 0.5",
+          "passed": true,
+          "measured": "0.00100263 / 1000 = 1.00263e-06",
+          "rationale": "FACT: the referent's price collapsed through every floor — under a bank-run shock the battery must show the price broken (<= 0.5x), not a dip-and-recover"
+        }
+      ]
+    }
+  ]
+}

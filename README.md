@@ -47,6 +47,17 @@ flowchart LR
 - **Every published number reproduces** — the release bundle ships its own
   verifier (`verify.py`); CI re-runs it plus `pytest`/`ruff`/`mypy` on every
   push.
+- **The instruments are calibrated against known answers** — `lab calibrate`
+  runs mechanisms with established-consensus properties (a PID controller, a
+  Compound/Aave-style kinked rate rule, a procyclical VaR-style buffer, a
+  Terra/Luna-style mint-burn) through the *same* §15/§20 batteries real
+  candidates face, and checks the output against the known ground truth
+  ([latest report](./reports/calibration-latest.md)). The suite's first run
+  caught a real bug: the anchor-series PRNG port had been biased since
+  Phase 4 (every "base" scenario ran with a hidden +0.73%/step drift) —
+  fixed, with distribution tests added. The §20 attack battery uses no
+  randomness, so the published adversarial evidence was unaffected: the
+  bundle verifier passes identically under the fixed generator.
 - **The ladder is honest about where this is** — research is done; the next
   step is a *human* publication decision, then community criticism, prototype,
   testnet. No token, no deployment (§27/§28).
@@ -395,6 +406,9 @@ previous discoveries instead of re-deriving them.
 
 ## Research Archive
 
+- `reports/calibration-latest.md` — known-answer validation of the
+  instruments (`lab calibrate`): known-good and known-flawed mechanisms
+  through the shipped batteries, checked against established consensus
 - `reports/finalists/` — §23 dossiers per finalist
 - `reports/lab-latest.md` — funnel status, ranking, §7 recommendation
 - `reports/PHASE_*_REPORT.md` — phase engineering reports
