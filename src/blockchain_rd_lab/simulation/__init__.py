@@ -109,7 +109,20 @@ class AnchorSeriesGenerator:
 
 
 class _DeterministicRandom:
-    """Small deterministic PRNG (mulberry32) — same series for same seed (§21)."""
+    """Small deterministic PRNG (mulberry32) — same series for same seed (§21).
+
+    r50 calibration finding: the original port's finalizer was mangled
+    (`(t ^ (t + (t >> 7))) & t` — the `& t` kept only bits already set in
+    t) and skipped mulberry32's `| 1` / `| 61` multipliers and the final
+    `t ^ (t >> 14)` avalanche. The drawn uniforms averaged 0.02 instead of
+    0.5 and the gauss mean was +3.5 sigma — every §15 "base" scenario ran
+    with a hidden +0.73%/step drift, and different seeds produced nearly
+    identical streams (Monte Carlo trials were effectively one trial).
+    Caught by the calibration suite: known-answer fixtures expected the
+    DOCUMENTED scenario means. The §20 attack battery uses no randomness
+    (crafted series), so r49's adversarial evidence is unaffected; the
+    bundle verifier passes identically under this fixed generator.
+    """
 
     def __init__(self, seed: int) -> None:
         self.state = seed & 0xFFFFFFFF or 1
@@ -117,9 +130,10 @@ class _DeterministicRandom:
     def _next(self) -> int:
         self.state = (self.state + 0x6D2B79F5) & 0xFFFFFFFF
         t = self.state
-        t = ((t ^ (t >> 15)) * t) & 0xFFFFFFFF
-        t = (t ^ (t + (t >> 7))) & t & 0xFFFFFFFF  # keep 32-bit
-        return t
+        t = ((t ^ (t >> 15)) * (t | 1)) & 0xFFFFFFFF
+        t2 = ((t ^ (t >> 7)) * (t | 61)) & 0xFFFFFFFF
+        t = (t ^ ((t + t2) & 0xFFFFFFFF)) & 0xFFFFFFFF
+        return (t ^ (t >> 14)) & 0xFFFFFFFF
 
     def uniform(self) -> float:
         return (self._next() >> 8) / 16777216.0
