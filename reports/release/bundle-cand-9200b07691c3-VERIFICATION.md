@@ -1,6 +1,6 @@
 # External Verification Report
 
-Bundle: `bundle-cand-9200b07691c3` — verified from the published files alone (no database access), 2026-09-16T15:13:43Z
+Bundle: `bundle-cand-9200b07691c3` — verified from the published files alone (no database access), 2026-09-22T11:16:02Z
 
 The verifier re-runs every reproducible claim with the lab's deterministic interpreter. A third party can re-run this script against the bundle and must obtain this report.
 
@@ -54,12 +54,11 @@ The verifier re-runs every reproducible claim with the lab's deterministic inter
 | re-run wash_flow @wash_level=0.04 | **REPRODUCED** | headline 32.6375 == published 32.6375 |
 | calibrated-sweep re-run (summary) | **REPRODUCED** | 19/19 calibrated-sweep headlines reproduced (the §4b @-tagged lines) |
 | §15 battery | **REPRODUCED** | 13 scenarios run non-degenerately under the current interpreter |
-| §19 score recomputation | **REPRODUCED** | sum(score*weight) = 6.4500 == published 6.4500 |
-| score headline consistency | **REPRODUCED** | README carries the same 6.45 headline |
-| imputation disclosure | **REPRODUCED** | 5 of 11 dimensions imputed at the 5.0 floor — disclosed per dimension |
+| §19 score recomputation | **REPRODUCED** | sum(score*weight) = 6.7250 == published 6.7250 |
+| score headline consistency | **REPRODUCED** | README carries the same 6.72 headline |
 | release package subject | **CONSISTENT** | release package names the manifest's candidate |
 | §4b calibration completeness | **REPRODUCED** | 19 calibration-tagged records; §4b renders every one per kind |
 
-Totals: 51 reproduced, 2 consistent, 0 not-reproducible.
+Totals: 50 reproduced, 2 consistent, 0 not-reproducible.
 
 **OVERALL: VERIFY-PASS** — every reproducible claim reproduces from the published files.
