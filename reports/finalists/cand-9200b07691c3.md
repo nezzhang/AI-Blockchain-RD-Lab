@@ -85,6 +85,8 @@ No external data dependency declared. See Security and adversarial sections for 
 - **exp-2240c2647989** (seed None, none): results recorded
 - **cand-9200b07691c3-scenarios-v3** (seed 7, none): results recorded
 - **cand-9200b07691c3-montecarlo-v3** (seed 7, none): mean_final=1005.6340499998557, p5_final=1005.6293537946926, p95_final=1005.6386936934243, failures=0
+- **cand-9200b07691c3-scenarios-v3-r50** (seed 7, sim-0.1.0): results recorded
+- **cand-9200b07691c3-montecarlo-v3-r50** (seed 7, sim-0.1.0): mean_final=1005.6171694456787, p5_final=1005.6171635493329, p95_final=1005.6171797937739, failures=0
 
 All runs are reproducible from the stored seed, parameters, and git commit (§21).
 

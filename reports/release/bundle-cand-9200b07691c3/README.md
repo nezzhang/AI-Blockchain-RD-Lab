@@ -66,3 +66,20 @@ attackers. All 11 score dimensions carry stored evidence — no imputation (per-
 The residual-attack disclosure in `release-package.md` §4 lists
 every attack surface the final model still carries. No token,
 no deployment, no live contract — §27/§28.
+
+## r50 evidence refresh (2026-09-22)
+
+The lab's calibration suite (known-answer validation, r50) caught a
+biased anchor-series PRNG that had been live since Phase 4. The §15
+scenario and Monte Carlo records in this bundle were RE-RUN under the
+repaired generator and are stored as experiment records
+`*-scenarios-v3-r50` / `*-montecarlo-v3-r50` (the store is append-only:
+the superseded biased records remain in the lab's database and in git
+history). Headline impact: the Monte Carlo mean moved 0.0017%
+(1005.6340 → 1005.6172) with 0 failures in 20 trials and 13/13
+scenarios still clean — the robustness conclusion is unchanged; the
+per-scenario final-state values were materially wrong and have been
+replaced. The §20 adversarial bounds use crafted series (no
+randomness) and are unaffected. The shipped `lab-runtime/` is the
+repaired generator, so `verify.py` exercises exactly the code that
+produced these numbers.

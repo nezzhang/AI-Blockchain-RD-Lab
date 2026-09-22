@@ -55,9 +55,11 @@ flowchart LR
   ([latest report](./reports/calibration-latest.md)). The suite's first run
   caught a real bug: the anchor-series PRNG port had been biased since
   Phase 4 (every "base" scenario ran with a hidden +0.73%/step drift) —
-  fixed, with distribution tests added. The §20 attack battery uses no
-  randomness, so the published adversarial evidence was unaffected: the
-  bundle verifier passes identically under the fixed generator.
+  fixed, with distribution tests added. The release bundle's §15/Monte Carlo
+  evidence was then re-run under the repaired generator and refreshed in
+  place (Monte Carlo mean moved 0.0017%, 13/13 scenarios still clean; the
+  superseded records stay in the append-only store). The §20 attack battery
+  uses no randomness, so the published adversarial evidence was unaffected.
 - **The ladder is honest about where this is** — research is done; the next
   step is a *human* publication decision, then community criticism, prototype,
   testnet. No token, no deployment (§27/§28).

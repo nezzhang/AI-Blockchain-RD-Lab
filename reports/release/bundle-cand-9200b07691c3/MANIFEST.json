@@ -4,16 +4,16 @@
   "deterministic_score": 6.725,
   "files": {
     "README.md": {
-      "bytes": 3148,
-      "sha256": "b36a1d957d7afa360fc03fd5d0b6b53561145c79ed15871b2d7fe3f67265aa6d"
+      "bytes": 4075,
+      "sha256": "0ad843d33e50ef69f8b26dce90dc94d6e05db277bd3d26d24bbd7efc73eefd68"
     },
     "adversarial-bounds.json": {
       "bytes": 97486,
       "sha256": "ffdf07f0d36196d1368ee2ce39de5e92aba571362d79cb4e45d1a9496c04997c"
     },
     "dossier.md": {
-      "bytes": 8597,
-      "sha256": "02d88747ad6ea60f39146071a074da1acaf4e68adfbd9f78e5daed96ce3ffb18"
+      "bytes": 8840,
+      "sha256": "f300dc6c9daba531db409cb8281f11e8c425a0426c4e3af3baade83c04b1086f"
     },
     "lab-runtime/blockchain_rd_lab/__init__.py": {
       "bytes": 46,
@@ -24,8 +24,8 @@
       "sha256": "a74cb245e1473678b072ac9a093a7773bc55eee7a07f85467ac3eb5af7049fa9"
     },
     "lab-runtime/blockchain_rd_lab/simulation/__init__.py": {
-      "bytes": 26284,
-      "sha256": "150e22e3d76916109d31bdcb0323016eb04c9a008fdd52ecdd502d8908142fbc"
+      "bytes": 27167,
+      "sha256": "55b54b780abd507b2787352f020bfce3382f5fa07ac580146fdc4f82ee395aae"
     },
     "lab-runtime/blockchain_rd_lab/simulation/adversarial.py": {
       "bytes": 66707,
@@ -49,11 +49,11 @@
     },
     "release-package.md": {
       "bytes": 16117,
-      "sha256": "ad557b94e27a76ac91fcfd102965d0e720709aff4f899c0922f58a632ff670ff"
+      "sha256": "b22b6d52875dfdc5d27a1b745a40cdaf6af42311eefb06a716ef50aa7dbec6ab"
     },
     "scenario-results.json": {
-      "bytes": 12400,
-      "sha256": "ac623b181e4d849c9d000eca120726a235198a6e5f494955ea1c41e681ba440e"
+      "bytes": 12810,
+      "sha256": "baa78103c91255a0e34e0402199e0dfcf69a8cede1d443808f5ff38f8dfbdd77"
     },
     "score-decomposition.json": {
       "bytes": 1915,
@@ -64,6 +64,7 @@
       "sha256": "a64c58c9a947e00652baa7254aae82eb65bbb142c1fda8344877e067b1ac375f"
     }
   },
-  "generated": "2026-09-21T23:36:00.549577+00:00",
-  "model_version": 3
+  "generated": "2026-09-22T15:45:32.956098+00:00",
+  "model_version": 3,
+  "refreshed": "r50: \u00a715/MC evidence re-run under the repaired PRNG"
 }

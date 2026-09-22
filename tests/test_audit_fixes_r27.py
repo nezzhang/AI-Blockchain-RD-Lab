@@ -208,12 +208,25 @@ class TestAuditFix6ScenarioBacking:
             (BUNDLE / "scenario-results.json").read_text(
                 encoding="utf-8"))
         ids = [r["experiment_id"] for r in recs]
-        assert any(i.endswith("-scenarios-v3") for i in ids)
-        assert any(i.endswith("-montecarlo-v3") for i in ids)
+        # r50: the shipped records are the REFRESHED re-runs under the
+        # repaired anchor PRNG; the superseded biased -v3 records remain
+        # in the store (append-only, §21), not in the bundle
+        assert any(i.endswith("-scenarios-v3-r50") for i in ids)
+        assert any(i.endswith("-montecarlo-v3-r50") for i in ids)
         mc = next(
-            r for r in recs if r["experiment_id"].endswith("-montecarlo-v3"))
+            r for r in recs
+            if r["experiment_id"].endswith("-montecarlo-v3-r50"))
         # the dossier's mean_final figure must trace to this file
         assert "mean_final" in mc["results"]
+
+    def test_scenario_results_mark_supersession(self) -> None:
+        """The refreshed records name the records they supersede."""
+        recs = json.loads(
+            (BUNDLE / "scenario-results.json").read_text(
+                encoding="utf-8"))
+        for r in recs:
+            sup = r["parameters"].get("supersedes", "")
+            assert sup.endswith("-v3"), r["experiment_id"]
 
 
 class TestAuditFix7OpenQuestionsInSection4:
