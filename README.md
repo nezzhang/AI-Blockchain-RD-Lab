@@ -9,11 +9,69 @@ simulating, attacking, and ranking **novel blockchain economic mechanisms**.
 > and to eliminate bad ideas through research, mathematical modeling,
 > simulation, and adversarial testing.
 
+## How it works
+
+One funnel turns 100 raw ideas into 1 evidence-backed recommendation. LLM
+agents *propose*; deterministic code *tests*; stored evidence *decides*.
+
+```mermaid
+flowchart LR
+    A["🔍 Discovery<br/>100 mechanisms<br/>§24 all 20 domains"] --> B["📚 Prior art<br/>20 serious candidates"]
+    B --> C["🧮 Formalize<br/>math model · §13"]
+    C --> D["📈 Simulate<br/>13 scenarios · §15"]
+    D --> E["⚔️ Red team<br/>8 attack choreographies · §20"]
+    E -->|"fatal flaw MEASURED<br/>(never averaged away)"| X["❌ Rejected<br/>kept as a research asset §26"]
+    E -->|"survives"| G["🛠️ Improve → retest §34"]
+    G -->|"patched model v(n+1)<br/>re-run battery"| E
+    G --> H["🏆 Score + rank §19<br/>5 finalists"]
+    H --> I["⭐ 1 recommended<br/>reproducible bundle §27"]
+```
+
+## Why you can trust the output
+
+Every claim in a report traces to a stored record; nothing is free-form prose.
+This is the honesty contract that makes the numbers checkable:
+
+```mermaid
+flowchart LR
+    L["🤖 LLM proposes<br/>structured JSON only"] --> V["✅ Pydantic validates<br/>schema gate §2"]
+    V --> T["🧪 Deterministic code tests<br/>safe interpreter · batteries · scorer"]
+    T --> S[("🗄️ SQLite store<br/>run + seed + git commit §21")]
+    S --> R["⚖️ Evidence decides<br/>rank · disclose · reject"]
+    R -. "residual attacks feed<br/>the next improvement" .-> L
+```
+
+- **A fatal flaw is never hidden or averaged out** — the §20 gate rejects only
+  on a *measured* attacker edge, and rejected ideas stay in
+  `ideas/rejected/` as research assets (§26).
+- **Every published number reproduces** — the release bundle ships its own
+  verifier (`verify.py`); CI re-runs it plus `pytest`/`ruff`/`mypy` on every
+  push.
+- **The ladder is honest about where this is** — research is done; the next
+  step is a *human* publication decision, then community criticism, prototype,
+  testnet. No token, no deployment (§27/§28).
+
+```mermaid
+flowchart LR
+    I1["Idea"] --> I2["Research"] --> I3["Simulation"] --> I4["📢 Publication<br/>(human decision)"]
+    I4 --> I5["Community<br/>criticism"] --> I6["Prototype"] --> I7["Testnet"]
+    I7 --> I8["Developer<br/>adoption"] --> I9["Only then:<br/>token / mainnet"]
+    style I4 fill:#f9a825,color:#000
+    style I1 fill:#2e7d32,color:#fff
+    style I2 fill:#2e7d32,color:#fff
+    style I3 fill:#2e7d32,color:#fff
+```
+
 **Auditing this repo?** Start with [`AUDITING.md`](./AUDITING.md) —
 where the load-bearing code lives, what three external audits already
 fixed, and the honest open weaknesses. Every published number in the
 [release bundle](./reports/release/bundle-cand-9200b07691c3/)
 reproduces from the published files alone.
+
+> The diagrams above are Mermaid (rendered natively by GitHub). Standalone
+> SVG versions for slides or write-ups live in
+> [`docs/diagrams/`](./docs/diagrams/) — regenerate them from the README
+> blocks with `npx @mermaid-js/mermaid-cli`.
 
 ## Definition of Success (§42) — verified
 
