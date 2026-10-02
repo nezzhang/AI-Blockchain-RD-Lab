@@ -650,3 +650,62 @@ class TestElasticityAudit:
         assert verdicts[0.5] is StockVerdict.SPIRAL_DOWN
         assert verdicts[0.75] is StockVerdict.SPIRAL_UP  # the flip
         assert verdicts[1.0] is StockVerdict.SPIRAL_UP
+
+    def test_hybrid_multi_axis_is_deterministic(self):
+        d = get_driver("usage-network-hybrid")
+        sc = SCENARIOS["demand_collapse"]
+        a = run_stock_scenario(d, sc, composition_mode="multi_axis")
+        b = run_stock_scenario(d, sc, composition_mode="multi_axis")
+        assert a == b
+        assert a.composition == "multi_axis"
+
+    def test_hybrid_multi_axis_comparison_is_measured(self):
+        d = get_driver("usage-network-hybrid")
+        sc = SCENARIOS["demand_collapse"]
+        dominant = run_stock_scenario(d, sc)
+        multi = run_stock_scenario(d, sc, composition_mode="multi_axis")
+        assert dominant.verdict is StockVerdict.SPIRAL_DOWN
+        assert multi.verdict is StockVerdict.STABLE
+        assert abs(multi.value_ratio - dominant.value_ratio) > 0.5
+
+    def test_multi_axis_rejects_other_drivers(self):
+        with pytest.raises(ValueError, match="usage-network-hybrid"):
+            run_stock_scenario(
+                get_driver("market-volume"),
+                SCENARIOS["steady"],
+                composition_mode="multi_axis",
+            )
+
+    def test_hybrid_multi_axis_crash_direction_differs(self):
+        d = get_driver("usage-network-hybrid")
+        dominant = run_stock_scenario(d, SCENARIOS["crash"])
+        multi = run_stock_scenario(d, SCENARIOS["crash"], composition_mode="multi_axis")
+        assert dominant.verdict is StockVerdict.SPIRAL_DOWN
+        assert multi.verdict is StockVerdict.SPIRAL_UP
+        assert multi.value_ratio > 2.0
+
+    def test_hybrid_multi_axis_suite_is_finite(self):
+        d = get_driver("usage-network-hybrid")
+        for sc in SCENARIOS.values():
+            r = run_stock_scenario(d, sc, composition_mode="multi_axis")
+            assert r.value_ratio == r.value_ratio
+            assert r.supply_ratio == r.supply_ratio
+            assert r.demand_ratio == r.demand_ratio
+            assert r.composition == "multi_axis"
+
+    def test_dominant_mode_remains_unchanged(self):
+        d = get_driver("usage-network-hybrid")
+        r = run_stock_scenario(d, SCENARIOS["demand_collapse"])
+        assert r.composition == "level"
+        assert r.verdict is StockVerdict.SPIRAL_DOWN
+        assert r.value_ratio < 0.01
+
+
+class TestHybridMultiAxisCensus:
+    def test_r47_census_exists_and_has_seven_rows(self):
+        from blockchain_rd_lab.config import REPO_ROOT, load_config
+        from blockchain_rd_lab.database import LabDatabase
+        db=LabDatabase(REPO_ROOT / load_config().storage.database)
+        rows=[e for e in db.iter_experiments() if e.experiment_id == "r47-hybrid-multiaxis-census"]
+        assert len(rows) == 1
+        assert len(rows[0].results["rows"]) == 7

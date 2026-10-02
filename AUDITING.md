@@ -145,7 +145,12 @@ fixed; do not re-report those.
    axis per driver (the hybrid's node axis rides at neutral —
    disclosed); one-sided bounded indices (climate/claims/prediction)
    are honestly VACUOUS — their crisis-mapping is a modeling
-   assumption the registry does not declare.
+   assumption the registry does not declare. r47 adds a research-only
+   full multi-axis comparison for usage-network-hybrid: dominant-axis
+   demand collapse spirals down while full usage+network composition
+   is stable; crash changes from spiral_down to spiral_up; both
+   trajectories are stored in §21 and reported side-by-side — the
+   dominant approximation is not silently replaced.
 
 ## How to file findings
 

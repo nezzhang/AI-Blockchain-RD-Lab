@@ -207,12 +207,22 @@ def _axis_is_signed_rate(driver: SupplyDriver, axis: str) -> bool:
 
 
 def run_stock_scenario(
-    driver: SupplyDriver, scenario: StockScenario
+    driver: SupplyDriver,
+    scenario: StockScenario,
+    composition_mode: str = "dominant",
 ) -> StockRunResult:
     """Compose the driver into a supply stock and run one scenario.
 
-    Deterministic: same (driver, scenario) -> same floats.
+    Deterministic: same (driver, scenario, composition_mode) -> same
+    floats. The default ``dominant`` mode preserves r43 results;
+    ``multi_axis`` is currently a research-only full composition for
+    usage-network-hybrid and is always compared side-by-side, never
+    silently substituted.
     """
+    if composition_mode not in {"dominant", "multi_axis"}:
+        raise ValueError(
+            f"unsupported stock composition mode: {composition_mode}"
+        )
     resolved = resolve_signal(driver)
     if resolved is None:
         return StockRunResult(
@@ -230,11 +240,27 @@ def run_stock_scenario(
             max_abs_rate=0.0,
             note="no resolvable signal axis (no probe declared)",
         )
-    axis, neutral, _probe = resolved
+    axis, neutral, probe = resolved
+    multi_axes: list[str] = []
+    if composition_mode == "multi_axis":
+        if driver.name != "usage-network-hybrid":
+            raise ValueError(
+                "multi_axis composition is currently defined only "
+                "for usage-network-hybrid"
+            )
+        multi_axes = [
+            key
+            for key in probe
+            if key in neutral and probe[key] != neutral[key]
+        ]
+        if not multi_axes:
+            raise ValueError("hybrid has no resolvable signal axes")
 
     ref = _reference_key(axis, neutral)
     if ref is not None:
-        composition = "level"
+        composition = (
+            "multi_axis" if composition_mode == "multi_axis" else "level"
+        )
         d_level = float(neutral[axis])
         if d_level <= 0.0:
             return StockRunResult(
@@ -307,11 +333,21 @@ def run_stock_scenario(
             -_GROWTH_CLAMP, min(_GROWTH_CLAMP, g + feedback)
         )
 
-        if composition == "level":
+        if composition in {"level", "multi_axis"}:
             state = dict(neutral)
-            state[axis] = d_cur
-            assert ref is not None  # narrowed by the composition branch
-            state[ref] = d_prev
+            if composition == "multi_axis":
+                # Full hybrid composition: both current signal axes
+                # follow the same demand level, with both references
+                # carrying the prior level. This tests the r43
+                # dominant-axis approximation without changing it.
+                state["active_users"] = d_cur
+                state["prev_active_users"] = d_prev
+                state["network_nodes"] = d_cur
+                state["prev_network_nodes"] = d_prev
+            else:
+                state[axis] = d_cur
+                assert ref is not None  # narrowed by the branch
+                state[ref] = d_prev
         else:
             state = {axis: gamma}
         rate = driver.supply_fn(state)

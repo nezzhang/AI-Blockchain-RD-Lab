@@ -123,6 +123,28 @@ replacement.
   record for SimSkill (arXiv 2609.03753) stored via
   scripts/r8_priorart_simskill.py — its 'verification asymmetry'
   foundation is the academic form of the lab's §2.
+- Round 47 hybrid multi-axis composition (the next protocol-foundation
+  step after r46: test whether r43's disclosed dominant-axis
+  approximation hides a materially different hybrid equilibrium).
+  NEW research-only mode in stock.py: run_stock_scenario(...,
+  composition_mode="multi_axis") composes BOTH usage and network
+  axes for usage-network-hybrid; the established dominant mode stays
+  the default and is never silently replaced. §21 census
+  r47-hybrid-multiaxis-census stores all 7 scenarios side-by-side.
+  MEASURED: demand_collapse changes dominant spiral_down to full-mode
+  STABLE (V 5e-12 -> 1.018, S 1e-12 -> 0.532); crash changes
+  dominant spiral_down to full-mode spiral_up (V 2e-13 -> 12.544,
+  S 4e-14 -> 9.25e11); organic remains spiral_up but full mode
+  materially reduces the value explosion (V 95,870 -> 1.040);
+  supply_shock remains spiral_down but full mode materially reduces
+  the melt (V 3e-10 -> 0.922). Oscillation changes spiral_up to
+  stable (V 66,928 -> 1.030). This is not a ranking substitution
+  or a deployment claim: it is evidence that the hybrid's r39
+  equilibrium depends on whether BOTH declared axes are actually
+  exercised. 6 new probes pin determinism, the demand-collapse
+  comparison, explicit hybrid-only scope, crash direction change,
+  finite seven-scenario coverage, and unchanged dominant mode.
+  634 pass (+6); ruff/mypy clean.
 - Round 46 self-audit of r45 (the "audit this" discipline: the
   r28/r34/r40/r44 hostile pass applied to the elasticity sweep —
   every finding verified by LIVE EXECUTION before any fix). THE
