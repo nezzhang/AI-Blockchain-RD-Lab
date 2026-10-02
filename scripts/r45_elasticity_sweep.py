@@ -61,7 +61,11 @@ def _has_resolvable_axis(driver_name: str) -> bool:
 
 
 def run_sweep() -> list[dict]:
-    """All composable drivers x all scenarios x all eta values."""
+    """All drivers with resolvable axes x all scenarios x all eta.
+
+    Some resolvable drivers compose as VACUOUS; those rows are
+    retained to measure eta-invariant vacuity, never silently skipped.
+    """
     rows: list[dict] = []
     for d in DRIVER_REGISTRY:
         if not _has_resolvable_axis(d.name):

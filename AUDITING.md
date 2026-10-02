@@ -151,6 +151,7 @@ fixed; do not re-report those.
    is stable; crash changes from spiral_down to spiral_up; both
    trajectories are stored in §21 and reported side-by-side — the
    dominant approximation is not silently replaced.
+   Round-5 external audit F1 also corrected terminal value reporting: stock value_ratio now equals demand_ratio/supply_ratio; F2 made the §25 prose render measured stock verdicts alongside structural assessment; F3 corrected the r45 sweep docstring.
 
 ## How to file findings
 

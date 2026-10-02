@@ -78,24 +78,31 @@ def _answer_dilution_risk(score: TokenScore, driver: SupplyDriver) -> str:
     )
 
 
-def _answer_death_spiral(score: TokenScore) -> str:
-    """§25: Can supply reduction create a death spiral?"""
+def _answer_death_spiral(score: TokenScore, measured: str | None = None) -> str:
+    """§25: Can supply reduction create a death spiral?
+
+    The structural assessment remains visible, but when stock evidence
+    is supplied the measured verdict is rendered explicitly rather than
+    contradicted by a structural-only LOW/MODERATE/HIGH claim.
+    """
     if score.death_spiral_resistance >= 8.0:
-        return (
-            "LOW RISK. The supply function includes both mint and burn "
-            "paths within bounded limits. Demand drops trigger mint "
-            "pressure, preventing deflationary cascades."
+        structural = (
+            "Structural assessment: LOW RISK. The supply function includes "
+            "both mint and burn paths within bounded limits."
         )
-    if score.death_spiral_resistance >= 5.0:
-        return (
-            "MODERATE RISK. Bounded supply prevents infinite contraction "
-            "but the mint response to demand drops is limited."
+    elif score.death_spiral_resistance >= 5.0:
+        structural = (
+            "Structural assessment: MODERATE RISK. Bounded supply limits "
+            "contraction, but the mint response is limited."
         )
-    return (
-        "HIGH RISK. The supply function lacks a demonstrated mint "
-        "response to demand contraction. A deflationary cascade is "
-        "structurally possible."
-    )
+    else:
+        structural = (
+            "Structural assessment: HIGH RISK. A deflationary cascade is "
+            "structurally possible."
+        )
+    if measured is None:
+        return structural
+    return f"{structural} Stock measurement (r43): {measured}."
 
 
 def _answer_manipulation(driver: SupplyDriver) -> str:
@@ -321,6 +328,7 @@ def build_token_report(
 
     # Stock scenarios (r43): the composed death-spiral dynamics —
     # §25's death-spiral question now cites measured verdicts.
+    stock_results: dict[str, dict[str, object]] = {}
     lines.append("## §17 Stock Scenarios (r43)")
     lines.append("")
     lines.append(
@@ -339,11 +347,13 @@ def build_token_report(
     for design, _score in ranked:
         d = design.driver
         cell = {}
+        stock_results[design.design_id] = {}
         for sc_name in (
             "demand_collapse", "crash", "supply_shock",
             "organic_growth",
         ):
             r = run_stock_scenario(d, SCENARIOS[sc_name])
+            stock_results[design.design_id][sc_name] = r.verdict.value
             if sc_name == "organic_growth":
                 cell[sc_name] = (
                     "vacuous" if r.verdict.value == "vacuous"
@@ -393,7 +403,16 @@ def build_token_report(
         lines.append("")
 
         lines.append("**Can supply reduction create a death spiral?**")
-        lines.append(_answer_death_spiral(score))
+        measured = stock_results.get(score.design_id, {})
+        if measured:
+            measured_text = (
+                "collapse=" + str(measured.get("demand_collapse"))
+                + "; crash=" + str(measured.get("crash"))
+                + "; mis-mint=" + str(measured.get("supply_shock"))
+            )
+        else:
+            measured_text = None
+        lines.append(_answer_death_spiral(score, measured_text))
         lines.append("")
 
         lines.append("**Can the system be gamed? / Can data be manipulated?**")
