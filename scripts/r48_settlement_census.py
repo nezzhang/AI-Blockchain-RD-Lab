@@ -73,6 +73,34 @@ def main() -> None:
                 "state_hash": r.state.state_hash,
             }
         )
+    # Explicit phased census row: prevote/precommit/finalize,
+    # proposer omission, round change, locks, and liveness metrics.
+    phased = make_proposal(1, 1, state, (), "v2")
+    phased_votes = tuple(
+        Vote(1, 1, phased.proposal_id, v, 1, phase=phase)
+        for phase in ("prevote", "precommit")
+        for v in ("v1", "v2", "v3")
+    )
+    phased_result = sim.settle_phased(
+        (tuple(), (phased,)), phased_votes, {},
+        proposer_schedule=("v1", "v2"),
+        omitted_proposers=frozenset({"v1"}),
+    )
+    scenarios.append({
+        "scenario": "phased_omission_round_change",
+        "finalized": phased_result.finalized,
+        "quorum_required": phased_result.quorum_required,
+        "prevote_weight": phased_result.prevote_weight,
+        "precommit_weight": phased_result.precommit_weight,
+        "rounds_attempted": phased_result.rounds_attempted,
+        "round_changes": phased_result.round_changes,
+        "proposer_omissions": phased_result.proposer_omissions,
+        "locked_validator_count": phased_result.locked_validator_count,
+        "lock_conflict_count": phased_result.lock_conflict_count,
+        "liveness_progress": phased_result.liveness_progress,
+        "failures": phased_result.failures,
+        "state_hash": phased_result.state.state_hash,
+    })
     rec = ExperimentRecord(
         experiment_id=CENSUS_ID,
         candidate_id="research-settlement-simulator",
