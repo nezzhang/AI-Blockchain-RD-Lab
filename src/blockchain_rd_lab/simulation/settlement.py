@@ -62,6 +62,7 @@ class Vote:
     proposal_id: str
     validator_id: str
     weight: int
+    phase: str = "legacy"
 
 
 @dataclass(frozen=True)
@@ -131,6 +132,14 @@ class SettlementResult:
     equivocation_count: int
     safety_violation_observed: bool
     failures: tuple[str, ...]
+    prevote_weight: int = 0
+    precommit_weight: int = 0
+    rounds_attempted: int = 1
+    round_changes: int = 0
+    proposer_omissions: int = 0
+    locked_validator_count: int = 0
+    lock_conflict_count: int = 0
+    liveness_progress: bool = False
 
 
 class SettlementSimulator:
@@ -166,8 +175,12 @@ class SettlementSimulator:
             ):
                 failures.append(f"invalid_parent_or_round:{p.proposal_id}")
                 continue
-            if p.proposer not in {v.validator_id for v in self.validators}:
+            validator_by_id = {v.validator_id: v for v in self.validators}
+            if p.proposer not in validator_by_id:
                 failures.append(f"unknown_proposer:{p.proposal_id}")
+                continue
+            if not validator_by_id[p.proposer].enabled:
+                failures.append(f"disabled_proposer:{p.proposal_id}")
                 continue
             txs = tuple(transactions[x] for x in p.tx_ids if x in transactions)
             if len(txs) != len(p.tx_ids):
@@ -199,12 +212,13 @@ class SettlementSimulator:
                     proposal_weights.get(vote.proposal_id, 0)
                     + weights[vote.validator_id]
                 )
+        unique_proposals = {p.proposal_id: p for p in proposals}
         qualified = [
-            p for p in proposals
+            p for p in unique_proposals.values()
             if proposal_weights.get(p.proposal_id, 0)
             >= self.required_quorum
         ]
-        conflict = len({p.proposal_id for p in proposals}) > 1
+        conflict = len(unique_proposals) > 1
         safety = len(qualified) > 1
         if safety:
             failures.append("multiple_quorum_proposals")
@@ -219,6 +233,126 @@ class SettlementSimulator:
             True, chosen.proposal_id, valid[chosen.proposal_id],
             self.required_quorum, proposal_weights[chosen.proposal_id],
             int(conflict), len(equivocation), safety, tuple(failures)
+        )
+
+
+    def settle_phased(
+        self,
+        proposals_by_round: tuple[tuple[Proposal, ...], ...],
+        votes: tuple[Vote, ...],
+        transactions: dict[str, Transaction],
+        *,
+        height: int = 1,
+        start_round: int = 0,
+        proposer_schedule: tuple[str, ...] | None = None,
+        omitted_proposers: frozenset[str] = frozenset(),
+    ) -> SettlementResult:
+        """Explicit prevote -> precommit -> finalize research run.
+
+        Bounded, deterministic, and non-production: locks and phase
+        certificates are abstract measurements, not cryptographic proofs.
+        """
+        failures: list[str] = []
+        enabled = {v.validator_id: v for v in self.validators if v.enabled}
+        configured = {v.validator_id: v for v in self.validators}
+        locks: dict[str, tuple[int, str]] = {}
+        prevote_weight = precommit_weight = 0
+        equivocations: set[str] = set()
+        lock_conflicts = 0
+        omissions = 0
+        rounds = 0
+        for idx, proposals in enumerate(proposals_by_round):
+            current_round = start_round + idx
+            rounds += 1
+            scheduled = (
+                proposer_schedule[idx]
+                if proposer_schedule and idx < len(proposer_schedule)
+                else None
+            )
+            if scheduled is not None and (
+                scheduled in omitted_proposers
+                or scheduled not in enabled
+            ):
+                omissions += 1
+                failures.append(f"proposer_omission:{scheduled}:{current_round}")
+                continue
+            valid: dict[str, AccountState] = {}
+            for proposal in {p.proposal_id: p for p in proposals}.values():
+                if proposal.height != height or proposal.round != current_round:
+                    failures.append(f"invalid_parent_or_round:{proposal.proposal_id}")
+                    continue
+                if scheduled is not None and proposal.proposer != scheduled:
+                    failures.append(f"unexpected_proposer:{proposal.proposal_id}")
+                    continue
+                proposer = configured.get(proposal.proposer)
+                if proposer is None or not proposer.enabled:
+                    failures.append(f"disabled_proposer:{proposal.proposal_id}")
+                    continue
+                txs = tuple(transactions[x] for x in proposal.tx_ids if x in transactions)
+                if len(txs) != len(proposal.tx_ids):
+                    failures.append(f"unknown_transaction:{proposal.proposal_id}")
+                    continue
+                applied = apply_proposal(self.genesis, txs)
+                if applied.accepted:
+                    valid[proposal.proposal_id] = applied.state
+            phase_votes: dict[str, dict[str, set[str]]] = {
+                "prevote": {},
+                "precommit": {},
+            }
+            for vote in votes:
+                if vote.height != height or vote.round != current_round:
+                    continue
+                if vote.phase not in phase_votes or vote.validator_id not in enabled:
+                    continue
+                if vote.proposal_id not in valid:
+                    continue
+                lock = locks.get(vote.validator_id)
+                if lock and lock[1] != vote.proposal_id:
+                    lock_conflicts += 1
+                    failures.append(f"lock_conflict:{vote.validator_id}")
+                    continue
+                key = vote.validator_id
+                seen = phase_votes[vote.phase].setdefault(key, set())
+                seen.add(vote.proposal_id)
+                if len(seen) > 1:
+                    equivocations.add(vote.validator_id)
+            def weight_for(
+                phase: str,
+                proposal_id: str,
+                _phase_votes=phase_votes,
+                _valid=valid,
+            ) -> int:
+                return sum(
+                    enabled[vid].weight
+                    for vid, ids in _phase_votes[phase].items()
+                    if ids == {proposal_id} and proposal_id in _valid
+                )
+            prev_candidates = [
+                pid for pid in valid if weight_for("prevote", pid) >= self.required_quorum
+            ]
+            if not prev_candidates:
+                continue
+            candidate = sorted(prev_candidates)[0]
+            prevote_weight = weight_for("prevote", candidate)
+            precommit_weight = weight_for("precommit", candidate)
+            if precommit_weight < self.required_quorum:
+                continue
+            for vid, ids in phase_votes["precommit"].items():
+                if ids == {candidate}:
+                    locks[vid] = (current_round, candidate)
+            return SettlementResult(
+                True, candidate, valid[candidate], self.required_quorum,
+                precommit_weight, int(len(valid) > 1), len(equivocations),
+                False, tuple(failures), prevote_weight, precommit_weight,
+                rounds, max(0, rounds - 1), omissions, len(locks),
+                lock_conflicts, True,
+            )
+        return SettlementResult(
+            False, None, self.genesis, self.required_quorum,
+            max(prevote_weight, precommit_weight), 0, len(equivocations),
+            False, tuple(failures), prevote_weight, precommit_weight,
+            rounds, max(0, rounds - 1), omissions, len(locks),
+            lock_conflicts, False,
         )
 
 
