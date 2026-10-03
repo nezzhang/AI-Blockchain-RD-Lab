@@ -612,29 +612,40 @@ class TestElasticityAudit:
                 )
 
     def test_zero_eta_anti_tracking_growth_spirals(self):
-        """The under-disclosed r45 finding: anti-tracking drivers
-        (burn-on-growth designs) diverge under sustained growth at
-        eta=0 — the DEFLATIONARY RUNAWAY needs NO feedback. The
-        composed rate anti-tracks demand growth, supply shrinks
-        while demand grows, and value compounds forever. Pinned for
-        ai-throughput and productivity-deflation under organic
-        growth (gdp too — same class, signed-rate composition)."""
+        """Anti-tracking growth diverges at eta=0 without feedback.
+        The robust set is ai/productivity under organic growth and
+        ai/gdp/productivity under hyper growth."""
         from dataclasses import replace
 
-        for name in (
-            "ai-throughput-deflation",
-            "productivity-deflation",
-            "counter-cyclical-gdp",
+        for name, scenario in (
+            ("ai-throughput-deflation", "organic_growth"),
+            ("productivity-deflation", "organic_growth"),
+            ("ai-throughput-deflation", "hyper_growth"),
+            ("counter-cyclical-gdp", "hyper_growth"),
+            ("productivity-deflation", "hyper_growth"),
         ):
             r = run_stock_scenario(
                 get_driver(name),
-                replace(SCENARIOS["organic_growth"], elasticity=0.0),
+                replace(SCENARIOS[scenario], elasticity=0.0),
             )
             assert r.verdict is StockVerdict.SPIRAL_UP, (
                 name,
+                scenario,
                 r.verdict,
             )
-            assert r.value_ratio > 1.0 + 0.05  # left the band upward
+            assert r.value_ratio > 1.0 + 0.05
+
+    def test_zero_eta_gdp_organic_boundary_is_divergent(self):
+        """At the r46 tolerance boundary, gdp organic growth is
+        consistently spiral_up rather than float-ULP rebased_up."""
+        from dataclasses import replace
+
+        r = run_stock_scenario(
+            get_driver("counter-cyclical-gdp"),
+            replace(SCENARIOS["organic_growth"], elasticity=0.0),
+        )
+        assert r.verdict is StockVerdict.SPIRAL_UP
+        assert r.value_ratio > 1.0 + 0.05
 
     def test_metcalfe_supply_shock_direction_reversal(self):
         """r46 F3, the audit's headline catch: metcalfe's supply
