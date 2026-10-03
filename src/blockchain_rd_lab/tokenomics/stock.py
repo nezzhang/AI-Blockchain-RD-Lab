@@ -381,7 +381,7 @@ def run_stock_scenario(
     # values[] records V before each update; terminal ratios must be
     # post-update and algebraically consistent (r47 audit F1).
     value_end = demand_ratio / supply_ratio if supply_ratio > 0.0 else math.inf
-    v_min = min(values + [value_end])
+    v_min = min([*values, value_end])
     v_max = max(values)
 
     # quiet tail: the last quarter of the window (the r20 discipline —
