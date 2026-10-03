@@ -382,7 +382,9 @@ def run_stock_scenario(
     # post-update and algebraically consistent (r47 audit F1).
     value_end = demand_ratio / supply_ratio if supply_ratio > 0.0 else math.inf
     v_min = min([*values, value_end])
-    v_max = max(values)
+    # Include the post-update terminal value in trajectory extrema;
+    # values[] records pre-update observations (r48 audit follow-up).
+    v_max = max([*values, value_end])
 
     # quiet tail: the last quarter of the window (the r20 discipline —
     # the verdict classifies what the system does AFTER the shock).

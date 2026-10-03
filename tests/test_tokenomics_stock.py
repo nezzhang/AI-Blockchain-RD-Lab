@@ -38,6 +38,16 @@ class TestStockComposition:
                 r2 = run_stock_scenario(d, sc)
                 assert r1 == r2, (d.name, sc.name)
 
+    def test_terminal_value_is_in_reported_extrema(self):
+        """The terminal post-update value is included in trajectory
+        extrema (external round-5 audit F1)."""
+        for d in DRIVER_REGISTRY:
+            for sc in SCENARIOS.values():
+                r = run_stock_scenario(d, sc)
+                if r.verdict is StockVerdict.VACUOUS:
+                    continue
+                assert r.min_value <= r.value_ratio <= r.max_value
+
     def test_registry_wide_finiteness(self):
         """Every driver x scenario produces a verdict with finite
         metrics (no NaN leakage through the composition)."""
