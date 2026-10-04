@@ -723,10 +723,15 @@ class TestElasticityAudit:
 
 
 class TestHybridMultiAxisCensus:
-    def test_r47_census_exists_and_has_seven_rows(self):
-        from blockchain_rd_lab.config import REPO_ROOT, load_config
-        from blockchain_rd_lab.database import LabDatabase
-        db=LabDatabase(REPO_ROOT / load_config().storage.database)
-        rows=[e for e in db.iter_experiments() if e.experiment_id == "r47-hybrid-multiaxis-census"]
-        assert len(rows) == 1
-        assert len(rows[0].results["rows"]) == 7
+    def test_r47_census_shape_is_reproducible(self):
+        """CI has no live lab.db; verify seven rows from the pure
+        simulator instead of coupling tests to local state."""
+        d = get_driver("usage-network-hybrid")
+        rows = [
+            run_stock_scenario(
+                d, scenario, composition_mode="multi_axis"
+            )
+            for scenario in SCENARIOS.values()
+        ]
+        assert len(rows) == 7
+        assert all(r.composition == "multi_axis" for r in rows)
