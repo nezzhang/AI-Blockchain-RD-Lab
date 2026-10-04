@@ -141,6 +141,7 @@ class SettlementResult:
     locked_validator_count: int = 0
     lock_conflict_count: int = 0
     liveness_progress: bool = False
+    certificate_observed: bool = False
 
 
 class SettlementSimulator:
@@ -247,6 +248,7 @@ class SettlementSimulator:
         start_round: int = 0,
         proposer_schedule: tuple[str, ...] | None = None,
         omitted_proposers: frozenset[str] = frozenset(),
+        continue_after_certificate: bool = False,
     ) -> SettlementResult:
         """Explicit prevote -> precommit -> finalize research run.
 
@@ -263,6 +265,7 @@ class SettlementSimulator:
         lock_conflicts = 0
         omissions = 0
         rounds = 0
+        certificate_observed = False
         for idx, proposals in enumerate(proposals_by_round):
             current_round = start_round + idx
             rounds += 1
@@ -363,26 +366,29 @@ class SettlementSimulator:
                 continue
             for vid in matching_precommit:
                 locks[vid] = (current_round, candidate)
-            return SettlementResult(
-                finalized=True,
-                proposal_id=candidate,
-                state=valid[candidate],
-                quorum_required=self.required_quorum,
-                vote_weight=precommit_weight,
-                conflict_count=int(len(valid) > 1),
-                equivocation_count=len(equivocations),
-                safety_violation_observed=False,
-                failures=tuple(failures),
-                prevote_weight=prevote_weight,
-                precommit_weight=precommit_weight,
-                rounds_attempted=rounds,
-                round_changes=max(0, rounds - 1),
-                proposer_omissions=omissions,
-                locked_validator_count=len(locks),
-                lock_conflict_count=lock_conflicts,
-                liveness_progress=True,
-                equivocation_evidence=tuple(sorted(equivocation_evidence)),
-            )
+            certificate_observed = True
+            if not continue_after_certificate:
+                return SettlementResult(
+                    finalized=True,
+                    proposal_id=candidate,
+                    state=valid[candidate],
+                    quorum_required=self.required_quorum,
+                    vote_weight=precommit_weight,
+                    conflict_count=int(len(valid) > 1),
+                    equivocation_count=len(equivocations),
+                    safety_violation_observed=False,
+                    failures=tuple(failures),
+                    prevote_weight=prevote_weight,
+                    precommit_weight=precommit_weight,
+                    rounds_attempted=rounds,
+                    round_changes=max(0, rounds - 1),
+                    proposer_omissions=omissions,
+                    locked_validator_count=len(locks),
+                    lock_conflict_count=lock_conflicts,
+                    liveness_progress=True,
+                    certificate_observed=True,
+                    equivocation_evidence=tuple(sorted(equivocation_evidence)),
+                )
         return SettlementResult(
             finalized=False,
             proposal_id=None,
@@ -401,6 +407,7 @@ class SettlementSimulator:
             locked_validator_count=len(locks),
             lock_conflict_count=lock_conflicts,
             liveness_progress=False,
+            certificate_observed=certificate_observed,
             equivocation_evidence=tuple(sorted(equivocation_evidence)),
         )
 

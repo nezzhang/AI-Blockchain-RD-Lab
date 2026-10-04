@@ -209,3 +209,24 @@ def test_phased_precommit_requires_matching_prevote_validator():
     )
     r = SettlementSimulator(state, vals()).settle_phased(((p,),), votes, {})
     assert not r.finalized
+
+def test_lock_carries_and_rejects_conflicting_next_round():
+    state = base()
+    p = make_proposal(1, 0, state, (), "v1")
+    q = make_proposal(1, 1, state, (), "v2")
+    votes = tuple(
+        Vote(1, 0, p.proposal_id, v, 1, phase=phase)
+        for phase in ("prevote", "precommit")
+        for v in ("v1", "v2", "v3")
+    )
+    next_votes = tuple(
+        Vote(1, 1, q.proposal_id, v, 1, phase="prevote")
+        for v in ("v1", "v2", "v3")
+    )
+    r = SettlementSimulator(state, vals()).settle_phased(
+        ((p,), (q,)), votes + next_votes, {},
+        proposer_schedule=("v1", "v2"),
+        continue_after_certificate=True,
+    )
+    assert r.certificate_observed and not r.finalized
+    assert r.lock_conflict_count >= 1
