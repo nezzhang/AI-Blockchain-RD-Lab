@@ -132,6 +132,7 @@ class SettlementResult:
     equivocation_count: int
     safety_violation_observed: bool
     failures: tuple[str, ...]
+    equivocation_evidence: tuple[str, ...] = ()
     prevote_weight: int = 0
     precommit_weight: int = 0
     rounds_attempted: int = 1
@@ -258,6 +259,7 @@ class SettlementSimulator:
         locks: dict[str, tuple[int, str]] = {}
         prevote_weight = precommit_weight = 0
         equivocations: set[str] = set()
+        equivocation_evidence: set[str] = set()
         lock_conflicts = 0
         omissions = 0
         rounds = 0
@@ -320,6 +322,16 @@ class SettlementSimulator:
                 seen.add(vote.proposal_id)
                 if len(seen) > 1:
                     equivocations.add(vote.validator_id)
+                    evidence = ":".join(
+                        (
+                            vote.validator_id,
+                            vote.phase,
+                            str(height),
+                            str(current_round),
+                            *sorted(seen),
+                        )
+                    )
+                    equivocation_evidence.add(evidence)
             def weight_for(
                 phase: str,
                 proposal_id: str,
@@ -352,18 +364,44 @@ class SettlementSimulator:
             for vid in matching_precommit:
                 locks[vid] = (current_round, candidate)
             return SettlementResult(
-                True, candidate, valid[candidate], self.required_quorum,
-                precommit_weight, int(len(valid) > 1), len(equivocations),
-                False, tuple(failures), prevote_weight, precommit_weight,
-                rounds, max(0, rounds - 1), omissions, len(locks),
-                lock_conflicts, True,
+                finalized=True,
+                proposal_id=candidate,
+                state=valid[candidate],
+                quorum_required=self.required_quorum,
+                vote_weight=precommit_weight,
+                conflict_count=int(len(valid) > 1),
+                equivocation_count=len(equivocations),
+                safety_violation_observed=False,
+                failures=tuple(failures),
+                prevote_weight=prevote_weight,
+                precommit_weight=precommit_weight,
+                rounds_attempted=rounds,
+                round_changes=max(0, rounds - 1),
+                proposer_omissions=omissions,
+                locked_validator_count=len(locks),
+                lock_conflict_count=lock_conflicts,
+                liveness_progress=True,
+                equivocation_evidence=tuple(sorted(equivocation_evidence)),
             )
         return SettlementResult(
-            False, None, self.genesis, self.required_quorum,
-            max(prevote_weight, precommit_weight), 0, len(equivocations),
-            False, tuple(failures), prevote_weight, precommit_weight,
-            rounds, max(0, rounds - 1), omissions, len(locks),
-            lock_conflicts, False,
+            finalized=False,
+            proposal_id=None,
+            state=self.genesis,
+            quorum_required=self.required_quorum,
+            vote_weight=max(prevote_weight, precommit_weight),
+            conflict_count=0,
+            equivocation_count=len(equivocations),
+            safety_violation_observed=False,
+            failures=tuple(failures),
+            prevote_weight=prevote_weight,
+            precommit_weight=precommit_weight,
+            rounds_attempted=rounds,
+            round_changes=max(0, rounds - 1),
+            proposer_omissions=omissions,
+            locked_validator_count=len(locks),
+            lock_conflict_count=lock_conflicts,
+            liveness_progress=False,
+            equivocation_evidence=tuple(sorted(equivocation_evidence)),
         )
 
 
