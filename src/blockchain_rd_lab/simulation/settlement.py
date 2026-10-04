@@ -278,7 +278,11 @@ class SettlementSimulator:
                 continue
             valid: dict[str, AccountState] = {}
             for proposal in {p.proposal_id: p for p in proposals}.values():
-                if proposal.height != height or proposal.round != current_round:
+                if (
+                    proposal.height != height
+                    or proposal.round != current_round
+                    or proposal.parent_state_hash != self.genesis.state_hash
+                ):
                     failures.append(f"invalid_parent_or_round:{proposal.proposal_id}")
                     continue
                 if scheduled is not None and proposal.proposer != scheduled:
@@ -334,12 +338,19 @@ class SettlementSimulator:
                 continue
             candidate = sorted(prev_candidates)[0]
             prevote_weight = weight_for("prevote", candidate)
-            precommit_weight = weight_for("precommit", candidate)
+            matching_precommit = {
+                vid
+                for vid, ids in phase_votes["precommit"].items()
+                if ids == {candidate}
+                and phase_votes["prevote"].get(vid) == {candidate}
+            }
+            precommit_weight = sum(
+                enabled[vid].weight for vid in matching_precommit
+            )
             if precommit_weight < self.required_quorum:
                 continue
-            for vid, ids in phase_votes["precommit"].items():
-                if ids == {candidate}:
-                    locks[vid] = (current_round, candidate)
+            for vid in matching_precommit:
+                locks[vid] = (current_round, candidate)
             return SettlementResult(
                 True, candidate, valid[candidate], self.required_quorum,
                 precommit_weight, int(len(valid) > 1), len(equivocations),

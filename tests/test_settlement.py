@@ -183,3 +183,29 @@ def test_phased_liveness_metrics_no_quorum():
     r = SettlementSimulator(state, vals()).settle_phased(((p,),), votes, {})
     assert not r.finalized and not r.liveness_progress
     assert r.rounds_attempted == 1 and r.prevote_weight == 0
+
+def test_phased_wrong_parent_cannot_finalize():
+    state = base()
+    p = make_proposal(1, 0, state, (), "v1")
+    bad = type(p)(p.height, p.round, "wrong-parent", p.tx_ids, p.proposer, p.proposal_id)
+    votes = tuple(
+        Vote(1, 0, bad.proposal_id, v, 1, phase=phase)
+        for phase in ("prevote", "precommit")
+        for v in ("v1", "v2", "v3")
+    )
+    r = SettlementSimulator(state, vals()).settle_phased(((bad,),), votes, {})
+    assert not r.finalized and any("invalid_parent_or_round" in x for x in r.failures)
+
+
+def test_phased_precommit_requires_matching_prevote_validator():
+    state = base()
+    p = make_proposal(1, 0, state, (), "v1")
+    votes = tuple(
+        Vote(1, 0, p.proposal_id, v, 1, phase="prevote")
+        for v in ("v1", "v2", "v3")
+    ) + tuple(
+        Vote(1, 0, p.proposal_id, v, 1, phase="precommit")
+        for v in ("v1", "v2", "v4")
+    )
+    r = SettlementSimulator(state, vals()).settle_phased(((p,),), votes, {})
+    assert not r.finalized
